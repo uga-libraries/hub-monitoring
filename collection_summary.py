@@ -21,6 +21,20 @@ import pandas as pd
 import sys
 
 
+def check_argument(arg_list):
+    # Checks if the expected arguments are present: script path (default in sys.argv) and directory path.
+    if len(arg_list) == 2:
+        # Checks if the provided directory path exists.
+        dir_path = arg_list[1]
+        if os.path.exists(dir_path):
+            return dir_path, None
+        else:
+            return None, f"Provided directory {dir_path} does not exist"
+    # Do not have the expected arguments.
+    else:
+        return None, "Missing required argument: directory"
+
+
 def get_accession_data(path):
     """Calculate the size, date, and risk profile of a single accession folder, using other functions
 
@@ -71,7 +85,10 @@ def get_size(path):
 if __name__ == '__main__':
 
     # Gets the path to the directory with the information to be summarized from the script argument.
-    directory = sys.argv[1]
+    directory, error = check_argument(sys.argv)
+    if error:
+        print(error)
+        sys.exit()
 
     # Starts a dataframe for information about each accession.
     # It will be summarized later to be by collection.
