@@ -72,6 +72,12 @@ def get_file_count(path):
     return file_count
 
 
+def get_risk(path):
+    acc = os.path.basename(path)
+    risk_csv_path = os.path.join(path, f"{acc}_full_risk_data.csv")
+    risk_df = pd.read_csv(risk_csv_path)
+
+
 def get_size(path):
     bytes = 0
     for root, dirs, files in os.walk(path):
