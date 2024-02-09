@@ -29,7 +29,7 @@ def get_accession_data(path):
     :return
         A list of the data
     """
-    size = ""
+    size = get_size(path)
     files = get_file_count(path)
     date = ""
     risk = []
@@ -42,6 +42,16 @@ def get_file_count(path):
     for root, dirs, files in os.walk(path):
         file_count += len(files)
     return file_count
+
+
+def get_size(path):
+    bytes = 0
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            bytes += os.stat(file_path).st_size
+    gb = bytes/1000000000
+    return gb
 
 
 if __name__ == '__main__':
