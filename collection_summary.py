@@ -15,6 +15,7 @@ Parameter:
 Returns:
     CSV with one row per collection
 """
+from datetime import datetime
 import os
 import pandas as pd
 import sys
@@ -31,10 +32,23 @@ def get_accession_data(path):
     """
     size = get_size(path)
     files = get_file_count(path)
-    date = ""
+    date = get_date(path)
     risk = []
     acc_list = [size, files, date].extend(risk)
     return acc_list
+
+
+def get_date(path):
+    # If preservation log is present, use its date created.
+    # If not, parse the year from the start of the accession folder name.
+    log_path = os.path.join(path, "preservation_log.txt")
+    if os.path.exists(log_path):
+        timestamp = os.stat(log_path).st_ctime
+        date = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
+    else:
+        acc_folder = os.path.basename(path)
+        date = acc_folder[:4]
+    return date
 
 
 def get_file_count(path):
