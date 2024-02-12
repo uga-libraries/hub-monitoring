@@ -79,13 +79,13 @@ def get_risk(path):
 
 
 def get_size(path):
-    bytes = 0
+    size_bytes = 0
     for root, dirs, files in os.walk(path):
         for file in files:
             file_path = os.path.join(root, file)
-            bytes += os.stat(file_path).st_size
-    gb = bytes/1000000000
-    return gb
+            size_bytes += os.stat(file_path).st_size
+    size_gb = size_bytes/1000000000
+    return size_gb
 
 
 if __name__ == '__main__':
