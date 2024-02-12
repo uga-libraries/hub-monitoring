@@ -103,12 +103,14 @@ if __name__ == '__main__':
 
     # Starts a dataframe for information about each accession.
     # It will be summarized later to be by collection.
-    df = pd.DataFrame(columns=['Collection', 'Status', 'GB', 'Files', 'Accession Date',
-                               'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'])
+    accession_df = pd.DataFrame(columns=['Collection', 'Status', 'GB', 'Files', 'Date',
+                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'])
 
-    # Navigate to each accession folder.
+    # Navigates to each accession folder, gets the information, and saves to the accession dataframe.
     for status in os.listdir(directory):
         for collection in os.listdir(os.path.join(directory, status)):
             for accession in os.listdir(os.path.join(directory, status, collection)):
                 accession_path = os.path.join(directory, status, collection, accession)
-                accession_list = [collection, status].extend(get_accession_data(accession_path))
+                accession_list = [collection, status]
+                accession_list.extend(get_accession_data(accession_path))
+                accession_df.loc[len(accession_df)] = accession_list
