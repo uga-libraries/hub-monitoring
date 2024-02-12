@@ -11,7 +11,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_accession_number(self):
         """Test for when the accession number starts with the year"""
-        path = join(getcwd(), '..', 'test_data', 'backlog', 'coll-002', '2022-02')
+        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl002', '2022-02-er')
         date = get_date(path)
         self.assertEqual(date, '2022', "Problem with test for accession number")
 

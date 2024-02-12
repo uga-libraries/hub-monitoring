@@ -121,7 +121,7 @@ def get_file_count(path):
 
 def get_risk(path):
     acc = os.path.basename(path)
-    risk_csv_path = os.path.join(path, f"{acc}_full_risk_data.csv")
+    risk_csv_path = os.path.join(path, f"{acc}_bag_full_risk_data.csv")
     risk_df = pd.read_csv(risk_csv_path)
     risk_list = []
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
