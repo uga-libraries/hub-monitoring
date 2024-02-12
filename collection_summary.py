@@ -121,6 +121,20 @@ def get_size(path):
     return size_gb
 
 
+def save_report(coll_df, dir_path):
+    # Determines the department based on a keyword in the directory path to include in the report name.
+    if "Hargrett" in dir_path:
+        dept = "harg"
+    else:
+        dept = "rbrl"
+
+    # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
+    today = datetime.today().strftime('%Y-%m-%d')
+
+    # Saves the dataframe to a CSV in the directory (script argument).
+    coll_df.to_csv(os.path.join(dir_path, f'{dept}_hub-collection-summary_{today}.csv'), index=False)
+
+
 if __name__ == '__main__':
 
     # Gets the path to the directory with the information to be summarized from the script argument.
@@ -142,4 +156,4 @@ if __name__ == '__main__':
 
     # Combines accession information for each collection and saves to a CSV in "directory".
     collection_df = combine_collection_data(accession_df)
-    pd.to_csv(os.path.join(directory, 'hub-collection-summary.csv'))
+    save_report(collection_df, directory)
