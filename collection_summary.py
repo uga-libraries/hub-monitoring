@@ -35,6 +35,23 @@ def check_argument(arg_list):
         return None, "Missing required argument: directory"
 
 
+def combine_collection_data(coll_df):
+    # Combine data from multiple accessions in the same collection.
+    # Collection and Status are the same for each group.
+    # GB, Files, and the four risk categories are added.
+    # TODO: this is dropping the Date column, because we haven't decided how to aggregate it.
+    coll_df = coll_df.groupby(['Collection', 'Status'], as_index=False).sum()
+
+    # Replaces risk columns with file counts with risk columns with the percentage of files.
+    coll_df['No_Match_Risk_%'] = round(coll_df['No_Match_Risk'] / coll_df['Files'] * 100, 1)
+    coll_df['High_Risk_%'] = round(coll_df['High_Risk'] / coll_df['Files'] * 100, 1)
+    coll_df['Moderate_Risk_%'] = round(coll_df['Moderate_Risk'] / coll_df['Files'] * 100, 1)
+    coll_df['Low_Risk_%'] = round(coll_df['Low_Risk'] / coll_df['Files'] * 100, 1)
+    coll_df.drop(['No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'], axis=1, inplace=True)
+
+    return coll_df
+
+
 def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     """Calculate the data about a single accession folder, mostly using other functions
 
@@ -122,3 +139,7 @@ if __name__ == '__main__':
         for collection in os.listdir(os.path.join(directory, status)):
             for accession in os.listdir(os.path.join(directory, status, collection)):
                 accession_df.loc[len(accession_df)] = get_accession_data(directory, status, collection, accession)
+
+    # Combines accession information for each collection and saves to a CSV in "directory".
+    collection_df = combine_collection_data(accession_df)
+    pd.to_csv(os.path.join(directory, 'hub-collection-summary.csv'))
