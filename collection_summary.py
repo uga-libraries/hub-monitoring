@@ -47,7 +47,7 @@ def get_accession_data(path):
     size = get_size(path)
     files = get_file_count(path)
     date = get_date(path)
-    risk = []
+    risk = get_risk(path)
     acc_list = [size, files, date].extend(risk)
     return acc_list
 
@@ -76,6 +76,10 @@ def get_risk(path):
     acc = os.path.basename(path)
     risk_csv_path = os.path.join(path, f"{acc}_full_risk_data.csv")
     risk_df = pd.read_csv(risk_csv_path)
+    risk_list = []
+    for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
+        risk_list.append((risk_df['NARA_Risk Level'] == risk).sum())
+    return risk_list
 
 
 def get_size(path):
