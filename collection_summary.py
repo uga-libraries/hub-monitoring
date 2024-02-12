@@ -39,7 +39,7 @@ def get_accession_data(path):
     """Calculate the size, date, and risk profile of a single accession folder, using other functions
 
     :parameter
-        dir : the path to the accession folder
+        path : the path to the accession folder
 
     :return
         A list of the data
@@ -48,7 +48,8 @@ def get_accession_data(path):
     files = get_file_count(path)
     date = get_date(path)
     risk = get_risk(path)
-    acc_list = [size, files, date].extend(risk)
+    acc_list = [size, files, date]
+    acc_list.extend(risk)
     return acc_list
 
 
