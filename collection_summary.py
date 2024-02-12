@@ -70,13 +70,13 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
 
     # Gets the data which requires additional calculation.
     # Size, Files, and Date are single data points, while risk is a list of four items.
+    date = get_date(acc_path)
     size = get_size(acc_path)
     files = get_file_count(acc_path)
-    date = get_date(acc_path)
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
-    acc_list = [acc_coll, acc_status, size, files, date]
+    acc_list = [acc_coll, acc_status, date, size, files]
     acc_list.extend(risk)
     return acc_list
 
@@ -145,7 +145,7 @@ if __name__ == '__main__':
 
     # Starts a dataframe for information about each accession.
     # It will be summarized later to be by collection.
-    accession_df = pd.DataFrame(columns=['Collection', 'Status', 'GB', 'Files', 'Date',
+    accession_df = pd.DataFrame(columns=['Collection', 'Status', 'Date', 'GB', 'Files',
                                          'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'])
 
     # Navigates to each accession folder, gets the information, and saves to the accession dataframe.
