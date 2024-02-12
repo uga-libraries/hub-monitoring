@@ -2,18 +2,18 @@
 
 Data included:
 - Collection
-- Size (GB and number of files)
-- Accession date (oldest if more than one)
 - Status (if backlog or closed)
-- Risk percentages (based on NARA risk data)
+- Accession date (date range if more than one)
+- Size (GB and number of files)
+- Risk percentages (based on the number of files at each NARA risk level)
 
 If there is more than one accession for the collection, the information is combined.
 
 Parameter:
-    directory (required) : the directory with the folders to be summarized
+directory (required): the directory with the folders to be summarized
 
 Returns:
-    CSV with one row per collection
+CSV with one row per collection
 """
 from datetime import datetime
 import os
@@ -22,6 +22,16 @@ import sys
 
 
 def check_argument(arg_list):
+    """Check if the required argument is present and a valid directory
+
+    :parameter
+    arg_list (list): the contents of sys.argv after the script is run
+
+    :returns
+    dir_path (string): the path to the folder with data to be summarized, or None (if error)
+    error (string): the error message, or None (if no error)
+    """
+
     # Checks if the expected arguments are present: script path (default in sys.argv) and directory path.
     if len(arg_list) == 2:
         # Checks if the provided directory path exists.
@@ -35,12 +45,19 @@ def check_argument(arg_list):
         return None, "Missing required argument: directory"
 
 
-def combine_collection_data(coll_df):
-    # Combine data from multiple accessions in the same collection.
-    # Collection and Status are the same for each group.
-    # GB, Files, and the four risk categories are added.
+def combine_collection_data(acc_df):
+    """Combine data for collections with multiple accessions
+
+    :parameter
+    acc_df (Pandas dataframe): the data for every accession
+
+    :returns
+    coll_df (Pandas dataframe): the data for every collection
+    """
+
+    # Adds the values in GB, Files, and the four risk category columns for each collection.
     # TODO: this is dropping the Date column, because we haven't decided how to aggregate it.
-    coll_df = coll_df.groupby(['Collection', 'Status'], as_index=False).sum()
+    coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
     # Replaces risk columns with file counts with risk columns with the percentage of files.
     coll_df['No_Match_Risk_%'] = round(coll_df['No_Match_Risk'] / coll_df['Files'] * 100, 1)
@@ -56,14 +73,15 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     """Calculate the data about a single accession folder, mostly using other functions
 
     :parameter
-        acc_dir : the name of the directory that contains the accession (script argument)
-        acc_status : if the accession is backlogged or closed, which is a folder within acc_dir
-        acc_coll : the collection the accession is part of, which is a folder within acc_status
-        acc_id : the accession id, which is a folder within acc_coll
+    acc_dir (string): the path to the folder with data to be summarized (script argument)
+    acc_status (string): if the accession is backlogged or closed, which is a folder within acc_dir
+    acc_coll (string): the collection the accession is part of, which is a folder within acc_status
+    acc_id (string): the accession id, which is a folder within acc_coll
 
     :returns
-        A list with the collection, status, size (GB), files, date, and number of files at each of the 4 risk levels
+    acc_list (list): collection, status, date, size (GB), files, and the number of files at each of the 4 risk levels
     """
+
     # Calculates the path to the accession folder, which combines the four function parameters.
     # Some parameters are also included in the accession data, so they are passed separately rather than as the path.
     acc_path = os.path.join(acc_dir, acc_status, acc_coll, acc_id)
@@ -78,6 +96,7 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     # Combines the data into a single list.
     acc_list = [acc_coll, acc_status, date, size, files]
     acc_list.extend(risk)
+
     return acc_list
 
 
@@ -88,11 +107,12 @@ def get_date(path):
     but for naming conventions that do not include the year, it will use the date created of the preservation log.
 
     :parameter
-        path (string): the path to the accession folder
+    path (string): the path to the accession folder
 
     :returns
-        String, either the year or "unknown"
+    date (string): the year or "unknown"
     """
+
     # Variables needed to identify the method for determining the year.
     acc_folder = os.path.basename(path)
     log_path = os.path.join(path, "preservation_log.txt")
@@ -113,33 +133,76 @@ def get_date(path):
 
 
 def get_file_count(path):
+    """Calculate the number of files in an accession
+
+    :parameter
+    path (string): the path to the accession folder
+
+    :returns
+    file_count (integer): the number of files in the accession folder
+    """
+
     file_count = 0
     for root, dirs, files in os.walk(path):
         file_count += len(files)
+
     return file_count
 
 
 def get_risk(path):
-    acc = os.path.basename(path)
-    risk_csv_path = os.path.join(path, f"{acc}_bag_full_risk_data.csv")
+    """Calculate the number of files at each of the four NARA risk levels
+
+    :parameter
+    path (string): the path to the accession folder
+
+    :returns
+    risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
+    """
+
+    # Constructs the path to the spreadsheet with risk data in the accession folder and reads it into a dataframe.
+    accession_number = os.path.basename(path)
+    risk_csv_path = os.path.join(path, f"{accession_number}_bag_full_risk_data.csv")
     risk_df = pd.read_csv(risk_csv_path)
+
+    # Counts the number of files (dataframe rows) with each possible NARA risk level and saves to a list.
     risk_list = []
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
         risk_list.append((risk_df['NARA_Risk Level'] == risk).sum())
+
     return risk_list
 
 
 def get_size(path):
+    """Calculate the number of files in an accession
+
+    :parameter
+    path (string): the path to the accession folder
+
+    :returns
+    size_gb (float): the size, in GB, of the accession folder
+    """
+
     size_bytes = 0
     for root, dirs, files in os.walk(path):
         for file in files:
             file_path = os.path.join(root, file)
             size_bytes += os.stat(file_path).st_size
     size_gb = size_bytes/1000000000
+
     return size_gb
 
 
 def save_report(coll_df, dir_path):
+    """Save the collection data to a CSV in the directory provided as the script argument
+
+    :parameter
+    coll_df (Pandas dataframe): the data for each collection
+    dir_path (string): the path to the folder with data to be summarized (script argument)
+
+    :returns:
+    None
+    """
+
     # Determines the department based on a keyword in the directory path to include in the report name.
     if "Hargrett" in dir_path:
         dept = "harg"
