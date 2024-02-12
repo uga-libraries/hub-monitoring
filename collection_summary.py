@@ -61,7 +61,7 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
         acc_coll : the collection the accession is part of, which is a folder within acc_status
         acc_id : the accession id, which is a folder within acc_coll
 
-    :return
+    :returns
         A list with the collection, status, size (GB), files, date, and number of files at each of the 4 risk levels
     """
     # Calculates the path to the accession folder, which combines the four function parameters.
@@ -82,15 +82,33 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
 
 
 def get_date(path):
-    # If preservation log is present, use its date created.
-    # If not, parse the year from the start of the accession folder name.
+    """Determine the year of the accession
+
+    The preferred method is to use the year from the accession number,
+    but for naming conventions that do not include the year, it will use the date created of the preservation log.
+
+    :parameter
+        path (string): the path to the accession folder
+
+    :returns
+        String, either the year or "unknown"
+    """
+    # Variables needed to identify the method for determining the year.
+    acc_folder = os.path.basename(path)
     log_path = os.path.join(path, "preservation_log.txt")
-    if os.path.exists(log_path):
-        timestamp = os.stat(log_path).st_ctime
-        date = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
-    else:
-        acc_folder = os.path.basename(path)
+
+    # Tries different methods for determining the accession year.
+    # Option 1: The first 4 characters of the accession folder name are the year (are numbers).
+    if acc_folder[:4].isdigit():
         date = acc_folder[:4]
+    # Option 2: The year the preservation log was created, if there is one.
+    elif os.path.exists(log_path):
+        timestamp = os.stat(log_path).st_ctime
+        date = datetime.fromtimestamp(timestamp).strftime('%Y')
+    # Option 3: Default text that no year could be determined.
+    else:
+        date = "unknown"
+
     return date
 
 
