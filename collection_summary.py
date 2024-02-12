@@ -35,20 +35,31 @@ def check_argument(arg_list):
         return None, "Missing required argument: directory"
 
 
-def get_accession_data(path):
-    """Calculate the size, date, and risk profile of a single accession folder, using other functions
+def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
+    """Calculate the data about a single accession folder, mostly using other functions
 
     :parameter
-        path : the path to the accession folder
+        acc_dir : the name of the directory that contains the accession (script argument)
+        acc_status : if the accession is backlogged or closed, which is a folder within acc_dir
+        acc_coll : the collection the accession is part of, which is a folder within acc_status
+        acc_id : the accession id, which is a folder within acc_coll
 
     :return
-        A list of the data
+        A list with the collection, status, size (GB), files, date, and number of files at each of the 4 risk levels
     """
-    size = get_size(path)
-    files = get_file_count(path)
-    date = get_date(path)
-    risk = get_risk(path)
-    acc_list = [size, files, date]
+    # Calculates the path to the accession folder, which combines the four function parameters.
+    # Some parameters are also included in the accession data, so they are passed separately rather than as the path.
+    acc_path = os.path.join(acc_dir, acc_status, acc_coll, acc_id)
+
+    # Gets the data which requires additional calculation.
+    # Size, Files, and Date are single data points, while risk is a list of four items.
+    size = get_size(acc_path)
+    files = get_file_count(acc_path)
+    date = get_date(acc_path)
+    risk = get_risk(acc_path)
+
+    # Combines the data into a single list.
+    acc_list = [acc_coll, acc_status, size, files, date]
     acc_list.extend(risk)
     return acc_list
 
@@ -110,7 +121,4 @@ if __name__ == '__main__':
     for status in os.listdir(directory):
         for collection in os.listdir(os.path.join(directory, status)):
             for accession in os.listdir(os.path.join(directory, status, collection)):
-                accession_path = os.path.join(directory, status, collection, accession)
-                accession_list = [collection, status]
-                accession_list.extend(get_accession_data(accession_path))
-                accession_df.loc[len(accession_df)] = accession_list
+                accession_df.loc[len(accession_df)] = get_accession_data(directory, status, collection, accession)
