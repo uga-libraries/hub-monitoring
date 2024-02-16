@@ -60,10 +60,10 @@ def combine_collection_data(acc_df):
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
     # Replaces risk columns with file counts with risk columns with the percentage of files.
-    coll_df['No_Match_Risk_%'] = round(coll_df['No_Match_Risk'] / coll_df['Files'] * 100, 1)
-    coll_df['High_Risk_%'] = round(coll_df['High_Risk'] / coll_df['Files'] * 100, 1)
-    coll_df['Moderate_Risk_%'] = round(coll_df['Moderate_Risk'] / coll_df['Files'] * 100, 1)
-    coll_df['Low_Risk_%'] = round(coll_df['Low_Risk'] / coll_df['Files'] * 100, 1)
+    coll_df['No_Match_Risk_%'] = (coll_df['No_Match_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
+    coll_df['High_Risk_%'] = (coll_df['High_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
+    coll_df['Moderate_Risk_%'] = (coll_df['Moderate_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
+    coll_df['Low_Risk_%'] = (coll_df['Low_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
     coll_df.drop(['No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'], axis=1, inplace=True)
 
     # Combines the dates into a date range and adds to the dataframe.
@@ -230,9 +230,38 @@ def get_size(path):
         for file in files:
             file_path = os.path.join(root, file)
             size_bytes += os.stat(file_path).st_size
-    size_gb = size_bytes/1000000000
+    size_gb = round_non_zero(size_bytes / 1000000000)
 
     return size_gb
+
+
+def round_non_zero(number):
+    """Round a number to the fewest decimal places that don't make the number 0
+
+    This is used in calculating percentage of files at each risk level in combine_collection_data()
+    and size (converted to GB) in get_size()
+
+    :parameter
+    number (float): a number to be rounded
+
+    :returns
+    round_number (float): the number rounded to the fewest decimal places that don't make it 0
+    """
+
+    # If the number is 0, returns it immediately, or else would get stuck in the while loop.
+    if number == 0:
+        return 0.0
+
+    # Starts with 2 decimal places, the minimum that we use.
+    places = 2
+    round_number = round(number, 2)
+
+    # As long as the rounded number is 0, keep adding one to the number of places.
+    while round_number == 0:
+        places += 1
+        round_number = round(number, places)
+
+    return round_number
 
 
 def save_report(coll_df, dir_path):
