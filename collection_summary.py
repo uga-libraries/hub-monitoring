@@ -70,7 +70,7 @@ def combine_collection_data(acc_df):
     return coll_df
 
 
-def combine_collection_date(acc_df):
+def combine_collection_dates(acc_df):
     """Combine date information for each collection into a single date or date range
 
     :parameter
