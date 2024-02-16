@@ -199,7 +199,7 @@ def get_risk(path):
 
     # Constructs the path to the spreadsheet with risk data in the accession folder and reads it into a dataframe.
     accession_number = os.path.basename(path)
-    risk_csv_path = os.path.join(path, f"{accession_number}_bag_full_risk_data.csv")
+    risk_csv_path = os.path.join(path, f"{accession_number}_full_risk_data.csv")
     risk_df = pd.read_csv(risk_csv_path)
 
     # Counts the number of files (dataframe rows) with each possible NARA risk level and saves to a list.
