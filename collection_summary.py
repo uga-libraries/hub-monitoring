@@ -152,21 +152,15 @@ def get_date(path):
     date (string): the year or "unknown"
     """
 
-    # Variables needed to identify the method for determining the year.
-    acc_folder = os.path.basename(path)
-    log_path = os.path.join(path, "preservation_log.txt")
-
-    # Tries different methods for determining the accession year.
     # Option 1: The first 4 characters of the accession folder name are the year (are numbers).
+    acc_folder = os.path.basename(path)
     if acc_folder[:4].isdigit():
         date = acc_folder[:4]
-    # Option 2: The year the preservation log was created, if there is one.
-    elif os.path.exists(log_path):
+    # Option 2: The year the preservation log was created.
+    else:
+        log_path = os.path.join(path, "preservation_log.txt")
         timestamp = os.stat(log_path).st_ctime
         date = datetime.fromtimestamp(timestamp).strftime('%Y')
-    # Option 3: Default text that no year could be determined.
-    else:
-        date = "unknown"
 
     return date
 
