@@ -23,10 +23,10 @@ class MyTestCase(unittest.TestCase):
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
-        expected_list = [['Collection', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
+        expected_list = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                           'Moderate_Risk_%', 'Low_Risk_%'],
-                         ['coll1', 'backlog', 36.6, 696, 12.9, 0.4, 58.2, 28.4],
-                         ['coll2', 'closed', 123.3, 82, 36.6, 0.0, 0.0, 63.4]]
+                         ['coll1', '2021-2022', 'backlog', 36.6, 696, 12.9, 0.4, 58.2, 28.4],
+                         ['coll2', '2023', 'closed', 123.3, 82, 36.6, 0.0, 0.0, 63.4]]
         self.assertEqual(collection_list, expected_list, "Problem with test for one accession")
 
     def test_one(self):
@@ -40,10 +40,10 @@ class MyTestCase(unittest.TestCase):
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
-        expected_list = [['Collection', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
+        expected_list = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                           'Moderate_Risk_%', 'Low_Risk_%'],
-                         ['coll1', 'backlog', 23.5, 51, 3.9, 0.0, 33.3, 62.7],
-                         ['coll2', 'backlog', 123.2, 250, 40.0, 21.6, 13.2, 25.2]]
+                         ['coll1', '2023', 'backlog', 23.5, 51, 3.9, 0.0, 33.3, 62.7],
+                         ['coll2', '2024', 'backlog', 123.2, 250, 40.0, 21.6, 13.2, 25.2]]
         self.assertEqual(collection_list, expected_list, "Problem with test for one accession")
 
 

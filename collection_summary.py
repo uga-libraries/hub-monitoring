@@ -57,7 +57,6 @@ def combine_collection_data(acc_df):
     """
 
     # Adds the values in GB, Files, and the four risk category columns for each collection.
-    # TODO: this is dropping the Date column, because we haven't decided how to aggregate it.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
     # Replaces risk columns with file counts with risk columns with the percentage of files.
@@ -66,6 +65,10 @@ def combine_collection_data(acc_df):
     coll_df['Moderate_Risk_%'] = round(coll_df['Moderate_Risk'] / coll_df['Files'] * 100, 1)
     coll_df['Low_Risk_%'] = round(coll_df['Low_Risk'] / coll_df['Files'] * 100, 1)
     coll_df.drop(['No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'], axis=1, inplace=True)
+
+    # Combines the dates into a date range and adds to the dataframe.
+    date_df = combine_collection_dates(acc_df)
+    coll_df = pd.merge(date_df, coll_df, on='Collection', how='outer')
 
     return coll_df
 
