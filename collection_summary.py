@@ -166,7 +166,7 @@ def get_date(path):
 
 
 def get_file_count(path):
-    """Calculate the number of files in an accession
+    """Calculate the number of files in an accession's bag data folder
 
     :parameter
     path (string): the path to the accession folder
@@ -175,8 +175,13 @@ def get_file_count(path):
     file_count (integer): the number of files in the accession folder
     """
 
+    # Calculates the path of the bag folder.
+    accession_number = os.path.basename(path)
+    bag_path = os.path.join(path, f'{accession_number}_bag', 'data')
+
+    # Counts the files at each level within the bag folder.
     file_count = 0
-    for root, dirs, files in os.walk(path):
+    for root, dirs, files in os.walk(bag_path):
         file_count += len(files)
 
     return file_count
