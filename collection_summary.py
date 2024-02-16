@@ -175,13 +175,13 @@ def get_file_count(path):
     file_count (integer): the number of files in the accession folder
     """
 
-    # Calculates the path of the bag folder.
+    # Calculates the path of the bag's data folder.
     accession_number = os.path.basename(path)
-    bag_path = os.path.join(path, f'{accession_number}_bag', 'data')
+    data_path = os.path.join(path, f'{accession_number}_bag', 'data')
 
-    # Counts the files at each level within the bag folder.
+    # Counts the files at each level within the bag's data folder.
     file_count = 0
-    for root, dirs, files in os.walk(bag_path):
+    for root, dirs, files in os.walk(data_path):
         file_count += len(files)
 
     return file_count
@@ -211,7 +211,7 @@ def get_risk(path):
 
 
 def get_size(path):
-    """Calculate the number of files in an accession
+    """Calculate the number of files in an accession's bag data folder
 
     :parameter
     path (string): the path to the accession folder
@@ -220,8 +220,13 @@ def get_size(path):
     size_gb (float): the size, in GB, of the accession folder
     """
 
+    # Calculates the path of the bag's data folder.
+    accession_number = os.path.basename(path)
+    data_path = os.path.join(path, f'{accession_number}_bag', 'data')
+
+    # Adds the size of the files at each level within the bag's data folder.
     size_bytes = 0
-    for root, dirs, files in os.walk(path):
+    for root, dirs, files in os.walk(data_path):
         for file in files:
             file_path = os.path.join(root, file)
             size_bytes += os.stat(file_path).st_size
