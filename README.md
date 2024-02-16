@@ -38,7 +38,7 @@ collection_summary.py
 
 There are unit tests for each function and for the script overall.
 The tests use files stored in the repo (test_data) as input. 
-The reports generated with these files are stored in [documents](documents) to serve as examples. 
+The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
 
 ## Workflow
 
