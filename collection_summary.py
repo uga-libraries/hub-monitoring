@@ -64,7 +64,7 @@ def combine_collection_data(acc_df):
     coll_df['High_Risk_%'] = (coll_df['High_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
     coll_df['Moderate_Risk_%'] = (coll_df['Moderate_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
     coll_df['Low_Risk_%'] = (coll_df['Low_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
-    coll_df.drop(['No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'], axis=1, inplace=True)
+    coll_df.drop(['Date', 'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'], axis=1, inplace=True)
 
     # Combines the dates into a date range and adds to the dataframe.
     date_df = combine_collection_dates(acc_df)
