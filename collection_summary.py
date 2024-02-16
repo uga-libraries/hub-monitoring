@@ -16,6 +16,7 @@ Returns:
 CSV with one row per collection
 """
 from datetime import datetime
+import numpy as np
 import os
 import pandas as pd
 import sys
@@ -67,6 +68,41 @@ def combine_collection_data(acc_df):
     coll_df.drop(['No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'], axis=1, inplace=True)
 
     return coll_df
+
+
+def combine_collection_date(acc_df):
+    """Combine date information for each collection into a single date or date range
+
+    :parameter
+    acc_df (Pandas dataframe): the data for every accession
+
+    :returns
+    date_df (Pandas dataframe): the date or date range for every collection, columns Collection and Date
+    """
+
+    # Makes the column "Date", which is a string, into numbers so the minimum and maximum can be calculated.
+    acc_df['Date'] = pd.to_numeric(acc_df['Date'])
+
+    # Makes a dataframe with the earliest date for each collection.
+    min_df = acc_df.groupby('Collection')['Date'].min().reset_index()
+    min_df = min_df.rename(columns={'Date': 'Earliest_Date'})
+
+    # Makes a dataframe with the latest date for each collection.
+    max_df = acc_df.groupby('Collection')['Date'].max().reset_index()
+    max_df = max_df.rename(columns={'Date': 'Latest_Date'})
+
+    # Combines the two dataframes into one,
+    # makes a column "Date" with the date range (earliest-latest), or a single date if they are the same,
+    # and removes the columns no longer needed after "Date" is made.
+    date_df = pd.merge(min_df, max_df, on='Collection', how='outer')
+    conditions = [date_df['Earliest_Date'] != date_df['Latest_Date'],
+                  date_df['Earliest_Date'] == date_df['Latest_Date']]
+    values = [date_df['Earliest_Date'].map(str) + "-" + date_df['Latest_Date'].map(str),
+              date_df['Earliest_Date'].map(str)]
+    date_df['Date'] = np.select(conditions, values)
+    date_df.drop(columns=['Earliest_Date', 'Latest_Date'], axis=1, inplace=True)
+
+    return date_df
 
 
 def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
