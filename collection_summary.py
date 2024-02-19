@@ -252,7 +252,7 @@ def round_non_zero(number):
     # If the number is 0, returns it immediately, or else would get stuck in the while loop.
     # There are collections with no files of a risk category, resulting in 0%.
     if number == 0:
-        return 0.0
+        return 0.00
 
     # Starts with 2 decimal places, the minimum that we use.
     places = 2
