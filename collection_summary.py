@@ -112,6 +112,22 @@ def combine_collection_dates(acc_df):
     return date_df
 
 
+def combine_collection_risks(acc_df):
+    """Combine risk information for each collection into the percent of files at each risk level
+
+    Duplicates from multiple instances of a file with the same NARA risk level are removed.
+    If multiple format identifications for the same file have different risk levels,
+    the file is counted once per risk level.
+
+    :parameter
+    acc_df (Pandas dataframe): the data for every accession
+
+    :returns
+    risk_df (Pandas dataframe): the percentage of files at the four NARA risk levels for each collection,
+    columns Collection, No_Match_Risk_%, High_Risk_%, Moderate_Risk_%, and Low_Risk_%
+    """
+
+
 def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     """Calculate the data about a single accession folder, mostly using other functions
 
@@ -206,10 +222,16 @@ def get_risk(path):
     risk_csv_path = os.path.join(path, f"{accession_number}_full_risk_data.csv")
     risk_df = pd.read_csv(risk_csv_path)
 
+    # Makes a new dataframe with the FITS_File_Path and NARA_Risk Level to remove duplicates.
+    # Duplicates may be from multiple FITS format identifications or multiple NARA matches.
+    # Each file is in the new dataframe once per NARA risk level, if it has more than one possible risk level.
+    risk_dedup_df = risk_df[['FITS_File_Path', 'NARA_Risk Level']]
+    risk_dedup_df = risk_dedup_df.drop_duplicates()
+
     # Counts the number of files (dataframe rows) with each possible NARA risk level and saves to a list.
     risk_list = []
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
-        risk_list.append((risk_df['NARA_Risk Level'] == risk).sum())
+        risk_list.append((risk_dedup_df['NARA_Risk Level'] == risk).sum())
 
     return risk_list
 

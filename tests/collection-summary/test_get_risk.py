@@ -23,6 +23,27 @@ class MyTestCase(unittest.TestCase):
         risk_expected = [5, 4, 3, 2]
         self.assertEqual(risk, risk_expected, "Problem with test for all risks repeated")
 
+    def test_duplicates(self):
+        """Test for when all files are in the risk CSV more than once, with the same risk level"""
+        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl002', '2021-11-er')
+        risk = get_risk(path)
+        risk_expected = [1, 0, 1, 2]
+        self.assertEqual(risk, risk_expected, "Problem with test for duplicates, all files")
+
+    def test_duplicates_mix(self):
+        """Test for when files are in the risk CSV 3 times, twice with the same risk level and once with a different"""
+        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl002', '2021-12-er')
+        risk = get_risk(path)
+        risk_expected = [2, 1, 2, 3]
+        self.assertEqual(risk, risk_expected, "Problem with test for duplicates, some files")
+
+    def test_duplicates_partial(self):
+        """Test for when some files are in the risk CSV more than once, with the same risk level"""
+        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl002', '2021-13-er')
+        risk = get_risk(path)
+        risk_expected = [1, 1, 0, 2]
+        self.assertEqual(risk, risk_expected, "Problem with test for duplicates, some files")
+
     def test_one_risk(self):
         """Test for when there is one file with one risk level"""
         path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl002', '2022-03-er')
