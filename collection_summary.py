@@ -59,7 +59,8 @@ def combine_collection_data(acc_df):
     # Adds the values in GB, Files, and the four risk category columns for each collection.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
-    # Replaces risk columns with file counts with risk columns with the percentage of files.
+    # Replaces risk columns (file counts) with risk columns that have the percentage of files.
+    # If files have multiple identifications, the combined percentages will be more than 100%.
     coll_df['No_Match_Risk_%'] = (coll_df['No_Match_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
     coll_df['High_Risk_%'] = (coll_df['High_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
     coll_df['Moderate_Risk_%'] = (coll_df['Moderate_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
@@ -249,6 +250,7 @@ def round_non_zero(number):
     """
 
     # If the number is 0, returns it immediately, or else would get stuck in the while loop.
+    # There are collections with no files of a risk category, resulting in 0%.
     if number == 0:
         return 0.0
 
@@ -256,7 +258,7 @@ def round_non_zero(number):
     places = 2
     round_number = round(number, 2)
 
-    # As long as the rounded number is 0, keep adding one to the number of places.
+    # As long as the rounded number is 0, keep adding one to the number of decimal places.
     while round_number == 0:
         places += 1
         round_number = round(number, places)
