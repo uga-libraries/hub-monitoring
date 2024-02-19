@@ -1,0 +1,8 @@
+1a15f9a9b44b3b1cf6a6e96d5d19fc40  data/Portable Document Format.pdf
+df86a5dec899dd8d34565c3d840f48ab  data/Word Document.docx
+82046361b15ab261d8021a4a149bd0df  data/Worksheet.xlsx
+77fbeba7fb82bcf7a5dd06829a3873dc  data/Folder A/High Risk Document.xps
+1a15f9a9b44b3b1cf6a6e96d5d19fc40  data/Folder B/Portable Document Format.pdf
+82046361b15ab261d8021a4a149bd0df  data/Folder B/Worksheet.xlsx
+df86a5dec899dd8d34565c3d840f48ab  data/Folder B/Folder BB/Word Document.docx
+82046361b15ab261d8021a4a149bd0df  data/Folder B/Folder BB/Worksheet.xlsx

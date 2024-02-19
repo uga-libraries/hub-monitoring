@@ -59,6 +59,9 @@ def combine_collection_data(acc_df):
     # Adds the values in GB, Files, and the four risk category columns for each collection.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
+    # Round the size to 2 decimal places, or more if needed to not be 0.
+    coll_df['GB'] = coll_df['GB'].map(round_non_zero)
+
     # Replaces risk columns (file counts) with risk columns that have the percentage of files.
     # If files have multiple identifications, the combined percentages will be more than 100%.
     coll_df['No_Match_Risk_%'] = (coll_df['No_Match_Risk'] / coll_df['Files'] * 100).map(round_non_zero)

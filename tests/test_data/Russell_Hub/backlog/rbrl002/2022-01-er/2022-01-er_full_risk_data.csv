@@ -1,15 +1,5 @@
-NARA_Risk Level
-Low Risk
-Moderate Risk
-Low Risk
-High Risk
-High Risk
-Low Risk
-Moderate Risk
-No Match
-Low Risk
-Moderate Risk
-Moderate Risk
-No Match
-Low Risk
-High Risk
+FITS_File_Path,NARA_Risk Level
+Z:\Russell_Hub\backlog\rbrl002\2022-01-er\2022-01-er_bag\data\Text File1.txt,High Risk
+Z:\Russell_Hub\backlog\rbrl002\2022-01-er\2022-01-er_bag\data\Text File2.txt,Low Risk
+Z:\Russell_Hub\backlog\rbrl002\2022-01-er\2022-01-er_bag\data\Text File3.txt,Moderate Risk
+Z:\Russell_Hub\backlog\rbrl002\2022-01-er\2022-01-er_bag\data\Text File4.txt,No Match

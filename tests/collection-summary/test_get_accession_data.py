@@ -10,9 +10,9 @@ from os.path import join
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
-        directory = join(getcwd(), '..', 'test_data', 'Russell_Hub')
-        accession_list = get_accession_data(directory, 'backlog', 'rbrl002', '2022-01-er')
-        accession_list_expected = ['rbrl002', 'backlog', '2022', .00000002, 2, 2, 3, 4, 5]
+        directory = join(getcwd(), '..', 'test_data', 'Hargrett_Hub')
+        accession_list = get_accession_data(directory, 'backlog', 'ms0001 Person papers', 'ms2022-15-er')
+        accession_list_expected = ['ms0001 Person papers', 'backlog', '2024', .00001, 3, 0, 0, 1, 2]
         self.assertEqual(accession_list, accession_list_expected, "Problem with test for the function")
 
 

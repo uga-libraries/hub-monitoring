@@ -26,12 +26,13 @@ class MyTestCase(unittest.TestCase):
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         run(f'python {script} "{directory}"', shell=True)
 
-        report = pd.read_csv(join(directory, f"harg_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"))
+        report = pd.read_csv(join(directory, f"harg_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"),
+                             dtype={'Date': str})
         result = [report.columns.tolist()] + report.values.tolist()
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%'],
-                    ['ms0001 Person papers', 2024, 'backlog', 0.00000001, 1, 100.0, 100.0, 100.0, 100.0],
-                    ['ua01-001 Department records', 2024, 'backlog', 0.00000001, 1, 0.0, 0.0, 0.0, 100.0]]
+                    ['ms0001 Person papers', '2024', 'backlog', 0.00001, 3, 0.0, 0.0, 33.33, 66.67],
+                    ['ua01-001 Dept records', '2009-2024', 'backlog', 0.00004, 4, 25.0, 0.0, 25.0, 50.0]]
         self.assertEqual(result, expected, "Problem with test for Hargrett data")
 
     def test_russell(self):
@@ -40,13 +41,14 @@ class MyTestCase(unittest.TestCase):
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         run(f'python {script} "{directory}"', shell=True)
 
-        report = pd.read_csv(join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"))
+        report = pd.read_csv(join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"),
+                             dtype={'Date': str})
         result = [report.columns.tolist()] + report.values.tolist()
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%'],
-                    ['rbrl001', 2021, 'backlog', 0.00000001, 1, 100.0, 100.0, 100.0, 100.0],
-                    ['rbrl002', 2022, 'backlog', 0.00000004, 4, 50.0, 75.0, 100.0, 150.0],
-                    ['rbrl003', 2023, 'closed', 0.00000003, 3, 0.0, 0.0, 33.33, 100.0]]
+                    ['rbrl001', '2015-2018', 'backlog', 0.0002, 9, 0.0, 0.0, 0.0, 100.0],
+                    ['rbrl002', '2022', 'backlog', 0.0002, 25, 24.0, 28.0, 32.0, 20.0],
+                    ['rbrl003', '2022-2023', 'closed', 0.001, 12, 0.0, 8.33, 58.33, 33.33]]
         self.assertEqual(result, expected, "Problem with test for Russell data")
 
 

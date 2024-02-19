@@ -1,3 +1,1 @@
-edc900745c5d15d773fbcdc0b376f00c  data/new 1.txt
-edc900745c5d15d773fbcdc0b376f00c  data/New folder/new 1 - Copy (2).txt
-edc900745c5d15d773fbcdc0b376f00c  data/New folder/new 1 - Copy.txt
+df86a5dec899dd8d34565c3d840f48ab  data/Document/Word Document.docx
