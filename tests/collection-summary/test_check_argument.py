@@ -27,6 +27,12 @@ class MyTestCase(unittest.TestCase):
         expected = (None, "Provided directory path/error does not exist")
         self.assertEqual(result, expected, "Problem with test for correct directory argument")
 
+    def test_extra_argument(self):
+        """Test for when there are too many arguments provided."""
+        result = check_argument(['collection_summary.py', getcwd(), 'extra'])
+        expected = (None, "Missing required argument: directory")
+        self.assertEqual(result, expected, "Problem with test for directory argument missing")
+
 
 if __name__ == '__main__':
     unittest.main()
