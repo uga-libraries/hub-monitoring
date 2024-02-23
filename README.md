@@ -38,7 +38,8 @@ collection_summary.py
 
 There are unit tests for each function and for the script overall.
 The tests use files stored in the repo (test_data) as input. 
-The risk spreadsheet and preservation log have variations needed for testing and do not match the files in the accession. 
+The risk spreadsheet has the correct columns and files, but the FITS and NARA data are made up to fit testing needs.
+The preservation log is empty because the contents aren't used by this script. 
 The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
 
 ## Workflow
