@@ -113,22 +113,6 @@ def combine_collection_dates(acc_df):
     return date_df
 
 
-def combine_collection_risks(acc_df):
-    """Combine risk information for each collection into the percent of files at each risk level
-
-    Duplicates from multiple instances of a file with the same NARA risk level are removed.
-    If multiple format identifications for the same file have different risk levels,
-    the file is counted once per risk level.
-
-    :parameter
-    acc_df (Pandas dataframe): the data for every accession
-
-    :returns
-    risk_df (Pandas dataframe): the percentage of files at the four NARA risk levels for each collection,
-    columns Collection, No_Match_Risk_%, High_Risk_%, Moderate_Risk_%, and Low_Risk_%
-    """
-
-
 def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     """Calculate the data about a single accession folder, mostly using other functions
 
