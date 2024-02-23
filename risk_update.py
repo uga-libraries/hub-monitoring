@@ -64,3 +64,7 @@ if __name__ == '__main__':
 
     # Navigates to each risk spreadsheet.
     # Makes a new risk spreadsheet with the same format identifications and updated NARA risk levels.
+    for root, directories, files in os.walk(directory):
+        for file in files:
+            if 'full_risk_data' in file and file.endswith('.csv'):
+                print(file)
