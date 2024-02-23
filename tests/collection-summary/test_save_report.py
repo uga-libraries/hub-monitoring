@@ -39,6 +39,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, True, "Problem with test for harg CSV is made")
 
         # Verifies the CSV has the expected contents.
+        # Would usually use pandas to read the CSV, but using csv library instead for a little more test independence.
         with open(csv_path, newline='') as csv_file:
             reader = csv.reader(csv_file)
             result = list(reader)
@@ -66,6 +67,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, True, "Problem with test for rbrl CSV is made")
 
         # Verifies the CSV has the expected contents.
+        # Would usually use pandas to read the CSV, but using csv library instead for a little more test independence.
         with open(csv_path, newline='') as csv_file:
             reader = csv.reader(csv_file)
             result = list(reader)

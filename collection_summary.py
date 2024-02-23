@@ -64,6 +64,7 @@ def combine_collection_data(acc_df):
 
     # Replaces risk columns (file counts) with risk columns that have the percentage of files.
     # If files have multiple identifications, the combined percentages will be more than 100%.
+    # Also removes the Date column, so it doesn't conflict with the column from combine_collection_dates().
     coll_df['No_Match_Risk_%'] = (coll_df['No_Match_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
     coll_df['High_Risk_%'] = (coll_df['High_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
     coll_df['Moderate_Risk_%'] = (coll_df['Moderate_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
@@ -229,6 +230,7 @@ def get_risk(path):
     risk_dedup_df = risk_dedup_df.drop_duplicates()
 
     # Counts the number of files (dataframe rows) with each possible NARA risk level and saves to a list.
+    # Uses "sum()" to aggregate because the equality has a Boolean result, and True=1, False=0.
     risk_list = []
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
         risk_list.append((risk_dedup_df['NARA_Risk Level'] == risk).sum())
