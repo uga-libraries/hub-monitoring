@@ -1,2 +1,2 @@
-FITS_File_Path,NARA_Risk Level
-Z:\Russell_Hub\closed\rbrl003\2022-27-er\2022-27-er_bag\data\Worksheet.xlsx,Moderate Risk
+FITS_File_Path,FITS_Format_Name,FITS_Format_Version,FITS_PUID,FITS_Identifying_Tool(s),FITS_Multiple_IDs,FITS_Date_Last_Modified,FITS_Size_KB,FITS_MD5,FITS_Creating_Application,FITS_Valid,FITS_Well-Formed,FITS_Status_Message,NARA_Format Name,NARA_File Extension(s),NARA_PRONOM URL,NARA_Risk Level,NARA_Proposed Preservation Plan,NARA_Match_Type,Technical_Appraisal,Other_Risk
+Z:\Russell_Hub\closed\rbrl003\2022-27-er\2022-27-er_bag\data\Worksheet.xlsx,Excel,2007 onwards,https://www.nationalarchives.gov.uk/pronom/fmt/214,Droid version 6.4,FALSE,2/19/2024,9,fixity_placeholder,,,,,Excel,xlsx,https://www.nationalarchives.gov.uk/pronom/fmt/214,Moderate Risk,Retain,PRONOM,Not for TA,Not for Other
