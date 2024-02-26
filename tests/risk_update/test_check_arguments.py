@@ -17,7 +17,7 @@ class MyTestCase(unittest.TestCase):
         Test for when both required arguments are present and valid paths.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('..', 'test_data'), join('..', 'NARA_PreservationActionPlan.csv')]
+        sys_argv = ['risk_updates.py', join('..', 'test_data'), join('..', 'test_data', 'NARA_PreservationActionPlan.csv')]
         directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of directory is correct.
@@ -25,7 +25,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(directory, expected, 'Problem with both correct, directory')
 
         # Tests that the value of nara_csv is correct.
-        expected = '..\\NARA_PreservationActionPlan.csv'
+        expected = '..\\test_data\\NARA_PreservationActionPlan.csv'
         self.assertEqual(nara_csv, expected, 'Problem with both correct, nara_csv')
         
         # Tests that the value of errors_list is correct.
@@ -78,11 +78,11 @@ class MyTestCase(unittest.TestCase):
         so the function treats it as directory.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('..', 'NARA_PreservationActionPlan.csv')]
+        sys_argv = ['risk_updates.py', join('..', 'test_data', 'NARA_PreservationActionPlan.csv')]
         directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of directory is correct.
-        expected = '..\\NARA_PreservationActionPlan.csv'
+        expected = '..\\test_data\\NARA_PreservationActionPlan.csv'
         self.assertEqual(directory, expected, 'Problem with directory missing, directory')
 
         # Tests that the value of nara_csv is correct.
@@ -99,7 +99,7 @@ class MyTestCase(unittest.TestCase):
         The second required argument, nara_csv, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', 'path/error/dir', join('..', 'NARA_PreservationActionPlan.csv')]
+        sys_argv = ['risk_updates.py', 'path/error/dir', join('..', 'test_data', 'NARA_PreservationActionPlan.csv')]
         directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of directory is correct.
@@ -107,7 +107,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(directory, expected, 'Problem with directory path error, directory')
 
         # Tests that the value of nara_csv is correct.
-        expected = '..\\NARA_PreservationActionPlan.csv'
+        expected = '..\\test_data\\NARA_PreservationActionPlan.csv'
         self.assertEqual(nara_csv, expected, 'Problem with directory path error, nara_csv')
 
         # Tests that the value of errors_list is correct.
