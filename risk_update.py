@@ -197,7 +197,6 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df):
     # Reads the risk csv into a dataframe, removing the older NARA information.
     current_df = pd.read_csv(os.path.join(parent_folder, risk_csv))
     update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message']
-    print(update_df.dtypes)
 
     # Adds the new NARA information.
     update_df = match_nara_risk(update_df, nara_df)
@@ -207,6 +206,27 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df):
     today = datetime.today().strftime('%Y-%m-%d')
     update_csv_path = os.path.join(parent_folder, f'{accession_number}_full_risk_data_{today}.csv')
     update_df.to_csv(update_csv_path, index=False)
+
+
+def read_nara_csv(nara_csv_path):
+    """Read the NARA Digital Preservation Plan spreadsheet into a dataframe and rename columns
+
+    Columns used in the final script output are renamed to have a "NARA" prefix
+    and underscores instead of spaces.
+
+    :parameter
+    nara_csv_path (string): path to the NARA CSV, which is a script argument
+
+    :return
+    nara_df (pandas DataFrame): dataframe with all data from the NARA CSV and select column renamed
+    """
+    nara_df = pd.read_csv(nara_csv_path)
+    nara_df = nara_df.rename(columns={'Format Name': 'NARA_Format_Name',
+                                      'File Extension(s)': 'NARA_File_Extensions',
+                                      'PRONOM URL': 'NARA_PRONOM_URL',
+                                      'NARA Risk Level': 'NARA_Risk_Level',
+                                      'NARA Proposed Preservation Plan': 'NARA_Proposed_Preservation_Plan'})
+    return nara_df
 
 
 if __name__ == '__main__':
@@ -220,12 +240,7 @@ if __name__ == '__main__':
         sys.exit()
 
     # Reads the NARA CSV into a dataframe and updates column names.
-    nara_risk_df = pd.read_csv(nara_csv)
-    nara_risk_df = nara_risk_df.rename(columns={'Format Name': 'NARA_Format_Name',
-                                                'File Extension(s)': 'NARA_File_Extensions',
-                                                'PRONOM URL': 'NARA_PRONOM_URL',
-                                                'NARA Risk Level': 'NARA_Risk_Level',
-                                                'NARA Proposed Preservation Plan': 'NARA_Proposed_Preservation_Plan'})
+    nara_risk_df = read_nara_csv(nara_csv)
 
     # Navigates to each risk spreadsheet.
     for root, directories, files in os.walk(directory):

@@ -6,7 +6,7 @@ tests use an abbreviated NARA Preservation Action Plan CSV (only the columns nee
 This test input must be updated to keep in sync with changes to update_df or the NARA CSV.
 """
 import unittest
-from risk_update import match_nara_risk
+from risk_update import match_nara_risk, read_nara_csv
 from numpy import nan
 from os import getcwd
 from os.path import join
@@ -18,12 +18,7 @@ class MyTestCase(unittest.TestCase):
     def setUp(self):
         """Reads NARA CSV into a dataframe and renames the columns. Used by every test."""
         nara_csv = join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv')
-        self.nara_df = read_csv(nara_csv)
-        self.nara_df = self.nara_df.rename(columns={'Format Name': 'NARA_Format_Name',
-                                                    'File Extension(s)': 'NARA_File_Extensions',
-                                                    'PRONOM URL': 'NARA_PRONOM_URL',
-                                                    'NARA Risk Level': 'NARA_Risk_Level',
-                                                    'NARA Proposed Preservation Plan': 'NARA_Proposed_Preservation_Plan'})
+        self.nara_df = read_nara_csv(nara_csv)
 
     def test_technique_1(self):
         """Test for format and NARA have PUID and match on PUID and version extracted from NARA name."""
