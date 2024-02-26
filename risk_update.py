@@ -237,7 +237,7 @@ if __name__ == '__main__':
     if len(errors_list) > 0:
         for error in errors_list:
             print(error)
-        sys.exit()
+        sys.exit(1)
 
     # Reads the NARA CSV into a dataframe and updates column names.
     nara_risk_df = read_nara_csv(nara_csv)
