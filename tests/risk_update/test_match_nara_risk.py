@@ -10,7 +10,7 @@ from risk_update import match_nara_risk, read_nara_csv
 from numpy import nan
 from os import getcwd
 from os.path import join
-from pandas import DataFrame, read_csv
+from pandas import DataFrame
 
 
 class MyTestCase(unittest.TestCase):
