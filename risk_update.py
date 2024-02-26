@@ -54,7 +54,7 @@ def check_arguments(argument_list):
     return dir_path, nara_path, errors
 
 
-def match_nara_risk(update_df):
+def match_nara_risk(update_df, nara_df):
     """Match format identifications to NARA's Digital Preservation Plan spreadsheet
 
     The match techniques are applied in order of accuracy, and stop for each format when a match is found.
@@ -64,8 +64,9 @@ def match_nara_risk(update_df):
     Returns a dataframe with all the format data, the NARA Risk Level and Proposed Preservation Plan,
     and the name of the technique that produced the match (NARA_Match_Type).
 
-    :parameter
+    :parameters
         update_df : a dataframe with FITS columns from a risk data spreadsheet
+        nara_df " a dataframe from NARA Digital Preservation Plan spreadsheet
 
     Returns:
         df_result : a dataframe with the format information and corresponding NARA risk information, if matched
@@ -79,7 +80,7 @@ def match_nara_risk(update_df):
     # Combines FITS format name and version, since NARA has that information in one column.
     # Removes " NO VALUE" from the combined column, which happens if there is no version.
     update_df['name_version'] = update_df['FITS_Format_Name'].str.lower() + ' ' + update_df['version_string']
-    update_df['name_version'] = update_df['name_version'].str.replace('\sNO VALUE$', '')
+    update_df['name_version'] = update_df['name_version'].str.replace(' NO VALUE', '')
 
     # Makes FITS and NARA format names lowercase for case-insensitive matching.
     update_df['name_lower'] = update_df['FITS_Format_Name'].str.lower()
@@ -91,7 +92,7 @@ def match_nara_risk(update_df):
     nara_df['nara_version'] = nara_df['NARA_Format_Name'].str.split(' ').str[-1]
 
     # List of relevant columns in the NARA dataframe.
-    nara_columns = ['NARA_Format_Name', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
+    nara_columns = ['NARA_Format_Name', 'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
                     'nara_format_lower', 'nara_version']
 
     # For each matching technique, it makes a dataframe by merging NARA into FITS based on one or two columns
@@ -125,8 +126,8 @@ def match_nara_risk(update_df):
     df_unmatched.drop(nara_columns, inplace=True, axis=1)
 
     # Technique 2: PRONOM Identifier and Format Name are both a match.
-    df_merge = pd.merge(df_unmatched, nara_df[nara_columns], left_on=['FITS_PUID', 'FITS_Format_Name'],
-                        right_on=['NARA_PRONOM_URL', 'NARA_Format_Name'], how='left')
+    df_merge = pd.merge(df_unmatched, nara_df[nara_columns], left_on=['FITS_PUID', 'name_lower'],
+                        right_on=['NARA_PRONOM_URL', 'nara_format_lower'], how='left')
     df_matched = df_merge[df_merge['NARA_Risk_Level'].notnull()].copy()
     df_matched = df_matched.assign(NARA_Match_Type='PRONOM and Name')
     df_result = pd.concat([df_result, df_matched], ignore_index=True)
@@ -191,14 +192,15 @@ def match_nara_risk(update_df):
     return df_result
 
 
-def new_risk_spreadsheet(parent_folder, risk_csv):
+def new_risk_spreadsheet(parent_folder, risk_csv, nara_df):
     """docstring tbd"""
     # Reads the risk csv into a dataframe, removing the older NARA information.
     current_df = pd.read_csv(os.path.join(parent_folder, risk_csv))
     update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message']
+    print(update_df.dtypes)
 
     # Adds the new NARA information.
-    update_df = match_nara_risk(update_df)
+    update_df = match_nara_risk(update_df, nara_df)
 
     # Saves the dataframe to a csv in the same folder as the original risk_csv.
     accession_number = os.path.basename(parent_folder)
@@ -218,16 +220,16 @@ if __name__ == '__main__':
         sys.exit()
 
     # Reads the NARA CSV into a dataframe and updates column names.
-    nara_df = pd.read_csv(nara_csv)
-    nara_df = nara_df.rename(columns={'Format Name': 'NARA_Format_Name',
-                                      'File Extension(s)': 'NARA_File_Extensions',
-                                      'PRONOM URL': 'NARA_PRONOM_URL',
-                                      'NARA Risk Level': 'NARA_Risk_Level',
-                                      'NARA Proposed Preservation Plan': 'NARA_Proposed_Preservation_Plan'})
+    nara_risk_df = pd.read_csv(nara_csv)
+    nara_risk_df = nara_risk_df.rename(columns={'Format Name': 'NARA_Format_Name',
+                                                'File Extension(s)': 'NARA_File_Extensions',
+                                                'PRONOM URL': 'NARA_PRONOM_URL',
+                                                'NARA Risk Level': 'NARA_Risk_Level',
+                                                'NARA Proposed Preservation Plan': 'NARA_Proposed_Preservation_Plan'})
 
     # Navigates to each risk spreadsheet.
     for root, directories, files in os.walk(directory):
         for file in files:
             if 'full_risk_data' in file and file.endswith('.csv'):
                 # Makes a new risk spreadsheet with the same format identifications and updated NARA risk levels.
-                new_risk_spreadsheet(root, file)
+                new_risk_spreadsheet(root, file, nara_risk_df)
