@@ -1,0 +1,4 @@
+3424f76d813e61efc94e28ccdd22d334  data/Document.docx
+0fef47b721afd36a7b2716de0b3cb9d0  data/Document.pdf
+5743c3418873982ae138801a504eb41b  data/Text Document.rtf
+c84e6a5c6403edeaf267311c13d3d64c  data/Web Page.html
