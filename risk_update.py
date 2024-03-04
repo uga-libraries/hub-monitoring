@@ -7,9 +7,10 @@ Parameters:
 Returns:
     New risk data spreadsheet added to each accession folder
 """
-from datetime import datetime
+from datetime import date, datetime
 import os
 import pandas as pd
+import re
 import sys
 
 
@@ -192,6 +193,46 @@ def match_nara_risk(update_df, nara_df):
     return df_result
 
 
+def most_recent_spreadsheet(file_list):
+    """Determines the most recent preservation spreadsheet in the file list based on the file name
+
+    From legacy practices, any spreadsheet with a date in the name is more recent than one without.
+
+    :parameter
+    file_list (list): list of file names with at least one preservation spreadsheet
+
+    :returns
+    recent_file (string): the name of the file that is the most recent
+    """
+    # Variables for the file that is the most recent.
+    recent_file = None
+    recent_date = None
+
+    # Tests each file in the file list looking for the most recent one, based on the date in the file name.
+    # The list will also include files that are not risk spreadsheets and risk spreadsheets without dates.
+    for file_name in file_list:
+
+        # Skip files that are not risk spreadsheets, like the preservation log.
+        if not('full_risk_data' in file_name and file_name.endswith('.csv')):
+            continue
+
+        # Parse the date from the risk spreadsheet, if it has one. If it doesn't, assigns 1900-01-01.
+        # Converts the date to datetime so that it can be compared to other dates.
+        try:
+            regex = re.search("_full_risk_data_([0-9]{4})-([0-9]{2})-([0-9]{2}).csv", file_name)
+            file_date = date(int(regex.group(1)), int(regex.group(2)), int(regex.group(3)))
+        except AttributeError:
+            file_date = date(1900, 1, 1)
+
+        # If this is the first risk spreadsheet evaluated, updates recent_file and recent_date.
+        # If there already is one, checks if this file's date is more recent, and if so updates those variables.
+        if recent_date is None or recent_date < file_date:
+            recent_file = file_name
+            recent_date = file_date
+
+    return recent_file
+
+
 def new_risk_spreadsheet(parent_folder, risk_csv, nara_df):
     """docstring tbd"""
     # Reads the risk csv into a dataframe, removing the older NARA information.
@@ -242,9 +283,9 @@ if __name__ == '__main__':
     # Reads the NARA CSV into a dataframe and updates column names.
     nara_risk_df = read_nara_csv(nara_csv)
 
-    # Navigates to each risk spreadsheet.
+    # Navigates to each folder with a risk spreadsheet
+    # and makes a new version from the most recent risk spreadsheet in each folder.
     for root, directories, files in os.walk(directory):
-        for file in files:
-            if 'full_risk_data' in file and file.endswith('.csv'):
-                # Makes a new risk spreadsheet with the same format identifications and updated NARA risk levels.
-                new_risk_spreadsheet(root, file, nara_risk_df)
+        if any('full_risk_data' in x for x in files):
+            file = most_recent_spreadsheet(files)
+            new_risk_spreadsheet(root, file, nara_risk_df)
