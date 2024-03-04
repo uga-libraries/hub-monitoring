@@ -127,23 +127,23 @@ class MyTestCase(unittest.TestCase):
                      'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
         self.assertEqual(result, expected, 'Problem with test for CSV contents, 2006-30-er')
 
-    # def test_error(self):
-    #     """Test for when the script arguments are not correct and the script exits"""
-    #     # Makes the variables used for script input.
-    #     # The script will be run twice in this test.
-    #     script = join(getcwd(), '..', '..', 'risk_update.py')
-    #     directory = join('test_data', 'Error_Hub', 'closed', 'rbrl004')
-    #
-    #     # Runs the script and tests that it exits.
-    #     with self.assertRaises(subprocess.CalledProcessError):
-    #         subprocess.run(f'python {script} {directory}', shell=True, check=True, stdout=subprocess.PIPE)
-    #
-    #     # Runs the script a second time and tests that it prints the correct errors.
-    #     output = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
-    #     result = output.stdout.decode('utf-8')
-    #     expected = "Directory 'test_data\\Error_Hub\\closed\\rbrl004' does not exist\r\n" \
-    #                "Required argument nara_csv is missing\r\n"
-    #     self.assertEqual(result, expected, "Problem with test for printed error")
+    def test_error(self):
+        """Test for when the script arguments are not correct and the script exits"""
+        # Makes the variables used for script input.
+        # The script will be run twice in this test.
+        script = join(getcwd(), '..', '..', 'risk_update.py')
+        directory = join('test_data', 'Error_Hub', 'closed', 'rbrl004')
+
+        # Runs the script and tests that it exits.
+        with self.assertRaises(subprocess.CalledProcessError):
+            subprocess.run(f'python {script} {directory}', shell=True, check=True, stdout=subprocess.PIPE)
+
+        # Runs the script a second time and tests that it prints the correct errors.
+        output = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
+        result = output.stdout.decode('utf-8')
+        expected = "Directory 'test_data\\Error_Hub\\closed\\rbrl004' does not exist\r\n" \
+                   "Required argument nara_csv is missing\r\n"
+        self.assertEqual(result, expected, "Problem with test for printed error")
 
 
 if __name__ == '__main__':
