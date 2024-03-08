@@ -48,7 +48,7 @@ def update_log(bag_dir, validation_result):
 
     :parameter
     bag_dir (string): the path to an accession bag
-    validation_result (string): the result of validating an accession bag
+    validation_result (Boolean): if an accession bag is valid
 
     :returns
     None
@@ -70,7 +70,7 @@ def update_log(bag_dir, validation_result):
     today = date.today().strftime('%Y-%m-%d')
 
     # Calculates the action to include in the log entry for bag validation, based on the value of validation_result.
-    if validation_result == 'Bag valid':
+    if validation_result is True:
         action = f'Validated bag for accession {accession}. The bag was valid.'
     else:
         action = f'Validated bag for accession {accession}. The bag was not valid.'

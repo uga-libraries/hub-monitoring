@@ -28,8 +28,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_001_er')
         bag_path = join(parent, '2023_test003_001_er_bag')
-        validation = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 28 bytes'
-        update_log(bag_path, validation)
+        update_log(bag_path, False)
 
         # Verifies the contents of the log have been updated.
         df = read_csv(join(parent, 'preservation_log.txt'), delimiter='\t')
@@ -59,8 +58,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_002_er')
         bag_path = join(parent, '2023_test003_002_er_bag')
-        validation = 'Bag valid'
-        update_log(bag_path, validation)
+        update_log(bag_path, True)
 
         # Verifies the contents of the log have been updated.
         df = read_csv(join(parent, 'preservation_log.txt'), delimiter='\t')
