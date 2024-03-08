@@ -4,8 +4,8 @@ Tests for the script validate_fixity.py, which validates accession fixity, updat
 import subprocess
 import unittest
 from datetime import date
-from os import getcwd
-from os.path import join
+from os import getcwd, remove
+from os.path import exists, join
 from pandas import read_csv
 from shutil import copyfile
 
@@ -14,7 +14,8 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Return the preservation logs to the original contents after testing,
-        using a copy of the original log that is also in the accession folder"""
+        using a copy of the original log that is also in the accession folder,
+        and delete the script validation report"""
         # Accession 2023_test003_001_er
         test1 = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_001_er')
         copyfile(join(test1, 'preservation_log_copy.txt'), join(test1, 'preservation_log.txt'))
@@ -23,12 +24,28 @@ class MyTestCase(unittest.TestCase):
         test2 = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_002_er')
         copyfile(join(test2, 'preservation_log_copy.txt'), join(test2, 'preservation_log.txt'))
 
+        # Validation report
+        validation_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update',
+                               f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+        if exists(validation_path):
+            remove(validation_path)
+
     def test_correct(self):
         """Test for when the script runs correctly on all accessions in Validate_Fixity_Hub, collection test_003"""
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
         directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update')
         subprocess.run(f'python {script} {directory}', shell=True)
+
+        # Verifies the contents of the validation report are correct.
+        df = read_csv(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        df = df.fillna('nan')
+        report_rows = [df.columns.tolist()] + df.values.tolist()
+        expected = [['Bag', 'Valid', 'Errors'],
+                    ['2023_test003_001_er_bag', False,
+                     'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
+                    ['2023_test003_002_er_bag', True, 'nan']]
+        self.assertEqual(report_rows, expected, 'Problem with test for correct, validation report')
 
         # Verifies the contents of the log for 2023_test003_001_er have been updated.
         df = read_csv(join(directory, '2023_test003_001_er', 'preservation_log.txt'), delimiter='\t')
