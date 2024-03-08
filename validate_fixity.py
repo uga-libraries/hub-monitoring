@@ -9,6 +9,7 @@ Returns:
     Updates the preservation_log.txt of each accession with the result
     Creates a summary report of the validations
 """
+import bagit
 import os
 import sys
 
@@ -40,6 +41,24 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, directory"
 
 
+def validate_bag(bag_dir):
+    """Validate an accession's bag
+
+    :parameter
+    bag_dir (string): the path to the accession bag
+
+    :returns
+    Either the string "Bag valid" or a string with the error message
+    """
+
+    new_bag = bagit.Bag(bag_dir)
+    try:
+        new_bag.validate()
+        return 'Bag valid'
+    except bagit.BagValidationError as errors:
+        return str(errors)
+
+
 if __name__ == '__main__':
 
     # Gets the path to the directory with the accessions to be validated from the script argument.
@@ -48,8 +67,8 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Navigates to each accession bag and validates it.
+    # Navigates to each accession bag, validates it, and updates the preservation log.
     for root, directories, files in os.walk(directory):
         for directory in directories:
             if directory.endswith('_bag'):
-                print("Validate Bag")
+                validation = validate_bag(os.path.join(root, directory))
