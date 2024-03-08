@@ -130,7 +130,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Starts a report for all validations in the directory provided as a script argument.
-    update_report(['Bag', 'Errors'], directory)
+    update_report(['Bag', 'Valid', 'Errors'], directory)
 
     # Navigates to each accession bag, validates it, and updates the preservation log.
     for root, directories, files in os.walk(directory):
@@ -139,3 +139,4 @@ if __name__ == '__main__':
                 bag_path = os.path.join(root, directory)
                 is_valid, error = validate_bag(bag_path)
                 update_log(bag_path, is_valid)
+                update_report([directory, is_valid, error])
