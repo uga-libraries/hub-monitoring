@@ -47,3 +47,9 @@ if __name__ == '__main__':
     if error:
         print(error)
         sys.exit(1)
+
+    # Navigates to each accession bag and validates it.
+    for root, directories, files in os.walk(directory):
+        for directory in directories:
+            if directory.endswith('_bag'):
+                print("Validate Bag")
