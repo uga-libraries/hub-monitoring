@@ -133,10 +133,10 @@ if __name__ == '__main__':
     update_report(['Bag', 'Valid', 'Errors'], directory)
 
     # Navigates to each accession bag, validates it, and updates the preservation log.
-    for root, directories, files in os.walk(directory):
-        for directory in directories:
-            if directory.endswith('_bag'):
-                bag_path = os.path.join(root, directory)
+    for root, folders, files in os.walk(directory):
+        for folder in folders:
+            if folder.endswith('_bag'):
+                bag_path = os.path.join(root, folder)
                 is_valid, error = validate_bag(bag_path)
                 update_log(bag_path, is_valid)
-                update_report([directory, is_valid, error])
+                update_report([folder, is_valid, error], directory)
