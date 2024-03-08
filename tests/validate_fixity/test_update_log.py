@@ -4,7 +4,7 @@ Tests for the function update_log(), which adds validation information to an acc
 import unittest
 from validate_fixity import update_log
 from datetime import date
-from os import getcwd, rename
+from os import getcwd
 from os.path import join
 from pandas import read_csv
 from shutil import copyfile
@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_001_er')
         bag_path = join(parent, '2023_test003_001_er_bag')
-        validation = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes'
+        validation = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 28 bytes'
         update_log(bag_path, validation)
 
         # Verifies the contents of the log have been updated.
