@@ -106,15 +106,19 @@ def validate_bag(bag_dir):
     bag_dir (string): the path to an accession bag
 
     :returns
-    Either the string "Bag valid" or a string with the error message
+    valid (Boolean): True if bag is valid, False if bag is not valid
+    error_msg (None, string): None if bag is valid, string with error if bag is not valid
     """
 
     new_bag = bagit.Bag(bag_dir)
     try:
         new_bag.validate()
-        return 'Bag valid'
+        valid = True
+        error_msg = None
     except bagit.BagValidationError as errors:
-        return str(errors)
+        valid = False
+        error_msg = str(errors)
+    return valid, error_msg
 
 
 if __name__ == '__main__':
@@ -133,5 +137,5 @@ if __name__ == '__main__':
         for directory in directories:
             if directory.endswith('_bag'):
                 bag_path = os.path.join(root, directory)
-                validation = validate_bag(bag_path)
-                update_log(bag_path, validation)
+                is_valid, error = validate_bag(bag_path)
+                update_log(bag_path, is_valid)
