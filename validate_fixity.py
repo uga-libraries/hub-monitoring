@@ -82,6 +82,23 @@ def update_log(bag_dir, validation_result):
         log_writer.writerow(log_row)
 
 
+def update_report(text_list, report_dir):
+    """Add a line of text to the summary report
+
+    :parameter
+    text_list (list): text for the three columns
+    report_dir (string): directory where the report is saved
+
+    :returns
+    None
+    """
+
+    report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+    with open(report_path, 'a', newline='') as open_report:
+        report_writer = csv.writer(open_report)
+        report_writer.writerow(text_list)
+
+
 def validate_bag(bag_dir):
     """Validate an accession's bag
 
@@ -107,6 +124,9 @@ if __name__ == '__main__':
     if error:
         print(error)
         sys.exit(1)
+
+    # Starts a report for all validations in the directory provided as a script argument.
+    update_report(['Bag', 'Errors'], directory)
 
     # Navigates to each accession bag, validates it, and updates the preservation log.
     for root, directories, files in os.walk(directory):
