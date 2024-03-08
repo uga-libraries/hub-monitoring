@@ -1,0 +1,8 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+TEST.001	2023.test001.001.ER	2023-10-30	CD.001	Virus scanned using Micorosoft Defender. No security threats were detected.	Jane Doe
+TEST.001	2023.test001.001.ER	2023-10-30	CD.001	Copied to external storage device using TeraCopy. No errors were detected.	Jane Doe
+TEST.001	2023.test001.001.ER	2023-10-30	CD.001	Bagged with accession 2023.test001.001.ER. No errors were detected.	Jane Doe
+TEST.001	2023.test001.001.ER	2023-10-31	CD.002	Virus scanned using Micorosoft Defender. No security threats were detected.	Jane Doe
+TEST.001	2023.test001.001.ER	2023-10-31	CD.002	Copied to external storage device using TeraCopy. No security threats were detected.	Jane Doe
+TEST.001	2023.test001.001.ER	2023-10-31	CD.002	Bagged with accession 2023.test001.001.ER. No security threats were detected.	Jane Doe
+TEST.001	2023.test001.001.ER	2023-10-31		Validated bag for accession 2023.test001.001.ER. The bag was valid.	Jane Doe

@@ -9,6 +9,15 @@ from os.path import join
 
 class MyTestCase(unittest.TestCase):
 
+    def test_correct(self):
+        """Test for when the script runs correctly on all accessions in Validate_Fixity_Hub"""
+        # Makes the variables used for script input and runs the script.
+        script = join(getcwd(), '..', '..', 'validate_fixity.py')
+        directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub')
+        subprocess.run(f'python {script} {directory}', shell=True)
+
+        self.assertEqual(True, True)
+
     def test_error(self):
         """Test for when the script argument is not correct and the script exits"""
         # Makes the variables used for script input.
