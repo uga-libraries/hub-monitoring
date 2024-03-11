@@ -155,6 +155,29 @@ class MyTestCase(unittest.TestCase):
         expected = ["NARA CSV 'nara_error.csv' does not exist"]
         self.assertEqual(errors_list, expected, 'Problem with NARA path error, errors_list')
 
+    def test_too_many_arguments(self):
+        """
+        Test for when there is an extra argument.
+        The two required arguments are present and valid.
+        """
+        # Makes the variable used for function input and runs the function being tested.
+        sys_argv = ['risk_updates.py', join('..', 'test_data'),
+                    join('..', 'test_data', 'NARA_PreservationActionPlan.csv'),
+                    'error_extra_argument']
+        directory, nara_csv, errors_list = check_arguments(sys_argv)
+
+        # Tests that the value of directory is correct.
+        expected = '..\\test_data'
+        self.assertEqual(directory, expected, 'Problem with too many arguments, directory')
+
+        # Tests that the value of nara_csv is correct.
+        expected = '..\\test_data\\NARA_PreservationActionPlan.csv'
+        self.assertEqual(nara_csv, expected, 'Problem with too many arguments, nara_csv')
+
+        # Tests that the value of errors_list is correct.
+        expected = ['Too many arguments. Should just have two, directory and nara_csv']
+        self.assertEqual(errors_list, expected, 'Problem with too many arguments, errors_list')
+
 
 if __name__ == '__main__':
     unittest.main()

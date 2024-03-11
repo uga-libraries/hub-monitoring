@@ -40,7 +40,7 @@ def check_arguments(argument_list):
         if not os.path.exists(dir_path):
             errors.append(f"Directory '{dir_path}' does not exist")
     else:
-        errors.append("Required argument directory is missing")
+        errors.append('Required argument directory is missing')
 
     # Verifies that the second required argument (nara_csv) is present,
     # and if it is present that it is a valid path.
@@ -49,7 +49,11 @@ def check_arguments(argument_list):
         if not os.path.exists(nara_path):
             errors.append(f"NARA CSV '{nara_path}' does not exist")
     else:
-        errors.append("Required argument nara_csv is missing")
+        errors.append('Required argument nara_csv is missing')
+
+    # Verifies that there are not too many arguments, which could mean the input was not in the correct order.
+    if len(argument_list) > 3:
+        errors.append('Too many arguments. Should just have two, directory and nara_csv')
 
     return dir_path, nara_path, errors
 
