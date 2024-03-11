@@ -205,7 +205,7 @@ def most_recent_spreadsheet(file_list):
     for file_name in file_list:
 
         # Skips files that are not risk spreadsheets, like the preservation log.
-        if not('full_risk_data' in file_name and file_name.endswith('.csv')):
+        if not('full_risk_data' in file_name):
             continue
 
         # Extracts the date from the risk spreadsheet file name, if it has one. If it doesn't, assigns 1900-01-01
