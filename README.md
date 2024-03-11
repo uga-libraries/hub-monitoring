@@ -16,8 +16,8 @@ the UGA Libraries' centralized storage for digital objects that are not suitable
 
 The file directory structure should be:
 
-- directory (parent folder being analyzed)
-    - status (if it is in the backlog or closed due to restrictions)
+- directory (parent folder being analyzed - optional if not doing collection summary)
+    - status (if it is in the backlog or closed due to restrictions - optional if not doing collection summary)
         - collection_id/name
             - accession_id
                 - accession_id_bag
@@ -25,11 +25,13 @@ The file directory structure should be:
                 - preservation_log.txt
                 - additional metadata files (optional)
 
-Additionally, the department name should be part of the directory path, 
+For the collection summary, the department name should be part of the directory path, 
 although does not need to be in the directory folder.
 
-Download the latest version of NARA's Digital Preservation Plan spreadsheet (CSV version) from the 
+For the risk update, download the latest version of NARA's Digital Preservation Plan spreadsheet (CSV version) from the 
 [U.S. National Archives Digital Preservation GitHub Repo](https://github.com/usnationalarchives/digital-preservation).
+
+For validating fixity, accessions should be bags or have a manifest. (UPDATE WITH MANIFEST INFO WHEN HAVE IT)
 
 ### Script Arguments
 
