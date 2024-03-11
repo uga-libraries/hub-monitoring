@@ -13,7 +13,7 @@ class MyTestCase(unittest.TestCase):
     def test_file_added(self):
         """Test for when the bag is not valid because a file was added"""
         # Makes variable for function input and runs the function.
-        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_002_bags_invalid',
+        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_002_bags_invalid',
                         '2023_test002_001_er', '2023_test002_001_er_bag')
         is_valid, error = validate_bag(bag_path)
 
@@ -27,7 +27,7 @@ class MyTestCase(unittest.TestCase):
     def test_file_deleted(self):
         """Test for when the bag is not valid because a file was deleted"""
         # Makes variable for function input and runs the function.
-        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_002_bags_invalid',
+        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_002_bags_invalid',
                         '2023_test002_002_er', '2023_test002_002_er_bag')
         is_valid, error = validate_bag(bag_path)
 
@@ -41,7 +41,7 @@ class MyTestCase(unittest.TestCase):
     def test_file_edited(self):
         """Test for when the bag is not valid because a file was edited"""
         # Makes variable for function input and runs the function.
-        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_002_bags_invalid',
+        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_002_bags_invalid',
                         '2023_test002_003_er', '2023_test002_003_er_bag')
         is_valid, error = validate_bag(bag_path)
 
@@ -55,7 +55,7 @@ class MyTestCase(unittest.TestCase):
     def test_fixity_changed(self):
         """Test for when the bag is not valid because a file's fixity was changed in the manifest"""
         # Makes variable for function input and runs the function.
-        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_002_bags_invalid',
+        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_002_bags_invalid',
                         '2023_test002_004_er', '2023_test002_004_er_bag')
         is_valid, error = validate_bag(bag_path)
 
@@ -70,7 +70,7 @@ class MyTestCase(unittest.TestCase):
     def test_missing_bag_info(self):
         """Test for when the bag is not valid because bag-info.txt is missing"""
         # Makes variable for function input and runs the function.
-        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_002_bags_invalid',
+        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_002_bags_invalid',
                         '2023_test002_005_er', '2023_test002_005_er_bag')
         is_valid, error = validate_bag(bag_path)
 
@@ -84,7 +84,7 @@ class MyTestCase(unittest.TestCase):
     def test_valid(self):
         """Test for when the bag is valid"""
         # Makes variable for function input and runs the function.
-        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_001_bags_valid',
+        bag_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_001_bags_valid',
                         '2023_test001_001_er', '2023_test001_001_er_bag')
         is_valid, error = validate_bag(bag_path)
 

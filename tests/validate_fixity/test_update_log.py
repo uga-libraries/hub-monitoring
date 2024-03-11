@@ -16,17 +16,17 @@ class MyTestCase(unittest.TestCase):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder"""
         # Accession 2023_test003_001_er
-        test1 = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_001_er')
+        test1 = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_001_er')
         copyfile(join(test1, 'preservation_log_copy.txt'), join(test1, 'preservation_log.txt'))
 
         # Accession 2023_test003_002_er
-        test2 = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_002_er')
+        test2 = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_002_er')
         copyfile(join(test2, 'preservation_log_copy.txt'), join(test2, 'preservation_log.txt'))
 
     def test_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
-        parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_001_er')
+        parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_001_er')
         bag_path = join(parent, '2023_test003_001_er_bag')
         update_log(bag_path, False)
 
@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
     def test_valid(self):
         """Test for when the bag is valid"""
         # Makes the variables needed for function input and runs the function.
-        parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_002_er')
+        parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_002_er')
         bag_path = join(parent, '2023_test003_002_er_bag')
         update_log(bag_path, True)
 

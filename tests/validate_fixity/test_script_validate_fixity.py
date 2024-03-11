@@ -17,15 +17,15 @@ class MyTestCase(unittest.TestCase):
         using a copy of the original log that is also in the accession folder,
         and delete the script validation report"""
         # Accession 2023_test003_001_er
-        test1 = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_001_er')
+        test1 = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_001_er')
         copyfile(join(test1, 'preservation_log_copy.txt'), join(test1, 'preservation_log.txt'))
 
         # Accession 2023_test003_002_er
-        test2 = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update', '2023_test003_002_er')
+        test2 = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_002_er')
         copyfile(join(test2, 'preservation_log_copy.txt'), join(test2, 'preservation_log.txt'))
 
         # Validation report
-        validation_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update',
+        validation_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update',
                                f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
         if exists(validation_path):
             remove(validation_path)
@@ -34,7 +34,7 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script runs correctly on all accessions in Validate_Fixity_Hub, collection test_003"""
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity_Hub', 'test_003_log_update')
+        directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update')
         subprocess.run(f'python {script} {directory}', shell=True)
 
         # Verifies the contents of the validation report are correct.
@@ -100,7 +100,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input.
         # The script will be run twice in this test.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        directory = join('test_data', 'Error_Hub')
+        directory = join('test_data', 'Error')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(subprocess.CalledProcessError):
@@ -109,7 +109,7 @@ class MyTestCase(unittest.TestCase):
         # Runs the script a second time and tests that it prints the correct error.
         output = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
-        expected = "Provided directory 'test_data\\Error_Hub' does not exist\r\n"
+        expected = "Provided directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, "Problem with test for printed error")
 
 
