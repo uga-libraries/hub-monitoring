@@ -23,8 +23,8 @@ def check_arguments(argument_list):
     argument_list (list): the contents of sys.argv after the script is run
 
     :returns
-    dir_path (string or None): the path to the directory to check for risk spreadsheets, or None if missing
-    nara_path (string or None): the path to NARA's Preservation Action Plan spreadsheet, or None if missing
+    dir_path (string, None): string with the path to the directory to check for risk spreadsheets, or None if missing
+    nara_path (string, None): string with the path to NARA's Preservation Action Plan spreadsheet, or None if missing
     errors (list): the list of errors encountered, if any, or an empty list
     """
 
@@ -206,7 +206,7 @@ def most_recent_spreadsheet(file_list):
 
         # Extracts the date from the risk spreadsheet file name, if it has one. If it doesn't, assigns 1900-01-01
         # for comparison since any spreadsheet with a date is more recent than one without.
-        # Converts the date to datetime so that it can be compared to other dates.
+        # Converts the date from a string to type date so that it can be compared to other dates.
         try:
             regex = re.search("_full_risk_data_([0-9]{4})-([0-9]{2})-([0-9]{2}).csv", file_name)
             file_date = date(int(regex.group(1)), int(regex.group(2)), int(regex.group(3)))

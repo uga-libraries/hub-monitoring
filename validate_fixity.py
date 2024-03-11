@@ -1,6 +1,6 @@
 """Validates the fixity for every accession in a directory
 
-Accessions are most commonly in bags, but legacy accessions may have a manifest instead
+Accessions are most commonly in bags, but legacy accessions may have a manifest instead.
 
 Parameter:
     directory (required): the directory that contains the accession folders
@@ -23,12 +23,11 @@ def check_argument(arg_list):
     arg_list (list): the contents of sys.argv after the script is run
 
     :returns
-    dir_path (string): the path to the folder with data to be summarized, or None (if error)
-    error (string): the error message, or None (if no error)
+    dir_path (string, None): string with the path to the folder with accessions to validate, or None if error
+    error (string, None): string with the error message, or None if no error
     """
 
-    # Checks if the required argument (directory path) is present and a valid path.
-    # It will be index 1 in the argument list, because sys.argv also includes the path to the script at index 0.
+    # Verifies the required argument (directory) is present and a valid path.
     # If the number of arguments is incorrect, dir_path is set to None.
     # If there is no error, error is set to None.
     if len(arg_list) == 1:
@@ -44,7 +43,7 @@ def check_argument(arg_list):
 
 
 def update_log(bag_dir, validation_result):
-    """Update an accession's preservation log with bag validation results
+    """Update an accession's preservation log with the bag validation results
 
     :parameter
     bag_dir (string): the path to an accession bag
@@ -75,7 +74,7 @@ def update_log(bag_dir, validation_result):
     else:
         action = f'Validated bag for accession {accession}. The bag was not valid.'
 
-    # Adds a row to the end of the preservation log for bag validation.
+    # Adds a row to the end of the preservation log for the bag validation.
     log_row = [collection, accession, today, None, action, 'validate_fixity.py']
     with open(log_path, 'a', newline='') as open_log:
         log_writer = csv.writer(open_log, delimiter='\t')
@@ -83,7 +82,7 @@ def update_log(bag_dir, validation_result):
 
 
 def update_report(text_list, report_dir):
-    """Add a line of text to the summary report
+    """Add a line of text (the header or the result of an accession validation) to the summary report
 
     :parameter
     text_list (list): text for the three columns
@@ -124,6 +123,7 @@ def validate_bag(bag_dir):
 if __name__ == '__main__':
 
     # Gets the path to the directory with the accessions to be validated from the script argument.
+    # Exits the script if there is an error.
     directory, error = check_argument(sys.argv)
     if error:
         print(error)
