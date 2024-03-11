@@ -44,6 +44,10 @@ risk_update.py
 - directory (required): the directory that contains the risk spreadsheets
 - nara_csv (required): the path to the most recent NARA Preservation Action Plan spreadsheet
 
+validate_fixity.py
+
+- directory (required): the directory with the folders to be summarized
+
 ### Testing
 
 There are unit tests for each function and for each script overall.
