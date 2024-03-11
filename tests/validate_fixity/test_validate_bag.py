@@ -1,5 +1,6 @@
 """
-Tests for the function validate_bag(), which validates an accession's bag and returns the error message.
+Tests for the function validate_bag(), which validates an accession's bag
+and returns if it is valid and the error message.
 """
 import unittest
 from validate_fixity import validate_bag
