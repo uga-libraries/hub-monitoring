@@ -52,8 +52,9 @@ validate_fixity.py
 
 There are unit tests for each function and for each script overall.
 The tests mostly use files stored in the repo (test_data) as input. 
-The risk spreadsheet has the correct columns and files, but the FITS and NARA data are made up to fit testing needs.
-The preservation log is empty because the contents aren't used by these script. 
+Preservation metadata files may be missing if they are not needed for a test 
+or have fake data to give the needed variations for the test.
+ 
 The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
 
 ## Workflow
