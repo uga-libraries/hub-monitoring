@@ -13,7 +13,7 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Deletes the CSV made by the function, if it was made"""
-        csv_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl004', '2005-10-er',
+        csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er',
                         f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
         if exists(csv_path):
             remove(csv_path)
@@ -22,13 +22,13 @@ class MyTestCase(unittest.TestCase):
         """Test for the function
         All variation is covered by match_nara_risk(), which this function calls."""
         # Creates input variables and runs the function.
-        root = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl004', '2005-10-er')
+        root = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er')
         file = '2005-10-er_full_risk_data.csv'
         nara_risk_df = read_nara_csv(join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv'))
         new_risk_spreadsheet(root, file, nara_risk_df)
 
         # Tests the expected CSV was made with the correct file name.
-        updated_csv_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl004', '2005-10-er',
+        updated_csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er',
                                 f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
         path_exists = exists(updated_csv_path)
         self.assertEqual(path_exists, True, "Problem with test for CSV was made")

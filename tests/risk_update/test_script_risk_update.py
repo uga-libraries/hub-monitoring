@@ -24,7 +24,7 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Delete script output, if created"""
         today = datetime.today().strftime('%Y-%m-%d')
-        coll_folder = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl004')
+        coll_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
         reports = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'))
@@ -36,13 +36,13 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script runs correctly on all three accessions in rbrl004"""
         # makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        directory = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl004')
+        directory = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
         nara_csv = join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv')
         subprocess.run(f'python {script} {directory} {nara_csv}', shell=True)
 
         # Paths to the three CSVs that should have been made.
         today = datetime.today().strftime('%Y-%m-%d')
-        coll_folder = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl004')
+        coll_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
         csv_paths = [join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv')]
@@ -132,7 +132,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input.
         # The script will be run twice in this test.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        directory = join('test_data', 'Error_Hub', 'closed', 'rbrl004')
+        directory = join('test_data', 'Error', 'closed', 'rbrl004')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(subprocess.CalledProcessError):
@@ -141,7 +141,7 @@ class MyTestCase(unittest.TestCase):
         # Runs the script a second time and tests that it prints the correct errors.
         output = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
-        expected = "Directory 'test_data\\Error_Hub\\closed\\rbrl004' does not exist\r\n" \
+        expected = "Directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"
         self.assertEqual(result, expected, "Problem with test for printed error")
 
