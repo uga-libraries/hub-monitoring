@@ -12,14 +12,14 @@ class MyTestCase(unittest.TestCase):
     def test_multiple(self):
         """Test for when each collection has multiple accessions"""
         # Makes test input and runs the function.
-        accession_df = DataFrame([['coll1', 'backlog', '2021', 30.01, 607, 90, 0, 17, 500],
-                                  ['coll1', 'backlog', '2021', 6.35, 80, 0, 0, 40, 40],
-                                  ['coll1', 'backlog', '2022', 0.25, 9, 0, 9, 0, 0],
-                                  ['coll2', 'closed', '2023', 90.12, 67, 30, 0, 0, 37],
-                                  ['coll2', 'closed', '2023', 33.10, 15, 0, 0, 0, 15]],
-                                 columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
-                                          'High_Risk', 'Moderate_Risk', 'Low_Risk'])
-        collection_df = combine_collection_data(accession_df)
+        acc_df = DataFrame([['coll1', 'backlog', '2021', 30.01, 607, 90, 0, 17, 500],
+                            ['coll1', 'backlog', '2021', 6.35, 80, 0, 0, 40, 40],
+                            ['coll1', 'backlog', '2022', 0.25, 9, 0, 9, 0, 0],
+                            ['coll2', 'closed', '2023', 90.12, 67, 30, 0, 0, 37],
+                            ['coll2', 'closed', '2023', 33.10, 15, 0, 0, 0, 15]],
+                           columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk'])
+        collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
@@ -32,12 +32,12 @@ class MyTestCase(unittest.TestCase):
     def test_no_csv(self):
         """Test for when a collection has multiple accessions and none have a risk csv"""
         # Makes test input and runs the function.
-        accession_df = DataFrame([['coll1', 'backlog', '2021', 30.01, 607, 0, 0, 0, 0],
-                                  ['coll1', 'backlog', '2021', 6.35, 80, 0, 0, 0, 0],
-                                  ['coll1', 'backlog', '2022', 0.25, 9, 0, 0, 0, 0]],
-                                 columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
-                                          'High_Risk', 'Moderate_Risk', 'Low_Risk'])
-        collection_df = combine_collection_data(accession_df)
+        acc_df = DataFrame([['coll1', 'backlog', '2021', 30.01, 607, 0, 0, 0, 0],
+                            ['coll1', 'backlog', '2021', 6.35, 80, 0, 0, 0, 0],
+                            ['coll1', 'backlog', '2022', 0.25, 9, 0, 0, 0, 0]],
+                           columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk'])
+        collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
@@ -49,11 +49,11 @@ class MyTestCase(unittest.TestCase):
     def test_no_csv_mix(self):
         """Test for when a collection has multiple accessions and one does not have a risk csv"""
         # Makes test input and runs the function.
-        accession_df = DataFrame([['coll2', 'closed', '2023', 90.12, 67, 30, 0, 0, 37],
-                                  ['coll2', 'closed', '2023', 33.10, 33, 0, 0, 0, 0]],
-                                 columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
-                                          'High_Risk', 'Moderate_Risk', 'Low_Risk'])
-        collection_df = combine_collection_data(accession_df)
+        acc_df = DataFrame([['coll2', 'closed', '2023', 90.12, 67, 30, 0, 0, 37],
+                            ['coll2', 'closed', '2023', 33.10, 33, 0, 0, 0, 0]],
+                           columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk'])
+        collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
@@ -65,11 +65,11 @@ class MyTestCase(unittest.TestCase):
     def test_one(self):
         """Test for when each collection has one accession"""
         # Makes test input and runs the function.
-        accession_df = DataFrame([['coll1', 'backlog', '2023', 23.52, 51, 2, 0, 17, 32],
-                                  ['coll2', 'backlog', '2024', 123.20, 250, 100, 54, 33, 63]],
-                                 columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
-                                          'High_Risk', 'Moderate_Risk', 'Low_Risk'])
-        collection_df = combine_collection_data(accession_df)
+        acc_df = DataFrame([['coll1', 'backlog', '2023', 23.52, 51, 2, 0, 17, 32],
+                            ['coll2', 'backlog', '2024', 123.20, 250, 100, 54, 33, 63]],
+                           columns=['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk'])
+        collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
