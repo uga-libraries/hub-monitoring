@@ -9,6 +9,14 @@ from os.path import exists, join
 from subprocess import CalledProcessError, PIPE, run
 
 
+def csv_to_list(csv_path):
+    """Read csv into a dataframe, clean up, and return the values of each row as a list"""
+    df = pd.read_csv(csv_path, dtype={'Date': str})
+    df = df.fillna('nan')
+    csv_list = [df.columns.tolist()] + df.values.tolist()
+    return csv_list
+
+
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
@@ -42,10 +50,8 @@ class MyTestCase(unittest.TestCase):
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         run(f'python {script} "{directory}"', shell=True)
 
-        report = pd.read_csv(join(directory, f"harg_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"),
-                             dtype={'Date': str})
-        report = report.fillna('nan')
-        result = [report.columns.tolist()] + report.values.tolist()
+        report_path = join(directory, f"harg_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        result = csv_to_list(report_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
                     ['ms0001 Person papers', '2024', 'backlog', 0.00001, 3, 0.0, 0.0, 33.33, 66.67, 'nan'],
@@ -58,10 +64,8 @@ class MyTestCase(unittest.TestCase):
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         run(f'python {script} "{directory}"', shell=True, stdout=PIPE)
 
-        report = pd.read_csv(join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"),
-                             dtype={'Date': str})
-        report = report.fillna('nan')
-        result = [report.columns.tolist()] + report.values.tolist()
+        report_path = join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        result = csv_to_list(report_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
                     ['rbrl001', '2024', 'backlog', 0.0002, 11, 0.0, 0.0, 0.0, 100.0, 'nan'],

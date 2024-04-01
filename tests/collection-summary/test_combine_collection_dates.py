@@ -8,14 +8,19 @@ from collection_summary import combine_collection_dates
 from pandas import DataFrame
 
 
+def make_df(df_rows):
+    """Make a return a dataframe with consistent column headers."""
+    df = DataFrame(df_rows, columns=['Collection', 'Date'])
+    return df
+
+
 class MyTestCase(unittest.TestCase):
 
     def test_multiple_diff_years(self):
         """Test for accessions that have multiple accession dates, all different years"""
         # Makes test input and runs the function.
-        acc_df = DataFrame([['coll_1', '2000'], ['coll_1', '2012'],
-                            ['coll_2', '1999'], ['coll_2', '1997'], ['coll_2', '1998']],
-                           columns=['Collection', 'Date'])
+        rows = [['coll_1', '2000'], ['coll_1', '2012'], ['coll_2', '1999'], ['coll_2', '1997'], ['coll_2', '1998']]
+        acc_df = make_df(rows)
         date_df = combine_collection_dates(acc_df)
 
         # Verifies the dataframe has the expected contents, converting it to a list first for easier comparison.
@@ -26,9 +31,8 @@ class MyTestCase(unittest.TestCase):
     def test_multiple_same_years(self):
         """Test for accessions that have multiple accession dates, all the same year"""
         # Makes test input and runs the function.
-        acc_df = DataFrame([['coll_1', '2001'], ['coll_1', '2001'],
-                            ['coll_2', '2013'], ['coll_2', '2013'], ['coll_2', '2013']],
-                           columns=['Collection', 'Date'])
+        rows = [['coll_1', '2001'], ['coll_1', '2001'], ['coll_2', '2013'], ['coll_2', '2013'], ['coll_2', '2013']]
+        acc_df = make_df(rows)
         date_df = combine_collection_dates(acc_df)
 
         # Verifies the dataframe has the expected contents, converting it to a list first for easier comparison.
@@ -39,7 +43,8 @@ class MyTestCase(unittest.TestCase):
     def test_one_year(self):
         """Test for accessions that have one accession date, which is a year"""
         # Makes test input and runs the function.
-        acc_df = DataFrame([['coll_1', '2023'], ['coll_2', '2014']], columns=['Collection', 'Date'])
+        rows = [['coll_1', '2023'], ['coll_2', '2014']]
+        acc_df = make_df(rows)
         date_df = combine_collection_dates(acc_df)
 
         # Verifies the dataframe has the expected contents, converting it to a list first for easier comparison.
