@@ -1,5 +1,5 @@
 """
-Tests for the function get_date(), which gets the year of the accession.
+Test for the function get_date(), which gets the year the accession was copied.
 """
 import unittest
 from collection_summary import get_date
@@ -9,17 +9,11 @@ from os.path import join
 
 class MyTestCase(unittest.TestCase):
 
-    def test_accession_number(self):
+    def test_function(self):
         """Test for when the accession number starts with the year"""
-        path = join(getcwd(), '..', 'test_data', 'Hargrett_Hub', 'backlog', 'ua01-001 Dept records', '2009_ua01-001')
+        path = join(getcwd(), '..', 'test_data', 'Hargrett_Hub', 'backlog', 'ua01-001 Dept records', 'ua01-001_032')
         date = get_date(path)
-        self.assertEqual(date, '2009', "Problem with test for accession number")
-
-    def test_log(self):
-        """Test for when the accession number does not start with the year, so it uses the preservation log file"""
-        path = join(getcwd(), '..', 'test_data', 'Hargrett_Hub', 'backlog', 'ua01-001 Dept records', 'ua01-001_033')
-        date = get_date(path)
-        self.assertEqual(date, '2024', "Problem with test for log")
+        self.assertEqual(date, '2024', "Problem with test for the function")
 
 
 if __name__ == '__main__':

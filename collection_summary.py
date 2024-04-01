@@ -144,28 +144,21 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     return acc_list
 
 
-def get_date(path):
-    """Determine the year of the accession
-
-    The preferred method is to use the year from the accession number,
-    but for naming conventions that do not include the year, it will use the date created of the preservation log.
+def get_date(acc_path):
+    """Determine the year the accession was copied to storage, which is the year the accession folder was made
 
     :parameter
-    path (string): the path to the accession folder
+    acc_path (string): the path to the accession folder
 
     :returns
-    date (string): the year or "unknown"
+    date (string): the year
     """
 
-    # Option 1: The first 4 characters of the accession folder name are the year (are numbers).
-    acc_folder = os.path.basename(path)
-    if acc_folder[:4].isdigit():
-        date = acc_folder[:4]
-    # Option 2: The year the preservation log was created.
-    else:
-        log_path = os.path.join(path, "preservation_log.txt")
-        timestamp = os.stat(log_path).st_ctime
-        date = datetime.fromtimestamp(timestamp).strftime('%Y')
+    # Gets the creation date of the accession folder.
+    timestamp = os.path.getctime(acc_path)
+
+    # Reformats the timestamp to just the year.
+    date = datetime.fromtimestamp(timestamp).strftime('%Y')
 
     return date
 

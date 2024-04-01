@@ -33,7 +33,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
                     ['ms0001 Person papers', '2024', 'backlog', 0.00001, 3, 0.0, 0.0, 33.33, 66.67, 'nan'],
-                    ['ua01-001 Dept records', '2009-2024', 'backlog', 0.00004, 4, 25.0, 0.0, 25.0, 50.0, 'nan']]
+                    ['ua01-001 Dept records', '2024', 'backlog', 0.00004, 4, 25.0, 0.0, 25.0, 50.0, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Hargrett data")
 
     def test_russell(self):
@@ -48,9 +48,9 @@ class MyTestCase(unittest.TestCase):
         result = [report.columns.tolist()] + report.values.tolist()
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
-                    ['rbrl001', '2015-2018', 'backlog', 0.0002, 9, 0.0, 0.0, 0.0, 100.0, 'nan'],
-                    ['rbrl002', '2021-2022', 'backlog', 0.0003, 37, 27.03, 24.32, 29.73, 32.43, 'nan'],
-                    ['rbrl003', '2022-2023', 'closed', 0.001, 12, 0.0, 8.33, 58.33, 33.33, 'nan']]
+                    ['rbrl001', '2024', 'backlog', 0.0002, 9, 0.0, 0.0, 0.0, 100.0, 'nan'],
+                    ['rbrl002', '2024', 'backlog', 0.0003, 37, 27.03, 24.32, 29.73, 32.43, 'nan'],
+                    ['rbrl003', '2024', 'closed', 0.001, 12, 0.0, 8.33, 58.33, 33.33, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Russell data")
 
 
