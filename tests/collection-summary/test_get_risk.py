@@ -44,6 +44,13 @@ class MyTestCase(unittest.TestCase):
         risk_expected = [1, 1, 0, 2]
         self.assertEqual(risk, risk_expected, "Problem with test for duplicates, some files")
 
+    def test_no_risk_csv(self):
+        """Test for the returned value when the accession has no risk csv"""
+        acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl002', '2021-40-er')
+        risk = get_risk(acc_path)
+        risk_expected = [0, 0, 0, 0]
+        self.assertEqual(risk, risk_expected, "Problem with test for no risk csv")
+
     def test_one_risk(self):
         """Test for when there is one file with one risk level"""
         acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl002', '2022-03-er')

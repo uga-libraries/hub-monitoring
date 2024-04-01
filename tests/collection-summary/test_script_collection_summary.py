@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 from os import getcwd, remove
 from os.path import exists, join
-from subprocess import run
+from subprocess import PIPE, run
 
 
 class MyTestCase(unittest.TestCase):
@@ -40,7 +40,7 @@ class MyTestCase(unittest.TestCase):
         """Test running the script with Russell test data"""
         directory = join(getcwd(), '..', 'test_data', 'Russell_Hub')
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        run(f'python {script} "{directory}"', shell=True)
+        run(f'python {script} "{directory}"', shell=True, stdout=PIPE)
 
         report = pd.read_csv(join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"),
                              dtype={'Date': str})
@@ -49,7 +49,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
                     ['rbrl001', '2024', 'backlog', 0.0002, 9, 0.0, 0.0, 0.0, 100.0, 'nan'],
-                    ['rbrl002', '2024', 'backlog', 0.0003, 37, 27.03, 24.32, 29.73, 32.43, 'nan'],
+                    ['rbrl002', '2024', 'backlog', 0.0003, 41, 24.39, 21.95, 26.83, 29.27, 'nan'],
                     ['rbrl003', '2024', 'closed', 0.001, 12, 0.0, 8.33, 58.33, 33.33, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Russell data")
 

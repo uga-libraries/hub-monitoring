@@ -195,10 +195,18 @@ def get_risk(acc_path):
     risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
     """
 
-    # Constructs the path to the spreadsheet with risk data in the accession folder and reads it into a dataframe.
+    # Constructs the path to the spreadsheet with risk data in the accession folder.
     accession_number = os.path.basename(acc_path)
     risk_csv_path = os.path.join(acc_path, f"{accession_number}_full_risk_data.csv")
-    risk_df = pd.read_csv(risk_csv_path)
+
+    # If the risk csv is present, reads it into a dataframe to summarize.
+    # If not, prints the error and returns a list with 0 for the number of files at every risk level.
+    # If an accession has a path length error, it may not have a risk data csv yet.
+    if os.path.exists(risk_csv_path):
+        risk_df = pd.read_csv(risk_csv_path)
+    else:
+        print(f'{accession_number} has not risk csv')
+        return [0, 0, 0, 0]
 
     # Makes a new dataframe with the FITS_File_Path and NARA_Risk Level to remove duplicates.
     # Duplicates may be from multiple FITS format identifications or multiple NARA matches.
