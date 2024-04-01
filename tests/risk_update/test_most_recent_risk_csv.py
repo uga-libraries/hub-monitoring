@@ -1,5 +1,5 @@
 """
-Tests for the function most_recent_spreadsheet(), which determines the most recent risk spreadsheet in a folder.
+Tests for the function most_recent_risk_csv(), which determines the most recent risk spreadsheet in a folder.
 """
 import unittest
 from risk_update import most_recent_risk_csv
