@@ -22,30 +22,7 @@ import os
 import pandas as pd
 import sys
 from risk_update import most_recent_risk_csv
-
-
-def check_argument(arg_list):
-    """Check if the required argument is present and a valid directory
-
-    @:parameter
-    arg_list (list): the contents of sys.argv after the script is run
-
-    @:returns
-    dir_path (string, None): the path to the folder with data to be summarized, or None if error
-    error (string, None): the error message, or None if no error
-    """
-
-    # Checks if the expected arguments are present: script path (default in sys.argv) and directory path.
-    if len(arg_list) == 2:
-        # Checks if the provided directory path exists.
-        dir_path = arg_list[1]
-        if os.path.exists(dir_path):
-            return dir_path, None
-        else:
-            return None, f'Provided directory {dir_path} does not exist'
-    # Do not have the expected arguments.
-    else:
-        return None, 'Missing required argument: directory'
+from validate_fixity import check_argument
 
 
 def combine_collection_data(acc_df):
