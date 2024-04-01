@@ -20,6 +20,7 @@ import numpy as np
 import os
 import pandas as pd
 import sys
+from risk_update import most_recent_risk_csv
 
 
 def check_argument(arg_list):
@@ -199,6 +200,9 @@ def get_file_count(acc_path):
 def get_risk(acc_path):
     """Calculate the number of files at each of the four NARA risk levels in an accession
 
+    The accession's risk spreadsheet is used to calculate the data.
+    If there is more than one, the most recent spreadsheet is used.
+
     :parameter
     acc_path (string): the path to the accession folder
 
@@ -206,17 +210,22 @@ def get_risk(acc_path):
     risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
     """
 
-    # Constructs the path to the spreadsheet with risk data in the accession folder.
-    accession_number = os.path.basename(acc_path)
-    risk_csv_path = os.path.join(acc_path, f"{accession_number}_full_risk_data.csv")
+    # Uses a function from risk_update.py (also in this repo) to get the name of the most recent risk csv.
+    # It requires a list of files at the first level within the accession list as input.
+    # If there is no risk csv for this accession, it will return None.
+    accession_file_list = []
+    for item in os.listdir(acc_path):
+        if os.path.isfile(os.path.join(acc_path, item)):
+            accession_file_list.append(item)
+    risk_csv_name = most_recent_risk_csv(accession_file_list)
 
     # If the risk csv is present, reads it into a dataframe to summarize.
     # If not, prints the error and returns a list with 0 for the number of files at every risk level.
     # If an accession has a path length error, it may not have a risk data csv yet.
-    if os.path.exists(risk_csv_path):
-        risk_df = pd.read_csv(risk_csv_path)
+    if risk_csv_name:
+        risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name))
     else:
-        print(f'{accession_number} has not risk csv')
+        print(f'Accession {os.path.basename(acc_path)} has not risk csv')
         return [0, 0, 0, 0]
 
     # Makes a new dataframe with the FITS_File_Path and NARA_Risk Level to remove duplicates.
