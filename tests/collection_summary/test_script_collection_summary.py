@@ -22,8 +22,9 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Delete script output, if created"""
         today = datetime.today().strftime('%Y-%m-%d')
-        reports = (join(getcwd(), '..', 'test_data', 'Hargrett_Hub', f"harg_hub-collection-summary_{today}.csv"),
-                   join(getcwd(), '..', 'test_data', 'Russell_Hub', f"rbrl_hub-collection-summary_{today}.csv"))
+        script_test_data = join(getcwd(), '..', 'test_data', 'Collection_Summary')
+        reports = (join(script_test_data, 'Hargrett_Hub', f"harg_hub-collection-summary_{today}.csv"),
+                   join(script_test_data, 'Russell_Hub', f"rbrl_hub-collection-summary_{today}.csv"))
         for report in reports:
             if exists(report):
                 remove(report)
@@ -32,7 +33,7 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script argument is not correct and the script exits"""
         # Makes the variables needed for the script input.
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        directory = join('test_data', 'Error')
+        directory = join('test_data', 'Collection_Summary', 'Error')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(CalledProcessError):
@@ -41,12 +42,12 @@ class MyTestCase(unittest.TestCase):
         # Runs the script a second time and tests that it prints the correct error.
         output = run(f'python {script} {directory}', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
-        expected = "Provided directory 'test_data\\Error' does not exist\r\n"
+        expected = "Provided directory 'test_data\\Collection_Summary\\Error' does not exist\r\n"
         self.assertEqual(result, expected, "Problem with test for printed error")
 
     def test_hargrett(self):
         """Test running the script with Hargrett test data"""
-        directory = join(getcwd(), '..', 'test_data', 'Hargrett_Hub')
+        directory = join(getcwd(), '..', 'test_data', 'Collection_Summary', 'Hargrett_Hub')
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         run(f'python {script} "{directory}"', shell=True)
 
@@ -60,7 +61,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_russell(self):
         """Test running the script with Russell test data"""
-        directory = join(getcwd(), '..', 'test_data', 'Russell_Hub')
+        directory = join(getcwd(), '..', 'test_data', 'Collection_Summary', 'Russell_Hub')
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         run(f'python {script} "{directory}"', shell=True, stdout=PIPE)
 

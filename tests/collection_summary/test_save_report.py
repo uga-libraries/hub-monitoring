@@ -32,8 +32,8 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Delete the reports, if they were made by the tests"""
         base_name = f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv"
-        csv_paths = [join(getcwd(), '..', 'test_data', 'Hargrett_Hub', f'harg_{base_name}'),
-                     join(getcwd(), '..', 'test_data', 'Russell_Hub', f'rbrl_{base_name}')]
+        csv_paths = [join(getcwd(), '..', 'test_data', 'Collection_Summary', 'Hargrett_Hub', f'harg_{base_name}'),
+                     join(getcwd(), '..', 'test_data', 'Collection_Summary', 'Russell_Hub', f'rbrl_{base_name}')]
 
         for path in csv_paths:
             if exists(path):
@@ -46,7 +46,7 @@ class MyTestCase(unittest.TestCase):
                 ['ms0002', 'backlog', 2.02, 200, '2019', 10.00, 0.00, 50.00, 40.00],
                 ['ms0003', 'backlog', 3.33, 303, '2021-2022', 33.00, 0.99, 4.95, 61.06]]
         coll_df = make_df(rows)
-        directory = join(getcwd(), '..', 'test_data', 'Hargrett_Hub')
+        directory = join(getcwd(), '..', 'test_data', 'Collection_Summary', 'Hargrett_Hub')
         save_report(coll_df, directory)
 
         # Verifies the expected CSV was made with the correct file name.
@@ -70,7 +70,7 @@ class MyTestCase(unittest.TestCase):
                 ['rbrl002', 'backlog', 20.20, 906, '2019', 40.40, 4.42, 55.19, 0.00],
                 ['rbrl003', 'backlog', 33.00, 1522, '2021-2022', 5.91, 11.83, 3.29, 78.98]]
         coll_df = make_df(rows)
-        directory = join(getcwd(), '..', 'test_data', 'Russell_Hub')
+        directory = join(getcwd(), '..', 'test_data', 'Collection_Summary', 'Russell_Hub')
         save_report(coll_df, directory)
 
         # Verifies the expected CSV was made with the correct file name.
