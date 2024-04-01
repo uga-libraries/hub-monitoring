@@ -20,13 +20,13 @@ The file directory structure should be:
     - status (if it is in the backlog or closed due to restrictions - optional if not doing collection summary)
         - collection_id/name
             - accession_id
-                - accession_id_bag
-                - accession_id_bag_full_risk_data.csv
+                - accession_id_bag (or folder with unbagged accession contents)
+                - accession_id_bag_full_risk_data.csv (will be missing if accession has long path errors)
                 - preservation_log.txt
                 - additional metadata files (optional)
 
 For the collection summary, the department name should be part of the directory path, 
-although does not need to be in the directory folder.
+although it does not need to be in the directory folder.
 
 For the risk update, download the latest version of NARA's Digital Preservation Plan spreadsheet (CSV version) from the 
 [U.S. National Archives Digital Preservation GitHub Repo](https://github.com/usnationalarchives/digital-preservation).
