@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 from os import getcwd, remove
 from os.path import exists, join
-from subprocess import PIPE, run
+from subprocess import CalledProcessError, PIPE, run
 
 
 class MyTestCase(unittest.TestCase):
@@ -19,6 +19,22 @@ class MyTestCase(unittest.TestCase):
         for report in reports:
             if exists(report):
                 remove(report)
+
+    def test_error(self):
+        """Test for when the script argument is not correct and the script exits"""
+        # Makes the variables needed for the script input.
+        script = join(getcwd(), '..', '..', 'collection_summary.py')
+        directory = join('test_data', 'Error')
+
+        # Runs the script and tests that it exits.
+        with self.assertRaises(CalledProcessError):
+            run(f'python {script} {directory}', shell=True, check=True, stdout=PIPE)
+
+        # Runs the script a second time and tests that it prints the correct error.
+        output = run(f'python {script} {directory}', shell=True, stdout=PIPE)
+        result = output.stdout.decode('utf-8')
+        expected = "Provided directory 'test_data\\Error' does not exist\r\n"
+        self.assertEqual(result, expected, "Problem with test for printed error")
 
     def test_hargrett(self):
         """Test running the script with Hargrett test data"""

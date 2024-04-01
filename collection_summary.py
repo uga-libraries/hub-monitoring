@@ -320,7 +320,7 @@ if __name__ == '__main__':
     directory, error = check_argument(sys.argv)
     if error:
         print(error)
-        sys.exit()
+        sys.exit(1)
 
     # Starts a dataframe for information about each accession.
     # It will be summarized later to be by collection.
