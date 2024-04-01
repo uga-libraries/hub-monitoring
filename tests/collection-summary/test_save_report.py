@@ -44,10 +44,10 @@ class MyTestCase(unittest.TestCase):
             reader = csv.reader(csv_file)
             result = list(reader)
         expected = [['Collection', 'Status', 'GB', 'Files', 'Date', 'No_Match_Risk_%', 'High_Risk_%',
-                     'Moderate_Risk_%', 'Low_Risk_%'],
-                    ['ms0001', 'backlog', '1.0', '111', '2015', '47.75', '15.32', '0.0', '36.94'],
-                    ['ms0002', 'backlog', '2.02', '200', '2019', '10.0', '0.0', '50.0', '40.0'],
-                    ['ms0003', 'backlog', '3.33', '303', '2021-2022', '33.0', '0.99', '4.95', '61.06']]
+                     'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
+                    ['ms0001', 'backlog', '1.0', '111', '2015', '47.75', '15.32', '0.0', '36.94', ''],
+                    ['ms0002', 'backlog', '2.02', '200', '2019', '10.0', '0.0', '50.0', '40.0', ''],
+                    ['ms0003', 'backlog', '3.33', '303', '2021-2022', '33.0', '0.99', '4.95', '61.06', '']]
         self.assertEqual(result, expected, "Problem with test for harg CSV contents")
 
     def test_rbrl(self):
@@ -72,10 +72,10 @@ class MyTestCase(unittest.TestCase):
             reader = csv.reader(csv_file)
             result = list(reader)
         expected = [['Collection', 'Status', 'GB', 'Files', 'Date', 'No_Match_Risk_%', 'High_Risk_%',
-                     'Moderate_Risk_%', 'Low_Risk_%'],
-                    ['rbrl001', 'backlog', '10.51', '852', '2015', '0.0', '0.0', '0.0', '100.0'],
-                    ['rbrl002', 'backlog', '20.2', '906', '2019', '40.4', '4.42', '55.19', '0.0'],
-                    ['rbrl003', 'backlog', '33.0', '1522', '2021-2022', '5.91', '11.83', '3.29', '78.98']]
+                     'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
+                    ['rbrl001', 'backlog', '10.51', '852', '2015', '0.0', '0.0', '0.0', '100.0', ''],
+                    ['rbrl002', 'backlog', '20.2', '906', '2019', '40.4', '4.42', '55.19', '0.0', ''],
+                    ['rbrl003', 'backlog', '33.0', '1522', '2021-2022', '5.91', '11.83', '3.29', '78.98', '']]
         self.assertEqual(result, expected, "Problem with test for rbrl CSV contents")
 
 

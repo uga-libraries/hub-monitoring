@@ -288,11 +288,14 @@ def save_report(coll_df, dir_path):
     None
     """
 
+    # Adds an empty column for archivist notes at the end.
+    coll_df['Notes'] = ''
+
     # Determines the department based on a keyword in the directory path to include in the report name.
-    if "Hargrett" in dir_path:
-        dept = "harg"
+    if 'Hargrett' in dir_path:
+        dept = 'harg'
     else:
-        dept = "rbrl"
+        dept = 'rbrl'
 
     # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
     today = datetime.today().strftime('%Y-%m-%d')
