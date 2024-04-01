@@ -34,6 +34,12 @@ class MyTestCase(unittest.TestCase):
         files = get_file_count(acc_path)
         self.assertEqual(files, 5, "Problem with test for multiple files in multiple folders")
 
+    def test_unbagged(self):
+        """Test for an accession that is not in a bag"""
+        acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2019-12-er')
+        files = get_file_count(acc_path)
+        self.assertEqual(files, 2, "Problem with test for unbagged")
+
 
 if __name__ == '__main__':
     unittest.main()
