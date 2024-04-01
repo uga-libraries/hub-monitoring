@@ -32,7 +32,13 @@ class MyTestCase(unittest.TestCase):
         """Test for a directory with multiple files and multiple folders"""
         acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl003', '2023-23-er')
         size = get_size(acc_path)
-        self.assertEqual(size, .0005, "Problem with test for folder")
+        self.assertEqual(size, 0.0005, "Problem with test for folder")
+
+    def test_unbagged(self):
+        """Test for an accession that is not in a bag"""
+        acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er')
+        size = get_size(acc_path)
+        self.assertEqual(size, 0.0002, "Problem with test for unbagged")
 
 
 if __name__ == '__main__':

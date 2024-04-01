@@ -188,7 +188,7 @@ def get_file_count(acc_path):
             if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
                 content_path = os.path.join(acc_path, item)
 
-    # Counts the files at each level within the bag's data folder.
+    # Counts the files at each level within the folder with the accession's content.
     file_count = 0
     for root, dirs, files in os.walk(content_path):
         file_count += len(files)
@@ -235,7 +235,10 @@ def get_risk(acc_path):
 
 
 def get_size(acc_path):
-    """Calculate the number of files in an accession's bag data folder
+    """Calculate the size of the accession in GB
+
+    For bagged accessions, this is the size of the bag data folder.
+    For unbagged accessions, this is the size of the folder within the accession folder that is not for FITS files.
 
     :parameter
     acc_path (string): the path to the accession folder
@@ -244,13 +247,20 @@ def get_size(acc_path):
     size_gb (float): the size, in GB, of the accession folder
     """
 
-    # Calculates the path of the bag's data folder.
+    # Calculates the path with the accession content,
+    # which is either the bag's data folder or the folder within the accession folder that isn't for the FITS files.
     accession_number = os.path.basename(acc_path)
     data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
+    if os.path.exists(data_path):
+        content_path = data_path
+    else:
+        for item in os.listdir(acc_path):
+            if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
+                content_path = os.path.join(acc_path, item)
 
-    # Adds the size of the files at each level within the bag's data folder.
+    # Adds the size of the files at each level within the folder with the accession's content.
     size_bytes = 0
-    for root, dirs, files in os.walk(data_path):
+    for root, dirs, files in os.walk(content_path):
         for file in files:
             file_path = os.path.join(root, file)
             size_bytes += os.stat(file_path).st_size
