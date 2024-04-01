@@ -48,9 +48,9 @@ class MyTestCase(unittest.TestCase):
         result = [report.columns.tolist()] + report.values.tolist()
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
-                    ['rbrl001', '2024', 'backlog', 0.0002, 9, 0.0, 0.0, 0.0, 100.0, 'nan'],
+                    ['rbrl001', '2024', 'backlog', 0.0002, 11, 0.0, 0.0, 0.0, 100.0, 'nan'],
                     ['rbrl002', '2024', 'backlog', 0.0003, 41, 24.39, 21.95, 26.83, 29.27, 'nan'],
-                    ['rbrl003', '2024', 'closed', 0.001, 12, 0.0, 8.33, 58.33, 33.33, 'nan']]
+                    ['rbrl003', '2024', 'closed', 0.001, 18, 0.0, 5.56, 38.89, 55.56, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Russell data")
 
 
