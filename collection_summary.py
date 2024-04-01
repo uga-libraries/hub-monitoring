@@ -163,19 +163,19 @@ def get_date(acc_path):
     return date
 
 
-def get_file_count(path):
+def get_file_count(acc_path):
     """Calculate the number of files in an accession's bag data folder
 
     :parameter
-    path (string): the path to the accession folder
+    acc_path (string): the path to the accession folder
 
     :returns
     file_count (integer): the number of files in the accession folder
     """
 
     # Calculates the path of the bag's data folder.
-    accession_number = os.path.basename(path)
-    data_path = os.path.join(path, f'{accession_number}_bag', 'data')
+    accession_number = os.path.basename(acc_path)
+    data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
 
     # Counts the files at each level within the bag's data folder.
     file_count = 0
@@ -185,19 +185,19 @@ def get_file_count(path):
     return file_count
 
 
-def get_risk(path):
-    """Calculate the number of files at each of the four NARA risk levels
+def get_risk(acc_path):
+    """Calculate the number of files at each of the four NARA risk levels in an accession
 
     :parameter
-    path (string): the path to the accession folder
+    acc_path (string): the path to the accession folder
 
     :returns
     risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
     """
 
     # Constructs the path to the spreadsheet with risk data in the accession folder and reads it into a dataframe.
-    accession_number = os.path.basename(path)
-    risk_csv_path = os.path.join(path, f"{accession_number}_full_risk_data.csv")
+    accession_number = os.path.basename(acc_path)
+    risk_csv_path = os.path.join(acc_path, f"{accession_number}_full_risk_data.csv")
     risk_df = pd.read_csv(risk_csv_path)
 
     # Makes a new dataframe with the FITS_File_Path and NARA_Risk Level to remove duplicates.
@@ -215,19 +215,19 @@ def get_risk(path):
     return risk_list
 
 
-def get_size(path):
+def get_size(acc_path):
     """Calculate the number of files in an accession's bag data folder
 
     :parameter
-    path (string): the path to the accession folder
+    acc_path (string): the path to the accession folder
 
     :returns
     size_gb (float): the size, in GB, of the accession folder
     """
 
     # Calculates the path of the bag's data folder.
-    accession_number = os.path.basename(path)
-    data_path = os.path.join(path, f'{accession_number}_bag', 'data')
+    accession_number = os.path.basename(acc_path)
+    data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
 
     # Adds the size of the files at each level within the bag's data folder.
     size_bytes = 0

@@ -12,26 +12,26 @@ class MyTestCase(unittest.TestCase):
 
     def test_file(self):
         """Test for a directory with one file and no folders"""
-        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2015-01-er')
-        files = get_file_count(path)
+        acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2015-01-er')
+        files = get_file_count(acc_path)
         self.assertEqual(files, 1, "Problem with test for one file")
 
     def test_file_folder(self):
         """Test for a directory with one file, which is in a folder"""
-        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2015-12-er')
-        files = get_file_count(path)
+        acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2015-12-er')
+        files = get_file_count(acc_path)
         self.assertEqual(files, 1, "Problem with test for one file in a folder")
 
     def test_files(self):
         """Test for a directory with two files and no folders"""
-        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2016-03-er')
-        files = get_file_count(path)
+        acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2016-03-er')
+        files = get_file_count(acc_path)
         self.assertEqual(files, 2, "Problem with test for two files")
 
     def test_files_folders(self):
         """Test for a directory with multiple files in multiple folders"""
-        path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2018-04-er')
-        files = get_file_count(path)
+        acc_path = join(getcwd(), '..', 'test_data', 'Russell_Hub', 'backlog', 'rbrl001', '2018-04-er')
+        files = get_file_count(acc_path)
         self.assertEqual(files, 5, "Problem with test for multiple files in multiple folders")
 
 
