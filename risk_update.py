@@ -184,14 +184,15 @@ def match_nara_risk(update_df, nara_df):
     return df_result
 
 
-def most_recent_spreadsheet(file_list):
-    """Determine the most recent preservation spreadsheet in the file list based on the file name
+def most_recent_risk_csv(file_list):
+    """Determine the most recent risk spreadsheet in the file list based on the file name
 
     From legacy practices, any spreadsheet with a date in the name is more recent than one without.
     The list will also include other types of files, such as preservation logs, which are ignored.
+    This function is also used in collection_summary.py
 
     :parameter
-    file_list (list): list of all file names in a folder with at least one preservation spreadsheet
+    file_list (list): list of all file names in a folder with at least one risk spreadsheet
 
     :returns
     recent_file (string): the name of the preservation spreadsheet that is the most recent
@@ -293,5 +294,5 @@ if __name__ == '__main__':
     # and makes a new version of it using the most recent risk spreadsheet in each folder.
     for root, directories, files in os.walk(directory):
         if any('full_risk_data' in x for x in files):
-            file = most_recent_spreadsheet(files)
+            file = most_recent_risk_csv(files)
             new_risk_spreadsheet(root, file, nara_risk_df)
