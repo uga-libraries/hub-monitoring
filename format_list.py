@@ -37,4 +37,15 @@ if __name__ == '__main__':
     # Fill blanks in NARA (legacy practice) with No Match (current practice).
     df['NARA_Risk_Level'] = df['NARA_Risk_Level'].fillna('No Match')
 
+    # Number of files and KB for each format name/version/risk combination.
+    files = df.groupby(['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level']).size().reset_index()
+    files = files.rename({0: 'File_Count'}, axis=1)
+    size = df.groupby(['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'])['FITS_Size_KB'].sum().reset_index()
+    size['Size_GB'] = size['FITS_Size_KB']/1000000
+    size = size.drop(columns='FITS_Size_KB')
+    df_formats = pd.merge(files, size, how='outer')
+
+    # Save the result to a CSV in directory.
+    df_formats.to_csv(os.path.join(directory, 'combined_format_data.csv'), index=False)
+
     # print('Number of risk spreadsheets combined:', len(csv_list))
