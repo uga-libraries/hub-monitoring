@@ -9,6 +9,7 @@ Returns:
     CSV with all format data
 """
 import os
+import pandas as pd
 import sys
 
 
@@ -17,26 +18,23 @@ if __name__ == '__main__':
     # Gets the path to the directory with the accessions to be validated from the script argument.
     directory = sys.argv[1]
 
-    # Count how many are added.
-    total = 0
+    # Makes a list of every risk spreadsheet, anywhere in the directory.
+    csv_list = []
+    for root, directories, files in os.walk(directory):
+        for file in files:
+            if 'full_risk_data' in file:
+                csv_list.append(os.path.join(root, file))
 
-    # Starts a spreadsheet for all format data.
-    with open(os.path.join(directory, 'combined_format_data.csv'), 'w') as combo:
-        combo.write('FITS_File_Path,FITS_Format_Name,FITS_Format_Version,FITS_PUID,FITS_Identifying_Tool(s),'
-                    'FITS_Multiple_IDs,FITS_Date_Last_Modified,FITS_Size_KB,FITS_MD5,FITS_Creating_Application,'
-                    'FITS_Valid,FITS_Well-Formed,FITS_Status_Message,NARA_Format_Name,NARA_File_Extensions,'
-                    'NARA_PRONOM_URL,NARA_Risk_Level,NARA_Proposed_Preservation_Plan,NARA_Match_Type,'
-                    'Technical_Appraisal_Format,Technical_Appraisal_Trash,Other_Risk_Indicator\n')
+    # Makes a dataframe with the contents of every spreadsheet.
+    df_all = pd.concat([pd.read_csv(f) for f in csv_list])
 
-        # Finds every risk spreadsheet and adds it to the spreadsheet.
-        for root, directories, files in os.walk(directory):
-            for file in files:
-                if 'full_risk_data' in file:
-                    total += 1
+    # Makes a copy of the dataframe with just the needed columns and no duplicate rows (from multiple NARA matches).
+    df = df_all[['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk Level']].copy()
+    df = df.rename({'NARA_Risk Level': 'NARA_Risk_Level'}, axis=1)
+    df = df.drop_duplicates()
+    df = df.drop(columns='FITS_File_Path')
 
-                    # Save everything but the header row, skipped by next, to the combined csv.
-                    with open(os.path.join(root, file), 'r') as f:
-                        next(f)
-                        combo.writelines(f)
+    # Fill blanks in NARA (legacy practice) with No Match (current practice).
+    df['NARA_Risk_Level'] = df['NARA_Risk_Level'].fillna('No Match')
 
-    print('Number of risk spreadsheets combined:', total)
+    # print('Number of risk spreadsheets combined:', len(csv_list))
