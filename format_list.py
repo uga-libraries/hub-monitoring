@@ -11,6 +11,7 @@ Returns:
 import os
 import pandas as pd
 import sys
+from validate_fixity import check_argument
 
 
 def combine_risk_csvs(dir_path):
@@ -89,7 +90,11 @@ def size_per_format(df):
 if __name__ == '__main__':
 
     # Gets the path to the directory with the accessions to be validated from the script argument.
-    directory = sys.argv[1]
+    # Exits the script if there is an error.
+    directory, error = check_argument(sys.argv)
+    if error:
+        print(error)
+        sys.exit(1)
 
     # Combines the risk data into one dataframe.
     df_all = combine_risk_csvs(directory)

@@ -1,11 +1,11 @@
 """
-Test for the script format_list.py
+Tests for the script format_list.py
 """
 import unittest
 from os import getcwd, remove
 from os.path import exists, join
 from pandas import read_csv
-from subprocess import run
+from subprocess import CalledProcessError, PIPE, run
 
 
 class MyTestCase(unittest.TestCase):
@@ -16,7 +16,7 @@ class MyTestCase(unittest.TestCase):
         if exists(output):
             remove(output)
 
-    def test_script(self):
+    def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')
         run(f'python {script} test_data', shell=True)
 
@@ -32,7 +32,24 @@ class MyTestCase(unittest.TestCase):
                     ['Portable Network Graphics', '1', 'High Risk', 1, 205.688],
                     ['Portable Network Graphics', '1', 'Moderate Risk', 1, 257.638],
                     ['Unknown Binary', 'nan', 'No Match', 1, 0.0]]
-        self.assertEqual(result, expected)
+        self.assertEqual(result, expected, 'Problem with test for correct')
+
+    def test_error(self):
+        """Test for when the script argument is not correct and the script exits"""
+        # Makes the variables used for script input.
+        # The script will be run twice in this test.
+        script = join(getcwd(), '..', '..', 'format_list.py')
+        directory = join('test_data', 'Error')
+
+        # Runs the script and tests that it exits.
+        with self.assertRaises(CalledProcessError):
+            run(f'python {script} {directory}', shell=True, check=True, stdout=PIPE)
+
+        # Runs the script a second time and tests that it prints the correct error.
+        output = run(f'python {script} {directory}', shell=True, stdout=PIPE)
+        result = output.stdout.decode('utf-8')
+        expected = "Provided directory 'test_data\\Error' does not exist\r\n"
+        self.assertEqual(result, expected, 'Problem with test for printed error')
 
 
 if __name__ == '__main__':
