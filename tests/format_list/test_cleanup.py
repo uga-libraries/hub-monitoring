@@ -16,12 +16,12 @@ class MyTestCase(unittest.TestCase):
         df_formats = df_formats.fillna('nan')
         result = [df_formats.columns.tolist()] + df_formats.values.tolist()
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
-                    ['Portable Document Format', 1.4, 410000.486, 'Moderate Risk'],
-                    ['JPEG File Interchange Format', 1.01, 220000.139, 'Low Risk'],
-                    ['JPEG File Interchange Format', 1.02, 183000.783, 'Low Risk'],
-                    ['Portable Document Format', 1.4, 94000.626, 'Moderate Risk'],
-                    ['JPEG File Interchange Format', 1.02, 110.597, 'Low Risk'],
-                    ['JPEG File Interchange Format', 1.02, 95.086, 'Low Risk'],
+                    ['Portable Document Format', '1.4', 410000.486, 'Moderate Risk'],
+                    ['JPEG File Interchange Format', '1.01', 220000.139, 'Low Risk'],
+                    ['JPEG File Interchange Format', '1.02', 183000.783, 'Low Risk'],
+                    ['Portable Document Format', '1.4', 94000.626, 'Moderate Risk'],
+                    ['JPEG File Interchange Format', '1.02', 110.597, 'Low Risk'],
+                    ['JPEG File Interchange Format', '1.02', 95.086, 'Low Risk'],
                     ['Unknown Binary', 'nan', 195.06, 'No Match'],
                     ['JPEG File Interchange Format', '1.01', 82638000.0, 'Low Risk'],
                     ['Portable Network Graphics', '1', 257638000.0, 'Moderate Risk'],
