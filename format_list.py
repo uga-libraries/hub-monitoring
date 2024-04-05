@@ -1,12 +1,12 @@
-"""Makes a spreadsheet with the format data from every full risk spreadsheet in a given folder
+"""Makes a spreadsheet with the format data from every full risk spreadsheet in a given directory
 
-Data included: TBD
+Data included: format name, version, NARA risk level, number of files, and size in GB
 
 Parameter:
-    directory (required): the directory with spreadsheets to be combined
+    directory (required): the path to the directory with spreadsheets to be combined
 
 Returns:
-    CSV with all format data
+    CSV with all format data, in the directory folder (script argument)
 """
 import os
 import pandas as pd
