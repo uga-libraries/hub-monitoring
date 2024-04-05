@@ -13,20 +13,28 @@ import pandas as pd
 import sys
 
 
+def combine_risk_csvs(dir):
+    """Combine the data from every risk csv in the directory into one dataframe"""
+
+    # Makes a list of every risk spreadsheet, anywhere in the directory.
+    csv_list = []
+    for root, directories, files in os.walk(dir):
+        for file in files:
+            if 'full_risk_data' in file:
+                csv_list.append(os.path.join(root, file))
+
+    # Combines every spreadsheet into one dataframe.
+    df = pd.concat([pd.read_csv(f) for f in csv_list])
+    return df
+
+
 if __name__ == '__main__':
 
     # Gets the path to the directory with the accessions to be validated from the script argument.
     directory = sys.argv[1]
 
-    # Makes a list of every risk spreadsheet, anywhere in the directory.
-    csv_list = []
-    for root, directories, files in os.walk(directory):
-        for file in files:
-            if 'full_risk_data' in file:
-                csv_list.append(os.path.join(root, file))
-
-    # Makes a dataframe with the contents of every spreadsheet.
-    df_all = pd.concat([pd.read_csv(f) for f in csv_list])
+    # Combines the risk data into one dataframe.
+    df_all = combine_risk_csvs(directory)
 
     # Makes a copy of the dataframe with just the needed columns and no duplicate rows (from multiple NARA matches).
     df = df_all[['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk Level']].copy()
@@ -47,5 +55,3 @@ if __name__ == '__main__':
 
     # Save the result to a CSV in directory.
     df_formats.to_csv(os.path.join(directory, 'combined_format_data.csv'), index=False)
-
-    # print('Number of risk spreadsheets combined:', len(csv_list))
