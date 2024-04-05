@@ -12,28 +12,36 @@ from pandas import read_csv
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Deletes the CSV made by the function, if it was made"""
-        csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er',
-                        f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
-        if exists(csv_path):
-            remove(csv_path)
+        """Deletes the CSVs made by the function, if made"""
+        log_csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'update_risk_log.csv')
+        risk_csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er',
+                             f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
+
+        for csv_path in (log_csv_path, risk_csv_path):
+            if exists(csv_path):
+                remove(csv_path)
 
     def test_function(self):
         """Test for the function
         All variation is covered by match_nara_risk(), which this function calls."""
         # Creates input variables and runs the function.
-        root = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er')
-        file = '2005-10-er_full_risk_data.csv'
-        nara_risk_df = read_nara_csv(join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv'))
-        new_risk_spreadsheet(root, file, nara_risk_df)
+        parent_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er')
+        risk_csv = '2005-10-er_full_risk_data.csv'
+        nara_df = read_nara_csv(join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv'))
+        log_dir = join(getcwd(), '..', 'test_data', 'Risk_Update')
+        new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir)
 
-        # Tests the expected CSV was made with the correct file name.
+        # Tests the expected log CSV was made.
+        log_path_exists = exists(join(getcwd(), '..', 'test_data', 'Risk_Update', 'update_risk_log.csv'))
+        self.assertEqual(log_path_exists, True, "Problem with test for log CSV was made")
+
+        # Tests the expected risk CSV was made with the correct file name.
         updated_csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er',
                                 f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
         path_exists = exists(updated_csv_path)
-        self.assertEqual(path_exists, True, "Problem with test for CSV was made")
+        self.assertEqual(path_exists, True, "Problem with test for risk CSV was made")
 
-        # Tests the CSV has the expected contents.
+        # Tests the risk CSV has the expected contents.
         # Replacing blanks with the string "nan" because PyCharm didn't see np.nan as an exact match.
         df = read_csv(updated_csv_path)
         df = df.fillna('nan')
@@ -66,7 +74,7 @@ class MyTestCase(unittest.TestCase):
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Document.docx', 'Word',
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
                      'nan', 'nan', 'nan', 'nan', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
-        self.assertEqual(result, expected, "Problem with test for CSV contents")
+        self.assertEqual(result, expected, "Problem with test for risk CSV contents")
 
 
 if __name__ == '__main__':
