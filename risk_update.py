@@ -6,6 +6,7 @@ Parameters:
 
 Returns:
     New risk spreadsheet is added to each accession folder
+    Log of all accessions (with collection and accession number) that were updated is made in the directory
 """
 from datetime import date, datetime
 import os
@@ -227,16 +228,19 @@ def most_recent_risk_csv(file_list):
     return recent_file
 
 
-def new_risk_spreadsheet(parent_folder, risk_csv, nara_df):
+def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
     """Make a new risk spreadsheet from the most current risk spreadsheet and NARA risk data
 
     The new spreadsheet is named accession_full_risk_data_date.csv,
     and is saved in the same folder as the original risk spreadsheet.
 
+    A log with every accession that is updated is also updated.
+
     :parameter
     parent_folder (string): path to the folder which contains the risk spreadsheet to be updated
     risk_csv (string): name of the risk spreadsheet to be updated
     nara_df (Pandas DataFrame): dataframe with all columns from NARA's Preservation Action Plan spreadsheet
+    log_dir (string): the path to the directory for saving the log (script argument directory)
 
     :returns
     None
@@ -254,6 +258,9 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df):
     today = datetime.today().strftime('%Y-%m-%d')
     update_csv_path = os.path.join(parent_folder, f'{accession_number}_full_risk_data_{today}.csv')
     update_df.to_csv(update_csv_path, index=False)
+
+    # Adds the accession to the log of updated risk spreadsheets.
+    update_log(parent_folder, log_dir)
 
 
 def read_nara_csv(nara_csv_path):
@@ -277,6 +284,36 @@ def read_nara_csv(nara_csv_path):
     return nara_df
 
 
+def update_log(accession_path, log_dir):
+    """Log accessions that had their risk csvs  updated
+
+    The log includes the collection and accession number, which are both part of the accession path.
+
+    :parameter
+    accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
+    log_dir (string): the path to the directory for saving the log (script argument directory)
+
+    :return
+    None. Makes or updates the log.
+    """
+
+    # Parses the collection and accession number from the accession path.
+    # The accession number is the last folder and the collection number is the second to last folder.
+    accession_path_list = accession_path.split('\\')
+    collection = accession_path_list[-2]
+    accession = accession_path_list[-1]
+
+    # If the log doesn't exist yet (this is the first CSV to be updated), makes the log with a header row.
+    log_path = os.path.join(log_dir, 'update_risk_log.csv')
+    if not os.path.exists(log_path):
+        with open(log_path, 'w') as f:
+            f.write('Collection,Accession\n')
+
+    # Adds the collection and accession to the log.
+    with open(log_path, 'a') as f:
+        f.write(f'{collection},{accession}\n')
+
+
 if __name__ == '__main__':
 
     # Gets the paths to the directory and NARA Preservation Action Plan spreadsheet from the script arguments.
@@ -295,4 +332,4 @@ if __name__ == '__main__':
     for root, directories, files in os.walk(directory):
         if any('full_risk_data' in x for x in files):
             file = most_recent_risk_csv(files)
-            new_risk_spreadsheet(root, file, nara_risk_df)
+            new_risk_spreadsheet(root, file, nara_risk_df, directory)
