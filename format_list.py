@@ -11,25 +11,29 @@ Returns:
 import os
 import pandas as pd
 import sys
+from risk_update import most_recent_risk_csv
 from validate_fixity import check_argument
 
 
 def combine_risk_csvs(dir_path):
-    """Combine the data from every risk csv in the directory into one dataframe
+    """Combine the data from the most recent risk csv for every accession in the directory into one dataframe
 
     @:parameter
     dir_path (string): path to the directory with risk csvs (script argument)
 
     @:returns
-    df (pandas DataFrame): dataframe with all columns from every risk csv
+    df (pandas DataFrame): dataframe with all columns from the most recent risk csv for every accession
     """
 
-    # Makes a list of every accession risk spreadsheet, anywhere in the directory.
+    # Makes a list of the most recent risk spreadsheet for every accession.
     csv_list = []
     for root, directories, files in os.walk(dir_path):
-        for file in files:
-            if 'full_risk_data' in file:
-                csv_list.append(os.path.join(root, file))
+        if any('full_risk_data' in x for x in files):
+            file = most_recent_risk_csv(files)
+            csv_list.append(os.path.join(root, file))
+
+    # Prints the number of CSVs, to give an idea of the amount of coverage since not all accessions have a risk CSV.
+    print('Number of CSVs to combine:', len(csv_list))
 
     # Combines every spreadsheet into one dataframe.
     df = pd.concat([pd.read_csv(f) for f in csv_list])
@@ -46,10 +50,10 @@ def df_cleanup(df):
     """Remove unneeded columns, rename a column, remove duplicates, fill empty NARA risk levels
 
     @:parameter
-    df (pandas DataFrame): dataframe with all columns from every risk csv
+    df (pandas DataFrame): dataframe with all columns from the most recent risk csv for every accession
 
     @:returns
-    df (pandas DataFrame): dataframe with select columns from every risk csv
+    df (pandas DataFrame): dataframe with select columns from the most recent risk csv for every accession
     """
 
     # Keeps only the needed columns.
@@ -75,7 +79,7 @@ def files_per_format(df):
     """Calculate the number of files for each format name, version, and NARA risk level combination
 
     @:parameter
-    df (pandas DataFrame): dataframe with select columns form every csv (output of df_cleanup())
+    df (pandas DataFrame): dataframe with select columns from the most recent risk csv for every accession
 
     @:returns
     files (pandas DataFrame): dataframe with format name, version, NARA risk level, and number of files
@@ -97,7 +101,7 @@ def size_per_format(df):
     """Calculate the size in GB for each format name, version, and NARA risk level combination
 
     @:parameter
-    df (pandas Dataframe): dataframe with select columns form every csv (output of df_cleanup())
+    df (pandas Dataframe): dataframe with select columns from the most recent risk csv for every accession
 
     @:returns
     size (pandas Dataframe): dataframe with format name, version, NARA risk level, and size in GB
@@ -128,7 +132,7 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Combines the risk data into one dataframe.
+    # Combines the most recent risk csv for each accession into one dataframe.
     df_all = combine_risk_csvs(directory)
 
     # Transforms the dataframe with all risk data to a dataframe with the desired data.
