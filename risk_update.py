@@ -6,6 +6,7 @@ Parameters:
 
 Returns:
     New risk spreadsheet is added to each accession folder
+    Log of all accessions (with collection and accession number) that were updated is made in the directory
 """
 from datetime import date, datetime
 import os
@@ -233,6 +234,8 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
     The new spreadsheet is named accession_full_risk_data_date.csv,
     and is saved in the same folder as the original risk spreadsheet.
 
+    A log with every accession that is updated is also updated.
+
     :parameter
     parent_folder (string): path to the folder which contains the risk spreadsheet to be updated
     risk_csv (string): name of the risk spreadsheet to be updated
@@ -282,7 +285,7 @@ def read_nara_csv(nara_csv_path):
 
 
 def update_log(accession_path, log_dir):
-    """Log accessions that have updated risk csvs
+    """Log accessions that had their risk csvs  updated
 
     The log includes the collection and accession number, which are both part of the accession path.
 
@@ -294,18 +297,19 @@ def update_log(accession_path, log_dir):
     None. Makes or updates the log.
     """
 
-    # Parse the collection and accession number from the accession path, which are the last 2 folders in the path.
+    # Parses the collection and accession number from the accession path.
+    # The accession number is the last folder and the collection number is the second to last folder.
     accession_path_list = accession_path.split('\\')
     collection = accession_path_list[-2]
     accession = accession_path_list[-1]
 
-    # If the log doesn't exist yet, make the log with a header row.
+    # If the log doesn't exist yet (this is the first CSV to be updated), makes the log with a header row.
     log_path = os.path.join(log_dir, 'update_risk_log.csv')
     if not os.path.exists(log_path):
         with open(log_path, 'w') as f:
             f.write('Collection,Accession\n')
 
-    # Add the accession to the log.
+    # Adds the collection and accession to the log.
     with open(log_path, 'a') as f:
         f.write(f'{collection},{accession}\n')
 
