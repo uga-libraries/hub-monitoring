@@ -15,7 +15,14 @@ from validate_fixity import check_argument
 
 
 def combine_risk_csvs(dir_path):
-    """Combine the data from every risk csv in the directory into one dataframe"""
+    """Combine the data from every risk csv in the directory into one dataframe
+
+    @:parameter
+    dir_path (string): path to the directory with risk csvs (script argument)
+
+    @:returns
+    df (pandas DataFrame): dataframe with all columns from every risk csv
+    """
 
     # Makes a list of every risk spreadsheet, anywhere in the directory.
     csv_list = []
@@ -35,7 +42,14 @@ def combine_risk_csvs(dir_path):
 
 
 def df_cleanup(df):
-    """Remove columns, remove duplicates, fill empty NARA risk levels"""
+    """Remove columns, remove duplicates, fill empty NARA risk levels
+
+    @:parameter
+    df (pandas DataFrame): dataframe with all columns from every csv
+
+    @:returns
+    df (pandas DataFrame): dataframe with select columns from every csv
+    """
 
     # Makes a copy of the dataframe with just the needed columns.
     df = df[['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk Level']]
@@ -55,7 +69,14 @@ def df_cleanup(df):
 
 
 def files_per_format(df):
-    """Number of files for each format name, version, risk level combination"""
+    """Number of files for each format name, version, risk level combination
+
+    @:parameter
+    df (pandas DataFrame): dataframe with select columns form every csv (output of df_cleanup())
+
+    @:returns
+    files (pandas DataFrame): dataframe with format name, version, NARA risk level, and number of files
+    """
 
     # Groupby includes NARA risk level so different possible risks for the name/version combination are kept.
     # Reset index keeps the name, version, and risk level as columns in the dataframe.
@@ -70,7 +91,14 @@ def files_per_format(df):
 
 
 def size_per_format(df):
-    """Size in GB for each format name, version, risk level combination"""
+    """Size in GB for each format name, version, risk level combination
+
+    @:parameter
+    df (pandas Dataframe): dataframe with select columns form every csv (output of df_cleanup())
+
+    @:returns
+    size (pandas Dataframe): dataframe with format name, version, NARA risk level, and size in GB
+    """
 
     # Groupby includes NARA risk level so different possible risks for the name/version combination are kept.
     # Reset index keeps the name, version, and risk level as columns in the dataframe.
