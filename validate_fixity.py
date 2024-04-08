@@ -140,3 +140,6 @@ if __name__ == '__main__':
                 is_valid, error = validate_bag(bag_path)
                 update_log(bag_path, is_valid)
                 update_report([folder, is_valid, error], directory)
+        for file in files:
+            if file.startswith('initialmanifest'):
+                acc_folder = root
