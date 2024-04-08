@@ -12,8 +12,11 @@ Returns:
 import bagit
 import csv
 from datetime import date
+import hashlib
 import os
 import sys
+
+import pandas as pd
 
 
 def check_argument(arg_list):
@@ -120,6 +123,49 @@ def validate_bag(bag_dir):
     return valid, error_msg
 
 
+def validate_manifest(acc_dir, manifest):
+    """Validate an accession that has a manifest instead of being bagged
+
+    Accession's with long file paths cannot be bagged.
+    They contain a file "initialmanifest_YYYYMMDD.csv" instead.
+    Inspired by https://github.com/uga-libraries/verify-md5-KDPmanifests/blob/main/hashverify.py
+
+    :parameter
+    acc_dir (string): the path to an accession folder
+    manifest (string): the path to the accession manifest file
+
+    :returns
+    valid (Boolean): True if the accession matched the manifest, False if the accession did not match the manifest
+    error_msg (None, string): None if accession matched the manifest, otherwise a string with errors
+    """
+
+    # Gets the path to the folder with the accession's files.
+    # The accession folder contains this folder and optionally a folder with FITS XML files.
+    acc_files = None
+    for item in os.listdir(acc_dir):
+        if os.path.isdir(os.path.join(acc_dir, item)) and not item.endswith('FITS'):
+            acc_files = os.path.join(acc_dir, item)
+
+    # Makes a dataframe with the path and MD5 of every file in acc_files.
+    files_list = []
+    for root, dirs, files in os.walk(acc_files):
+        for file in files:
+            filepath = os.path.join(root, file)
+            with open(filepath, 'rb') as f:
+                data = f.read()
+                md5_generated = hashlib.md5(data).hexdigest()
+            files_list.append([filepath, md5_generated.upper()])
+    df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'])
+
+    # Reads the manifest into a dataframe.
+    df_manifest = pd.read_csv(manifest)
+
+    # Merge the two dataframes to compare them.
+    df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='MD5', right_on='Acc_MD5', indicator='Match')
+
+    return df_files, df_manifest
+
+
 if __name__ == '__main__':
 
     # Gets the path to the directory with the accessions to be validated from the script argument.
@@ -133,8 +179,8 @@ if __name__ == '__main__':
     update_report(['Bag', 'Valid', 'Errors'], directory)
 
     # Navigates to each accession bag, validates it, and updates the preservation log.
-    for root, folders, files in os.walk(directory):
-        for folder in folders:
+    for root, dirs, files in os.walk(directory):
+        for folder in dirs:
             if folder.endswith('_bag'):
                 bag_path = os.path.join(root, folder)
                 is_valid, error = validate_bag(bag_path)
@@ -142,4 +188,6 @@ if __name__ == '__main__':
                 update_report([folder, is_valid, error], directory)
         for file in files:
             if file.startswith('initialmanifest'):
-                acc_folder = root
+                acc_path = root
+                manifest_path = os.path.join(root, file)
+                is_valid, error = validate_manifest(acc_path, manifest_path)
