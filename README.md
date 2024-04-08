@@ -70,7 +70,7 @@ TBD
 
 For the file list, after the script runs:
 1. Add a "Source" column as the first column with the Hub DEPARTMENT for combining it with other format data.
-2. Merge rows where the only NARA risk level is different.  
+2. Merge rows where only the NARA risk level is different.  
    a. If one of the NARA risk levels is No Match, only include the other risk level(s).  
    b. For multiple other risk levels, convert to a range, e.g. Low-High Risk or Low-Moderate Risk.
 
