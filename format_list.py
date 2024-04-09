@@ -8,6 +8,7 @@ Parameter:
 Returns:
     CSV with all format data, in the directory folder (script argument)
 """
+from datetime import datetime
 import os
 import pandas as pd
 import sys
@@ -36,7 +37,7 @@ def combine_risk_csvs(dir_path):
     print('Number of CSVs to combine:', len(csv_list))
 
     # Combines every spreadsheet into one dataframe.
-    df = pd.concat([pd.read_csv(f) for f in csv_list])
+    df = pd.concat([pd.read_csv(f, low_memory=False) for f in csv_list])
 
     # Converts the version column to a string.
     # By default, if a CSV has all numeric versions, it is a float, but otherwise a string.
@@ -132,6 +133,9 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
+    # Saves when the script started, for calculating how long this will take.
+    start = datetime.now()
+
     # Combines the most recent risk csv for each accession into one dataframe.
     df_all = combine_risk_csvs(directory)
 
@@ -146,3 +150,8 @@ if __name__ == '__main__':
 
     # Saves the result to a CSV in the directory.
     df_format_list.to_csv(os.path.join(directory, 'combined_format_data.csv'), index=False)
+
+    # Calculates how long the script took.
+    end = datetime.now()
+    print(f'Script started at {start} and ended at {end}')
+    print('Time required:', end - start)
