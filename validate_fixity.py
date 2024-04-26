@@ -206,3 +206,4 @@ if __name__ == '__main__':
                 manifest_path = os.path.join(root, file)
                 is_valid, error = validate_manifest(root, manifest_path)
                 update_preservation_log(root, is_valid, 'manifest')
+                update_report([root, is_valid, f'{len(error)} errors'], directory)
