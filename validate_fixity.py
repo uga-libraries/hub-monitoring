@@ -136,7 +136,8 @@ def validate_manifest(acc_dir, manifest):
 
     :returns
     valid (Boolean): True if the accession matched the manifest, False if the accession did not match the manifest
-    error_msg (None, string): None if accession matched the manifest, otherwise a string with errors
+    error_list (list): Empty list if accession matched the manifest,
+                       otherwise a list with the path, md5, and source of any that did not match
     """
 
     # Gets the path to the folder with the accession's files.
@@ -163,10 +164,23 @@ def validate_manifest(acc_dir, manifest):
     # Merge the two dataframes to compare them.
     df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='MD5', right_on='Acc_MD5', indicator='Match')
 
-    # Determine if everything matched (values in Match will all be both)
+    # Determines if everything matched (values in Match will all be both)
     valid = df_compare['Match'].eq('both').all(axis=0)
 
-    return valid, 'tbd'
+    # Makes a list of the path, MD5, and source of the MD5 (manifest or file) for any that did not match,
+    # if there were any that did not match.
+    error_list = []
+    if not valid:
+        df_left = df_compare[df_compare['Match'] == 'left_only']
+        df_left = df_left[['File', 'MD5']]
+        df_left['MD5_Source'] = 'Manifest'
+        error_list.extend(df_left.values.tolist())
+        df_right = df_compare[df_compare['Match'] == 'right_only']
+        df_right = df_right[['Acc_Path', 'Acc_MD5']]
+        df_right['MD5_Source'] = 'Current'
+        error_list.extend(df_right.values.tolist())
+
+    return valid, error_list
 
 
 if __name__ == '__main__':
