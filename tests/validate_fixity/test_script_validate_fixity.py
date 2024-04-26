@@ -16,13 +16,11 @@ class MyTestCase(unittest.TestCase):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder,
         and delete the script validation report"""
-        # Accession 2023_test003_001_er
-        test1 = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_001_er')
-        copyfile(join(test1, 'preservation_log_copy.txt'), join(test1, 'preservation_log.txt'))
-
-        # Accession 2023_test003_002_er
-        test2 = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_002_er')
-        copyfile(join(test2, 'preservation_log_copy.txt'), join(test2, 'preservation_log.txt'))
+        # Preservation logs
+        accessions = ['2023_test003_001_er', '2023_test003_002_er', '2023_test003_003_er', '2023_test003_004_er']
+        for accession in accessions:
+            folder = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', accession)
+            copyfile(join(folder, 'preservation_log_copy.txt'), join(folder, 'preservation_log.txt'))
 
         # Validation report
         validation_path = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update',
@@ -41,7 +39,7 @@ class MyTestCase(unittest.TestCase):
         df = read_csv(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         df = df.fillna('nan')
         report_rows = [df.columns.tolist()] + df.values.tolist()
-        expected = [['Bag', 'Valid', 'Errors'],
+        expected = [['Accession', 'Valid', 'Errors'],
                     ['2023_test003_001_er_bag', False,
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
                     ['2023_test003_002_er_bag', True, 'nan']]
@@ -52,23 +50,15 @@ class MyTestCase(unittest.TestCase):
         df = df.fillna('nan')
         log_rows = [df.columns.tolist()] + df.values.tolist()
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.003', '2023.test003.001.ER', '2023-02-28', 'CD.001',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.001.ER', '2023-02-28', 'CD.001',
-                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.001.ER', '2023-02-28', 'CD.001',
-                     'Bagged with accession 2023.test003.001.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.001.ER', '2023-02-28', 'CD.002',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.001.ER', '2023-02-28', 'CD.002',
-                     'Copied to external storage device using TeraCopy. No security threats were detected.',
-                     'Jane Doe'],
-                    ['TEST.003', '2023.test003.001.ER', '2023-02-28', 'CD.002',
-                     'Bagged with accession 2023.test003.001.ER. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.001.ER', '2023-02-28', 'nan',
-                     'Validated bag for accession 2023.test003.001.ER. The bag was valid.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.001.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.test003.001.ER. The bag was not valid.', 'validate_fixity.py']]
+                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Bagged with accession.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Virus scanned. No threats.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Copied. No errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Bagged with accession.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'nan', 'Validated bag for accession. Valid.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag for accession 2023.3.1.ER. The bag is not valid.', 'validate_fixity.py']]
         self.assertEqual(log_rows, expected, 'Problem with test for correct, 2023_test003_001_er')
 
         # Verifies the contents of the log for 2023_test003_002_er have been updated.
@@ -76,23 +66,15 @@ class MyTestCase(unittest.TestCase):
         df = df.fillna('nan')
         log_rows = [df.columns.tolist()] + df.values.tolist()
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.003', '2023.test003.002.ER', '2023-02-28', 'CD.001',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.002.ER', '2023-02-28', 'CD.001',
-                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.002.ER', '2023-02-28', 'CD.001',
-                     'Bagged with accession 2023.test003.002.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.002.ER', '2023-02-28', 'CD.002',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.002.ER', '2023-02-28', 'CD.002',
-                     'Copied to external storage device using TeraCopy. No security threats were detected.',
-                     'Jane Doe'],
-                    ['TEST.003', '2023.test003.002.ER', '2023-02-28', 'CD.002',
-                     'Bagged with accession 2023.test003.002.ER. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.002.ER', '2023-02-28', 'nan',
-                     'Validated bag for accession 2023.test003.002.ER. The bag was valid.', 'Jane Doe'],
-                    ['TEST.003', '2023.test003.002.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.test003.002.ER. The bag was valid.', 'validate_fixity.py']]
+                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Bagged with accession.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD2', 'Virus scanned. No threats.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD2', 'Copied. No errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD2', 'Bagged with accession.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'nan', 'Validated bag for accession. Valid.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag for accession 2023.3.2.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(log_rows, expected, 'Problem with test for correct, 2023_test003_002_er')
 
     def test_error(self):
