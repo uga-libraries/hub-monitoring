@@ -203,6 +203,6 @@ if __name__ == '__main__':
                 update_report([folder, is_valid, error], directory)
         for file in files:
             if file.startswith('initialmanifest'):
-                acc_path = root
                 manifest_path = os.path.join(root, file)
-                is_valid, error = validate_manifest(acc_path, manifest_path)
+                is_valid, error = validate_manifest(root, manifest_path)
+                update_preservation_log(root, is_valid, 'manifest')
