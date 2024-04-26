@@ -45,24 +45,22 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, directory"
 
 
-def update_preservation_log(bag_dir, validation_result):
+def update_preservation_log(acc_dir, validation_result, validation_type):
     """Update an accession's preservation log with the bag validation results
 
     :parameter
-    bag_dir (string): the path to an accession bag
-    validation_result (Boolean): if an accession bag is valid
+    acc_dir (string): the path to an accession folder, which contains the preservation log
+    validation_result (Boolean): if an accession's file fixity is valid
+    validation_type (string): bag or manifest
 
     :returns
     None
     """
 
-    # Calculates the path to the preservation_log.txt file, which is in the same directory as the accession bag.
-    bag_parent = os.path.dirname(bag_dir)
-    log_path = os.path.join(bag_parent, 'preservation_log.txt')
-
     # Gets the collection and accession numbers from the preservation log.
     # These are the first two columns, the values are the same for every row in the preservation log,
     # and they are formatted differently than the folder names so must be taken from the log.
+    log_path = os.path.join(acc_dir, 'preservation_log.txt')
     with open(log_path, 'r') as open_log:
         last_row = open_log.readlines()[-1].split('\t')
         collection = last_row[0]
@@ -71,11 +69,11 @@ def update_preservation_log(bag_dir, validation_result):
     # Formats today's date YYYY-MM-DD to include in the log entry for bag validation.
     today = date.today().strftime('%Y-%m-%d')
 
-    # Calculates the action to include in the log entry for bag validation, based on the value of validation_result.
+    # Calculates the action to include in the log entry for the validation.
     if validation_result is True:
-        action = f'Validated bag for accession {accession}. The bag was valid.'
+        action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
     else:
-        action = f'Validated bag for accession {accession}. The bag was not valid.'
+        action = f'Validated {validation_type} for accession {accession}. The {validation_type} is not valid.'
 
     # Adds a row to the end of the preservation log for the bag validation.
     log_row = [collection, accession, today, None, action, 'validate_fixity.py']
@@ -201,7 +199,7 @@ if __name__ == '__main__':
             if folder.endswith('_bag'):
                 bag_path = os.path.join(root, folder)
                 is_valid, error = validate_bag(bag_path)
-                update_preservation_log(bag_path, is_valid)
+                update_preservation_log(root, is_valid, 'bag')
                 update_report([folder, is_valid, error], directory)
         for file in files:
             if file.startswith('initialmanifest'):
