@@ -45,7 +45,7 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, directory"
 
 
-def update_log(bag_dir, validation_result):
+def update_preservation_log(bag_dir, validation_result):
     """Update an accession's preservation log with the bag validation results
 
     :parameter
@@ -201,7 +201,7 @@ if __name__ == '__main__':
             if folder.endswith('_bag'):
                 bag_path = os.path.join(root, folder)
                 is_valid, error = validate_bag(bag_path)
-                update_log(bag_path, is_valid)
+                update_preservation_log(bag_path, is_valid)
                 update_report([folder, is_valid, error], directory)
         for file in files:
             if file.startswith('initialmanifest'):

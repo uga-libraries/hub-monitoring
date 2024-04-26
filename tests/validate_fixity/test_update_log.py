@@ -2,7 +2,7 @@
 Tests for the function update_log(), which adds validation information to an accession's preservation log.
 """
 import unittest
-from validate_fixity import update_log
+from validate_fixity import update_preservation_log
 from datetime import date
 from os import getcwd
 from os.path import join
@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_001_er')
         bag_path = join(parent, '2023_test003_001_er_bag')
-        update_log(bag_path, False)
+        update_preservation_log(bag_path, False)
 
         # Verifies the contents of the log have been updated.
         df = read_csv(join(parent, 'preservation_log.txt'), delimiter='\t')
@@ -58,7 +58,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         parent = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_002_er')
         bag_path = join(parent, '2023_test003_002_er_bag')
-        update_log(bag_path, True)
+        update_preservation_log(bag_path, True)
 
         # Verifies the contents of the log have been updated.
         df = read_csv(join(parent, 'preservation_log.txt'), delimiter='\t')
