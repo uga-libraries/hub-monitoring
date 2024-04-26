@@ -155,15 +155,18 @@ def validate_manifest(acc_dir, manifest):
                 data = f.read()
                 md5_generated = hashlib.md5(data).hexdigest()
             files_list.append([filepath, md5_generated.upper()])
-    df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'])
+    df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the manifest into a dataframe.
-    df_manifest = pd.read_csv(manifest)
+    df_manifest = pd.read_csv(manifest, dtype=object)
 
     # Merge the two dataframes to compare them.
     df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='MD5', right_on='Acc_MD5', indicator='Match')
 
-    return df_files, df_manifest
+    # Determine if everything matched (values in Match will all be both)
+    valid = df_compare['Match'].eq('both').all(axis=0)
+
+    return valid, 'tbd'
 
 
 if __name__ == '__main__':
