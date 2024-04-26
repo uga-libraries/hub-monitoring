@@ -193,7 +193,7 @@ if __name__ == '__main__':
     # Starts a report for all validations in the directory provided as a script argument.
     update_report(['Accession', 'Valid', 'Errors'], directory)
 
-    # Navigates to each accession bag, validates it, and updates the preservation log.
+    # Navigates to each accession, validates it, and updates the preservation log.
     for root, dirs, files in os.walk(directory):
         for folder in dirs:
             if folder.endswith('_bag'):
@@ -204,6 +204,12 @@ if __name__ == '__main__':
         for file in files:
             if file.startswith('initialmanifest'):
                 manifest_path = os.path.join(root, file)
-                is_valid, error = validate_manifest(root, manifest_path)
+                is_valid, errors_list = validate_manifest(root, manifest_path)
                 update_preservation_log(root, is_valid, 'manifest')
-                update_report([root, is_valid, f'{len(error)} errors'], directory)
+                update_report([os.path.basename(root), is_valid, f'{len(errors_list)} errors'], directory)
+                # Saves the list of each file with fixity differences.
+                if not is_valid:
+                    with open(os.path.join(directory, f'{root}_manifest_validation_errors.csv'), 'a', newline='') as f:
+                        f_write = csv.writer(f)
+                        f_write.writerow(['File', 'MD5', 'MD5_Source'])
+                        f_write.writerows(errors_list)
