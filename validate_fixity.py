@@ -45,7 +45,7 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, directory"
 
 
-def update_preservation_log(acc_dir, validation_result, validation_type):
+def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
     """Update an accession's preservation log with the bag validation results
 
     If there is no preservation log (rare), it will print an error and not do the rest of the function.
@@ -55,6 +55,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type):
     acc_dir (string): the path to an accession folder, which contains the preservation log
     validation_result (Boolean): if an accession's file fixity is valid
     validation_type (string): bag or manifest
+    error_msg (None or string; optional): included for bag validation so error details can be in the log
 
     :returns
     None
@@ -79,10 +80,13 @@ def update_preservation_log(acc_dir, validation_result, validation_type):
     today = date.today().strftime('%Y-%m-%d')
 
     # Calculates the action to include in the log entry for the validation.
+    # It includes if it was a bag or manifest, if it was valid or not, and for invalid bags the error message.
     if validation_result:
         action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
     else:
         action = f'Validated {validation_type} for accession {accession}. The {validation_type} is not valid.'
+        if error_msg:
+            action = action + ' ' + error_msg
 
     # Adds a row to the end of the preservation log for the bag validation.
     log_row = [collection, accession, today, None, action, 'validate_fixity.py']
@@ -228,7 +232,7 @@ if __name__ == '__main__':
         for folder in dirs:
             if folder.endswith('_bag'):
                 is_valid, error = validate_bag(os.path.join(root, folder))
-                update_preservation_log(root, is_valid, 'bag')
+                update_preservation_log(root, is_valid, 'bag', error)
                 update_report([folder, is_valid, error], directory)
         for file in files:
             if file.startswith('initialmanifest'):

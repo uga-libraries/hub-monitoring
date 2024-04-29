@@ -68,7 +68,8 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Bagged with accession.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'nan', 'Validated bag for accession. Valid.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.1.ER. The bag is not valid.', 'validate_fixity.py']]
+                     'Validated bag for accession 2023.3.1.ER. The bag is not valid. Payload-Oxum validation failed. '
+                     'Expected 1 files and 4 bytes but found 1 files and 26 bytes', 'validate_fixity.py']]
         self.assertEqual(log_rows, expected, 'Problem with test for correct, 2023_test003_001_er')
 
         # Verifies the contents of the log for 2023_test003_002_er have been updated.

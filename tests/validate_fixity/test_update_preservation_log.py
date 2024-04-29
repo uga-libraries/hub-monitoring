@@ -24,7 +24,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
         root = join('test_data', 'test_003_log_update', '2023_test003_001_er')
-        update_preservation_log(root, False, 'bag')
+        error = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'
+        update_preservation_log(root, False, 'bag', error)
 
         # Verifies the contents of the log have been updated.
         df = read_csv(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -39,14 +40,16 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Bagged with accession.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'nan', 'Validated bag for accession. Valid.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.1.ER. The bag is not valid.', 'validate_fixity.py']]
+                     'Validated bag for accession 2023.3.1.ER. The bag is not valid. '
+                     'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes',
+                     'validate_fixity.py']]
         self.assertEqual(log_rows, expected, 'Problem with test for bag, not valid')
 
     def test_bag_valid(self):
         """Test for when the bag is valid"""
         # Makes the variables needed for function input and runs the function.
         root = join('test_data', 'test_003_log_update', '2023_test003_002_er')
-        update_preservation_log(root, True, 'bag')
+        update_preservation_log(root, True, 'bag', None)
 
         # Verifies the contents of the log have been updated.
         df = read_csv(join(root, 'preservation_log.txt'), delimiter='\t')
