@@ -13,8 +13,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession does not match the manifest due to file deletions."""
         # Makes the variables for function input and runs the function.
         acc_path = join('test_data', 'test_005_manifest_invalid', '2023_test005_001_er')
-        manifest_path = join(acc_path, 'initialmanifest_20230501.csv')
-        is_valid, error = validate_manifest(acc_path, manifest_path)
+        file = 'initialmanifest_20230501.csv'
+        is_valid, error = validate_manifest(acc_path, file)
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for invalid deletion, is_valid')
@@ -27,8 +27,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession does not match the manifest due to files being edited."""
         # Makes the variables for function input and runs the function.
         acc_path = join('test_data', 'test_005_manifest_invalid', '2023_test005_002_er')
-        manifest_path = join(acc_path, 'initialmanifest_20230601.csv')
-        is_valid, error = validate_manifest(acc_path, manifest_path)
+        file = 'initialmanifest_20230601.csv'
+        is_valid, error = validate_manifest(acc_path, file)
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for invalid edit, is_valid')
@@ -45,8 +45,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession matches the manifest."""
         # Makes the variables for function input and runs the function.
         acc_path = join('test_data', 'test_004_manifest_valid', '2023_test004_001_er')
-        manifest_path = join(acc_path, 'initialmanifest_20231003.csv')
-        is_valid, error = validate_manifest(acc_path, manifest_path)
+        file = 'initialmanifest_20231003.csv'
+        is_valid, error = validate_manifest(acc_path, file)
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, True, 'Problem with test for valid, is_valid')
@@ -59,8 +59,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession matches the manifest."""
         # Makes the variables for function input and runs the function.
         acc_path = join('test_data', 'test_004_manifest_valid', '2023_test004_002_er')
-        manifest_path = join(acc_path, 'initialmanifest_20231124.csv')
-        is_valid, error = validate_manifest(acc_path, manifest_path)
+        file = 'initialmanifest_20231124.csv'
+        is_valid, error = validate_manifest(acc_path, file)
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, True, 'Problem with test for valid duplicate, is_valid')
@@ -73,8 +73,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession matches the manifest. It also has a FITS folder."""
         # Makes the variables for function input and runs the function.
         acc_path = join('test_data', 'test_004_manifest_valid', '2023_test004_003_er')
-        manifest_path = join(acc_path, 'initialmanifest_20240426.csv')
-        is_valid, error = validate_manifest(acc_path, manifest_path)
+        file = 'initialmanifest_20240426.csv'
+        is_valid, error = validate_manifest(acc_path, file)
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, True, 'Problem with test for valid FITS, is_valid')

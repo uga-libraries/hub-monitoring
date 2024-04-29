@@ -157,7 +157,7 @@ def validate_manifest(acc_dir, manifest):
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the manifest into a dataframe.
-    df_manifest = pd.read_csv(manifest, dtype=object)
+    df_manifest = pd.read_csv(os.path.join(acc_dir, manifest), dtype=object)
 
     # Merge the two dataframes to compare them.
     df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='MD5', right_on='Acc_MD5', indicator='Match')
@@ -197,14 +197,12 @@ if __name__ == '__main__':
     for root, dirs, files in os.walk(directory):
         for folder in dirs:
             if folder.endswith('_bag'):
-                bag_path = os.path.join(root, folder)
-                is_valid, error = validate_bag(bag_path)
+                is_valid, error = validate_bag(os.path.join(root, folder))
                 update_preservation_log(root, is_valid, 'bag')
                 update_report([folder, is_valid, error], directory)
         for file in files:
             if file.startswith('initialmanifest'):
-                manifest_path = os.path.join(root, file)
-                is_valid, errors_list = validate_manifest(root, manifest_path)
+                is_valid, errors_list = validate_manifest(root, file)
                 update_preservation_log(root, is_valid, 'manifest')
                 update_report([os.path.basename(root), is_valid, f'{len(errors_list)} errors'], directory)
                 # Saves the list of each file with fixity differences.
