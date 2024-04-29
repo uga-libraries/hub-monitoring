@@ -35,7 +35,12 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
         directory = join(getcwd(), 'test_data', 'test_003_log_update')
-        subprocess.run(f'python {script} {directory}', shell=True)
+        msg = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
+
+        # Verifies the script printed the correct message about the accession without a preservation log.
+        result = msg.stdout.decode('utf-8')
+        expected = '\r\nERROR: accession 2023_test003_005_er has no preservation log.\r\n'
+        self.assertEqual(result, expected, 'Problem with test for printed message')
 
         # Verifies the contents of the validation report are correct.
         df = read_csv(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
@@ -46,7 +51,8 @@ class MyTestCase(unittest.TestCase):
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
                     ['2023_test003_002_er_bag', True, 'nan'],
                     ['2023_test003_003_er', False, '6 errors'],
-                    ['2023_test003_004_er', True, '0 errors']]
+                    ['2023_test003_004_er', True, '0 errors'],
+                    ['2023_test003_005_er', True, '0 errors']]
         self.assertEqual(report_rows, expected, 'Problem with test for correct, validation report')
 
         # Verifies the contents of the log for 2023_test003_001_er have been updated.
