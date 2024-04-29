@@ -100,13 +100,21 @@ def update_report(text_list, report_dir):
 
     :parameter
     text_list (list): text for the three columns
-    report_dir (string): directory where the report is saved
+    report_dir (string): directory where the report is saved (script argument)
 
     :returns
     None
     """
 
     report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+
+    # If the report doesn't already exist, starts a report with a header.
+    if not os.path.exists(report_path):
+        with open(report_path, 'w', newline='') as open_report:
+            report_writer = csv.writer(open_report)
+            report_writer.writerow(['Accession', 'Valid', 'Errors'])
+
+    # Adds the error text to the report.
     with open(report_path, 'a', newline='') as open_report:
         report_writer = csv.writer(open_report)
         report_writer.writerow(text_list)
@@ -223,9 +231,6 @@ if __name__ == '__main__':
     if error:
         print(error)
         sys.exit(1)
-
-    # Starts a report for all validations in the directory provided as a script argument.
-    update_report(['Accession', 'Valid', 'Errors'], directory)
 
     # Navigates to each accession, validates it, and updates the preservation log.
     for root, dirs, files in os.walk(directory):
