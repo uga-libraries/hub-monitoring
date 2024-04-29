@@ -70,7 +70,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type):
     today = date.today().strftime('%Y-%m-%d')
 
     # Calculates the action to include in the log entry for the validation.
-    if validation_result is True:
+    if validation_result:
         action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
     else:
         action = f'Validated {validation_type} for accession {accession}. The {validation_type} is not valid.'
