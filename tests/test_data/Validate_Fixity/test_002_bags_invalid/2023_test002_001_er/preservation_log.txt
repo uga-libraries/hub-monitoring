@@ -3,6 +3,6 @@ TEST.002	2023.test002.001.ER	2023-01-31	CD.001	Virus scanned using Microsoft Def
 TEST.002	2023.test002.001.ER	2023-01-31	CD.001	Copied to external storage device using TeraCopy. No errors were detected.	Jane Doe
 TEST.002	2023.test002.001.ER	2023-01-31	CD.001	Bagged with accession 2023.test002.001.ER. No errors were detected.	Jane Doe
 TEST.002	2023.test002.001.ER	2023-01-31	CD.002	Virus scanned using Microsoft Defender. No security threats were detected.	Jane Doe
-TEST.002	2023.test002.001.ER	2023-01-31	CD.002	Copied to external storage device using TeraCopy. No security threats were detected.	Jane Doe
-TEST.002	2023.test002.001.ER	2023-01-31	CD.002	Bagged with accession 2023.test002.001.ER. No security threats were detected.	Jane Doe
+TEST.002	2023.test002.001.ER	2023-01-31	CD.002	Copied to external storage device using TeraCopy. No errors were detected.	Jane Doe
+TEST.002	2023.test002.001.ER	2023-01-31	CD.002	Bagged with accession 2023.test002.001.ER. No errors were detected.	Jane Doe
 TEST.002	2023.test002.001.ER	2023-01-31		Validated bag for accession 2023.test002.001.ER. The bag was valid.	Jane Doe
