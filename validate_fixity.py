@@ -238,12 +238,20 @@ if __name__ == '__main__':
             if folder.endswith('_bag'):
                 is_valid, error = validate_bag(os.path.join(root, folder))
                 update_preservation_log(root, is_valid, 'bag', error)
-                update_report([folder, is_valid, error], directory)
+                if not is_valid:
+                    update_report([folder, is_valid, error], directory)
         for file in files:
             if file.startswith('initialmanifest'):
                 is_valid, errors_list = validate_manifest(root, file)
                 update_preservation_log(root, is_valid, 'manifest')
-                update_report([os.path.basename(root), is_valid, f'{len(errors_list)} errors'], directory)
                 # Saves the list of each file with fixity differences to a CSV.
                 if not is_valid:
+                    update_report([os.path.basename(root), is_valid, f'{len(errors_list)} errors'], directory)
                     manifest_validation_log(directory, os.path.basename(root), errors_list)
+
+    # Prints if there were any validation errors, based on if the validation log was made or not.
+    log = os.path.join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+    if os.path.exists(log):
+        print('\nValidation errors found, see fixity_validation.csv in the directory provided as the script argument.')
+    else:
+        print('\nNo validation errors.')
