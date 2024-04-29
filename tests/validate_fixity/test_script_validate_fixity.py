@@ -19,11 +19,11 @@ class MyTestCase(unittest.TestCase):
         # Preservation logs
         accessions = ['2023_test003_001_er', '2023_test003_002_er', '2023_test003_003_er', '2023_test003_004_er']
         for accession in accessions:
-            folder = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', accession)
+            folder = join(getcwd(), 'test_data','test_003_log_update', accession)
             copyfile(join(folder, 'preservation_log_copy.txt'), join(folder, 'preservation_log.txt'))
 
         # Reports
-        directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update')
+        directory = join(getcwd(), 'test_data', 'test_003_log_update')
         reports = [f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv",
                    '2023_test003_003_er_manifest_validation_errors.csv']
         for report in reports:
@@ -34,8 +34,13 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script runs correctly on all accessions in Validate_Fixity_Hub, collection test_003"""
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update')
-        subprocess.run(f'python {script} {directory}', shell=True)
+        directory = join(getcwd(), 'test_data', 'test_003_log_update')
+        msg = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
+
+        # Verifies the script printed the correct message about the accession without a preservation log.
+        result = msg.stdout.decode('utf-8')
+        expected = '\r\nERROR: accession 2023_test003_005_er has no preservation log.\r\n'
+        self.assertEqual(result, expected, 'Problem with test for printed message')
 
         # Verifies the contents of the validation report are correct.
         df = read_csv(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
@@ -46,7 +51,8 @@ class MyTestCase(unittest.TestCase):
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
                     ['2023_test003_002_er_bag', True, 'nan'],
                     ['2023_test003_003_er', False, '6 errors'],
-                    ['2023_test003_004_er', True, '0 errors']]
+                    ['2023_test003_004_er', True, '0 errors'],
+                    ['2023_test003_005_er', True, '0 errors']]
         self.assertEqual(report_rows, expected, 'Problem with test for correct, validation report')
 
         # Verifies the contents of the log for 2023_test003_001_er have been updated.
@@ -62,7 +68,8 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Bagged with accession.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'nan', 'Validated bag for accession. Valid.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.1.ER. The bag is not valid.', 'validate_fixity.py']]
+                     'Validated bag for accession 2023.3.1.ER. The bag is not valid. Payload-Oxum validation failed. '
+                     'Expected 1 files and 4 bytes but found 1 files and 26 bytes', 'validate_fixity.py']]
         self.assertEqual(log_rows, expected, 'Problem with test for correct, 2023_test003_001_er')
 
         # Verifies the contents of the log for 2023_test003_002_er have been updated.

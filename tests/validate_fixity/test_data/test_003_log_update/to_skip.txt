@@ -1,0 +1,2 @@
+This represents a file in the directory at the same level as the accession folders.
+It will be skipped by the script with no errors.
