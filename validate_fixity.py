@@ -48,6 +48,9 @@ def check_argument(arg_list):
 def update_preservation_log(acc_dir, validation_result, validation_type):
     """Update an accession's preservation log with the bag validation results
 
+    If there is no preservation log (rare), it will print an error and not do the rest of the function.
+    The validation result will only be in the fixity_validation.csv, not in the accession folder.
+
     :parameter
     acc_dir (string): the path to an accession folder, which contains the preservation log
     validation_result (Boolean): if an accession's file fixity is valid
@@ -57,10 +60,16 @@ def update_preservation_log(acc_dir, validation_result, validation_type):
     None
     """
 
+    # Verifies the preservation log exists.
+    # If not, prints an error and does not do the rest of this function.
+    log_path = os.path.join(acc_dir, 'preservation_log.txt')
+    if not os.path.exists(log_path):
+        print(f'\nERROR: accession {os.path.basename(acc_dir)} has no preservation log.')
+        return
+
     # Gets the collection and accession numbers from the preservation log.
     # These are the first two columns, the values are the same for every row in the preservation log,
     # and they are formatted differently than the folder names so must be taken from the log.
-    log_path = os.path.join(acc_dir, 'preservation_log.txt')
     with open(log_path, 'r') as open_log:
         last_row = open_log.readlines()[-1].split('\t')
         collection = last_row[0]
