@@ -108,6 +108,27 @@ def update_report(text_list, report_dir):
         report_writer.writerow(text_list)
 
 
+def manifest_validation_log(acc_dir, acc, errors):
+    """Make a CSV file with all validation errors from a single accession
+
+    This is too much information to include in the preservation log.
+    The file is saved in the directory with the accessions.
+
+    :parameter
+    acc_dir (string): the path to the directory where the report is saved (script argument)
+    acc (string): the accession number, used for naming the report
+    errors (list): a list of validation errors to include in the report
+
+    :returns
+    None
+    """
+
+    with open(os.path.join(acc_dir, f'{acc}_manifest_validation_errors.csv'), 'w', newline='') as f:
+        f_write = csv.writer(f)
+        f_write.writerow(['File', 'MD5', 'MD5_Source'])
+        f_write.writerows(errors)
+
+
 def validate_bag(bag_dir):
     """Validate an accession's bag
 
@@ -214,9 +235,6 @@ if __name__ == '__main__':
                 is_valid, errors_list = validate_manifest(root, file)
                 update_preservation_log(root, is_valid, 'manifest')
                 update_report([os.path.basename(root), is_valid, f'{len(errors_list)} errors'], directory)
-                # Saves the list of each file with fixity differences.
+                # Saves the list of each file with fixity differences to a CSV.
                 if not is_valid:
-                    with open(os.path.join(directory, f'{root}_manifest_validation_errors.csv'), 'a', newline='') as f:
-                        f_write = csv.writer(f)
-                        f_write.writerow(['File', 'MD5', 'MD5_Source'])
-                        f_write.writerows(errors_list)
+                    manifest_validation_log(directory, os.path.basename(root), errors_list)
