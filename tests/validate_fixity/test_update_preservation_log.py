@@ -17,13 +17,13 @@ class MyTestCase(unittest.TestCase):
         using a copy of the original log that is also in the accession folder"""
         accessions = ['2023_test003_001_er', '2023_test003_002_er', '2023_test003_003_er', '2023_test003_004_er']
         for accession in accessions:
-            folder = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', accession)
+            folder = join(getcwd(), 'test_data', 'test_003_log_update', accession)
             copyfile(join(folder, 'preservation_log_copy.txt'), join(folder, 'preservation_log.txt'))
 
     def test_bag_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_001_er')
+        root = join('test_data', 'test_003_log_update', '2023_test003_001_er')
         update_preservation_log(root, False, 'bag')
 
         # Verifies the contents of the log have been updated.
@@ -45,7 +45,7 @@ class MyTestCase(unittest.TestCase):
     def test_bag_valid(self):
         """Test for when the bag is valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_002_er')
+        root = join('test_data', 'test_003_log_update', '2023_test003_002_er')
         update_preservation_log(root, True, 'bag')
 
         # Verifies the contents of the log have been updated.
@@ -67,7 +67,7 @@ class MyTestCase(unittest.TestCase):
     def test_manifest_not_valid(self):
         """Test for when the manifest is not valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_003_er')
+        root = join('test_data', 'test_003_log_update', '2023_test003_003_er')
         update_preservation_log(root, False, 'manifest')
 
         # Verifies the contents of the log have been updated.
@@ -87,7 +87,7 @@ class MyTestCase(unittest.TestCase):
     def test_manifest_valid(self):
         """Test for when the manifest is valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', '2023_test003_004_er')
+        root = join('test_data', 'test_003_log_update', '2023_test003_004_er')
         update_preservation_log(root, True, 'manifest')
 
         # Verifies the contents of the log have been updated.

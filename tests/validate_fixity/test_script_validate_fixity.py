@@ -19,11 +19,11 @@ class MyTestCase(unittest.TestCase):
         # Preservation logs
         accessions = ['2023_test003_001_er', '2023_test003_002_er', '2023_test003_003_er', '2023_test003_004_er']
         for accession in accessions:
-            folder = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update', accession)
+            folder = join(getcwd(), 'test_data','test_003_log_update', accession)
             copyfile(join(folder, 'preservation_log_copy.txt'), join(folder, 'preservation_log.txt'))
 
         # Reports
-        directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update')
+        directory = join(getcwd(), 'test_data', 'test_003_log_update')
         reports = [f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv",
                    '2023_test003_003_er_manifest_validation_errors.csv']
         for report in reports:
@@ -34,7 +34,7 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script runs correctly on all accessions in Validate_Fixity_Hub, collection test_003"""
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        directory = join(getcwd(), '..', 'test_data', 'Validate_Fixity', 'test_003_log_update')
+        directory = join(getcwd(), 'test_data', 'test_003_log_update')
         subprocess.run(f'python {script} {directory}', shell=True)
 
         # Verifies the contents of the validation report are correct.
