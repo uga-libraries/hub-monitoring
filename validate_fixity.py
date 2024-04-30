@@ -96,7 +96,9 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
 
 
 def update_report(acc, error_msg, report_dir):
-    """Add a line of text (the header or the result of an accession validation) to the summary report
+    """Add a line of text to the summary report
+
+    If it doesn't already exist, it makes the report with the header before adding the text.
 
     :parameter
     acc (string): the folder name of the accession with the error
@@ -247,7 +249,7 @@ if __name__ == '__main__':
                 update_preservation_log(root, is_valid, 'manifest')
                 # Saves the list of each file with fixity differences to a CSV.
                 if not is_valid:
-                    update_report(os.path.basename(root), f'{len(errors_list)} errors', directory)
+                    update_report(os.path.basename(root), f'{len(errors_list)} manifest errors', directory)
                     manifest_validation_log(directory, os.path.basename(root), errors_list)
 
     # Prints if there were any validation errors, based on if the validation log was made or not.

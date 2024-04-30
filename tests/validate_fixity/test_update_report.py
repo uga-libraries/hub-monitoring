@@ -42,15 +42,15 @@ class MyTestCase(unittest.TestCase):
     def test_manifest_not_valid(self):
         """Test for adding validation information for manifests that are not valid to an existing report"""
         error_one = [['error']]
-        update_report('2023_test003_003_er', f'{len(error_one)} errors', getcwd())
+        update_report('2023_test003_003_er', f'{len(error_one)} manifest errors', getcwd())
         error_two = [['error'], ['error']]
-        update_report('2023_test003_004_er', f'{len(error_two)} errors', getcwd())
+        update_report('2023_test003_004_er', f'{len(error_two)} manifest errors', getcwd())
 
         df = read_csv(join(getcwd(), f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         report_rows = [df.columns.tolist()] + df.values.tolist()
         expected = [['Accession', 'Validation_Error'],
-                    ['2023_test003_003_er', '1 errors'],
-                    ['2023_test003_004_er', '2 errors']]
+                    ['2023_test003_003_er', '1 manifest errors'],
+                    ['2023_test003_004_er', '2 manifest errors']]
         self.assertEqual(report_rows, expected, 'Problem with test for manifest not valid')
 
 
