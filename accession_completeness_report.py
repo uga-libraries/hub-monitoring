@@ -27,7 +27,8 @@ def accession_paths(coll_dir, coll):
             continue
 
         # Skip non-accession folders that may be sibling folders of accessions.
-        if acc == 'Risk_remediation' or acc == 'Access Copies' or acc.startswith('Apprais') or acc.endswith('FITS'):
+        skip = ['Access Copies', 'AIPs V2', 'to ingest', 'Risk_remediation']
+        if acc in skip or acc.startswith('Apprais') or acc.endswith('FITS'):
             continue
 
         # Accession folders that are inside Preservation Copies folders.
@@ -40,10 +41,20 @@ def accession_paths(coll_dir, coll):
             else:
                 for accession_folder in os.listdir(os.path.join(coll_dir, coll, 'Preservation Copies')):
                     acc_paths.append(os.path.join(coll_dir, coll, 'Preservation Copies', accession_folder))
+
         # Accessions content inside the collection folder.
         # TODO: do not depend on knowing the coll.
-        elif coll == 'ms4466 Athens Metal Arts Guild':
+        elif coll in ['ms4466 Athens Metal Arts Guild', 'RBRL_041_CLC', 'RBRL_059_DDB', 'RBRL_189_SDB', 'rbrl390',
+                      'rbrl459', 'rbrl480', 'rbrl481', 'rbrl483', 'rbrl496', 'rbrl501', 'rbrl507', 'rbrl508']:
             acc_paths.append(os.path.join(coll_dir, coll))
+
+        # Collection with extra collection folder.
+        # TODO: do not depend on knowing the coll.
+        elif coll == 'rbrl499':
+            for accession_folder in os.listdir(os.path.join(coll_dir, coll, coll)):
+                if not accession_folder.endswith('.csv'):
+                    acc_paths.append(os.path.join(coll_dir, coll, coll, accession_folder))
+
         # Accession folders that are inside the collection folder.
         else:
             acc_paths.append(os.path.join(coll_dir, coll, acc))
@@ -57,17 +68,15 @@ if __name__ == '__main__':
     # First level within the folder is the collection.
     for collection in os.listdir(collection_directory):
 
-        # Skip files and the non-collection folder
+        # Skips files and the non-collection folder.
         if os.path.isfile(os.path.join(collection_directory, collection)) or collection == 'scripts':
             continue
 
-        # Skip Linguistic Atlas Project, which is handled differently.
+        # Skips unconventional collections.
         # TODO: confirm this
-        if collection == 'ua22-008 Linguistic Atlas Project':
+        unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
+        if collection in unconventional:
             continue
 
-        print()
-        print(collection)
-
+        # Gets a list of the path to every folder with accession content.
         accession_list = accession_paths(collection_directory, collection)
-        print(accession_list)
