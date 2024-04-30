@@ -35,6 +35,10 @@ For validating fixity, accessions should be bags or have a manifest. (UPDATE WIT
 
 ### Script Arguments
 
+accession_completeness_report.py
+
+- directory (required): the directory with the folders to be checked for completeness
+
 collection_summary.py
 
 - directory (required): the directory with the folders to be summarized
@@ -54,13 +58,16 @@ validate_fixity.py
 
 ### Testing
 
-There are unit tests for each function and for each script overall.
+There are unit tests for each function and for each script overall for collection_summary.py, risk_update.py, and validate_fixity.py.
 The tests mostly use files stored in the repo (test_data) as input. 
 Preservation metadata files may be missing if they are not needed for a test 
 or have fake data to give the needed variations for the test.
  
 Tests for format_list.py are preliminary and all use the same input test data.
 It is the common data variations, but is not explicitly testing for all possible variations.
+
+There are no tests yet for accession_completeness_report.py.
+Check a sample of the accessions to see the report has the correct information.
 
 The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
 
