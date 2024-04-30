@@ -62,6 +62,35 @@ def accession_paths(coll_dir, coll):
     return acc_paths
 
 
+def check_completeness(acc_path):
+    """Test if the accession has a preservation log, full risk report, and if content is bagged
+    
+    acc_path (string): full path to the accession folder
+    
+    Returns a dictionary with True/False for if each of the three expected criteria are met.
+    """
+
+    # Starts a dictionary with the default value of False for all 3 criteria.
+    # These are updated to True if they are found in the accession.
+    result = {'pres_log': False, 'full_risk': False, 'bag': False}
+
+    # All the desired criteria are in the first level within the accession folder.
+    for item in os.listdir(acc_path):
+
+        # Preservation log has two possible naming conventions.
+        if item == 'preservation_log.txt' or item.endswith('PreservationLog.txt'):
+            result['pres_log'] = True
+
+        # Full risk data spreadsheet may have a date between full_risk_data and the file extension.
+        elif 'full_risk_data' in item and item.endswith('.csv'):
+            result['full_risk'] = True
+
+        elif item.endswith('_bag'):
+            result['bag'] = True
+
+    return result
+
+
 if __name__ == '__main__':
     collection_directory = sys.argv[1]
 
@@ -78,5 +107,8 @@ if __name__ == '__main__':
         if collection in unconventional:
             continue
 
-        # Gets a list of the path to every folder with accession content.
+        # Gets a list of the path to every folder with accession content and tests their completeness.
         accession_list = accession_paths(collection_directory, collection)
+        for accession_path in accession_list:
+            complete_dict = check_completeness(accession_path)
+
