@@ -60,10 +60,10 @@ class MyTestCase(unittest.TestCase):
         df = read_csv(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         df = df.fillna('nan')
         report_rows = [df.columns.tolist()] + df.values.tolist()
-        expected = [['Accession', 'Valid', 'Errors'],
-                    ['2023_test003_001_er_bag', False,
+        expected = [['Accession', 'Validation_Error'],
+                    ['2023_test003_001_er_bag',
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
-                    ['2023_test003_003_er', False, '6 errors']]
+                    ['2023_test003_003_er', '6 errors']]
         self.assertEqual(report_rows, expected, 'Problem with test for correct, validation report')
 
         # Verifies the contents of the log for 2023_test003_001_er have been updated.
