@@ -5,10 +5,10 @@ import os
 import sys
 
 
-def accession_paths(coll_dir, coll):
+def accession_paths(coll):
     """Find the accession folder(s), which can be in a few places in the collection folder
 
-    coll_dir (string): path to the folder with collections (script argument)
+    collection_directory (string): path to the folder with collections (script argument)
     coll (string): folder name of the collection
 
     returns a list of paths to the folders with the accession content,
@@ -19,10 +19,10 @@ def accession_paths(coll_dir, coll):
 
     # First level within the collection is either the content, accession folders
     # or a folder "Preservation Copies" with the content or accession folders.
-    for acc in os.listdir(os.path.join(coll_dir, coll)):
+    for acc in os.listdir(os.path.join(collection_directory, coll)):
 
         # Skip files.
-        if os.path.isfile(os.path.join(coll_dir, coll, acc)):
+        if os.path.isfile(os.path.join(collection_directory, coll, acc)):
             continue
 
         # Skip non-accession folders that may be sibling folders of accessions.
@@ -31,32 +31,32 @@ def accession_paths(coll_dir, coll):
             continue
 
         # Accession folders that are inside Preservation Copies folders.
-        if os.path.exists(os.path.join(coll_dir, coll, 'Preservation Copies')):
+        if os.path.exists(os.path.join(collection_directory, coll, 'Preservation Copies')):
             # Content is in Preservation Copies.
             # TODO: do not depend on knowing the coll.
             if coll in ['ua12-022 GLOBES records', 'ua16-010 Athens Music Project collection']:
-                acc_paths.append(os.path.join(coll_dir, coll, 'Preservation Copies'))
+                acc_paths.append(os.path.join(collection_directory, coll, 'Preservation Copies'))
             # Accession folders are in Preservation Copies.
             else:
-                for accession_folder in os.listdir(os.path.join(coll_dir, coll, 'Preservation Copies')):
-                    acc_paths.append(os.path.join(coll_dir, coll, 'Preservation Copies', accession_folder))
+                for accession_folder in os.listdir(os.path.join(collection_directory, coll, 'Preservation Copies')):
+                    acc_paths.append(os.path.join(collection_directory, coll, 'Preservation Copies', accession_folder))
 
         # Accessions content inside the collection folder.
         # TODO: do not depend on knowing the coll.
         elif coll in ['ms4466 Athens Metal Arts Guild', 'RBRL_041_CLC', 'RBRL_059_DDB', 'RBRL_189_SDB', 'rbrl390',
                       'rbrl459', 'rbrl480', 'rbrl481', 'rbrl483', 'rbrl496', 'rbrl501', 'rbrl507', 'rbrl508']:
-            acc_paths.append(os.path.join(coll_dir, coll))
+            acc_paths.append(os.path.join(collection_directory, coll))
 
         # Collection with extra collection folder.
         # TODO: do not depend on knowing the coll.
         elif coll == 'rbrl499':
-            for accession_folder in os.listdir(os.path.join(coll_dir, coll, coll)):
+            for accession_folder in os.listdir(os.path.join(collection_directory, coll, coll)):
                 if not accession_folder.endswith('.csv'):
-                    acc_paths.append(os.path.join(coll_dir, coll, coll, accession_folder))
+                    acc_paths.append(os.path.join(collection_directory, coll, coll, accession_folder))
 
         # Accession folders that are inside the collection folder.
         else:
-            acc_paths.append(os.path.join(coll_dir, coll, acc))
+            acc_paths.append(os.path.join(collection_directory, coll, acc))
 
     # Removes duplicates. When the accessions content is inside the collection folder,
     # it is added once per folder that doesn't have a skip rule.
@@ -136,7 +136,7 @@ if __name__ == '__main__':
             continue
 
         # Gets a list of the path to every folder with accession content and tests their completeness.
-        accession_list = accession_paths(collection_directory, collection)
+        accession_list = accession_paths(collection)
         for accession_path in accession_list:
             completeness_dict = check_completeness(accession_path)
             # If any of the criteria are missing, save to the report.
