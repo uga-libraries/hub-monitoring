@@ -1,7 +1,6 @@
 """Analyze all accessions in a given folder for completeness
-
-Hargrett-specific navigation so far.
 """
+import csv
 import os
 import sys
 
@@ -91,6 +90,32 @@ def check_completeness(acc_path):
     return result
 
 
+def update_report(coll, acc_path, complete):
+    """Adds an accession to the completeness report
+
+     acc_path (string): full path to the accession folder
+     completeness (dictionary): Keys are pres_log, full_risk, bag and values are Boolean
+
+     Returns None
+    """
+
+    # If the report does not already exist, makes a report with a header row.
+    report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
+    if not os.path.exists(report_path):
+        with open(report_path, 'w', newline='') as report:
+            writer = csv.writer(report)
+            writer.writerow(['Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Bag'])
+
+    # Gets the accession number from the path.
+    # TODO, there are cases where this is the collection number or 'Preservation Copies'
+    acc = os.path.basename(acc_path)
+
+    # Saves the information to the report.
+    with open(report_path, 'a', newline='') as report:
+        writer = csv.writer(report)
+        writer.writerow([coll, acc, complete['pres_log'], complete['full_risk'], complete['bag']])
+
+
 if __name__ == '__main__':
     collection_directory = sys.argv[1]
 
@@ -110,5 +135,8 @@ if __name__ == '__main__':
         # Gets a list of the path to every folder with accession content and tests their completeness.
         accession_list = accession_paths(collection_directory, collection)
         for accession_path in accession_list:
-            complete_dict = check_completeness(accession_path)
+            completeness_dict = check_completeness(accession_path)
+            # If any of the criteria are missing, save to the report.
+            if False in completeness_dict.values():
+                update_report(collection, accession_path, completeness_dict)
 
