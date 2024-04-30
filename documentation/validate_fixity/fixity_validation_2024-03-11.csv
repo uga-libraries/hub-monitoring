@@ -1,10 +1,6 @@
-Bag,Valid,Errors
-2023_test001_001_er_bag,True,
-2023_test001_002_er_bag,True,
-2023_test002_001_er_bag,False,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes
-2023_test002_002_er_bag,False,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes
-2023_test002_003_er_bag,False,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 3 files and 79 bytes
-2023_test002_004_er_bag,False,"Bag validation failed: data\CD_2\File2.txt md5 validation failed: expected=""00a0aaaa0aa0a00ab00ad0a000aa00a0"" found=""85c8fbcb2ff1d73cb94ed9c355eb20d5"""
-2023_test002_005_er_bag,False,Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem
-2023_test003_001_er_bag,False,Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes
-2023_test003_002_er_bag,True,
+Accession,Validation_Error
+2023_test002_001_er_bag,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes
+2023_test002_002_er_bag,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes
+2023_test002_004_er_bag,"Bag validation failed: data\CD_2\File2.txt md5 validation failed: expected=""00a0aaaa0aa0a00ab00ad0a000aa00a0"" found=""85c8fbcb2ff1d73cb94ed9c355eb20d5"""
+2023_test005_001_er,1 manifest errors
+2023_test005_003_er,2 manifest errors
