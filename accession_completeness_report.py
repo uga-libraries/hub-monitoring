@@ -58,6 +58,9 @@ def accession_paths(coll_dir, coll):
         else:
             acc_paths.append(os.path.join(coll_dir, coll, acc))
 
+    # Removes duplicates. When the accessions content is inside the collection folder,
+    # it is added once per folder that doesn't have a skip rule.
+    acc_paths = list(set(acc_paths))
     return acc_paths
 
 
