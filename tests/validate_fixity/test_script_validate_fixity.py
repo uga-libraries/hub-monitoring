@@ -63,10 +63,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['Accession', 'Valid', 'Errors'],
                     ['2023_test003_001_er_bag', False,
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
-                    ['2023_test003_002_er_bag', True, 'nan'],
-                    ['2023_test003_003_er', False, '6 errors'],
-                    ['2023_test003_004_er', True, '0 errors'],
-                    ['2023_test003_005_er', True, '0 errors']]
+                    ['2023_test003_003_er', False, '6 errors']]
         self.assertEqual(report_rows, expected, 'Problem with test for correct, validation report')
 
         # Verifies the contents of the log for 2023_test003_001_er have been updated.
@@ -191,13 +188,20 @@ class MyTestCase(unittest.TestCase):
         df = df.fillna('nan')
         log_rows = [df.columns.tolist()] + df.values.tolist()
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001', 'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001', 'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001', 'Bagged with accession 2023.test001.002.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002', 'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002', 'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002', 'Bagged with accession 2023.test001.002.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'nan', 'Validated bag for accession 2023.test001.002.ER. The bag was valid.', 'Jane Doe'],
+                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
+                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
+                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
+                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
+                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
+                     'Bagged with accession 2023.test001.002.ER. No errors were detected.', 'Jane Doe'],
+                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002',
+                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
+                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002',
+                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
+                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002',
+                     'Bagged with accession 2023.test001.002.ER. No errors were detected.', 'Jane Doe'],
+                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'nan',
+                     'Validated bag for accession 2023.test001.002.ER. The bag was valid.', 'Jane Doe'],
                     ['TEST.001', '2023.test001.002.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag for accession 2023.test001.002.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(log_rows, expected, 'Problem with test for correct no errors, 2023_test003_002_er')
@@ -214,7 +218,7 @@ class MyTestCase(unittest.TestCase):
             subprocess.run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=subprocess.PIPE)
 
         # Runs the script a second time and tests that it prints the correct error.
-        output = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
+        output = subprocess.run(f'python "{script}" "{directory}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, 'Problem with test for printed error')
