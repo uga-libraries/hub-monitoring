@@ -161,3 +161,10 @@ if __name__ == '__main__':
             # If any of the criteria are missing, saves the information to the report.
             if False in completeness_dict.values():
                 update_report(collection, accession_path, completeness_dict)
+
+    # Prints if there were any incomplete accessions (the report was made) or not.
+    report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
+    if os.path.exists(report_path):
+        print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {collection_directory}.')
+    else:
+        print(f'\nAll accessions are complete.')
