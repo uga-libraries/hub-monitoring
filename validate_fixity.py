@@ -95,11 +95,12 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         log_writer.writerow(log_row)
 
 
-def update_report(text_list, report_dir):
+def update_report(acc, error_msg, report_dir):
     """Add a line of text (the header or the result of an accession validation) to the summary report
 
     :parameter
-    text_list (list): text for the three columns
+    acc (string): the folder name of the accession with the error
+    error_msg (string): validation error
     report_dir (string): directory where the report is saved (script argument)
 
     :returns
@@ -112,12 +113,12 @@ def update_report(text_list, report_dir):
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as open_report:
             report_writer = csv.writer(open_report)
-            report_writer.writerow(['Accession', 'Valid', 'Errors'])
+            report_writer.writerow(['Accession', 'Validation_Error'])
 
     # Adds the error text to the report.
     with open(report_path, 'a', newline='') as open_report:
         report_writer = csv.writer(open_report)
-        report_writer.writerow(text_list)
+        report_writer.writerow([acc, error_msg])
 
 
 def manifest_validation_log(acc_dir, acc, errors):
@@ -239,14 +240,14 @@ if __name__ == '__main__':
                 is_valid, error = validate_bag(os.path.join(root, folder))
                 update_preservation_log(root, is_valid, 'bag', error)
                 if not is_valid:
-                    update_report([folder, is_valid, error], directory)
+                    update_report(folder, error, directory)
         for file in files:
             if file.startswith('initialmanifest'):
                 is_valid, errors_list = validate_manifest(root, file)
                 update_preservation_log(root, is_valid, 'manifest')
                 # Saves the list of each file with fixity differences to a CSV.
                 if not is_valid:
-                    update_report([os.path.basename(root), is_valid, f'{len(errors_list)} errors'], directory)
+                    update_report(os.path.basename(root), f'{len(errors_list)} errors', directory)
                     manifest_validation_log(directory, os.path.basename(root), errors_list)
 
     # Prints if there were any validation errors, based on if the validation log was made or not.
