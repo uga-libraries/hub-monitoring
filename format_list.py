@@ -133,9 +133,6 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Saves when the script started, for calculating how long this will take.
-    start = datetime.now()
-
     # Combines the most recent risk csv for each accession into one dataframe.
     df_all = combine_risk_csvs(directory)
 
@@ -153,8 +150,3 @@ if __name__ == '__main__':
     # This is sometimes necessary due to not having write permissions on the accession storage.
     # directory = 'insert-path'
     df_format_list.to_csv(os.path.join(directory, 'combined_format_data.csv'), index=False)
-
-    # Calculates how long the script took.
-    end = datetime.now()
-    print(f'Script started at {start} and ended at {end}')
-    print('Time required:', end - start)
