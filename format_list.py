@@ -8,7 +8,6 @@ Parameter:
 Returns:
     CSV with all format data, in the directory folder (script argument)
 """
-from datetime import datetime
 import os
 import pandas as pd
 import sys
