@@ -25,13 +25,15 @@ class MyTestCase(unittest.TestCase):
 
     def test_existing_log(self):
         """Test for when there is already a log."""
-        # Creates variables for function arguments.
-        # Runs the function twice, first to make the log and then to add to the existing log.
-        accession_path_1 = join(getcwd(), 'dept', 'coll-001', 'acc-001')
-        accession_path_2 = join(getcwd(), 'dept', 'coll-001', 'acc-002')
+        # Runs the function once to make a new log.
+        parent_folder = join(getcwd(), 'dept', 'coll-001', 'acc-001')
         log_dir = getcwd()
-        update_log(accession_path_1, log_dir)
-        update_log(accession_path_2, log_dir)
+        update_log(parent_folder, log_dir)
+
+        # Runs the function again to add to an existing log.
+        parent_folder = join(getcwd(), 'dept', 'coll-001', 'acc-002')
+        log_dir = getcwd()
+        update_log(parent_folder, log_dir)
 
         # Tests that the log was made.
         log_path = join(getcwd(), 'update_risk_log.csv')
@@ -39,16 +41,16 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(log_made, True, "Problem with test for new log, log made")
 
         # Tests that the log has the expected contents.
-        log_contents = csv_to_list(log_path)
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession'], ['coll-001', 'acc-001'], ['coll-001', 'acc-002']]
-        self.assertEqual(log_contents, expected, "Problem with test for new log, log contents")
+        self.assertEqual(result, expected, "Problem with test for existing log, log contents")
 
     def test_new_log(self):
         """Test for when there is not already a log."""
         # Creates variables for function arguments and runs the function.
-        accession_path = join(getcwd(), 'coll-001', 'acc-001')
+        parent_folder = join(getcwd(), 'coll-001', 'acc-001')
         log_dir = getcwd()
-        update_log(accession_path, log_dir)
+        update_log(parent_folder, log_dir)
 
         # Tests that the log was made.
         log_path = join(getcwd(), 'update_risk_log.csv')
@@ -56,9 +58,9 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(log_made, True, "Problem with test for new log, log made")
 
         # Tests that the log has the expected contents.
-        log_contents = csv_to_list(log_path)
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession'], ['coll-001', 'acc-001']]
-        self.assertEqual(log_contents, expected, "Problem with test for new log, log contents")
+        self.assertEqual(result, expected, "Problem with test for new log, log contents")
 
 
 if __name__ == '__main__':

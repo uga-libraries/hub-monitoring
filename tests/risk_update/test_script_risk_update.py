@@ -39,12 +39,12 @@ class MyTestCase(unittest.TestCase):
         script = join(getcwd(), '..', '..', 'risk_update.py')
         directory = join('test_data', 'Russell_Hub', 'rbrl004')
         nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
-        subprocess.run(f'python {script} {directory} {nara_csv}', shell=True)
+        subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True)
 
         # Tests the log was made.
         log_path = join('test_data', 'Russell_Hub', 'rbrl004', 'update_risk_log.csv')
-        log_path_exists = exists(log_path)
-        self.assertEqual(log_path_exists, True, 'Problem with test for log was made')
+        log_made = exists(log_path)
+        self.assertEqual(log_made, True, 'Problem with test for log was made')
 
         # Tests the contents of the log are correct.
         result = csv_to_list(log_path)
@@ -62,10 +62,10 @@ class MyTestCase(unittest.TestCase):
                      join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv')]
 
         # Tests all three risk CSVs were made and have the correct file names.
-        paths_exist = []
+        csvs_made = []
         for csv_path in csv_paths:
-            paths_exist.append(exists(csv_path))
-        self.assertEqual(paths_exist, [True, True, True], 'Problem with test for risk CSVs were made')
+            csvs_made.append(exists(csv_path))
+        self.assertEqual(csvs_made, [True, True, True], 'Problem with test for risk CSVs were made')
 
         # Tests the contents of accession 2005-10-er CSV are correct.
         result = csv_to_list(csv_paths[0])
@@ -150,10 +150,10 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the script and tests that it exits.
         with self.assertRaises(subprocess.CalledProcessError):
-            subprocess.run(f'python {script} {directory}', shell=True, check=True, stdout=subprocess.PIPE)
+            subprocess.run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=subprocess.PIPE)
 
         # Runs the script a second time and tests that it prints the correct errors.
-        output = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
+        output = subprocess.run(f'python "{script}" "{directory}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"

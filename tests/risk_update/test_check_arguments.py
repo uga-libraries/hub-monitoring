@@ -17,7 +17,8 @@ class MyTestCase(unittest.TestCase):
         Test for when both required arguments are present and valid paths.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'Russell_Hub'), join('test_data', 'NARA_PreservationActionPlan.csv')]
+        sys_argv = ['risk_updates.py', join('test_data', 'Russell_Hub'),
+                    join('test_data', 'NARA_PreservationActionPlan.csv')]
         directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of directory is correct.
@@ -46,8 +47,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(nara_csv, None, 'Problem with both missing, nara_csv')
 
         # Tests that the value of errors_list is correct.
-        expected = ['Required argument directory is missing',
-                    'Required argument nara_csv is missing']
+        expected = ['Required argument directory is missing', 'Required argument nara_csv is missing']
         self.assertEqual(errors_list, expected, 'Problem with both missing, errors_list')
 
     def test_both_path_error(self):
@@ -86,8 +86,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(directory, expected, 'Problem with directory missing, directory')
 
         # Tests that the value of nara_csv is correct.
-        expected = None
-        self.assertEqual(nara_csv, expected, 'Problem with directory missing, nara_csv')
+        self.assertEqual(nara_csv, None, 'Problem with directory missing, nara_csv')
 
         # Tests that the value of errors_list is correct.
         expected = ['Required argument nara_csv is missing']

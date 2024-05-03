@@ -17,7 +17,7 @@ class MyTestCase(unittest.TestCase):
     def setUp(self):
         """Reads NARA CSV into a dataframe and renames the columns. Used by every test."""
         nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
-        self.nara_df = read_nara_csv(nara_csv)
+        self.nara_risk_df = read_nara_csv(nara_csv)
 
     def test_technique_1(self):
         """Test for format and NARA have PUID and match on PUID and version extracted from NARA name."""
@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -57,7 +57,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -83,7 +83,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -106,7 +106,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -134,7 +134,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -160,7 +160,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -184,7 +184,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -206,7 +206,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -227,7 +227,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -247,7 +247,7 @@ class MyTestCase(unittest.TestCase):
                               columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
