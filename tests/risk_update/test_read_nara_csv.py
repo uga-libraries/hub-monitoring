@@ -4,7 +4,6 @@ Test for the function read_nara_csv(), which reads the NARA CSV and renames colu
 import unittest
 from risk_update import read_nara_csv
 from numpy import nan
-from os import getcwd
 from os.path import join
 
 
@@ -15,7 +14,7 @@ class MyTestCase(unittest.TestCase):
         There is no input variation or error handling.
         The script verifies the path to the CSV is valid before this function runs."""
         # Creates input variable (in production, this is a script argument) and runs the function.
-        nara_csv = join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv')
+        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
         nara_risk_df = read_nara_csv(nara_csv)
 
         # Tests the contents of nara_risk_df is correct.

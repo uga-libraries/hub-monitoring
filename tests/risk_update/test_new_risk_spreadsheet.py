@@ -4,7 +4,7 @@ Test for the function new_risk_spreadsheet()True which combines existing format 
 import unittest
 from risk_update import new_risk_spreadsheet, read_nara_csv
 from datetime import datetime
-from os import getcwd, remove
+from os import remove
 from os.path import exists, join
 from pandas import read_csv
 
@@ -13,8 +13,8 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Deletes the CSVs made by the function, if made"""
-        log_csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'update_risk_log.csv')
-        risk_csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er',
+        log_csv_path = join('test_data', 'Russell_Hub', 'update_risk_log.csv')
+        risk_csv_path = join('test_data', 'Russell_Hub', 'rbrl004', '2005-10-er',
                              f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
 
         for csv_path in (log_csv_path, risk_csv_path):
@@ -25,18 +25,18 @@ class MyTestCase(unittest.TestCase):
         """Test for the function
         All variation is covered by match_nara_risk(), which this function calls."""
         # Creates input variables and runs the function.
-        parent_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er')
+        parent_folder = join('test_data', 'Russell_Hub', 'rbrl004', '2005-10-er')
         risk_csv = '2005-10-er_full_risk_data.csv'
-        nara_df = read_nara_csv(join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv'))
-        log_dir = join(getcwd(), '..', 'test_data', 'Risk_Update')
+        nara_df = read_nara_csv(join('test_data', 'NARA_PreservationActionPlan.csv'))
+        log_dir = join('test_data', 'Russell_Hub')
         new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir)
 
         # Tests the expected log CSV was made.
-        log_path_exists = exists(join(getcwd(), '..', 'test_data', 'Risk_Update', 'update_risk_log.csv'))
+        log_path_exists = exists(join('test_data', 'Russell_Hub', 'update_risk_log.csv'))
         self.assertEqual(log_path_exists, True, "Problem with test for log CSV was made")
 
         # Tests the expected risk CSV was made with the correct file name.
-        updated_csv_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', '2005-10-er',
+        updated_csv_path = join('test_data', 'Russell_Hub', 'rbrl004', '2005-10-er',
                                 f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
         path_exists = exists(updated_csv_path)
         self.assertEqual(path_exists, True, "Problem with test for risk CSV was made")

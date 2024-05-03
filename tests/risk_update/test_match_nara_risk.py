@@ -8,7 +8,6 @@ This test input must be updated to keep in sync with changes to update_df or the
 import unittest
 from risk_update import match_nara_risk, read_nara_csv
 from numpy import nan
-from os import getcwd
 from os.path import join
 from pandas import DataFrame
 
@@ -17,7 +16,7 @@ class MyTestCase(unittest.TestCase):
 
     def setUp(self):
         """Reads NARA CSV into a dataframe and renames the columns. Used by every test."""
-        nara_csv = join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv')
+        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
         self.nara_df = read_nara_csv(nara_csv)
 
     def test_technique_1(self):

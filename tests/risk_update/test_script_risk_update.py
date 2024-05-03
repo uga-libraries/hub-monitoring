@@ -24,11 +24,11 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Delete script output, if created"""
         today = datetime.today().strftime('%Y-%m-%d')
-        coll_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
+        coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
         reports = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
-                   join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', 'update_risk_log.csv'))
+                   join(coll_folder, 'update_risk_log.csv'))
         for report in reports:
             if exists(report):
                 remove(report)
@@ -37,12 +37,12 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script runs correctly on all three accessions in rbrl004"""
         # makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        directory = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
-        nara_csv = join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv')
+        directory = join('test_data', 'Russell_Hub', 'rbrl004')
+        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
         subprocess.run(f'python {script} {directory} {nara_csv}', shell=True)
 
         # Tests the log was made.
-        log_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', 'update_risk_log.csv')
+        log_path = join('test_data', 'Russell_Hub', 'rbrl004', 'update_risk_log.csv')
         log_path_exists = exists(log_path)
         self.assertEqual(log_path_exists, True, 'Problem with test for log was made')
 
@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
 
         # Paths to the three risk CSVs that should have been made.
         today = datetime.today().strftime('%Y-%m-%d')
-        coll_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
+        coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
         csv_paths = [join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv')]
