@@ -2,16 +2,19 @@
 Tests for the script collection_summary.py, which makes a CSV summarizing the collections in a directory.
 """
 import unittest
-import pandas as pd
 from datetime import datetime
 from os import getcwd, remove
 from os.path import exists, join
+from pandas import read_csv
 from subprocess import CalledProcessError, PIPE, run
 
 
 def csv_to_list(csv_path):
-    """Read csv into a dataframe, clean up, and return the values of each row as a list"""
-    df = pd.read_csv(csv_path, dtype={'Date': str})
+    """Read csv into a dataframe, clean up, and return the values of each row as a list
+    Date is made a string so the compared value is shorter.
+    Blanks are filled with a string because np.nan comparisons work inconsistently.
+    """
+    df = read_csv(csv_path, dtype={'Date': str})
     df = df.fillna('nan')
     csv_list = [df.columns.tolist()] + df.values.tolist()
     return csv_list

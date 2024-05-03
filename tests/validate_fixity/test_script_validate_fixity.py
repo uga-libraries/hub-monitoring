@@ -10,6 +10,17 @@ from pandas import read_csv
 from shutil import copyfile
 
 
+def csv_to_list(csv_path, delimiter=','):
+    """Read csv into a dataframe, clean up, and return the values of each row as a list
+    Delimiter is supplied so this works on the preservation log, which is tab separated instead of commas.
+    Blanks are filled with a string because np.nan comparisons work inconsistently.
+    """
+    df = read_csv(csv_path, delimiter=delimiter)
+    df = df.fillna('nan')
+    csv_list = [df.columns.tolist()] + df.values.tolist()
+    return csv_list
+
+
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
@@ -57,9 +68,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for correct, printed message')
 
         # Verifies the contents of the validation report are correct.
-        df = read_csv(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Accession', 'Validation_Error'],
                     ['2023_test003_001_er_bag',
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
@@ -67,9 +76,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for correct, validation report')
 
         # Verifies the contents of the log for 2023_test003_001_er have been updated.
-        df = read_csv(join(directory, '2023_test003_001_er', 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(directory, '2023_test003_001_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
@@ -84,9 +91,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for correct, 2023_test003_001_er')
 
         # Verifies the contents of the log for 2023_test003_002_er have been updated.
-        df = read_csv(join(directory, '2023_test003_002_er', 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(directory, '2023_test003_002_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
@@ -100,9 +105,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for correct, 2023_test003_002_er')
 
         # Verifies the contents of the log for 2023_test003_003_er have been updated.
-        df = read_csv(join(directory, '2023_test003_003_er', 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(directory, '2023_test003_003_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
@@ -114,8 +117,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for correct, 2023_test003_003_er')
 
         # Verifies the contents of 2023_test0003_004_er manifest validation errors log.
-        df = read_csv(join(directory, '2023_test003_003_er_manifest_validation_errors.csv'))
-        result = [df.columns.tolist()] + df.values.tolist()
+        result= csv_to_list(join(directory, '2023_test003_003_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Z:\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
                     ['Z:\\CD_2\\File03.txt', '3D77C578A138BA560F31DD22B83A53D3', 'Manifest'],
@@ -129,9 +131,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for correct, manifest validation errors')
 
         # Verifies the contents of the log for 2023_test003_004_er have been updated.
-        df = read_csv(join(directory, '2023_test003_004_er', 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(directory, '2023_test003_004_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
@@ -161,9 +161,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(report_made, False, 'Problem with test for correct no errors, validation report')
 
         # Verifies the contents of the log for 2023_test001_001_er have been updated.
-        df = read_csv(join(directory, '2023_test001_001_er', 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(directory, '2023_test001_001_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.001', '2023.test001.001.ER', '2023-10-30', 'CD.001',
                      'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
@@ -184,9 +182,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for correct no errors, 2023_test001_001_er')
 
         # Verifies the contents of the log for 2023_test001_002_er have been updated.
-        df = read_csv(join(directory, '2023_test001_002_er', 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(directory, '2023_test001_002_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
                      'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],

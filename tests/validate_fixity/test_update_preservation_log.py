@@ -3,10 +3,10 @@ Tests for the function update_preservation_log(), which adds validation informat
 """
 import unittest
 from validate_fixity import update_preservation_log
+from test_script_validate_fixity import csv_to_list
 from datetime import date
 from os import getcwd
 from os.path import join
-from pandas import read_csv
 from shutil import copyfile
 
 
@@ -29,9 +29,7 @@ class MyTestCase(unittest.TestCase):
         update_preservation_log(root, is_valid, 'bag', error)
 
         # Verifies the contents of the log have been updated.
-        df = read_csv(join(root, 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
@@ -55,9 +53,7 @@ class MyTestCase(unittest.TestCase):
         update_preservation_log(root, is_valid, 'bag', error)
 
         # Verifies the contents of the log have been updated.
-        df = read_csv(join(root, 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
@@ -78,9 +74,7 @@ class MyTestCase(unittest.TestCase):
         update_preservation_log(root, is_valid, 'manifest')
 
         # Verifies the contents of the log have been updated.
-        df = read_csv(join(root, 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
@@ -99,9 +93,7 @@ class MyTestCase(unittest.TestCase):
         update_preservation_log(root, is_valid, 'manifest')
 
         # Verifies the contents of the log have been updated.
-        df = read_csv(join(root, 'preservation_log.txt'), delimiter='\t')
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],

@@ -3,16 +3,9 @@ Tests for the function update_log(), which make a log of all accessions updated 
 """
 import unittest
 from risk_update import update_log
+from test_script_risk_update import csv_to_list
 from os import getcwd, remove
 from os.path import exists, join
-from pandas import read_csv
-
-
-def csv_to_list(csv_path):
-    """Converts the contents of a csv to a list, with one item per row."""
-    df = read_csv(csv_path)
-    csv_list = [df.columns.tolist()] + df.values.tolist()
-    return csv_list
 
 
 class MyTestCase(unittest.TestCase):

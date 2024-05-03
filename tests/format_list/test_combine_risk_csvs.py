@@ -3,6 +3,7 @@ Test for the function combine_risk_csvs(), which finds all risk csvs in a direct
 """
 import unittest
 from format_list import combine_risk_csvs
+from test_cleanup import df_to_list
 from os import getcwd
 from os.path import join
 
@@ -13,8 +14,7 @@ class MyTestCase(unittest.TestCase):
         directory = join(getcwd(), 'test_data')
         df_all = combine_risk_csvs(directory)
 
-        df = df_all.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = df_to_list(df_all)
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB', 
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message', 

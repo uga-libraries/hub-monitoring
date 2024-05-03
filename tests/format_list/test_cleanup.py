@@ -7,6 +7,15 @@ from os import getcwd
 from os.path import join
 
 
+def df_to_list(df):
+    """Convert a dataframe to a list of list, with the column names and row values
+    Blanks are filled with a string because np.nan comparisons work inconsistently.
+    """
+    df = df.fillna('nan')
+    df_list = [df.columns.tolist()] + df.values.tolist()
+    return df_list
+
+
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
@@ -14,8 +23,7 @@ class MyTestCase(unittest.TestCase):
         df_all = combine_risk_csvs(directory)
         df_formats = df_cleanup(df_all)
 
-        df = df_formats.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = df_to_list(df_formats)
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
                     ['Portable Document Format', '1.4', 410000.486, 'Moderate Risk'],
                     ['JPEG File Interchange Format', '1.01', 220000.139, 'Low Risk'],

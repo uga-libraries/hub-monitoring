@@ -11,10 +11,10 @@ from pandas import DataFrame
 
 
 def make_df(df_rows):
-    """Make a return a dataframe with consistent column headers."""
-    header = ['Collection', 'Status', 'GB', 'Files', 'Date', 'No_Match_Risk_%', 'High_Risk_%',
-              'Moderate_Risk_%', 'Low_Risk_%']
-    df = DataFrame(df_rows, columns=header)
+    """Make and return a dataframe with consistent column names."""
+    column_names = ['Collection', 'Status', 'GB', 'Files', 'Date', 'No_Match_Risk_%', 'High_Risk_%',
+                    'Moderate_Risk_%', 'Low_Risk_%']
+    df = DataFrame(df_rows, columns=column_names)
     return df
 
 

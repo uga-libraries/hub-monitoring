@@ -3,6 +3,7 @@ Test for the function new_risk_spreadsheet()True which combines existing format 
 """
 import unittest
 from risk_update import new_risk_spreadsheet, read_nara_csv
+from test_script_risk_update import csv_to_list
 from datetime import datetime
 from os import remove
 from os.path import exists, join
@@ -44,9 +45,7 @@ class MyTestCase(unittest.TestCase):
 
         # Tests the risk CSV has the expected contents.
         # Replacing blanks with the string "nan" because PyCharm didn't see np.nan as an exact match.
-        df = read_csv(risk_csv_path)
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(risk_csv_path)
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',

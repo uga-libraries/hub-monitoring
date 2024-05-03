@@ -9,8 +9,9 @@ from pandas import DataFrame
 
 
 def make_df(df_rows):
-    """Make a return a dataframe with consistent column headers."""
-    df = DataFrame(df_rows, columns=['Collection', 'Date'])
+    """Make and return a dataframe with consistent column headers."""
+    column_names = ['Collection', 'Date']
+    df = DataFrame(df_rows, columns=column_names)
     return df
 
 

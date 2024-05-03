@@ -10,13 +10,13 @@ from pandas import read_csv
 
 
 def csv_to_list(csv_path):
-    """Make a list of the contents of a CSV, with one list per row, including the header
-    Blanks are replaced by the string "nan".
+    """Read csv into a dataframe, clean up, and return the values of each row as a list
+    Blanks are filled with a string because np.nan comparisons work inconsistently.
     """
     df = read_csv(csv_path)
     df = df.fillna('nan')
-    df_list = [df.columns.tolist()] + df.values.tolist()
-    return df_list
+    csv_list = [df.columns.tolist()] + df.values.tolist()
+    return csv_list
 
 
 class MyTestCase(unittest.TestCase):

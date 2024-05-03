@@ -8,6 +8,16 @@ from pandas import read_csv
 from subprocess import CalledProcessError, PIPE, run
 
 
+def csv_to_list(csv_path):
+    """Read csv into a dataframe, clean up, and return the values of each row as a list
+    Blanks are filled with a string because np.nan comparisons work inconsistently.
+    """
+    df = read_csv(csv_path)
+    df = df.fillna('nan')
+    csv_list = [df.columns.tolist()] + df.values.tolist()
+    return csv_list
+
+
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
@@ -21,9 +31,7 @@ class MyTestCase(unittest.TestCase):
         directory = 'test_data'
         run(f'python "{script}" "{directory}"', shell=True)
 
-        df = read_csv(join('test_data', 'combined_format_data.csv'))
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join('test_data', 'combined_format_data.csv'))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'File_Count', 'Size_GB'],
                     ['JPEG File Interchange Format', '1.01', 'Low Risk', 2, 82.858],
                     ['JPEG File Interchange Format', '1.02', 'Low Risk', 3, 0.183],
