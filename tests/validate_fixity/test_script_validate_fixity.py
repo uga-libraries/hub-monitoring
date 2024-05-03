@@ -26,31 +26,29 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder,
-        and delete reports made by the script."""
-        # Preservation logs
-        bag_accessions = ['2023_test001_001_er', '2023_test001_002_er']
-        for bag_accession in bag_accessions:
-            folder = join(getcwd(), 'test_data', 'test_001_bags_valid', bag_accession)
-            copyfile(join(folder, 'preservation_log_copy.txt'), join(folder, 'preservation_log.txt'))
+        and delete all other test outputs if they were created."""
+        # List of paths for accession with logs to replace.
+        accessions = [join('test_data', 'test_001_bags_valid', '2023_test001_001_er'),
+                      join('test_data', 'test_001_bags_valid', '2023_test001_002_er'),
+                      join('test_data','test_003_log_update', '2023_test003_001_er'),
+                      join('test_data','test_003_log_update', '2023_test003_002_er'),
+                      join('test_data','test_003_log_update', '2023_test003_003_er'),
+                      join('test_data','test_003_log_update', '2023_test003_004_er')]
 
-        accessions = ['2023_test003_001_er', '2023_test003_002_er', '2023_test003_003_er', '2023_test003_004_er']
+        # For each accession, replaces the updated log with a copy of the original log from the accession folder.
         for accession in accessions:
-            folder = join(getcwd(), 'test_data','test_003_log_update', accession)
-            copyfile(join(folder, 'preservation_log_copy.txt'), join(folder, 'preservation_log.txt'))
+            copyfile(join(accession, 'preservation_log_copy.txt'), join(accession, 'preservation_log.txt'))
 
-        # Reports
-        directory = join(getcwd(), 'test_data', 'test_003_log_update')
-        reports = [f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv",
-                   '2023_test003_003_er_manifest_validation_errors.csv']
-        for report in reports:
-            if exists(join(directory, report)):
-                remove(join(directory, report))
+        # List of paths for possible test outputs that should be deleted.
+        today = date.today().strftime('%Y-%m-%d')
+        outputs = [join('test_data', 'test_003_log_update', f'fixity_validation_{today}.csv'),
+                   join('test_data', 'test_003_log_update', '2023_test003_003_er_manifest_validation_errors.csv'),
+                   join('test_data', 'test_001_bags_valid', f'fixity_validation_{today}.csv')]
 
-        # Report that should not be made, since the bag accessions are valid.
-        bag_report = join(getcwd(), 'test_data', 'test_001_bags_valid',
-                          f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-        if exists(bag_report):
-            remove(bag_report)
+        # Deletes any test output that is present.
+        for output in outputs:
+            if exists(output):
+                remove(output)
 
     def test_correct_errors(self):
         """Test for when the script runs correctly on all accessions in collection test_003.

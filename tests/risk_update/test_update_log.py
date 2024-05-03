@@ -11,10 +11,9 @@ from os.path import exists, join
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Delete the log, if it was made by a test."""
-        log_path = join(getcwd(), 'update_risk_log.csv')
-        if exists(log_path):
-            remove(log_path)
+        """Delete the test output if it was created"""
+        if exists('update_risk_log.csv'):
+            remove('update_risk_log.csv')
 
     def test_existing_log(self):
         """Test for when there is already a log."""

@@ -21,10 +21,9 @@ def csv_to_list(csv_path):
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Delete script output, if created"""
-        output = join('test_data', 'combined_format_data.csv')
-        if exists(output):
-            remove(output)
+        """Delete the test output if it was created"""
+        if exists(join('test_data', 'combined_format_data.csv')):
+            remove(join('test_data', 'combined_format_data.csv'))
 
     def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')

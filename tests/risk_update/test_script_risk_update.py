@@ -22,16 +22,19 @@ def csv_to_list(csv_path):
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Delete script output, if created"""
+        """Delete the test outputs if they were created"""
+        # List of paths for possible test outputs.
         today = datetime.today().strftime('%Y-%m-%d')
         coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
-        reports = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
+        outputs = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
                    join(coll_folder, 'update_risk_log.csv'))
-        for report in reports:
-            if exists(report):
-                remove(report)
+
+        # Deletes any test output that is present.
+        for output in outputs:
+            if exists(output):
+                remove(output)
 
     def test_correct(self):
         """Test for when the script runs correctly on all three accessions in rbrl004"""

@@ -12,10 +12,10 @@ from os.path import basename, exists, join
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Delete the validation report, and accession reports for manifest validation, if made by any of the tests"""
-        report = f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"
-        if exists(report):
-            remove(report)
+        """Delete the test output if it was created"""
+        today = date.today().strftime('%Y-%m-%d')
+        if exists(f"fixity_validation_{today}.csv"):
+            remove(f"fixity_validation_{today}.csv")
 
     def test_bag_not_valid(self):
         """Test for adding validation information for bags that are not valid to an existing report"""

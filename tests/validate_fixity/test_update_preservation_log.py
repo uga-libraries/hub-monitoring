@@ -5,7 +5,6 @@ import unittest
 from validate_fixity import update_preservation_log
 from test_script_validate_fixity import csv_to_list
 from datetime import date
-from os import getcwd
 from os.path import join
 from shutil import copyfile
 
@@ -15,10 +14,15 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder"""
-        accessions = ['2023_test003_001_er', '2023_test003_002_er', '2023_test003_003_er', '2023_test003_004_er']
+        # List of paths for accessions with logs to replace.
+        accessions = [join('test_data', 'test_003_log_update', '2023_test003_001_er'),
+                      join('test_data', 'test_003_log_update', '2023_test003_002_er'),
+                      join('test_data', 'test_003_log_update', '2023_test003_003_er'),
+                      join('test_data', 'test_003_log_update', '2023_test003_004_er')]
+
+        # For each accession, replaces the updated log with a copy of the original log from the accession folder.
         for accession in accessions:
-            folder = join(getcwd(), 'test_data', 'test_003_log_update', accession)
-            copyfile(join(folder, 'preservation_log_copy.txt'), join(folder, 'preservation_log.txt'))
+            copyfile(join(accession, 'preservation_log_copy.txt'), join(accession, 'preservation_log.txt'))
 
     def test_bag_not_valid(self):
         """Test for when the bag is not valid"""

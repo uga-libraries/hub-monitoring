@@ -4,18 +4,16 @@ Test for the function manifest_validation_log(), which saves validation errors t
 import unittest
 from validate_fixity import manifest_validation_log
 from test_script_validate_fixity import csv_to_list
-from os import getcwd, remove
+from os import remove
 from os.path import basename, exists, join
 
 
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Deletes the validation report, if made by the test."""
-        report = join(getcwd(), 'test_data', 'test_005_manifest_invalid',
-                      '2023_test005_001_er_manifest_validation_errors.csv')
-        if exists(report):
-            remove(report)
+        """Delete the test output if it was created"""
+        if exists(join('test_data', 'test_005_manifest_invalid', '2023_test005_001_er_manifest_validation_errors.csv')):
+            remove(join('test_data', 'test_005_manifest_invalid', '2023_test005_001_er_manifest_validation_errors.csv'))
 
     def test_function(self):
         """Test for correct operation of the function"""

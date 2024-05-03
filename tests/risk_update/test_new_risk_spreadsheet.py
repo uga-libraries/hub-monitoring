@@ -7,20 +7,21 @@ from test_script_risk_update import csv_to_list
 from datetime import datetime
 from os import remove
 from os.path import exists, join
-from pandas import read_csv
 
 
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Deletes the CSVs made by the function, if made"""
-        log_csv_path = join('test_data', 'Russell_Hub', 'update_risk_log.csv')
-        file_path = join('test_data', 'Russell_Hub', 'rbrl004', '2005-10-er',
-                             f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        """Delete the test outputs if they were created"""
+        # List of paths for possible test outputs.
+        today = datetime.today().strftime('%Y-%m-%d')
+        outputs = [join('test_data', 'Russell_Hub', 'update_risk_log.csv'),
+                   join('test_data', 'Russell_Hub', 'rbrl004', '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv')]
 
-        for csv_path in (log_csv_path, file_path):
-            if exists(csv_path):
-                remove(csv_path)
+        # Deletes any test output that is present.
+        for output in outputs:
+            if exists(output):
+                remove(output)
 
     def test_function(self):
         """Test for the function
