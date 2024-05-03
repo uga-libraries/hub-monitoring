@@ -18,7 +18,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')
-        run(f'python {script} test_data', shell=True)
+        directory = 'test_data'
+        run(f'python "{script}" {directory}', shell=True)
 
         df = read_csv(join('test_data', 'combined_format_data.csv'))
         df = df.fillna('nan')
@@ -43,10 +44,10 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the script and tests that it exits.
         with self.assertRaises(CalledProcessError):
-            run(f'python {script} {directory}', shell=True, check=True, stdout=PIPE)
+            run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=PIPE)
 
         # Runs the script a second time and tests that it prints the correct error.
-        output = run(f'python {script} {directory}', shell=True, stdout=PIPE)
+        output = run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, 'Problem with test for printed error')

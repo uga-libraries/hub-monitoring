@@ -10,12 +10,13 @@ from os.path import join
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
-        df_all = combine_risk_csvs(join(getcwd(), 'test_data'))
+        directory = join(getcwd(), 'test_data')
+        df_all = combine_risk_csvs(directory)
         df_formats = df_cleanup(df_all)
         df_size = size_per_format(df_formats)
 
-        df_size = df_size.fillna('nan')
-        result = [df_size.columns.tolist()] + df_size.values.tolist()
+        df = df_size.fillna('nan')
+        result = [df.columns.tolist()] + df.values.tolist()
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'Size_GB'],
                     ['JPEG File Interchange Format', '1.01', 'Low Risk', 82.858],
                     ['JPEG File Interchange Format', '1.02', 'Low Risk', 0.183],
