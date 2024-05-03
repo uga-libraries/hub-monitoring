@@ -51,8 +51,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the expected CSV was made with the correct file name.
         csv_path = join(directory, f"harg_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
-        result = exists(csv_path)
-        self.assertEqual(result, True, "Problem with test for harg CSV is made")
+        csv_made = exists(csv_path)
+        self.assertEqual(csv_made, True, "Problem with test for harg CSV is made")
 
         # Verifies the CSV has the expected contents.
         result = read_csv(csv_path)
@@ -75,8 +75,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the expected CSV was made with the correct file name.
         csv_path = join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
-        result = exists(csv_path)
-        self.assertEqual(result, True, "Problem with test for rbrl CSV is made")
+        csv_made = exists(csv_path)
+        self.assertEqual(csv_made, True, "Problem with test for rbrl CSV is made")
 
         # Verifies the CSV has the expected contents.
         # Would usually use pandas to read the CSV, but using csv library instead for a little more test independence.

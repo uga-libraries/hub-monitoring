@@ -36,19 +36,19 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the script and tests that it exits.
         with self.assertRaises(CalledProcessError):
-            run(f'python {script} {directory}', shell=True, check=True, stdout=PIPE)
+            run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=PIPE)
 
         # Runs the script a second time and tests that it prints the correct error.
-        output = run(f'python {script} {directory}', shell=True, stdout=PIPE)
+        output = run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, "Problem with test for printed error")
 
     def test_hargrett(self):
         """Test running the script with Hargrett test data"""
-        directory = join('test_data', 'Hargrett_Hub')
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        run(f'python {script} "{directory}"', shell=True)
+        directory = join('test_data', 'Hargrett_Hub')
+        run(f'python "{script}" "{directory}"', shell=True)
 
         report_path = join(directory, f"harg_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(report_path)
@@ -60,14 +60,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_russell(self):
         """Test running the script with Russell test data"""
-        directory = join('test_data', 'Russell_Hub')
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        output = run(f'python {script} "{directory}"', shell=True, stdout=PIPE)
+        directory = join('test_data', 'Russell_Hub')
+        output = run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
 
         # Tests the print statement for an accession without a risk csv.
-        printed_stmt = output.stdout.decode('utf-8')
-        expected_stmt = 'Accession 2021-40-er has no risk csv\r\n'
-        self.assertEqual(printed_stmt, expected_stmt, "Problem test for Russell print statement")
+        result = output.stdout.decode('utf-8')
+        expected = 'Accession 2021-40-er has no risk csv\r\n'
+        self.assertEqual(result, expected, "Problem test for Russell print statement")
 
         # Tests the contents of the report.
         report_path = join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")

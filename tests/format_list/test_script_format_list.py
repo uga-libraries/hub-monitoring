@@ -19,7 +19,7 @@ class MyTestCase(unittest.TestCase):
     def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')
         directory = 'test_data'
-        run(f'python "{script}" {directory}', shell=True)
+        run(f'python "{script}" "{directory}"', shell=True)
 
         df = read_csv(join('test_data', 'combined_format_data.csv'))
         df = df.fillna('nan')
