@@ -1,0 +1,2 @@
+File to keep folder from being deleted by GitHub syncing for being empty.
+Folder is what is needed to test skipping non-status folders.
