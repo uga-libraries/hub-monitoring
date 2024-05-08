@@ -10,7 +10,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_function(self):
         directory = join('test_data', 'Hargrett_Hub')
-        status = 'backlog'
+        status = 'backlogged'
         collection = 'ms0001 Person papers'
         accession = 'ms2022-15-er'
         result = get_accession_data(directory, status, collection, accession)
