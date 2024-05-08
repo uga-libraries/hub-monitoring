@@ -60,8 +60,8 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list(report_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
-                    ['ms0001 Person papers', '2024', 'backlog', 0.00001, 3, 0.0, 0.0, 33.33, 66.67, 'nan'],
-                    ['ua01-001 Dept records', '2024', 'backlog', 0.00004, 4, 25.0, 0.0, 25.0, 50.0, 'nan']]
+                    ['ms0001 Person papers', '2024', 'backlogged', 0.00001, 3, 0.0, 0.0, 33.33, 66.67, 'nan'],
+                    ['ua01-001 Dept records', '2024', 'backlogged', 0.00004, 4, 25.0, 0.0, 25.0, 50.0, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Hargrett data")
 
     def test_russell(self):
@@ -80,8 +80,8 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list(report_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
-                    ['rbrl001', '2024', 'backlog', 0.0002, 11, 0.0, 0.0, 0.0, 100.0, 'nan'],
-                    ['rbrl002', '2024', 'backlog', 0.0003, 41, 24.39, 21.95, 26.83, 29.27, 'nan'],
+                    ['rbrl001', '2024', 'backlogged', 0.0002, 11, 0.0, 0.0, 0.0, 100.0, 'nan'],
+                    ['rbrl002', '2024', 'backlogged', 0.0003, 41, 24.39, 21.95, 26.83, 29.27, 'nan'],
                     ['rbrl003', '2024', 'closed', 0.001, 18, 0.0, 5.56, 38.89, 55.56, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Russell data")
 
