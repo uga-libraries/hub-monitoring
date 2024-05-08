@@ -11,9 +11,10 @@ class MyTestCase(unittest.TestCase):
 
     def test_file_added(self):
         """Test for when the bag is not valid because a file was added"""
-        # Makes variable for function input and runs the function.
-        bag_path = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', '2023_test002_001_er_bag')
-        is_valid, error = validate_bag(bag_path)
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er')
+        folder = '2023_test002_001_er_bag'
+        is_valid, error = validate_bag(join(root, folder))
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for file added, is_valid')
@@ -24,9 +25,10 @@ class MyTestCase(unittest.TestCase):
 
     def test_file_deleted(self):
         """Test for when the bag is not valid because a file was deleted"""
-        # Makes variable for function input and runs the function.
-        bag_path = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er', '2023_test002_002_er_bag')
-        is_valid, error = validate_bag(bag_path)
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er')
+        folder = '2023_test002_002_er_bag'
+        is_valid, error = validate_bag(join(root, folder))
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for file deleted, is_valid')
@@ -37,9 +39,10 @@ class MyTestCase(unittest.TestCase):
 
     def test_file_edited(self):
         """Test for when the bag is not valid because a file was edited"""
-        # Makes variable for function input and runs the function.
-        bag_path = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er', '2023_test002_003_er_bag')
-        is_valid, error = validate_bag(bag_path)
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er')
+        folder = '2023_test002_003_er_bag'
+        is_valid, error = validate_bag(join(root, folder))
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for file edited, is_valid')
@@ -50,9 +53,10 @@ class MyTestCase(unittest.TestCase):
 
     def test_fixity_changed(self):
         """Test for when the bag is not valid because a file's fixity was changed in the manifest"""
-        # Makes variable for function input and runs the function.
-        bag_path = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er', '2023_test002_004_er_bag')
-        is_valid, error = validate_bag(bag_path)
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er')
+        folder = '2023_test002_004_er_bag'
+        is_valid, error = validate_bag(join(root, folder))
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for fixity changed, is_valid')
@@ -64,9 +68,10 @@ class MyTestCase(unittest.TestCase):
 
     def test_missing_bag_info(self):
         """Test for when the bag is not valid because bag-info.txt is missing"""
-        # Makes variable for function input and runs the function.
-        bag_path = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er', '2023_test002_005_er_bag')
-        is_valid, error = validate_bag(bag_path)
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')
+        folder = '2023_test002_005_er_bag'
+        is_valid, error = validate_bag(join(root, folder))
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for missing bag-info.txt, is_valid')
@@ -77,16 +82,16 @@ class MyTestCase(unittest.TestCase):
 
     def test_valid(self):
         """Test for when the bag is valid"""
-        # Makes variable for function input and runs the function.
-        bag_path = join('test_data', 'test_001_bags_valid', '2023_test001_001_er', '2023_test001_001_er_bag')
-        is_valid, error = validate_bag(bag_path)
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_001_bags_valid', '2023_test001_001_er')
+        folder = '2023_test001_001_er_bag'
+        is_valid, error = validate_bag(join(root, folder))
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, True, 'Problem with test for valid, is_valid')
 
         # Verifies error has the correct value.
-        expected = None
-        self.assertEqual(error, expected, 'Problem with test for valid bag, error')
+        self.assertEqual(error, None, 'Problem with test for valid bag, error')
 
 
 if __name__ == '__main__':

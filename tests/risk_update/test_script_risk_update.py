@@ -10,41 +10,44 @@ from pandas import read_csv
 
 
 def csv_to_list(csv_path):
-    """Make a list of the contents of a CSV, with one list per row, including the header
-    Blanks are replaced by the string "nan".
+    """Read csv into a dataframe, clean up, and return the values of each row as a list
+    Blanks are filled with a string because np.nan comparisons work inconsistently.
     """
     df = read_csv(csv_path)
     df = df.fillna('nan')
-    df_list = [df.columns.tolist()] + df.values.tolist()
-    return df_list
+    csv_list = [df.columns.tolist()] + df.values.tolist()
+    return csv_list
 
 
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Delete script output, if created"""
+        """Delete the test outputs if they were created"""
+        # List of paths for possible test outputs.
         today = datetime.today().strftime('%Y-%m-%d')
-        coll_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
-        reports = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
+        coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
+        outputs = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
-                   join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', 'update_risk_log.csv'))
-        for report in reports:
-            if exists(report):
-                remove(report)
+                   join(coll_folder, 'update_risk_log.csv'))
+
+        # Deletes any test output that is present.
+        for output in outputs:
+            if exists(output):
+                remove(output)
 
     def test_correct(self):
         """Test for when the script runs correctly on all three accessions in rbrl004"""
         # makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        directory = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
-        nara_csv = join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv')
-        subprocess.run(f'python {script} {directory} {nara_csv}', shell=True)
+        directory = join('test_data', 'Russell_Hub', 'rbrl004')
+        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
+        subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True)
 
         # Tests the log was made.
-        log_path = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004', 'update_risk_log.csv')
-        log_path_exists = exists(log_path)
-        self.assertEqual(log_path_exists, True, 'Problem with test for log was made')
+        log_path = join('test_data', 'Russell_Hub', 'rbrl004', 'update_risk_log.csv')
+        log_made = exists(log_path)
+        self.assertEqual(log_made, True, 'Problem with test for log was made')
 
         # Tests the contents of the log are correct.
         result = csv_to_list(log_path)
@@ -56,16 +59,16 @@ class MyTestCase(unittest.TestCase):
 
         # Paths to the three risk CSVs that should have been made.
         today = datetime.today().strftime('%Y-%m-%d')
-        coll_folder = join(getcwd(), '..', 'test_data', 'Risk_Update', 'rbrl004')
+        coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
         csv_paths = [join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv')]
 
         # Tests all three risk CSVs were made and have the correct file names.
-        paths_exist = []
+        csvs_made = []
         for csv_path in csv_paths:
-            paths_exist.append(exists(csv_path))
-        self.assertEqual(paths_exist, [True, True, True], 'Problem with test for risk CSVs were made')
+            csvs_made.append(exists(csv_path))
+        self.assertEqual(csvs_made, [True, True, True], 'Problem with test for risk CSVs were made')
 
         # Tests the contents of accession 2005-10-er CSV are correct.
         result = csv_to_list(csv_paths[0])
@@ -150,10 +153,10 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the script and tests that it exits.
         with self.assertRaises(subprocess.CalledProcessError):
-            subprocess.run(f'python {script} {directory}', shell=True, check=True, stdout=subprocess.PIPE)
+            subprocess.run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=subprocess.PIPE)
 
         # Runs the script a second time and tests that it prints the correct errors.
-        output = subprocess.run(f'python {script} {directory}', shell=True, stdout=subprocess.PIPE)
+        output = subprocess.run(f'python "{script}" "{directory}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"

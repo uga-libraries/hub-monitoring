@@ -8,21 +8,29 @@ from pandas import read_csv
 from subprocess import CalledProcessError, PIPE, run
 
 
+def csv_to_list(csv_path):
+    """Read csv into a dataframe, clean up, and return the values of each row as a list
+    Blanks are filled with a string because np.nan comparisons work inconsistently.
+    """
+    df = read_csv(csv_path)
+    df = df.fillna('nan')
+    csv_list = [df.columns.tolist()] + df.values.tolist()
+    return csv_list
+
+
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Delete script output, if created"""
-        output = join('test_data', 'combined_format_data.csv')
-        if exists(output):
-            remove(output)
+        """Delete the test output if it was created"""
+        if exists(join('test_data', 'combined_format_data.csv')):
+            remove(join('test_data', 'combined_format_data.csv'))
 
     def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')
-        run(f'python {script} test_data', shell=True)
+        directory = 'test_data'
+        run(f'python "{script}" "{directory}"', shell=True)
 
-        df = read_csv(join('test_data', 'combined_format_data.csv'))
-        df = df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = csv_to_list(join('test_data', 'combined_format_data.csv'))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'File_Count', 'Size_GB'],
                     ['JPEG File Interchange Format', '1.01', 'Low Risk', 2, 82.858],
                     ['JPEG File Interchange Format', '1.02', 'Low Risk', 3, 0.183],
@@ -43,10 +51,10 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the script and tests that it exits.
         with self.assertRaises(CalledProcessError):
-            run(f'python {script} {directory}', shell=True, check=True, stdout=PIPE)
+            run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=PIPE)
 
         # Runs the script a second time and tests that it prints the correct error.
-        output = run(f'python {script} {directory}', shell=True, stdout=PIPE)
+        output = run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, 'Problem with test for printed error')

@@ -8,9 +8,10 @@ from pandas import DataFrame
 
 
 def make_df(df_rows):
-    """Make a return a dataframe with consistent column headers."""
-    header = ['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk']
-    df = DataFrame(df_rows, columns=header)
+    """Make and return a dataframe with consistent column names."""
+    column_names = ['Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk', 'High_Risk', 
+                    'Moderate_Risk', 'Low_Risk']
+    df = DataFrame(df_rows, columns=column_names)
     return df
 
 
@@ -28,12 +29,12 @@ class MyTestCase(unittest.TestCase):
         collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
-        collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
-        expected_list = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
-                          'Moderate_Risk_%', 'Low_Risk_%'],
-                         ['coll1', '2021-2022', 'backlog', 36.61, 696, 12.93, 1.29, 8.19, 77.59],
-                         ['coll2', '2023', 'closed', 123.22, 82, 36.59, 0.0, 0.0, 63.41]]
-        self.assertEqual(collection_list, expected_list, "Problem with test for multiple accessions")
+        result = [collection_df.columns.tolist()] + collection_df.values.tolist()
+        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
+                     'Moderate_Risk_%', 'Low_Risk_%'],
+                    ['coll1', '2021-2022', 'backlog', 36.61, 696, 12.93, 1.29, 8.19, 77.59],
+                    ['coll2', '2023', 'closed', 123.22, 82, 36.59, 0.0, 0.0, 63.41]]
+        self.assertEqual(result, expected, "Problem with test for multiple accessions")
 
     def test_no_csv(self):
         """Test for when a collection has multiple accessions and none have a risk csv"""
@@ -45,11 +46,11 @@ class MyTestCase(unittest.TestCase):
         collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
-        collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
-        expected_list = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
-                          'Moderate_Risk_%', 'Low_Risk_%'],
-                         ['coll1', '2021-2022', 'backlog', 36.61, 696, 0.0, 0.0, 0.0, 0.0]]
-        self.assertEqual(collection_list, expected_list, "Problem with test for no accessions have a risk csv")
+        result = [collection_df.columns.tolist()] + collection_df.values.tolist()
+        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
+                     'Moderate_Risk_%', 'Low_Risk_%'],
+                    ['coll1', '2021-2022', 'backlog', 36.61, 696, 0.0, 0.0, 0.0, 0.0]]
+        self.assertEqual(result, expected, "Problem with test for no accessions have a risk csv")
 
     def test_no_csv_mix(self):
         """Test for when a collection has multiple accessions and one does not have a risk csv"""
@@ -60,11 +61,11 @@ class MyTestCase(unittest.TestCase):
         collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
-        collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
-        expected_list = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
-                          'Moderate_Risk_%', 'Low_Risk_%'],
-                         ['coll2', '2023', 'closed', 123.22, 100, 30.0, 0.0, 0.0, 37.0]]
-        self.assertEqual(collection_list, expected_list, "Problem with test for an accession doesn't have a risk csv")
+        result = [collection_df.columns.tolist()] + collection_df.values.tolist()
+        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
+                     'Moderate_Risk_%', 'Low_Risk_%'],
+                    ['coll2', '2023', 'closed', 123.22, 100, 30.0, 0.0, 0.0, 37.0]]
+        self.assertEqual(result, expected, "Problem with test for an accession doesn't have a risk csv")
 
     def test_one(self):
         """Test for when each collection has one accession"""
@@ -75,12 +76,12 @@ class MyTestCase(unittest.TestCase):
         collection_df = combine_collection_data(acc_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
-        collection_list = [collection_df.columns.tolist()] + collection_df.values.tolist()
-        expected_list = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
-                          'Moderate_Risk_%', 'Low_Risk_%'],
-                         ['coll1', '2023', 'backlog', 23.52, 51, 3.92, 0.0, 33.33, 62.75],
-                         ['coll2', '2024', 'backlog', 123.2, 250, 40.0, 21.6, 13.2, 25.2]]
-        self.assertEqual(collection_list, expected_list, "Problem with test for one accession")
+        result = [collection_df.columns.tolist()] + collection_df.values.tolist()
+        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
+                     'Moderate_Risk_%', 'Low_Risk_%'],
+                    ['coll1', '2023', 'backlog', 23.52, 51, 3.92, 0.0, 33.33, 62.75],
+                    ['coll2', '2024', 'backlog', 123.2, 250, 40.0, 21.6, 13.2, 25.2]]
+        self.assertEqual(result, expected, "Problem with test for one accession")
 
 
 if __name__ == '__main__':

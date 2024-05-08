@@ -8,28 +8,34 @@ This test input must be updated to keep in sync with changes to update_df or the
 import unittest
 from risk_update import match_nara_risk, read_nara_csv
 from numpy import nan
-from os import getcwd
 from os.path import join
 from pandas import DataFrame
+
+
+def make_df(df_rows):
+    """Make and return a dataframe with consistent column names."""
+    column_names = ['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID']
+    df = DataFrame(df_rows, columns=column_names)
+    return df
 
 
 class MyTestCase(unittest.TestCase):
 
     def setUp(self):
         """Reads NARA CSV into a dataframe and renames the columns. Used by every test."""
-        nara_csv = join(getcwd(), '..', 'test_data', 'NARA_PreservationActionPlan.csv')
-        self.nara_df = read_nara_csv(nara_csv)
+        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
+        self.nara_risk_df = read_nara_csv(nara_csv)
 
     def test_technique_1(self):
         """Test for format and NARA have PUID and match on PUID and version extracted from NARA name."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['PDF', 1.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/14'],
-                               ['Rich Text Format', 1.5, 'https://www.nationalarchives.gov.uk/pronom/fmt/50'],
-                               ['Rich Text Format', 1.6, 'https://www.nationalarchives.gov.uk/pronom/fmt/50']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['PDF', 1.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/14'],
+                ['Rich Text Format', 1.5, 'https://www.nationalarchives.gov.uk/pronom/fmt/50'],
+                ['Rich Text Format', 1.6, 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -51,14 +57,12 @@ class MyTestCase(unittest.TestCase):
         """Test for format and NARA have PUID and match on PUID and name but not version extracted from NARA name.
         The case of format and NARA names is the same."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['Portable Document Format/Archiving (PDF/A-1a) accessible', '1A',
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
-                               ['Rich Text Format 1.5', 'NO VALUE',
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/50']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['Portable Document Format/Archiving (PDF/A-1a) accessible', '1A', 'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
+                ['Rich Text Format 1.5', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -77,14 +81,12 @@ class MyTestCase(unittest.TestCase):
         """Test for format and NARA have PUID and match on PUID and name but not version extracted from NARA name.
         The case of format and NARA names is not the same."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['portable document format/archiving (PDF/A-1a) accessible', '1A',
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
-                               ['RICH TEXT FORMAT 1.5', 'NO VALUE',
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/50']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['portable document format/archiving (PDF/A-1a) accessible', '1A', 'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
+                ['RICH TEXT FORMAT 1.5', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -102,12 +104,12 @@ class MyTestCase(unittest.TestCase):
     def test_technique_3(self):
         """Test for format and NARA have PUID and match on PUID but not version or name."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['HTML', 'v5.1', 'https://www.nationalarchives.gov.uk/pronom/fmt/96'],
-                               ['PDF 1.0', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/14']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['HTML', 'v5.1', 'https://www.nationalarchives.gov.uk/pronom/fmt/96'],
+                ['PDF 1.0', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/14']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -128,14 +130,12 @@ class MyTestCase(unittest.TestCase):
         """Test for format has PUID and NARA does not have a PUID and match on name.
         The case of format and NARA names is the same."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['Portable Document Format (PDF) Portfolio', 2.0,
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
-                               ['WordPerfect Template', 'NO VALUE',
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/00']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['Portable Document Format (PDF) Portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
+                ['WordPerfect Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -154,14 +154,12 @@ class MyTestCase(unittest.TestCase):
         """Test for format has PUID and NARA does not have a PUID and match on name.
         The case of format and NARA names is not the same."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['portable document format (pdf) portfolio', 2.0,
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
-                               ['WORDPERFECT TEMPLATE', 'NO VALUE',
-                                'https://www.nationalarchives.gov.uk/pronom/fmt/00']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['portable document format (pdf) portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
+                ['WORDPERFECT TEMPLATE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -180,12 +178,12 @@ class MyTestCase(unittest.TestCase):
         """Test for format has no PUID (NARA may) and match on name.
         The case of format and NARA names is the same."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['Rich Text Format', 1.5, 'NO VALUE'],
-                               ['WordPerfect Template', 'NO VALUE', 'NO VALUE']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['Rich Text Format', 1.5, 'NO VALUE'],
+                ['WordPerfect Template', 'NO VALUE', 'NO VALUE']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -202,12 +200,12 @@ class MyTestCase(unittest.TestCase):
         """Test for format has no PUID (NARA may) and match on name.
         The case of format and NARA names is not the same."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['RICH TEXT FORMAT', 1.5, 'NO VALUE'],
-                               ['wordperfect template', 'NO VALUE', 'NO VALUE']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['RICH TEXT FORMAT', 1.5, 'NO VALUE'],
+                ['wordperfect template', 'NO VALUE', 'NO VALUE']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -223,12 +221,12 @@ class MyTestCase(unittest.TestCase):
     def test_no_match_puid(self):
         """Test for format has PUID and does not match NARA."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56'],
-                               ['OneNote', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/637']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56'],
+                ['OneNote', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/637']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
@@ -243,12 +241,12 @@ class MyTestCase(unittest.TestCase):
     def test_no_match(self):
         """Test for format has no PUID and does not match NARA."""
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
-        update_df = DataFrame([['Excel', 3.0, 'NO VALUE'],
-                               ['OneNote', 'NO VALUE', 'NO VALUE']],
-                              columns=['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID'])
+        rows = [['Excel', 3.0, 'NO VALUE'],
+                ['OneNote', 'NO VALUE', 'NO VALUE']]
+        update_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_df)
+        update_df = match_nara_risk(update_df, self.nara_risk_df)
         result = [update_df.columns.tolist()] + update_df.values.tolist()
 
         # Tests the contents of update_df is correct.
