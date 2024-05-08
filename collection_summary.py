@@ -328,10 +328,15 @@ if __name__ == '__main__':
                                          'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'])
 
     # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
+    # Folders used for other purposes at the status and accession level are skipped.
     for status in os.listdir(directory):
-        for collection in os.listdir(os.path.join(directory, status)):
-            for accession in os.listdir(os.path.join(directory, status, collection)):
-                accession_df.loc[len(accession_df)] = get_accession_data(directory, status, collection, accession)
+        if status in ('backlogged', 'closed'):
+            for collection in os.listdir(os.path.join(directory, status)):
+                for accession in os.listdir(os.path.join(directory, status, collection)):
+                    skip_list = ['Appraisal', 'Appraisal copy', 'Arranged', 'Risk remediation']
+                    if accession not in skip_list:
+                        accession_df.loc[len(accession_df)] = get_accession_data(directory, status,
+                                                                                 collection, accession)
 
     # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
     collection_df = combine_collection_data(accession_df)
