@@ -1,2 +1,0 @@
-a50e59a1bd33da44f5c2643d58ee3a47  data/Plain Text Document.txt
-fd1fdb8123aa1487a4eaade430c56113  data/Text Document.rtf
