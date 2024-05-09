@@ -56,6 +56,7 @@ def accession_test(acc_id, acc_path):
     # University archives variation, ua_##_###.
     elif re.match('ua_[0-9]{2}_[0-9]{3}', acc_id):
         return True
+    # Folder that matches none of the patterns for an accession.
     else:
         return False
 
@@ -368,6 +369,7 @@ if __name__ == '__main__':
     for status in os.listdir(directory):
         if status in ('backlogged', 'closed'):
             for collection in os.listdir(os.path.join(directory, status)):
+                # Do not include ua22-008 in the report, since it is not our collection.
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
                 # print('\nStarting on collection', collection)
