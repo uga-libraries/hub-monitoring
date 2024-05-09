@@ -27,7 +27,7 @@ from validate_fixity import check_argument
 
 
 def accession_test(acc_id):
-    """Determine if a folder within a collection folder is an accession
+    """Determine if a folder within a collection folder is an accession based on the folder name
 
     @:parameter
     acc_id (string): the accession id, which is a folder within acc_coll
@@ -35,17 +35,20 @@ def accession_test(acc_id):
     @:return
     test (Boolean): True if it is an accession and False if not
     """
-    # TODO: this is untested
-    # Tests for different patterns that indicate an accession.
-    # If any match, test is True, and if none do then test is False.
+
+    # The most common pattern is YYYY-##-er, sometimes with underscores, three numbers, or ER.
     if re.match('[0-9]{4}[-|_][0-9]{2,3}[-|_][er|ER]', acc_id):
         test = True
+    # The string no-acc-num is used on legacy accessions that were never assigned a number.
     elif acc_id == 'no-acc-num':
         test = True
+    # Legacy format with the pattern LastnameFirstinitial_ER.
     elif re.match('[A-Za-z]+_ER', acc_id):
         test = True
+    # University archives variation, ua##-###.
     elif re.match('ua[0-9]{2}-[0-9]{3}', acc_id):
         test = True
+    # University archives variation, ua_##_###.
     elif re.match('ua_[0-9]{2}_[0-9]{3}', acc_id):
         test = True
     else:
