@@ -237,7 +237,7 @@ def get_risk(acc_path):
     # If not, prints the error and returns a list with 0 for the number of files at every risk level.
     # If an accession has a path length error, it may not have a risk data csv yet.
     if risk_csv_name:
-        risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name))
+        risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name), low_memory=False)
     else:
         print(f'Accession {os.path.basename(acc_path)} has no risk csv')
         return [0, 0, 0, 0]
@@ -372,7 +372,7 @@ if __name__ == '__main__':
                 # Do not include ua22-008 in the report, since it is not our collection.
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
-                # print('\nStarting on collection', collection)
+                print('\nStarting on collection', collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
                     is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
                     if is_accession:
