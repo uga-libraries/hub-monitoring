@@ -104,9 +104,14 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
 
     # Gets the data which requires additional calculation.
     # Size, Files, and Date are single data points, while risk is a list of four items.
+    # Skips size for an extremely large collection so the report finishes sooner.
     date = get_date(acc_path)
-    size = get_size(acc_path)
-    files = get_file_count(acc_path)
+    if acc_coll == 'rbrl246jhi':
+        size = 0
+        files = 0
+    else:
+        size = get_size(acc_path)
+        files = get_file_count(acc_path)
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
