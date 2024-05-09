@@ -42,11 +42,11 @@ def accession_test(acc_id):
         test = True
     elif acc_id == 'no-acc-num':
         test = True
-    elif re.match('[A-Za-Z]+_ER', acc_id):
+    elif re.match('[A-Za-z]+_ER', acc_id):
         test = True
-    elif re.match('ua[0-9]{2}-[0-9]{3}'):
+    elif re.match('ua[0-9]{2}-[0-9]{3}', acc_id):
         test = True
-    elif re.match('ua-[0-9]{2}_[0-9]{3}'):
+    elif re.match('ua_[0-9]{2}_[0-9]{3}', acc_id):
         test = True
     else:
         test = False
