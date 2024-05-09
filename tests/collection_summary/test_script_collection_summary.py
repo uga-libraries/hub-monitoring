@@ -58,10 +58,10 @@ class MyTestCase(unittest.TestCase):
 
         report_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(report_path)
-        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
-                     'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
-                    ['ms0001 Person papers', '2024', 'backlogged', 0.00001, 3, 0.0, 0.0, 33.33, 66.67, 'nan'],
-                    ['ua01-001 Dept records', '2024', 'backlogged', 0.00004, 4, 25.0, 0.0, 25.0, 50.0, 'nan']]
+        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
+                     'Moderate_Risk', 'Low_Risk', 'Notes'],
+                    ['ms0001 Person papers', '2024', 'backlogged', 0.00001, 3, 0, 0, 1, 2, 'nan'],
+                    ['ua01-001 Dept records', '2024', 'backlogged', 0.00004, 4, 1, 0, 1, 2, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Hargrett data")
 
     def test_russell(self):
@@ -78,11 +78,11 @@ class MyTestCase(unittest.TestCase):
         # Tests the contents of the report.
         report_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(report_path)
-        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
-                     'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
-                    ['rbrl001', '2024', 'backlogged', 0.0002, 11, 0.0, 0.0, 0.0, 100.0, 'nan'],
-                    ['rbrl002', '2024', 'backlogged', 0.0003, 41, 24.39, 21.95, 26.83, 29.27, 'nan'],
-                    ['rbrl003', '2024', 'closed', 0.001, 18, 0.0, 5.56, 38.89, 55.56, 'nan']]
+        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
+                     'Moderate_Risk', 'Low_Risk', 'Notes'],
+                    ['rbrl001', '2024', 'backlogged', 0.0002, 11, 0, 0, 0, 11, 'nan'],
+                    ['rbrl002', '2024', 'backlogged', 0.0003, 41, 10, 9, 11, 12, 'nan'],
+                    ['rbrl003', '2024', 'closed', 0.001, 18, 0, 1, 7, 10, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Russell data")
 
 

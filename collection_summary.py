@@ -41,16 +41,9 @@ def combine_collection_data(acc_df):
     # Rounds the size to 2 decimal places, or more places if needed to not be 0.
     coll_df['GB'] = coll_df['GB'].map(round_non_zero)
 
-    # Replaces risk columns that have file counts with risk columns that have the percentage of files.
-    # If files have multiple identifications, the combined percentages will be more than 100%.
-    coll_df['No_Match_Risk_%'] = (coll_df['No_Match_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
-    coll_df['High_Risk_%'] = (coll_df['High_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
-    coll_df['Moderate_Risk_%'] = (coll_df['Moderate_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
-    coll_df['Low_Risk_%'] = (coll_df['Low_Risk'] / coll_df['Files'] * 100).map(round_non_zero)
-
     # Combines the dates into a date range and adds to the dataframe.
     # Removes the existing "Date" column, so it doesn't conflict with the new "Date" column made by the function.
-    coll_df.drop(['Date', 'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'], axis=1, inplace=True)
+    coll_df.drop(['Date'], axis=1, inplace=True)
     date_df = combine_collection_dates(acc_df)
     coll_df = pd.merge(date_df, coll_df, on='Collection', how='outer')
 
