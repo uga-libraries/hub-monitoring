@@ -20,9 +20,38 @@ from datetime import datetime
 import numpy as np
 import os
 import pandas as pd
+import re
 import sys
 from risk_update import most_recent_risk_csv
 from validate_fixity import check_argument
+
+
+def accession_test(acc_id):
+    """Determine if a folder within a collection folder is an accession
+
+    @:parameter
+    acc_id (string): the accession id, which is a folder within acc_coll
+
+    @:return
+    test (Boolean): True if it is an accession and False if not
+    """
+    # TODO: this is untested
+    # Tests for different patterns that indicate an accession.
+    # If any match, test is True, and if none do then test is False.
+    if re.match('[0-9]{4}[-|_][0-9]{2,3}[-|_][er|ER]', acc_id):
+        test = True
+    elif acc_id == 'no-acc-num':
+        test = True
+    elif re.match('[A-Za-Z]+_ER', acc_id):
+        test = True
+    elif re.match('ua[0-9]{2}-[0-9]{3}'):
+        test = True
+    elif re.match('ua-[0-9]{2}_[0-9]{3}'):
+        test = True
+    else:
+        test = False
+
+    return test
 
 
 def combine_collection_data(acc_df):
@@ -335,11 +364,10 @@ if __name__ == '__main__':
             for collection in os.listdir(os.path.join(directory, status)):
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
-                #print('\nStarting on collection', collection)
+                # print('\nStarting on collection', collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
-                    skip_list = ['Appraisal', 'Appraisal copy', 'Appraised_arranged', 'Appraised_arranged_FITS',
-                                 'Arranged', 'Risk remediation']
-                    if accession not in skip_list and os.path.isdir(os.path.join(directory, status, collection, accession)):
+                    is_accession = accession_test(accession)
+                    if is_accession and os.path.isdir(os.path.join(directory, status, collection, accession)):
                         accession_df.loc[len(accession_df)] = get_accession_data(directory, status,
                                                                                  collection, accession)
 
