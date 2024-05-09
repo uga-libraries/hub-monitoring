@@ -166,13 +166,15 @@ def get_file_count(acc_path):
         for item in os.listdir(acc_path):
             if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
                 content_path = os.path.join(acc_path, item)
+    try:
+        # Counts the files at each level within the folder with the accession's content.
+        file_count = 0
+        for root, dirs, files in os.walk(content_path):
+            file_count += len(files)
 
-    # Counts the files at each level within the folder with the accession's content.
-    file_count = 0
-    for root, dirs, files in os.walk(content_path):
-        file_count += len(files)
-
-    return file_count
+        return file_count
+    except UnboundLocalError:
+        return 0
 
 
 def get_risk(acc_path):
@@ -245,15 +247,22 @@ def get_size(acc_path):
             if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
                 content_path = os.path.join(acc_path, item)
 
-    # Adds the size of the files at each level within the folder with the accession's content.
-    size_bytes = 0
-    for root, dirs, files in os.walk(content_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            size_bytes += os.stat(file_path).st_size
-    size_gb = round_non_zero(size_bytes / 1000000000)
-
-    return size_gb
+    try:
+        # Adds the size of the files at each level within the folder with the accession's content.
+        size_bytes = 0
+        for root, dirs, files in os.walk(content_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                try:
+                    size_bytes += os.stat(file_path).st_size
+                except FileNotFoundError:
+                    with open('size_error.txt', 'a', newline='', encoding='utf-8') as f:
+                        f.write(file_path + '\n')
+        size_gb = round_non_zero(size_bytes / 1000000000)
+        return size_gb
+    except UnboundLocalError:
+        print('Cannot find the content path for', acc_path)
+        return 0
 
 
 def round_non_zero(number):
@@ -332,9 +341,11 @@ if __name__ == '__main__':
     for status in os.listdir(directory):
         if status in ('backlogged', 'closed'):
             for collection in os.listdir(os.path.join(directory, status)):
+                print("\nStarting on collection", collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
-                    skip_list = ['Appraisal', 'Appraisal copy', 'Arranged', 'Risk remediation']
-                    if accession not in skip_list:
+                    skip_list = ['Appraisal', 'Appraisal copy', 'Appraised_arranged', 'Appraised_arranged_FITS',
+                                 'Arranged', 'Risk remediation']
+                    if accession not in skip_list and os.path.isdir(os.path.join(directory, status, collection, accession)):
                         accession_df.loc[len(accession_df)] = get_accession_data(directory, status,
                                                                                  collection, accession)
 
