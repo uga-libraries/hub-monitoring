@@ -26,15 +26,20 @@ from risk_update import most_recent_risk_csv
 from validate_fixity import check_argument
 
 
-def accession_test(acc_id):
+def accession_test(acc_id, acc_path):
     """Determine if a folder within a collection folder is an accession based on the folder name
 
     @:parameter
     acc_id (string): the accession id, which is a folder within acc_coll
+    acc_path (string): the path to the accession folder
 
     @:return
     test (Boolean): True if it is an accession and False if not
     """
+
+    # If the path is to a file, do not test the folder name.
+    if os.path.isfile(acc_path):
+        return False
 
     # The most common pattern is YYYY-##-er, sometimes with underscores, three numbers, or ER.
     if re.match('[0-9]{4}[-|_][0-9]{2,3}[-|_][er|ER]', acc_id):
@@ -369,8 +374,8 @@ if __name__ == '__main__':
                     continue
                 # print('\nStarting on collection', collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
-                    is_accession = accession_test(accession)
-                    if is_accession and os.path.isdir(os.path.join(directory, status, collection, accession)):
+                    is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
+                    if is_accession:
                         accession_df.loc[len(accession_df)] = get_accession_data(directory, status,
                                                                                  collection, accession)
 
