@@ -26,8 +26,8 @@ class MyTestCase(unittest.TestCase):
         """Delete the test outputs if they were created"""
         # List of paths for possible test outputs.
         today = datetime.today().strftime('%Y-%m-%d')
-        outputs = [join('test_data', 'Hargrett_Hub', f"harg_hub-collection-summary_{today}.csv"),
-                   join('test_data', 'Russell_Hub', f"rbrl_hub-collection-summary_{today}.csv")]
+        outputs = [join('test_data', 'Hargrett_Hub', f'hub-collection-summary_{today}.csv'),
+                   join('test_data', 'Russell_Hub', f'hub-collection-summary_{today}.csv')]
 
         # Deletes any test output that is present.
         for output in outputs:
@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
         directory = join('test_data', 'Hargrett_Hub')
         run(f'python "{script}" "{directory}"', shell=True)
 
-        report_path = join(directory, f"harg_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        report_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(report_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
@@ -76,7 +76,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem test for Russell print statement")
 
         # Tests the contents of the report.
-        report_path = join(directory, f"rbrl_hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        report_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(report_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk_%', 'High_Risk_%',
                      'Moderate_Risk_%', 'Low_Risk_%', 'Notes'],
