@@ -309,17 +309,11 @@ def save_report(coll_df, dir_path):
     # Adds an empty column for archivist notes as the last column.
     coll_df['Notes'] = ''
 
-    # Determines the department based on a keyword in the directory path to include in the report name.
-    if 'Hargrett' in dir_path:
-        dept = 'harg'
-    else:
-        dept = 'rbrl'
-
     # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
     today = datetime.today().strftime('%Y-%m-%d')
 
     # Saves the dataframe to a CSV in the directory (script argument).
-    coll_df.to_csv(os.path.join(dir_path, f'{dept}_hub-collection-summary_{today}.csv'), index=False)
+    coll_df.to_csv(os.path.join(dir_path, f'hub-collection-summary_{today}.csv'), index=False)
 
 
 if __name__ == '__main__':
@@ -341,7 +335,7 @@ if __name__ == '__main__':
     for status in os.listdir(directory):
         if status in ('backlogged', 'closed'):
             for collection in os.listdir(os.path.join(directory, status)):
-                print("\nStarting on collection", collection)
+                #print("\nStarting on collection", collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
                     skip_list = ['Appraisal', 'Appraisal copy', 'Appraised_arranged', 'Appraised_arranged_FITS',
                                  'Arranged', 'Risk remediation']
