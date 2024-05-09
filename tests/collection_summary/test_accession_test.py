@@ -49,6 +49,12 @@ class MyTestCase(unittest.TestCase):
         is_accession = accession_test(accession)
         self.assertEqual(is_accession, True, 'Problem with test for pattern 1e')
 
+    def test_pattern_1f(self):
+        """Test for when the folder matches pattern 1 (year-number-er), with additional text"""
+        accession = '2023-14-er_addition'
+        is_accession = accession_test(accession)
+        self.assertEqual(is_accession, True, 'Problem with test for pattern 1f')
+
     def test_pattern_2(self):
         """Test for when the folder matches pattern 2, equal to no-acc-num"""
         accession = 'no-acc-num'
