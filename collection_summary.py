@@ -34,7 +34,7 @@ def accession_test(acc_id, acc_path):
     acc_path (string): the path to the accession folder
 
     @:return
-    test (Boolean): True if it is an accession and False if not
+    Boolean: True if it is an accession and False if not
     """
 
     # If the path is to a file, do not test the folder name.
@@ -43,23 +43,21 @@ def accession_test(acc_id, acc_path):
 
     # The most common pattern is YYYY-##-er, sometimes with underscores, three numbers, or ER.
     if re.match('[0-9]{4}[-|_][0-9]{2,3}[-|_][er|ER]', acc_id):
-        test = True
+        return True
     # The string no-acc-num is used on legacy accessions that were never assigned a number.
     elif acc_id == 'no-acc-num':
-        test = True
+        return True
     # Legacy format with the pattern LastnameFirstinitial_ER.
     elif re.match('[A-Za-z]+_ER', acc_id):
-        test = True
+        return True
     # University archives variation, ua##-###.
     elif re.match('ua[0-9]{2}-[0-9]{3}', acc_id):
-        test = True
+        return True
     # University archives variation, ua_##_###.
     elif re.match('ua_[0-9]{2}_[0-9]{3}', acc_id):
-        test = True
+        return True
     else:
-        test = False
-
-    return test
+        return False
 
 
 def combine_collection_data(acc_df):
