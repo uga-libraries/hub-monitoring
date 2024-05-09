@@ -12,7 +12,7 @@ class MyTestCase(unittest.TestCase):
         directory = join('test_data', 'Hargrett_Hub')
         status = 'backlogged'
         collection = 'ms0001 Person papers'
-        accession = 'ms2022-15-er'
+        accession = '2022-15-er'
         result = get_accession_data(directory, status, collection, accession)
 
         expected = ['ms0001 Person papers', 'backlogged', '2024', .00001, 3, 0, 0, 1, 2]
