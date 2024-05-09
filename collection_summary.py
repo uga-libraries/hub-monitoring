@@ -328,7 +328,9 @@ if __name__ == '__main__':
     for status in os.listdir(directory):
         if status in ('backlogged', 'closed'):
             for collection in os.listdir(os.path.join(directory, status)):
-                #print("\nStarting on collection", collection)
+                if collection == 'ua22-008 Linguistic Atlas Project':
+                    continue
+                #print('\nStarting on collection', collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
                     skip_list = ['Appraisal', 'Appraisal copy', 'Appraised_arranged', 'Appraised_arranged_FITS',
                                  'Arranged', 'Risk remediation']
