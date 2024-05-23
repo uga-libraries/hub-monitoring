@@ -181,6 +181,7 @@ def get_risk(acc_path):
 
     @:returns
     risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
+                      and a note, either an empty string or that the accession has no risk csv
     """
 
     # Uses a function from risk_update.py (also in this repo) to get the name of the most recent risk csv.
@@ -212,6 +213,10 @@ def get_risk(acc_path):
     risk_list = []
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
         risk_list.append((risk_dedup_df['NARA_Risk Level'] == risk).sum())
+
+    # Adds an empty string to the end of the list, which is for the Notes column.
+    # There is no information for Notes if there is a risk csv.
+    risk_list.append('')
 
     return risk_list
 
