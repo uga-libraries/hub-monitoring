@@ -47,7 +47,7 @@ class MyTestCase(unittest.TestCase):
         """Test for the returned value when the accession has no risk csv"""
         acc_path = join('test_data', 'Russell_Hub', 'backlogged', 'rbrl002', '2021-40-er')
         risk = get_risk(acc_path)
-        expected = [0, 0, 0, 0]
+        expected = [0, 0, 0, 0, 'Accession 2021-40-er has no risk csv']
         self.assertEqual(risk, expected, "Problem with test for no risk csv")
 
     def test_one_risk(self):
