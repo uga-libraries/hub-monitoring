@@ -299,9 +299,6 @@ def save_report(coll_df, dir_path):
     None
     """
 
-    # Adds an empty column for archivist notes as the last column.
-    coll_df['Notes'] = ''
-
     # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
     today = datetime.today().strftime('%Y-%m-%d')
 
@@ -321,7 +318,7 @@ if __name__ == '__main__':
     # Starts a dataframe for information about each accession.
     # It will be summarized later to be by collection.
     accession_df = pd.DataFrame(columns=['Collection', 'Status', 'Date', 'GB', 'Files',
-                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'])
+                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
 
     # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
     # Folders used for other purposes at the status and accession level are skipped.
