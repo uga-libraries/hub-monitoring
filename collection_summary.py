@@ -197,7 +197,7 @@ def get_risk(acc_path):
     # If not, prints the error and returns a list with 0 for the number of files at every risk level.
     # If an accession has a path length error, it may not have a risk data csv yet.
     if risk_csv_name:
-        risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name))
+        risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name), low_memory=False)
     else:
         return [0, 0, 0, 0, f'Accession {os.path.basename(acc_path)} has no risk csv. ']
 
