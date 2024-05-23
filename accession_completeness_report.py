@@ -108,15 +108,16 @@ def check_completeness(acc_path):
     return result
 
 
-def update_report(coll, acc_path, result):
+def update_report(status_folder, coll, acc_path, result):
     """Adds an accession to the completeness report
 
     The report is saved in the collections_directory.
 
     @:parameter
+    status_folder (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
     acc_path (string): the full path to the accession folder
-    result: (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
+    result (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
 
     @:returns
     None
@@ -127,7 +128,7 @@ def update_report(coll, acc_path, result):
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
-            writer.writerow(['Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Bag'])
+            writer.writerow(['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Bag'])
 
     # Gets the accession number from the path.
     # TODO, there are cases where this is the collection number or 'Preservation Copies'.
@@ -136,7 +137,7 @@ def update_report(coll, acc_path, result):
     # Saves the information to the report.
     with open(report_path, 'a', newline='') as report:
         writer = csv.writer(report)
-        writer.writerow([coll, acc, result['pres_log'], result['full_risk'], result['bag']])
+        writer.writerow([status_folder, coll, acc, result['pres_log'], result['full_risk'], result['bag']])
 
 
 if __name__ == '__main__':
@@ -162,7 +163,7 @@ if __name__ == '__main__':
                     completeness_dict = check_completeness(accession_path)
                     # If any of the criteria are missing, saves the information to the report.
                     if False in completeness_dict.values():
-                        update_report(collection, accession_path, completeness_dict)
+                        update_report(status, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made) or not.
     report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
