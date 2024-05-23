@@ -20,9 +20,10 @@ class MyTestCase(unittest.TestCase):
     def test_temp_notes(self):
         """Test for initial development of notes functionality: NOT FINAL!!!"""
         # Makes test input and runs the function.
-        rows = [['coll1', 'backlog', '2021', 30.01, 607, 90, 0, 17, 500, ''],
-                ['coll1', 'backlog', '2021', 6.35, 80, 0, 0, 40, 40, ''],
-                ['coll1', 'backlog', '2022', 0.25, 9, 0, 9, 0, 0, '']]
+        rows = [['coll1', 'backlog', '2021', 30.01, 607, 90, 0, 17, 500, 'Acc 1a no csv. '],
+                ['coll1', 'backlog', '2021', 6.35, 80, 0, 0, 40, 40, 'Acc 1b no csv. '],
+                ['coll1', 'backlog', '2022', 0.25, 9, 0, 9, 0, 0, ''],
+                ['coll2', 'backlog', '1992', 1.03, 10, 2, 3, 4, 5, 'Acc 2 no csv. ']]
         acc_df = make_df(rows)
         collection_df = combine_collection_data(acc_df)
 
@@ -30,7 +31,8 @@ class MyTestCase(unittest.TestCase):
         result = [collection_df.columns.tolist()] + collection_df.values.tolist()
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
                      'Moderate_Risk', 'Low_Risk', 'Notes'],
-                    ['coll1', '2021-2022', 'backlog', 36.61, 696, 90, 9, 57, 540, '']]
+                    ['coll1', '2021-2022', 'backlog', 36.61, 696, 90, 9, 57, 540, 'Acc 1a no csv. Acc 1b no csv. '],
+                    ['coll2', '1992', 'backlog', 1.03, 10, 2, 3, 4, 5, 'Acc 2 no csv. ']]
         self.assertEqual(result, expected, "Problem with temp test for notes")
 
     # def test_multiple(self):

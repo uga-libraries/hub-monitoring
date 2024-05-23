@@ -199,7 +199,7 @@ def get_risk(acc_path):
     if risk_csv_name:
         risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name))
     else:
-        return [0, 0, 0, 0, f'Accession {os.path.basename(acc_path)} has no risk csv']
+        return [0, 0, 0, 0, f'Accession {os.path.basename(acc_path)} has no risk csv. ']
 
     # Makes a new dataframe with the FITS_File_Path and NARA_Risk Level to remove duplicates.
     # Duplicates may be from multiple FITS format identifications or multiple NARA matches.
