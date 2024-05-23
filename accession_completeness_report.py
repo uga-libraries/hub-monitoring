@@ -131,7 +131,6 @@ def update_report(status, coll, acc_path, result):
             writer.writerow(['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Bag'])
 
     # Gets the accession number from the path.
-    # TODO, there are cases where this is the collection number or 'Preservation Copies'.
     acc = os.path.basename(acc_path)
 
     # Saves the information to the report.
@@ -152,7 +151,6 @@ if __name__ == '__main__':
             for collection in os.listdir(os.path.join(collection_directory, status_folder)):
 
                 # Skips unconventional collections.
-                # TODO: confirm this
                 unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
                 if collection in unconventional:
                     continue
