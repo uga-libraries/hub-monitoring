@@ -9,7 +9,7 @@ import os
 import sys
 
 
-def accession_paths(status_folder, coll):
+def accession_paths(status, coll):
     """Find the accession folder(s), which can be in a few places in the collection folder
 
     Most accessions are in folders named with the accession number within the collection folder.
@@ -17,7 +17,7 @@ def accession_paths(status_folder, coll):
     A few are in the collection folder without any additional folders.
 
     @:parameter
-    status_folder (string): parent folder of collection folder, either "backlogged" or "closed"
+    status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
 
     @:returns
@@ -25,7 +25,7 @@ def accession_paths(status_folder, coll):
     """
 
     acc_paths = []
-    coll_path = os.path.join(collection_directory, status_folder, coll)
+    coll_path = os.path.join(collection_directory, status, coll)
 
     # Navigates the collection folder looking for the folder with the accession content.
     for acc in os.listdir(coll_path):
@@ -108,13 +108,13 @@ def check_completeness(acc_path):
     return result
 
 
-def update_report(status_folder, coll, acc_path, result):
+def update_report(status, coll, acc_path, result):
     """Adds an accession to the completeness report
 
     The report is saved in the collections_directory.
 
     @:parameter
-    status_folder (string): parent folder of collection folder, either "backlogged" or "closed"
+    status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
     acc_path (string): the full path to the accession folder
     result (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
@@ -137,7 +137,7 @@ def update_report(status_folder, coll, acc_path, result):
     # Saves the information to the report.
     with open(report_path, 'a', newline='') as report:
         writer = csv.writer(report)
-        writer.writerow([status_folder, coll, acc, result['pres_log'], result['full_risk'], result['bag']])
+        writer.writerow([status, coll, acc, result['pres_log'], result['full_risk'], result['bag']])
 
 
 if __name__ == '__main__':
@@ -145,11 +145,11 @@ if __name__ == '__main__':
 
     # First level within the collection_directory is status folders (backlogged or closed),
     # as well as additional folders and files that are not part of this analysis.
-    for status in os.listdir(collection_directory):
-        if status == 'backlogged' or status == 'closed':
+    for status_folder in os.listdir(collection_directory):
+        if status_folder == 'backlogged' or status_folder == 'closed':
 
             # All folders within the status folders should be collections.
-            for collection in os.listdir(os.path.join(collection_directory, status)):
+            for collection in os.listdir(os.path.join(collection_directory, status_folder)):
 
                 # Skips unconventional collections.
                 # TODO: confirm this
@@ -158,12 +158,12 @@ if __name__ == '__main__':
                     continue
 
                 # Gets a list of the path to every folder with accession content and tests their completeness.
-                accession_list = accession_paths(status, collection)
+                accession_list = accession_paths(status_folder, collection)
                 for accession_path in accession_list:
                     completeness_dict = check_completeness(accession_path)
                     # If any of the criteria are missing, saves the information to the report.
                     if False in completeness_dict.values():
-                        update_report(status, collection, accession_path, completeness_dict)
+                        update_report(status_folder, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made) or not.
     report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
