@@ -15,7 +15,7 @@ class MyTestCase(unittest.TestCase):
         accession = 'ms2022-15-er'
         result = get_accession_data(directory, status, collection, accession)
 
-        expected = ['ms0001 Person papers', 'backlogged', '2024', .00001, 3, 0, 0, 1, 2]
+        expected = ['ms0001 Person papers', 'backlogged', '2024', .00001, 3, 0, 0, 1, 2, '']
         self.assertEqual(result, expected, "Problem with test for the function")
 
 
