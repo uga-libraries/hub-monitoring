@@ -9,7 +9,7 @@ import os
 import sys
 
 
-def accession_paths(coll):
+def accession_paths(status_folder, coll):
     """Find the accession folder(s), which can be in a few places in the collection folder
 
     Most accessions are in folders named with the accession number within the collection folder.
@@ -17,6 +17,7 @@ def accession_paths(coll):
     A few are in the collection folder without any additional folders.
 
     @:parameter
+    status_folder (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
 
     @:returns
@@ -24,12 +25,13 @@ def accession_paths(coll):
     """
 
     acc_paths = []
+    coll_path = os.path.join(collection_directory, status_folder, coll)
 
     # Navigates the collection folder looking for the folder with the accession content.
-    for acc in os.listdir(os.path.join(collection_directory, coll)):
+    for acc in os.listdir(coll_path):
 
         # Skips anything that is a file instead of a folder.
-        if os.path.isfile(os.path.join(collection_directory, coll, acc)):
+        if os.path.isfile(os.path.join(coll_path, acc)):
             continue
 
         # Skips non-accession folders that may be sibling folders of accessions.
@@ -39,36 +41,36 @@ def accession_paths(coll):
             continue
 
         # Finds accession folders that are inside 'Preservation Copies' folders.
-        if os.path.exists(os.path.join(collection_directory, coll, 'Preservation Copies')):
+        if os.path.exists(os.path.join(coll_path, 'Preservation Copies')):
             # Content is in Preservation Copies.
             # TODO: do not depend on knowing the coll.
             if coll in ['ua12-022 GLOBES records', 'ua16-010 Athens Music Project collection']:
-                acc_paths.append(os.path.join(collection_directory, coll, 'Preservation Copies'))
+                acc_paths.append(os.path.join(coll_path, 'Preservation Copies'))
             # Content is in accession folders within Preservation Copies.
             else:
-                for accession_folder in os.listdir(os.path.join(collection_directory, coll, 'Preservation Copies')):
+                for accession_folder in os.listdir(os.path.join(coll_path, 'Preservation Copies')):
                     acc_paths.append(os.path.join(collection_directory, coll, 'Preservation Copies', accession_folder))
 
         # Finds accession content inside the collection folder with no further folders.
         # TODO: do not depend on knowing the coll.
         elif coll in ['ms4466 Athens Metal Arts Guild', 'RBRL_041_CLC', 'RBRL_059_DDB', 'RBRL_189_SDB', 'rbrl390',
                       'rbrl459', 'rbrl480', 'rbrl481', 'rbrl483', 'rbrl496', 'rbrl501', 'rbrl507', 'rbrl508']:
-            acc_paths.append(os.path.join(collection_directory, coll))
+            acc_paths.append(os.path.join(coll_path))
 
         # Finds accession folders for a collection that has an extra collection folder.
         # Everything in this folder except a few CSVs is an accession folder.
         # TODO: do not depend on knowing the coll.
         elif coll == 'rbrl499':
-            for accession_folder in os.listdir(os.path.join(collection_directory, coll, coll)):
+            for accession_folder in os.listdir(os.path.join(coll_path, coll)):
                 if not accession_folder.endswith('.csv'):
-                    acc_paths.append(os.path.join(collection_directory, coll, coll, accession_folder))
+                    acc_paths.append(os.path.join(coll_path, coll, accession_folder))
 
         # Finds accession folders that are inside the collection folder (most common).
         else:
-            acc_paths.append(os.path.join(collection_directory, coll, acc))
+            acc_paths.append(os.path.join(coll_path, acc))
 
     # Removes duplicate paths.
-    # When the accessions content is inside the collection folder, it is added once per folder that isn'ted skipped.
+    # When the accessions content is inside the collection folder, it is added once per folder that isn't skipped.
     acc_paths = list(set(acc_paths))
 
     return acc_paths
@@ -155,7 +157,7 @@ if __name__ == '__main__':
                     continue
 
                 # Gets a list of the path to every folder with accession content and tests their completeness.
-                accession_list = accession_paths(collection)
+                accession_list = accession_paths(status, collection)
                 for accession_path in accession_list:
                     completeness_dict = check_completeness(accession_path)
                     # If any of the criteria are missing, saves the information to the report.
