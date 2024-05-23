@@ -140,31 +140,31 @@ def update_report(coll, acc_path, result):
 if __name__ == '__main__':
     collection_directory = sys.argv[1]
 
-    # First level within the collection_directory should be the collection.
-    # TODO: update once we reorganize to status (backlog or closed) first.
-    for collection in os.listdir(collection_directory):
+    # First level within the collection_directory is status folders (backlogged or closed),
+    # as well as additional folders and files that are not part of this analysis.
+    for status in os.listdir(collection_directory):
+        if status == 'backlogged' or status == 'closed':
 
-        # Skips files and the non-collection folder.
-        if os.path.isfile(os.path.join(collection_directory, collection)) or collection == 'scripts':
-            continue
+            # All folders within the status folders should be collections.
+            for collection in os.listdir(os.path.join(collection_directory, status)):
 
-        # Skips unconventional collections.
-        # TODO: confirm this
-        unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
-        if collection in unconventional:
-            continue
+                # Skips unconventional collections.
+                # TODO: confirm this
+                unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
+                if collection in unconventional:
+                    continue
 
-        # Gets a list of the path to every folder with accession content and tests their completeness.
-        accession_list = accession_paths(collection)
-        for accession_path in accession_list:
-            completeness_dict = check_completeness(accession_path)
-            # If any of the criteria are missing, saves the information to the report.
-            if False in completeness_dict.values():
-                update_report(collection, accession_path, completeness_dict)
+                # Gets a list of the path to every folder with accession content and tests their completeness.
+                accession_list = accession_paths(collection)
+                for accession_path in accession_list:
+                    completeness_dict = check_completeness(accession_path)
+                    # If any of the criteria are missing, saves the information to the report.
+                    if False in completeness_dict.values():
+                        update_report(collection, accession_path, completeness_dict)
 
-    # Prints if there were any incomplete accessions (the report was made) or not.
-    report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
-    if os.path.exists(report_path):
-        print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {collection_directory}.')
-    else:
-        print(f'\nAll accessions are complete.')
+            # Prints if there were any incomplete accessions (the report was made) or not.
+            report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
+            if os.path.exists(report_path):
+                print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {collection_directory}.')
+            else:
+                print(f'\nAll accessions are complete.')
