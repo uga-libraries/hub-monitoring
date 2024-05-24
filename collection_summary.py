@@ -126,7 +126,8 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     acc_id (string): the accession id, which is a folder within acc_coll
 
     @:returns
-    acc_list (list): collection, status, date, size (GB), files, and the number of files at each of the 4 risk levels
+    acc_list (list): accession, collection, status, date, size (GB), files,
+    the number of files at each of the 4 risk levels, and a note for if the accession has no risk csv
     """
 
     # Calculates the path to the accession folder, which combines the four function parameters.
@@ -144,7 +145,7 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
-    acc_list = [acc_coll, acc_status, date, size_gb, files]
+    acc_list = [acc_id, acc_coll, acc_status, date, size_gb, files]
     acc_list.extend(risk)
 
     return acc_list
