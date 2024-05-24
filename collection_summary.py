@@ -1,20 +1,23 @@
-"""Makes a spreadsheet with summary data about each collection in a given department folder
+"""Makes spreadsheets with summary data about each accession and collection in a given department folder
 
 Data included:
+- Accession (accession report only)
 - Collection
 - Status (if backlog or closed)
 - Accession date (date range if more than one)
 - Size (GB and number of files)
-- Risk percentages (based on the number of files at each NARA risk level)
-- Notes (empty column for archivist notes)
+- Risk (number of files at each NARA risk level)
+- Notes (if there was no risk csv and for additional archivist notes)
 
-If there is more than one accession for the collection, the information is combined.
+If there is more than one accession for the collection,
+the information is combined in the collection report.
 
 Parameter:
     directory (required): the directory with the folders to be summarized
 
 Returns:
-    CSV with one row per collection
+    hub-accession-summary_DATE.csv
+    hub-collection-summary_DATE.csv
 """
 import csv
 from datetime import datetime
