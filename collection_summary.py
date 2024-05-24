@@ -65,6 +65,9 @@ def combine_collection_data(acc_df):
     coll_df (Pandas dataframe): the data for every collection
     """
 
+    # Removes the Accession folder, which is only needed for the accession report.
+    acc_df.drop(['Accession'], axis=1, inplace=True)
+
     # Adds the values in GB, Files, and the four risk category columns for each collection.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
