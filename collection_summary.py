@@ -20,7 +20,6 @@ from datetime import datetime
 import numpy as np
 import os
 import pandas as pd
-import re
 import sys
 from risk_update import most_recent_risk_csv
 from validate_fixity import check_argument
@@ -30,7 +29,7 @@ def accession_test(acc_id, acc_path):
     """Determine if a folder within a collection folder is an accession based on the folder name
 
     @:parameter
-    acc_id (string): the accession id, which is a folder within acc_coll
+    acc_id (string): the accession id, which is the name of a folder within acc_coll
     acc_path (string): the path to the accession folder
 
     @:return
@@ -41,20 +40,14 @@ def accession_test(acc_id, acc_path):
     if os.path.isfile(acc_path):
         return False
 
-    # The most common pattern is YYYY-##-er, sometimes with underscores, three numbers, or ER.
-    if re.match('[0-9]{4}[-|_][0-9]{2,3}[-|_][er|ER]', acc_id):
+    # Pattern one: ends with -er or -ER.
+    if acc_id.lower().endswith('-er'):
         return True
-    # The string no-acc-num is used on legacy accessions that were never assigned a number.
+    # Pattern two: ends with _er or _ER.
+    elif acc_id.lower().endswith('_er'):
+        return True
+    # Temporary designation for legacy content while determining an accession number.
     elif acc_id == 'no-acc-num':
-        return True
-    # Legacy format with the pattern LastnameFirstinitial_ER.
-    elif re.match('[A-Za-z]+_ER', acc_id):
-        return True
-    # University archives variation, ua##-###.
-    elif re.match('ua[0-9]{2}-[0-9]{3}', acc_id):
-        return True
-    # University archives variation, ua_##_###.
-    elif re.match('ua_[0-9]{2}_[0-9]{3}', acc_id):
         return True
     # Folder that matches none of the patterns for an accession.
     else:

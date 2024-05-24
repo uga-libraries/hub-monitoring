@@ -29,6 +29,12 @@ class MyTestCase(unittest.TestCase):
         is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
         self.assertEqual(is_accession, False, 'Problem with test for not accession 2')
 
+    def test_no_acc_num(self):
+        """Test for when the folder is equal to no-acc-num"""
+        accession = 'no-acc-num'
+        is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
+        self.assertEqual(is_accession, True, 'Problem with test for no-acc-num')
+
     def test_pattern_1a(self):
         """Test for when the folder matches pattern 1 (year-number-er), with dashes and lowercase er"""
         accession = '2021-89-er'
@@ -42,52 +48,28 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(is_accession, True, 'Problem with test for pattern 1b')
 
     def test_pattern_1c(self):
-        """Test for when the folder matches pattern 1 (year-number-er), with underscores and lowercase er"""
-        accession = '2011_20_er'
-        is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 1c')
-
-    def test_pattern_1d(self):
-        """Test for when the folder matches pattern 1 (year-number-er), with underscores and uppercase ER"""
-        accession = '2013_36_ER'
-        is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 1d')
-
-    def test_pattern_1e(self):
         """Test for when the folder matches pattern 1 (year-number-er), with 3 digits instead of 2"""
         accession = '2022-108-er'
         is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 1e')
+        self.assertEqual(is_accession, True, 'Problem with test for pattern 1c')
 
-    def test_pattern_1f(self):
-        """Test for when the folder matches pattern 1 (year-number-er), with additional text"""
-        accession = '2023-14-er_addition'
+    def test_pattern_2a(self):
+        """Test for when the folder matches pattern 2 (year-number-er), with underscores and lowercase er"""
+        accession = '2011_20_er'
         is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 1f')
+        self.assertEqual(is_accession, True, 'Problem with test for pattern 2a')
 
-    def test_pattern_2(self):
-        """Test for when the folder matches pattern 2, equal to no-acc-num"""
-        accession = 'no-acc-num'
+    def test_pattern_2b(self):
+        """Test for when the folder matches pattern 2 (year-number-er), with underscores and uppercase ER"""
+        accession = '2013_36_ER'
         is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 2')
+        self.assertEqual(is_accession, True, 'Problem with test for pattern 2b')
 
-    def test_pattern_3(self):
-        """Test for when the folder matches pattern 3, letters_ER"""
+    def test_pattern_2c(self):
+        """Test for when the folder matches pattern 2, letters_ER"""
         accession = 'MethvinE_ER'
         is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 3')
-
-    def test_pattern_4(self):
-        """Test for when the folder matches pattern 4, ua##-###"""
-        accession = 'ua16-010'
-        is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 4')
-
-    def test_pattern_5(self):
-        """Test for when the folder matches pattern 5, ua_##_###"""
-        accession = 'ua_14_018'
-        is_accession = accession_test(accession, join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er'))
-        self.assertEqual(is_accession, True, 'Problem with test for pattern 5')
+        self.assertEqual(is_accession, True, 'Problem with test for pattern 2c')
 
 
 if __name__ == '__main__':
