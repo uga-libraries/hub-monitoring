@@ -40,34 +40,8 @@ def accession_paths(status, coll):
         if acc in skip or acc.startswith('Apprais') or acc.startswith('Risk') or acc.endswith('FITS'):
             continue
 
-        # Finds accession folders that are inside 'Preservation Copies' folders.
-        if os.path.exists(os.path.join(coll_path, 'Preservation Copies')):
-            # Content is in Preservation Copies.
-            # TODO: do not depend on knowing the coll.
-            if coll in ['ua12-022 GLOBES records', 'ua16-010 Athens Music Project collection']:
-                acc_paths.append(os.path.join(coll_path, 'Preservation Copies'))
-            # Content is in accession folders within Preservation Copies.
-            else:
-                for accession_folder in os.listdir(os.path.join(coll_path, 'Preservation Copies')):
-                    acc_paths.append(os.path.join(collection_directory, coll, 'Preservation Copies', accession_folder))
-
-        # Finds accession content inside the collection folder with no further folders.
-        # TODO: do not depend on knowing the coll.
-        elif coll in ['ms4466 Athens Metal Arts Guild', 'RBRL_041_CLC', 'RBRL_059_DDB', 'RBRL_189_SDB', 'rbrl390',
-                      'rbrl459', 'rbrl480', 'rbrl481', 'rbrl483', 'rbrl496', 'rbrl501', 'rbrl507', 'rbrl508']:
-            acc_paths.append(os.path.join(coll_path))
-
-        # Finds accession folders for a collection that has an extra collection folder.
-        # Everything in this folder except a few CSVs is an accession folder.
-        # TODO: do not depend on knowing the coll.
-        elif coll == 'rbrl499':
-            for accession_folder in os.listdir(os.path.join(coll_path, coll)):
-                if not accession_folder.endswith('.csv'):
-                    acc_paths.append(os.path.join(coll_path, coll, accession_folder))
-
-        # Finds accession folders that are inside the collection folder (most common).
-        else:
-            acc_paths.append(os.path.join(coll_path, acc))
+        # Accession folder is directly inside the collection folder.
+        acc_paths.append(os.path.join(coll_path, acc))
 
     # Removes duplicate paths.
     # When the accessions content is inside the collection folder, it is added once per folder that isn't skipped.
