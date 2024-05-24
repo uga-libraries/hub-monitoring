@@ -25,6 +25,35 @@ from risk_update import most_recent_risk_csv
 from validate_fixity import check_argument
 
 
+def accession_test(acc_id, acc_path):
+    """Determine if a folder within a collection folder is an accession based on the folder name
+
+    @:parameter
+    acc_id (string): the accession id, which is the name of a folder within acc_coll
+    acc_path (string): the path to the accession folder
+
+    @:return
+    Boolean: True if it is an accession and False if not
+    """
+
+    # If the path is to a file, do not test the folder name.
+    if os.path.isfile(acc_path):
+        return False
+
+    # Pattern one: ends with -er or -ER.
+    if acc_id.lower().endswith('-er'):
+        return True
+    # Pattern two: ends with _er or _ER.
+    elif acc_id.lower().endswith('_er'):
+        return True
+    # Temporary designation for legacy content while determining an accession number.
+    elif acc_id == 'no-acc-num':
+        return True
+    # Folder that matches none of the patterns for an accession.
+    else:
+        return False
+
+
 def combine_collection_data(acc_df):
     """Combine data for collections with multiple accessions
 
@@ -104,9 +133,14 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
 
     # Gets the data which requires additional calculation.
     # Size, Files, and Date are single data points, while risk is a list of four items.
+    # Skips size for an extremely large collection so the report finishes sooner.
     date = get_date(acc_path)
-    size = get_size(acc_path)
-    files = get_file_count(acc_path)
+    if acc_coll == 'rbrl246jhi':
+        size = 0
+        files = 0
+    else:
+        size = get_size(acc_path)
+        files = get_file_count(acc_path)
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
@@ -196,7 +230,7 @@ def get_risk(acc_path):
     # If not, prints the error and returns a list with 0 for the number of files at every risk level.
     # If an accession has a path length error, it may not have a risk data csv yet.
     if risk_csv_name:
-        risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name))
+        risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name), low_memory=False)
     else:
         print(f'Accession {os.path.basename(acc_path)} has no risk csv')
         return [0, 0, 0, 0]
@@ -328,13 +362,15 @@ if __name__ == '__main__':
     for status in os.listdir(directory):
         if status in ('backlogged', 'closed'):
             for collection in os.listdir(os.path.join(directory, status)):
-                #print("\nStarting on collection", collection)
+                # Do not include ua22-008 in the report, since it is not our collection.
+                if collection == 'ua22-008 Linguistic Atlas Project':
+                    continue
+                print('\nStarting on collection', collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
-                    skip_list = ['Appraisal', 'Appraisal copy', 'Appraised_arranged', 'Appraised_arranged_FITS',
-                                 'Arranged', 'Risk remediation']
-                    if accession not in skip_list and os.path.isdir(os.path.join(directory, status, collection, accession)):
-                        accession_df.loc[len(accession_df)] = get_accession_data(directory, status,
-                                                                                 collection, accession)
+                    is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
+                    if is_accession:
+                        accession_data = get_accession_data(directory, status, collection, accession)
+                        accession_df.loc[len(accession_df)] = accession_data
 
     # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
     collection_df = combine_collection_data(accession_df)

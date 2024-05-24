@@ -1,0 +1,1 @@
+Tests that skipping files within the collection folder.
