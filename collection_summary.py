@@ -351,6 +351,6 @@ if __name__ == '__main__':
 
     # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
     today = datetime.today().strftime('%Y-%m-%d')
-    accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv'))
+    accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv')).fillna('')
     collection_df = combine_collection_data(accession_df)
     collection_df.to_csv(os.path.join(directory, f'hub-collection-summary_{today}.csv'), index=False)
