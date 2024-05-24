@@ -255,19 +255,20 @@ def get_risk(acc_path):
 
 
 def get_size(acc_path):
-    """Calculate the size of the accession in GB
+    """Calculate the size of the accession in number of files and GB
 
-    For bagged accessions, this is the size of the bag data folder.
-    For unbagged accessions, this is the size of the folder within the accession folder that is not for FITS files.
+    For bagged accessions, this is for the contents of the bag data folder.
+    Otherwise, this is for the contents of the folder within the accession folder that is not for FITS files.
 
     @:parameter
     acc_path (string): the path to the accession folder
 
     @:returns
+    file_count (integer): the number of files in the accession folder
     size_gb (float): the size, in GB, of the accession folder
     """
 
-    # Calculates the path with the accession content,
+    # Calculates the path to the folder with the accession content,
     # which is either the bag's data folder or the folder within the accession folder that isn't for the FITS files.
     accession_number = os.path.basename(acc_path)
     data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
@@ -279,9 +280,11 @@ def get_size(acc_path):
                 content_path = os.path.join(acc_path, item)
 
     try:
-        # Adds the size of the files at each level within the folder with the accession's content.
+        # Adds the number and size of the files at each level within the folder with the accession's content.
+        file_count = 0
         size_bytes = 0
         for root, dirs, files in os.walk(content_path):
+            file_count += len(files)
             for file in files:
                 file_path = os.path.join(root, file)
                 try:
@@ -290,10 +293,10 @@ def get_size(acc_path):
                     with open('size_error.txt', 'a', newline='', encoding='utf-8') as f:
                         f.write(file_path + '\n')
         size_gb = round_non_zero(size_bytes / 1000000000)
-        return size_gb
+        return file_count, size_gb
     except UnboundLocalError:
-        print('Cannot find the content path for', acc_path)
-        return 0
+        print('Cannot calculate size for', acc_path)
+        return 0, 0
 
 
 def round_non_zero(number):
