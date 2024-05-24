@@ -364,6 +364,8 @@ if __name__ == '__main__':
                         accession_data = get_accession_data(directory, status, collection, accession)
                         save_accession_report(directory, accession_data)
 
-    # # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
-    # collection_df = combine_collection_data(accession_df)
-    # save_report(collection_df, directory)
+    # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
+    today = datetime.today().strftime('%Y-%m-%d')
+    accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv'))
+    collection_df = combine_collection_data(accession_df)
+    save_report(collection_df, directory)
