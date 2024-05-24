@@ -215,6 +215,7 @@ def get_risk(acc_path):
 
     @:returns
     risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
+                      and a note, either an empty string or that the accession has no risk csv
     """
 
     # Uses a function from risk_update.py (also in this repo) to get the name of the most recent risk csv.
@@ -232,8 +233,7 @@ def get_risk(acc_path):
     if risk_csv_name:
         risk_df = pd.read_csv(os.path.join(acc_path, risk_csv_name), low_memory=False)
     else:
-        print(f'Accession {os.path.basename(acc_path)} has no risk csv')
-        return [0, 0, 0, 0]
+        return [0, 0, 0, 0, f'Accession {os.path.basename(acc_path)} has no risk csv. ']
 
     # Makes a new dataframe with the FITS_File_Path and NARA_Risk Level to remove duplicates.
     # Duplicates may be from multiple FITS format identifications or multiple NARA matches.
@@ -246,6 +246,10 @@ def get_risk(acc_path):
     risk_list = []
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
         risk_list.append((risk_dedup_df['NARA_Risk Level'] == risk).sum())
+
+    # Adds an empty string to the end of the list, which is for the Notes column.
+    # There is no information for Notes if there is a risk csv.
+    risk_list.append('')
 
     return risk_list
 
@@ -333,9 +337,6 @@ def save_report(coll_df, dir_path):
     None
     """
 
-    # Adds an empty column for archivist notes as the last column.
-    coll_df['Notes'] = ''
-
     # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
     today = datetime.today().strftime('%Y-%m-%d')
 
@@ -355,7 +356,7 @@ if __name__ == '__main__':
     # Starts a dataframe for information about each accession.
     # It will be summarized later to be by collection.
     accession_df = pd.DataFrame(columns=['Collection', 'Status', 'Date', 'GB', 'Files',
-                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk'])
+                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
 
     # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
     # Folders used for other purposes at the status and accession level are skipped.

@@ -68,12 +68,7 @@ class MyTestCase(unittest.TestCase):
         """Test running the script with Russell test data"""
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         directory = join('test_data', 'Russell_Hub')
-        output = run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
-
-        # Tests the print statement for an accession without a risk csv.
-        result = output.stdout.decode('utf-8')
-        expected = 'Accession 2021-40-er has no risk csv\r\n'
-        self.assertEqual(result, expected, "Problem test for Russell print statement")
+        run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
 
         # Tests the contents of the report.
         report_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
@@ -81,7 +76,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
                      'Moderate_Risk', 'Low_Risk', 'Notes'],
                     ['rbrl001', '2024', 'backlogged', 0.0002, 11, 0, 0, 0, 11, 'nan'],
-                    ['rbrl002', '2024', 'backlogged', 0.0003, 41, 10, 9, 11, 12, 'nan'],
+                    ['rbrl002', '2024', 'backlogged', 0.0003, 41, 10, 9, 11, 12,
+                     'Accession 2021-40-er has no risk csv. '],
                     ['rbrl003', '2024', 'closed', 0.001, 18, 0, 1, 7, 10, 'nan']]
         self.assertEqual(result, expected, "Problem with test for Russell data")
 

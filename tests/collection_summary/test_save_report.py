@@ -17,7 +17,7 @@ from pandas import DataFrame
 def make_df(df_rows):
     """Make and return a dataframe with consistent column names."""
     column_names = ['Collection', 'Status', 'GB', 'Files', 'Date', 'No_Match_Risk', 'High_Risk',
-                    'Moderate_Risk', 'Low_Risk']
+                    'Moderate_Risk', 'Low_Risk', 'Notes']
     df = DataFrame(df_rows, columns=column_names)
     return df
 
@@ -46,9 +46,9 @@ class MyTestCase(unittest.TestCase):
     def test_harg(self):
         """Test for when the report should be saved in the Hargrett Hub"""
         # Makes test input and runs the function.
-        rows = [['ms0001', 'backlog', 1.00, 111, '2015', 11, 15, 45, 40],
-                ['ms0002', 'backlog', 2.02, 200, '2019', 0, 0, 50, 150],
-                ['ms0003', 'backlog', 3.33, 303, '2021-2022', 100, 20, 33, 150]]
+        rows = [['ms0001', 'backlog', 1.00, 111, '2015', 11, 15, 45, 40, ''],
+                ['ms0002', 'backlog', 2.02, 200, '2019', 0, 0, 50, 150, ''],
+                ['ms0003', 'backlog', 3.33, 303, '2021-2022', 100, 20, 33, 150, '']]
         coll_df = make_df(rows)
         directory = join('test_data', 'Hargrett_Hub')
         save_report(coll_df, directory)
@@ -70,9 +70,9 @@ class MyTestCase(unittest.TestCase):
     def test_rbrl(self):
         """Test for when the report should be saved in the Russell Hub"""
         # Makes test input and runs the function.
-        rows = [['rbrl001', 'backlog', 10.51, 852, '2015', 0, 0, 2, 850],
-                ['rbrl002', 'backlog', 20.20, 906, '2019', 100, 56, 212, 538],
-                ['rbrl003', 'backlog', 33.00, 1522, '2021-2022', 93, 942, 243, 244]]
+        rows = [['rbrl001', 'backlog', 10.51, 852, '2015', 0, 0, 2, 850, ''],
+                ['rbrl002', 'backlog', 20.20, 906, '2019', 100, 56, 212, 538, ''],
+                ['rbrl003', 'backlog', 33.00, 1522, '2021-2022', 93, 942, 243, 244, '']]
         coll_df = make_df(rows)
         directory = join('test_data', 'Russell_Hub')
         save_report(coll_df, directory)
