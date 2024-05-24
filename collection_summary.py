@@ -16,6 +16,7 @@ Parameter:
 Returns:
     CSV with one row per collection
 """
+import csv
 from datetime import datetime
 import numpy as np
 import os
@@ -293,6 +294,30 @@ def round_non_zero(number):
     return round_number
 
 
+def save_accession_report(dir_path, row):
+    """Save a row of data to a CSV in the directory provided as the script argument
+
+    @:parameter
+    dir_path (string): the path to the folder with data to be summarized (script argument)
+    row (list or string): list with data for a row in the CSV or "header"
+    """
+
+    # Path to the accession report.
+    today = datetime.today().strftime('%Y-%m-%d')
+    report_path = os.path.join(dir_path, f'hub-accession-summary_{today}.csv')
+
+    # Makes the report with a header row if row is "header". Otherwise, adds the row to the report.
+    if row == 'header':
+        with open(report_path, 'w', newline='') as report:
+            report_writer = csv.writer(report)
+            report_writer.writerow(['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
+    else:
+        with open(report_path, 'a', newline='') as report:
+            report_writer = csv.writer(report)
+            report_writer.writerow(row)
+
+
 def save_report(coll_df, dir_path):
     """Save the collection data to a CSV in the directory provided as the script argument
 
@@ -320,10 +345,8 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Starts a dataframe for information about each accession.
-    # It will be summarized later to be by collection.
-    accession_df = pd.DataFrame(columns=['Collection', 'Status', 'Date', 'GB', 'Files',
-                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
+    # Starts a CSV for information about each accession. It will also be summarized later by collection.
+    save_accession_report(directory, 'header')
 
     # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
     # Folders used for other purposes at the status and accession level are skipped.
@@ -338,8 +361,8 @@ if __name__ == '__main__':
                     is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
                     if is_accession:
                         accession_data = get_accession_data(directory, status, collection, accession)
-                        accession_df.loc[len(accession_df)] = accession_data
+                        save_accession_report(directory, accession_data)
 
-    # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
-    collection_df = combine_collection_data(accession_df)
-    save_report(collection_df, directory)
+    # # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
+    # collection_df = combine_collection_data(accession_df)
+    # save_report(collection_df, directory)
