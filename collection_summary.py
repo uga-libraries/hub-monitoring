@@ -322,24 +322,6 @@ def save_accession_report(dir_path, row):
             report_writer.writerow(row)
 
 
-def save_report(coll_df, dir_path):
-    """Save the collection data to a CSV in the directory provided as the script argument
-
-    @:parameter
-    coll_df (Pandas dataframe): the data for each collection
-    dir_path (string): the path to the folder with data to be summarized (script argument)
-
-    @:returns
-    None
-    """
-
-    # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
-    today = datetime.today().strftime('%Y-%m-%d')
-
-    # Saves the dataframe to a CSV in the directory (script argument).
-    coll_df.to_csv(os.path.join(dir_path, f'hub-collection-summary_{today}.csv'), index=False)
-
-
 if __name__ == '__main__':
 
     # Gets the path to the directory with the information to be summarized from the script argument.
@@ -371,4 +353,4 @@ if __name__ == '__main__':
     today = datetime.today().strftime('%Y-%m-%d')
     accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv'))
     collection_df = combine_collection_data(accession_df)
-    save_report(collection_df, directory)
+    collection_df.to_csv(os.path.join(directory, f'hub-collection-summary_{today}.csv'), index=False)
