@@ -29,7 +29,7 @@ class MyTestCase(unittest.TestCase):
         outputs = [join('test_data', 'Hargrett_Hub', f'hub-accession-summary_{today}.csv'),
                    join('test_data', 'Hargrett_Hub', f'hub-collection-summary_{today}.csv'),
                    join('test_data', 'Russell_Hub', f'hub-accession-summary_{today}.csv'),
-                   join('test_data', 'Hargrett_Hub', f'hub-collection-summary_{today}.csv')]
+                   join('test_data', 'Russell_Hub', f'hub-collection-summary_{today}.csv')]
 
         # Deletes any test output that is present.
         for output in outputs:
