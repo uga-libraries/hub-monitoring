@@ -136,15 +136,14 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     # Skips size for an extremely large collection so the report finishes sooner.
     date = get_date(acc_path)
     if acc_coll == 'rbrl246jhi':
-        size = 0
         files = 0
+        size_gb = 0
     else:
-        size = get_size(acc_path)
-        files = get_file_count(acc_path)
+        files, size_gb = get_size(acc_path)
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
-    acc_list = [acc_coll, acc_status, date, size, files]
+    acc_list = [acc_coll, acc_status, date, size_gb, files]
     acc_list.extend(risk)
 
     return acc_list
