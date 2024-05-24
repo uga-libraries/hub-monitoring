@@ -1,0 +1,4 @@
+Collection,Date,Status,GB,Files,No_Match_Risk,High_Risk,Moderate_Risk,Low_Risk,Notes
+rbrl001,2024,backlogged,0.0002,11,0,0,0,11,
+rbrl002,2024,backlogged,0.0003,41,10,9,11,12,Accession 2021-40-er has no risk csv. 
+rbrl003,2024,closed,0.001,18,0,1,7,10,
