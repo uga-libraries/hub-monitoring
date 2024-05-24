@@ -63,8 +63,8 @@ def check_completeness(acc_path):
     # Looks for the completeness criteria, which are in the first level within the accession folder.
     for item in os.listdir(acc_path):
 
-        # Preservation log has two possible naming conventions.
-        if item == 'preservation_log.txt' or item.endswith('PreservationLog.txt'):
+        # Preservation log has a consistent file name.
+        if item == 'preservation_log.txt':
             result['pres_log'] = True
 
         # Full risk data spreadsheet may have a date between full_risk_data and the file extension.
