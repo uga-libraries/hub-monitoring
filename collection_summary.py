@@ -1,21 +1,25 @@
-"""Makes a spreadsheet with summary data about each collection in a given department folder
+"""Makes spreadsheets with summary data about each accession and collection in a given department folder
 
 Data included:
+- Accession (accession report only)
 - Collection
 - Status (if backlog or closed)
 - Accession date (date range if more than one)
 - Size (GB and number of files)
-- Risk percentages (based on the number of files at each NARA risk level)
-- Notes (empty column for archivist notes)
+- Risk (number of files at each NARA risk level)
+- Notes (if there was no risk csv and for additional archivist notes)
 
-If there is more than one accession for the collection, the information is combined.
+If there is more than one accession for the collection,
+the information is combined in the collection report.
 
 Parameter:
     directory (required): the directory with the folders to be summarized
 
 Returns:
-    CSV with one row per collection
+    hub-accession-summary_DATE.csv
+    hub-collection-summary_DATE.csv
 """
+import csv
 from datetime import datetime
 import numpy as np
 import os
@@ -63,6 +67,9 @@ def combine_collection_data(acc_df):
     @:returns
     coll_df (Pandas dataframe): the data for every collection
     """
+
+    # Removes the Accession folder, which is only needed for the accession report.
+    acc_df.drop(['Accession'], axis=1, inplace=True)
 
     # Adds the values in GB, Files, and the four risk category columns for each collection.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
@@ -125,7 +132,8 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     acc_id (string): the accession id, which is a folder within acc_coll
 
     @:returns
-    acc_list (list): collection, status, date, size (GB), files, and the number of files at each of the 4 risk levels
+    acc_list (list): accession, collection, status, date, size (GB), files,
+    the number of files at each of the 4 risk levels, and a note for if the accession has no risk csv
     """
 
     # Calculates the path to the accession folder, which combines the four function parameters.
@@ -143,7 +151,7 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
-    acc_list = [acc_coll, acc_status, date, size_gb, files]
+    acc_list = [acc_id, acc_coll, acc_status, date, size_gb, files]
     acc_list.extend(risk)
 
     return acc_list
@@ -293,22 +301,28 @@ def round_non_zero(number):
     return round_number
 
 
-def save_report(coll_df, dir_path):
-    """Save the collection data to a CSV in the directory provided as the script argument
+def save_accession_report(dir_path, row):
+    """Save a row of data to a CSV in the directory provided as the script argument
 
     @:parameter
-    coll_df (Pandas dataframe): the data for each collection
     dir_path (string): the path to the folder with data to be summarized (script argument)
-
-    @:returns
-    None
+    row (list or string): list with data for a row in the CSV or "header"
     """
 
-    # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
+    # Path to the accession report.
     today = datetime.today().strftime('%Y-%m-%d')
+    report_path = os.path.join(dir_path, f'hub-accession-summary_{today}.csv')
 
-    # Saves the dataframe to a CSV in the directory (script argument).
-    coll_df.to_csv(os.path.join(dir_path, f'hub-collection-summary_{today}.csv'), index=False)
+    # Makes the report with a header row if row is "header". Otherwise, adds the row to the report.
+    if row == 'header':
+        with open(report_path, 'w', newline='') as report:
+            report_writer = csv.writer(report)
+            report_writer.writerow(['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
+    else:
+        with open(report_path, 'a', newline='') as report:
+            report_writer = csv.writer(report)
+            report_writer.writerow(row)
 
 
 if __name__ == '__main__':
@@ -320,10 +334,8 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Starts a dataframe for information about each accession.
-    # It will be summarized later to be by collection.
-    accession_df = pd.DataFrame(columns=['Collection', 'Status', 'Date', 'GB', 'Files',
-                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
+    # Starts a CSV for information about each accession. It will also be summarized later by collection.
+    save_accession_report(directory, 'header')
 
     # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
     # Folders used for other purposes at the status and accession level are skipped.
@@ -338,8 +350,10 @@ if __name__ == '__main__':
                     is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
                     if is_accession:
                         accession_data = get_accession_data(directory, status, collection, accession)
-                        accession_df.loc[len(accession_df)] = accession_data
+                        save_accession_report(directory, accession_data)
 
     # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
+    today = datetime.today().strftime('%Y-%m-%d')
+    accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv')).fillna('')
     collection_df = combine_collection_data(accession_df)
-    save_report(collection_df, directory)
+    collection_df.to_csv(os.path.join(directory, f'hub-collection-summary_{today}.csv'), index=False)
