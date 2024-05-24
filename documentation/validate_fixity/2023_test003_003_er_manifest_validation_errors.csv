@@ -1,0 +1,7 @@
+File,MD5,MD5_Source
+Z:\CD_2\File02.txt,0CBC6611F5540BD0809A388DC95A615B,Manifest
+Z:\CD_2\File03.txt,3D77C578A138BA560F31DD22B83A53D3,Manifest
+Z:\CD_1\File1.txt,4324B4C675E56A5E04BD9A8C74796EE5,Manifest
+C:\GitHub\hub-monitoring\tests\validate_fixity\test_data\test_003_log_update\2023_test003_003_er\2023_test003_003_er\CD_1\File1.txt,717216B472AA04EB2E615809C7F30C4E,Current
+C:\GitHub\hub-monitoring\tests\validate_fixity\test_data\test_003_log_update\2023_test003_003_er\2023_test003_003_er\CD_2\File02.txt,8078CD550FCF6755750A59378AFC7D30,Current
+C:\GitHub\hub-monitoring\tests\validate_fixity\test_data\test_003_log_update\2023_test003_003_er\2023_test003_003_er\CD_1\New Text Document.txt,9669CD9006F03AD6F1F8831601640482,Current

@@ -1,0 +1,3 @@
+1bd03c0e4b8360dbf6da890de17d0fbe  data/Plain Text Document.txt
+fd656ea517c05851c9bc4b880a74d27b  data/Plain Text Document2.txt
+dc51a06bf523e54412311cdd8eadcc08  data/Text Document.rtf
