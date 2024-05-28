@@ -208,12 +208,12 @@ def validate_manifest(acc_dir, manifest):
     df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='MD5', right_on='Acc_MD5', indicator='Match')
 
     # Determines if everything matched (values in Match will all be both)
-    valid = df_compare['Match'].eq('both').all(axis=0)
+    all_match = df_compare['Match'].eq('both').all(axis=0)
 
     # Makes a list of the path, MD5, and source of the MD5 (manifest or file) for any that did not match,
     # if there were any that did not match.
     error_list = []
-    if not valid:
+    if not all_match:
         df_left = df_compare[df_compare['Match'] == 'left_only']
         df_left = df_left[['File', 'MD5']]
         df_left['MD5_Source'] = 'Manifest'
@@ -222,6 +222,17 @@ def validate_manifest(acc_dir, manifest):
         df_right = df_right[['Acc_Path', 'Acc_MD5']]
         df_right['MD5_Source'] = 'Current'
         error_list.extend(df_right.values.tolist())
+
+    # Compares the number of files in the accession to the number of files in the manifest
+    # to detect if the number of duplicate files has changed.
+    accession_count = len(df_files.index)
+    manifest_count = len(df_manifest.index)
+    if accession_count != manifest_count:
+        error_list.append(f'Number of files does not match. '
+                          f'{accession_count} files in the accession folder and {manifest_count} in the manifest.')
+
+    # Determines if there were any errors, based on the contents of errors_list.
+    valid = len(error_list) == 0
 
     return valid, error_list
 
