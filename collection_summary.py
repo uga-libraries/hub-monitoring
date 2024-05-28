@@ -345,10 +345,10 @@ if __name__ == '__main__':
                 # Do not include ua22-008 in the report, since it is not our collection.
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
-                print('Starting on collection', collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
                     is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
                     if is_accession:
+                        print('Starting on accession', os.path.join(directory, status, collection, accession))
                         accession_data = get_accession_data(directory, status, collection, accession)
                         save_accession_report(directory, accession_data)
 
