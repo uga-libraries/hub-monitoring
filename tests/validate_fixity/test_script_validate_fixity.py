@@ -76,7 +76,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['Accession', 'Validation_Error'],
                     ['2023_test003_001_er_bag',
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'],
-                    ['2023_test003_003_er', '6 manifest errors']]
+                    ['2023_test003_003_er', '7 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for correct, validation report')
 
         # Verifies the contents of the log for 2023_test003_001_er have been updated.
@@ -120,7 +120,7 @@ class MyTestCase(unittest.TestCase):
                      'Validated manifest for accession 2023.3.3.ER. The manifest is not valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for correct, 2023_test003_003_er')
 
-        # Verifies the contents of 2023_test0003_004_er manifest validation errors log.
+        # Verifies the contents of 2023_test0003_003_er manifest validation errors log.
         result= csv_to_list(join(directory, '2023_test003_003_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Z:\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
@@ -131,7 +131,9 @@ class MyTestCase(unittest.TestCase):
                     [join(directory, '2023_test003_003_er', '2023_test003_003_er', 'CD_2', 'File02.txt'),
                      '8078CD550FCF6755750A59378AFC7D30', 'Current'],
                     [join(directory, '2023_test003_003_er', '2023_test003_003_er','CD_1', 'New Text Document.txt'),
-                     '9669CD9006F03AD6F1F8831601640482', 'Current']]
+                     '9669CD9006F03AD6F1F8831601640482', 'Current'],
+                    ['Number of files does not match. 4 files in the accession folder and 6 in the manifest.',
+                     'nan', 'nan']]
         self.assertEqual(result, expected, 'Problem with test for correct, manifest validation errors')
 
         # Verifies the contents of the log for 2023_test003_004_er have been updated.
