@@ -228,8 +228,8 @@ def validate_manifest(acc_dir, manifest):
     accession_count = len(df_files.index)
     manifest_count = len(df_manifest.index)
     if accession_count != manifest_count:
-        error_list.append(f'Number of files does not match. '
-                          f'{accession_count} files in the accession folder and {manifest_count} in the manifest.')
+        error_list.append([f'Number of files does not match. '
+                          f'{accession_count} files in the accession folder and {manifest_count} in the manifest.'])
 
     # Determines if there were any errors, based on the contents of errors_list.
     valid = len(error_list) == 0
