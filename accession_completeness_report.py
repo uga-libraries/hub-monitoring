@@ -125,12 +125,10 @@ if __name__ == '__main__':
                 if collection in unconventional:
                     continue
 
-                # Prints current collection for tracking progress and identifying input that causes errors.
-                print('Starting on collection', collection)
-
                 # Gets a list of the path to every folder with accession content and tests their completeness.
                 accession_list = accession_paths(status_folder, collection)
                 for accession_path in accession_list:
+                    print('Starting on accession', accession_path)
                     completeness_dict = check_completeness(accession_path)
                     # If any of the criteria are missing, saves the information to the report.
                     if False in completeness_dict.values():
