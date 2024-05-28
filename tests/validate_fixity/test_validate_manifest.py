@@ -24,7 +24,7 @@ class MyTestCase(unittest.TestCase):
                     'Number of files does not match. 1 files in the accession folder and 2 in the manifest.']
         self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion, error')
 
-    def test_invalid_deletion_duplicates(self):
+    def test_invalid_deletion_all_duplicates(self):
         """Test for when the accession does not match the manifest due to file deletions.
         All copies of a duplicate file have been deleted."""
         # Makes the variables for function input and runs the function.
@@ -33,13 +33,29 @@ class MyTestCase(unittest.TestCase):
         is_valid, errors_list = validate_manifest(root, file)
 
         # Verifies is_valid has the correct value.
-        self.assertEqual(is_valid, False, 'Problem with test for invalid deletion duplicates, is_valid')
+        self.assertEqual(is_valid, False, 'Problem with test for invalid deletion all duplicates, is_valid')
 
         # Verifies errors_list has the correct value.
         expected = [['Z:\\2023_test005_003_er\\CD_1\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
                     ['Z:\\2023_test005_003_er\\CD_2\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
                     'Number of files does not match. 1 files in the accession folder and 3 in the manifest.']
-        self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion duplicates, error')
+        self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion all duplicates, error')
+
+    def test_invalid_deletion_some_duplicates(self):
+        """Test for when the accession matches the manifest due to only some duplicate files being deleted.
+        Change is detected based on the number of files, not fixity..
+        """
+        # Makes the variables for function input and runs the function.
+        root = join('test_data', 'test_004_manifest_valid', '2023_test004_004_er')
+        file = 'initialmanifest_20231031.csv'
+        is_valid, errors_list = validate_manifest(root, file)
+
+        # Verifies is_valid has the correct value.
+        self.assertEqual(is_valid, False, 'Problem with test for invalid deletion some duplicates, is_valid')
+
+        # Verifies errors_list has the correct value.
+        expected = ['Number of files does not match. 2 files in the accession folder and 4 in the manifest.']
+        self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion some duplicates, error')
 
     def test_invalid_edit(self):
         """Test for when the accession does not match the manifest due to files being edited."""
@@ -88,22 +104,6 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies errors_list has the correct value.
         self.assertEqual(errors_list, [], 'Problem with test for valid, error')
-
-    def test_invalid_deletion_some_duplicates(self):
-        """Test for when the accession matches the manifest due to only some duplicate files being deleted.
-        Change is detected based on the number of files, not fixity..
-        """
-        # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_004_manifest_valid', '2023_test004_004_er')
-        file = 'initialmanifest_20231031.csv'
-        is_valid, errors_list = validate_manifest(root, file)
-
-        # Verifies is_valid has the correct value.
-        self.assertEqual(is_valid, False, 'Problem with test for invalid deletion some duplicates, is_valid')
-
-        # Verifies errors_list has the correct value.
-        expected = ['Number of files does not match. 2 files in the accession folder and 4 in the manifest.']
-        self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion some duplicates, error')
 
     def test_valid_duplicate(self):
         """Test for when the accession matches the manifest. It includes duplicate files."""
