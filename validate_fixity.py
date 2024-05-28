@@ -239,12 +239,14 @@ if __name__ == '__main__':
     for root, dirs, files in os.walk(directory):
         for folder in dirs:
             if folder.endswith('_bag'):
+                print(f'Starting on accession {root} (bag)')
                 is_valid, error = validate_bag(os.path.join(root, folder))
                 update_preservation_log(root, is_valid, 'bag', error)
                 if not is_valid:
                     update_report(folder, error, directory)
         for file in files:
             if file.startswith('initialmanifest'):
+                print(f'Starting on accession {root} (manifest)')
                 is_valid, errors_list = validate_manifest(root, file)
                 update_preservation_log(root, is_valid, 'manifest')
                 # Saves the list of each file with fixity differences to a CSV.

@@ -331,5 +331,6 @@ if __name__ == '__main__':
     # and makes a new version of it using the most recent risk spreadsheet in each folder.
     for root, directories, files in os.walk(directory):
         if any('full_risk_data' in x for x in files):
+            print('Starting on accession', root)
             file = most_recent_risk_csv(files)
             new_risk_spreadsheet(root, file, nara_risk_df, directory)

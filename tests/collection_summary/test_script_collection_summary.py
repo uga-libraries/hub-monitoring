@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
         """Test running the script with Hargrett test data"""
         script = join(getcwd(), '..', '..', 'collection_summary.py')
         directory = join('test_data', 'Hargrett_Hub')
-        run(f'python "{script}" "{directory}"', shell=True)
+        run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
 
         # Tests the contents of the accession report.
         acc_path = join(directory, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")

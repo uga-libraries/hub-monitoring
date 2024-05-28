@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
     def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')
         directory = 'test_data'
-        run(f'python "{script}" "{directory}"', shell=True)
+        run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
 
         result = csv_to_list(join('test_data', 'combined_format_data.csv'))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'File_Count', 'Size_GB'],

@@ -29,11 +29,12 @@ def combine_risk_csvs(dir_path):
     csv_list = []
     for root, directories, files in os.walk(dir_path):
         if any('full_risk_data' in x for x in files):
+            print('Starting on accession', root)
             file = most_recent_risk_csv(files)
             csv_list.append(os.path.join(root, file))
 
     # Prints the number of CSVs, to give an idea of the amount of coverage since not all accessions have a risk CSV.
-    print('Number of CSVs to combine:', len(csv_list))
+    print('\nNumber of CSVs to combine:', len(csv_list))
 
     # Combines every spreadsheet into one dataframe.
     df = pd.concat([pd.read_csv(f, low_memory=False) for f in csv_list])
