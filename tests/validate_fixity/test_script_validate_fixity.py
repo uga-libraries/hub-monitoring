@@ -60,7 +60,13 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the script printed the correct message about the missing preservation log and validation errors.
         result = output.stdout.decode('utf-8')
-        expected = ('\r\nERROR: accession 2023_test003_005_er has no preservation log.\r\n'
+        coll_path = join(getcwd(), 'test_data', 'test_003_log_update')
+        expected = (f'Starting on accession {coll_path}\\2023_test003_001_er (bag)\r\n'
+                    f'Starting on accession {coll_path}\\2023_test003_002_er (bag)\r\n'
+                    f'Starting on accession {coll_path}\\2023_test003_003_er (manifest)\r\n'
+                    f'Starting on accession {coll_path}\\2023_test003_004_er (manifest)\r\n'
+                    f'Starting on accession {coll_path}\\2023_test003_005_er (manifest)\r\n'
+                    '\r\nERROR: accession 2023_test003_005_er has no preservation log.\r\n'
                     '\r\nValidation errors found, see fixity_validation.csv in the directory '
                     'provided as the script argument.\r\n')
         self.assertEqual(result, expected, 'Problem with test for correct, printed message')
@@ -150,7 +156,10 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the script printed the correct message about validation errors.
         result = output.stdout.decode('utf-8')
-        expected = '\r\nNo validation errors.\r\n'
+        coll_path = join(getcwd(), 'test_data', 'test_001_bags_valid')
+        expected = (f'Starting on accession {coll_path}\\2023_test001_001_er (bag)\r\n'
+                    f'Starting on accession {coll_path}\\2023_test001_002_er (bag)\r\n'
+                    '\r\nNo validation errors.\r\n')
         self.assertEqual(result, expected, 'Problem with test for correct no errors, printed message')
 
         # Verifies the validation report was not made. It is only made for errors.
