@@ -42,7 +42,7 @@ class MyTestCase(unittest.TestCase):
         script = join(getcwd(), '..', '..', 'risk_update.py')
         directory = join('test_data', 'Russell_Hub', 'rbrl004')
         nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
-        subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True)
+        subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the log was made.
         log_path = join('test_data', 'Russell_Hub', 'rbrl004', 'update_risk_log.csv')
