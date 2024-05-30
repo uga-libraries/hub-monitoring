@@ -155,7 +155,16 @@ def validate_bag(bag_dir):
     error_msg (None, string): None if bag is valid, string with error if bag is not valid
     """
 
-    new_bag = bagit.Bag(bag_dir)
+    # Tries to make a bag object, so that bagit library can validate it.
+    # There are cases where filenames prevent it from making a bag, in which case it returns values.
+    try:
+        new_bag = bagit.Bag(bag_dir)
+    except bagit.BagError as errors:
+        valid = False
+        error_msg = 'Cannot make bag for validation: ' + str(errors)
+        return valid, error_msg
+
+    # Validates the bag.
     try:
         new_bag.validate()
         valid = True
@@ -163,6 +172,7 @@ def validate_bag(bag_dir):
     except bagit.BagValidationError as errors:
         valid = False
         error_msg = str(errors)
+
     return valid, error_msg
 
 
