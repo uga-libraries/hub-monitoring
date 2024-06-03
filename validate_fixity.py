@@ -238,21 +238,24 @@ if __name__ == '__main__':
     # Navigates to each accession, validates it, and updates the preservation log.
     for root, dirs, files in os.walk(directory):
         for folder in dirs:
+            # First tries to validate by looking for a bag.
             if folder.endswith('_bag'):
                 print(f'Starting on accession {root} (bag)')
                 is_valid, error = validate_bag(os.path.join(root, folder))
                 update_preservation_log(root, is_valid, 'bag', error)
                 if not is_valid:
                     update_report(folder, error, directory)
-        for file in files:
-            if file.startswith('initialmanifest'):
-                print(f'Starting on accession {root} (manifest)')
-                is_valid, errors_list = validate_manifest(root, file)
-                update_preservation_log(root, is_valid, 'manifest')
-                # Saves the list of each file with fixity differences to a CSV.
-                if not is_valid:
-                    update_report(os.path.basename(root), f'{len(errors_list)} manifest errors', directory)
-                    manifest_validation_log(directory, os.path.basename(root), errors_list)
+            # If there is no bag, tries to validate by looking for an initial manifest.
+            else:
+                for file in files:
+                    if file.startswith('initialmanifest'):
+                        print(f'Starting on accession {root} (manifest)')
+                        is_valid, errors_list = validate_manifest(root, file)
+                        update_preservation_log(root, is_valid, 'manifest')
+                        # Saves the list of each file with fixity differences to a CSV.
+                        if not is_valid:
+                            update_report(os.path.basename(root), f'{len(errors_list)} manifest errors', directory)
+                            manifest_validation_log(directory, os.path.basename(root), errors_list)
 
     # Prints if there were any validation errors, based on if the validation log was made or not.
     log = os.path.join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
