@@ -208,8 +208,10 @@ def validate_bag_manifest(bag_dir):
                               names=['Bag_MD5', 'Bag_Path'], dtype=object)
 
     # Merge the two dataframes to compare them.
+    df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='Bag_MD5', right_on='Acc_MD5', indicator='Match')
 
     # Determines if everything matched (values in Match will all be both).
+    valid = df_compare['Match'].eq('both').all(axis=0)
 
     # Updates the Preservation Log
 
