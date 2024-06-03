@@ -202,7 +202,10 @@ def validate_bag_manifest(bag_dir):
             files_list.append([filepath, md5_generated])
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
-    # Reads the manifest into a dataframe.
+    # Reads the bag manifest into a dataframe.
+    # It is tab delimited and does not have a header row.
+    df_manifest = pd.read_csv(os.path.join(bag_dir, 'manifest-md5.txt'), delimiter='  ', engine='python',
+                              names=['Bag_MD5', 'Bag_Path'], dtype=object)
 
     # Merge the two dataframes to compare them.
 
