@@ -192,6 +192,15 @@ def validate_bag_manifest(bag_dir):
     """
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
+    files_list = []
+    for root, dirs, files in os.walk(os.path.join(bag_dir, 'data')):
+        for file in files:
+            filepath = os.path.join(root, file)
+            with open(filepath, 'rb') as f:
+                data = f.read()
+                md5_generated = hashlib.md5(data).hexdigest()
+            files_list.append([filepath, md5_generated])
+    df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the manifest into a dataframe.
 
@@ -204,7 +213,7 @@ def validate_bag_manifest(bag_dir):
     # If there were errors,
     # saves the path, MD5, and source of the MD5 (manifest or file) for any that did not match to a log
     # and updates the script report.
-    
+
 
 def validate_manifest(acc_dir, manifest):
     """Validate an accession that has a manifest instead of being bagged
