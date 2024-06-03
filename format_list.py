@@ -146,7 +146,4 @@ if __name__ == '__main__':
     df_format_list = pd.merge(df_files, df_size, how='outer')
 
     # Saves the result to a CSV in the directory.
-    # To not save in the same directory as the script argument, update the value of directory.
-    # This is sometimes necessary due to not having write permissions on the accession storage.
-    # directory = 'insert-path'
     df_format_list.to_csv(os.path.join(directory, 'combined_format_data.csv'), index=False)
