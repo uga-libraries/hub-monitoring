@@ -156,10 +156,12 @@ def validate_bag(bag_dir):
     """
 
     # Tries to make a bag object, so that bagit library can validate it.
-    # There are cases where filenames prevent it from making a bag, in which case it returns values.
+    # There are cases where filenames prevent it from making a bag, in which case it returns the values
+    # and also tries to validate the bag using the manifest.
     try:
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
+        validate_bag_manifest(bag_dir)
         valid = False
         error_msg = 'Cannot make bag for validation: ' + str(errors)
         return valid, error_msg
@@ -175,6 +177,34 @@ def validate_bag(bag_dir):
 
     return valid, error_msg
 
+
+def validate_bag_manifest(bag_dir):
+    """Validate an accession using the bag manifest if the bagit functionality fails
+
+    Bagit cannot validate a bag if the path is too long.
+
+    :parameter
+    bag_dir (string): the path to an accession bag
+
+    :returns
+    None
+    Updates the preservation log, and if there are errors updates the report and makes a log
+    """
+
+    # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
+
+    # Reads the manifest into a dataframe.
+
+    # Merge the two dataframes to compare them.
+
+    # Determines if everything matched (values in Match will all be both).
+
+    # Updates the Preservation Log
+
+    # If there were errors,
+    # saves the path, MD5, and source of the MD5 (manifest or file) for any that did not match to a log
+    # and updates the script report.
+    
 
 def validate_manifest(acc_dir, manifest):
     """Validate an accession that has a manifest instead of being bagged
