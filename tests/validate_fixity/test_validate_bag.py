@@ -9,6 +9,23 @@ from os.path import join
 
 class MyTestCase(unittest.TestCase):
 
+    # def test_bag_error(self):
+    #     """Template for test for when the bag cannot be validated because bagit gives a BagError
+    #     This is caused by path length and cannot be reliably replicated in the test data.
+    #     Instead, supply the path in root and folder to a bag known to have this error.
+    #     """
+    #     # Makes variables for function input and runs the function.
+    #     root = 'INSERT PATH TO ACCESSION FOLDER'
+    #     folder = 'INSERT NAME OF BAG FOLDER'
+    #     is_valid, error = validate_bag(join(root, folder))
+    #
+    #     # Verifies is_valid has the correct value.
+    #     self.assertEqual(is_valid, False, 'Problem with test for bag error, is_valid')
+    #
+    #     # Verifies error has the correct value.
+    #     expected = 'Cannot make bag for validation: INSERT ERROR FROM VALIDATING BAG WITH BAGIT'
+    #     self.assertEqual(error, expected, 'Problem with test for bag error, error')
+
     def test_file_added(self):
         """Test for when the bag is not valid because a file was added"""
         # Makes variables for function input and runs the function.
