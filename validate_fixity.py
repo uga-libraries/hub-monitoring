@@ -152,8 +152,8 @@ def validate_bag(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument)
 
     :returns
-    valid (Boolean): True if bag is valid, False if bag is not valid
-    error_msg (None, string): None if bag is valid, string with error if bag is not valid
+    None
+    Updates the preservation_log.txt, and if it is not valid also updates the script report
     """
 
     # Tries to make a bag object, so that bagit library can validate it.
@@ -167,16 +167,15 @@ def validate_bag(bag_dir, report_dir):
         error_msg = 'Cannot make bag for validation: ' + str(errors)
         return valid, error_msg
 
-    # Validates the bag.
+    # Validates the bag and updates the preservation log.
+    # If there is a validation error, also adds it to the script report.
     try:
         new_bag.validate()
-        valid = True
-        error_msg = None
+        update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
     except bagit.BagValidationError as errors:
-        valid = False
-        error_msg = str(errors)
-
-    return valid, error_msg
+        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
+        accession_number = os.path.basename(os.path.dirname(bag_dir))
+        update_report(accession_number, str(errors), report_dir)
 
 
 def validate_bag_manifest(bag_dir, report_dir):
@@ -310,6 +309,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Navigates to each accession, validates it, and updates the preservation log.
+    # If it is not valid, makes a fixity validation report and, for validation by manifest, a file log.
     for root, dirs, files in os.walk(directory):
         for folder in dirs:
             if folder.endswith('_bag'):
