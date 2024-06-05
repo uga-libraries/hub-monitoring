@@ -214,7 +214,6 @@ def validate_bag_manifest(bag_dir):
     valid = df_compare['Match'].eq('both').all(axis=0)
 
     # Updates the preservation log.
-    print("Updating log in", os.path.dirname(bag_dir))
     update_preservation_log(os.path.dirname(bag_dir), valid, 'bag')
 
     # If there were errors,
