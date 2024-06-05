@@ -144,11 +144,12 @@ def manifest_validation_log(acc_dir, acc, errors):
         f_write.writerows(errors)
 
 
-def validate_bag(bag_dir):
+def validate_bag(bag_dir, report_dir):
     """Validate an accession's bag
 
     :parameter
     bag_dir (string): the path to an accession bag
+    report_dir (string): directory where the report is saved (script argument)
 
     :returns
     valid (Boolean): True if bag is valid, False if bag is not valid
@@ -161,7 +162,7 @@ def validate_bag(bag_dir):
     try:
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
-        validate_bag_manifest(bag_dir)
+        validate_bag_manifest(bag_dir, report_dir)
         valid = False
         error_msg = 'Cannot make bag for validation: ' + str(errors)
         return valid, error_msg
@@ -178,13 +179,14 @@ def validate_bag(bag_dir):
     return valid, error_msg
 
 
-def validate_bag_manifest(bag_dir):
+def validate_bag_manifest(bag_dir, report_dir):
     """Validate an accession using the bag manifest if the bagit functionality fails
 
     Bagit cannot validate a bag if the path is too long.
 
     :parameter
     bag_dir (string): the path to an accession bag
+    report_dir (string): directory where the report is saved (script argument)
 
     :returns
     None
@@ -219,6 +221,17 @@ def validate_bag_manifest(bag_dir):
     # If there were errors,
     # saves the path, MD5, and source of the MD5 (manifest or file) for any that did not match to a log
     # and updates the script report.
+    if not valid:
+        error_list = []
+        df_left = df_compare[df_compare['Match'] == 'left_only']
+        df_left = df_left[['Bag_Path', 'Bag_MD5']]
+        df_left['MD5_Source'] = 'Manifest'
+        error_list.extend(df_left.values.tolist())
+        df_right = df_compare[df_compare['Match'] == 'right_only']
+        df_right = df_right[['Acc_Path', 'Acc_MD5']]
+        df_right['MD5_Source'] = 'Current'
+        error_list.extend(df_right.values.tolist())
+        update_report(os.path.dirname(bag_dir), f'{len(error_list)} bag manifest errors', report_dir)
 
 
 def validate_manifest(acc_dir, manifest):
@@ -295,7 +308,7 @@ if __name__ == '__main__':
         for folder in dirs:
             if folder.endswith('_bag'):
                 print(f'Starting on accession {root} (bag)')
-                is_valid, error = validate_bag(os.path.join(root, folder))
+                is_valid, error = validate_bag(os.path.join(root, folder), directory)
                 update_preservation_log(root, is_valid, 'bag', error)
                 if not is_valid:
                     update_report(folder, error, directory)
