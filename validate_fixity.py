@@ -204,7 +204,7 @@ def validate_bag_manifest(bag_dir):
 
     # Reads the bag manifest into a dataframe.
     # It is tab delimited and does not have a header row.
-    df_manifest = pd.read_csv(os.path.join(bag_dir, 'manifest-md5.txt'), delimiter='  ', engine='python',
+    df_manifest = pd.read_csv(os.path.join(bag_dir, 'manifest-md5.txt'), delimiter='  data/', engine='python',
                               names=['Bag_MD5', 'Bag_Path'], dtype=object)
 
     # Merge the two dataframes to compare them.
