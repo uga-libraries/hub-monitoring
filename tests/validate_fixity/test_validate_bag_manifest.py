@@ -33,7 +33,8 @@ class MyTestCase(unittest.TestCase):
         validate_bag_manifest(bag_dir)
 
         # Verifies the contents of the preservation_log.txt have been updated.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'),
+                             delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'CD.001',
                      'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
@@ -60,7 +61,8 @@ class MyTestCase(unittest.TestCase):
         validate_bag_manifest(bag_dir)
 
         # Verifies the contents of the preservation_log.txt have been updated.
-        result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_002_er', 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_002_er', 'preservation_log.txt'),
+                             delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
                      'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
