@@ -213,7 +213,9 @@ def validate_bag_manifest(bag_dir):
     # Determines if everything matched (values in Match will all be both).
     valid = df_compare['Match'].eq('both').all(axis=0)
 
-    # Updates the Preservation Log
+    # Updates the preservation log.
+    print("Updating log in", os.path.dirname(bag_dir))
+    update_preservation_log(os.path.dirname(bag_dir), valid, 'bag')
 
     # If there were errors,
     # saves the path, MD5, and source of the MD5 (manifest or file) for any that did not match to a log
