@@ -17,7 +17,7 @@ class MyTestCase(unittest.TestCase):
     #     # Makes variables for function input and runs the function.
     #     root = 'INSERT PATH TO ACCESSION FOLDER'
     #     folder = 'INSERT NAME OF BAG FOLDER'
-    #     is_valid, error = validate_bag(join(root, folder))
+    #     is_valid, error = validate_bag(join(root, folder), INSERT PATH FOR WHERE TO SAVE REPORT)
     #
     #     # Verifies is_valid has the correct value.
     #     self.assertEqual(is_valid, False, 'Problem with test for bag error, is_valid')
@@ -31,7 +31,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er')
         folder = '2023_test002_001_er_bag'
-        is_valid, error = validate_bag(join(root, folder))
+        is_valid, error = validate_bag(join(root, folder), 'test_data')
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for file added, is_valid')
@@ -45,7 +45,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er')
         folder = '2023_test002_002_er_bag'
-        is_valid, error = validate_bag(join(root, folder))
+        is_valid, error = validate_bag(join(root, folder), 'test_data')
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for file deleted, is_valid')
@@ -59,7 +59,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er')
         folder = '2023_test002_003_er_bag'
-        is_valid, error = validate_bag(join(root, folder))
+        is_valid, error = validate_bag(join(root, folder), 'test_data')
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for file edited, is_valid')
@@ -73,7 +73,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er')
         folder = '2023_test002_004_er_bag'
-        is_valid, error = validate_bag(join(root, folder))
+        is_valid, error = validate_bag(join(root, folder), 'test_data')
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for fixity changed, is_valid')
@@ -88,7 +88,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')
         folder = '2023_test002_005_er_bag'
-        is_valid, error = validate_bag(join(root, folder))
+        is_valid, error = validate_bag(join(root, folder), 'test_data')
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, False, 'Problem with test for missing bag-info.txt, is_valid')
@@ -102,7 +102,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_001_bags_valid', '2023_test001_001_er')
         folder = '2023_test001_001_er_bag'
-        is_valid, error = validate_bag(join(root, folder))
+        is_valid, error = validate_bag(join(root, folder), 'test_data')
 
         # Verifies is_valid has the correct value.
         self.assertEqual(is_valid, True, 'Problem with test for valid, is_valid')
