@@ -1,6 +1,0 @@
-Collection	Accession	Date	Media Identifier	Action	Staff
-TEST.3	2023.3.4.ER	2023-04-28	CD1	Virus scanned. No threats.	Jane Doe
-TEST.3	2023.3.4.ER	2023-04-28	CD1	Copied. No errors.	Jane Doe
-TEST.3	2023.3.4.ER	2023-04-28	CD2	Virus scanned. No threats.	Jane Doe
-TEST.3	2023.3.4.ER	2023-04-28	CD2	Copied. No errors.	Jane Doe
-TEST.3	2023.3.4.ER	2023-04-28		Cannot bag. Made manifest. Valid.	Jane Doe

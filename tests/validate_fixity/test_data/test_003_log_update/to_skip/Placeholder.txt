@@ -1,2 +1,0 @@
-This folder represents a folder in the directory that is neither a bag or a folder with a manifest.
-It will be skipped by the script.
