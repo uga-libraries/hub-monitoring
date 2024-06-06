@@ -87,6 +87,16 @@ class MyTestCase(unittest.TestCase):
                      'Validated manifest for accession 2023.3.6.ER. The manifest is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for manifest, valid')
 
+    # def test_no_log(self):
+    #     """Test for when there is no preservation log to update
+    #     Haven't figured out how to test what a function prints automatically,
+    #     so this will cause the function to print to the terminal when the test runs.
+    #     """
+    #     # Makes the variables needed for function input and runs the function.
+    #     accession_directory = join('test_data', 'test_003_log_update', '2023_test003_007_er')
+    #     update_preservation_log(accession_directory, True, 'manifest')
+    #     self.assertEqual(True, True)
+
 
 if __name__ == '__main__':
     unittest.main()
