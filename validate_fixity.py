@@ -169,6 +169,7 @@ def validate_bag(bag_dir, report_dir):
     except bagit.BagError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
         update_report(accession_number, f'Could not make bag for validation: {str(errors)}', report_dir)
+        validate_bag_manifest(bag_dir, report_dir)
         return
 
     # Validates the bag and updates the preservation log.
@@ -181,7 +182,67 @@ def validate_bag(bag_dir, report_dir):
         update_report(accession_number, str(errors), report_dir)
 
 
-#TODO: add function to validate bag using manifest.
+def validate_bag_manifest(bag_dir, report_dir):
+    """Validate an accession using the bag manifest if the bagit functionality fails
+
+    Bagit cannot validate a bag if the path is too long.
+
+    :parameter
+    bag_dir (string): the path to an accession bag
+    report_dir (string): directory where the report is saved (script argument)
+
+    :returns
+    None
+    Updates the preservation log, and if there are errors updates the report and makes a log
+    """
+
+    # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
+    files_list = []
+    for root, dirs, files in os.walk(os.path.join(bag_dir, 'data')):
+        for file in files:
+            filepath = os.path.join(root, file)
+            with open(filepath, 'rb') as f:
+                data = f.read()
+                md5_generated = hashlib.md5(data).hexdigest()
+            files_list.append([filepath, md5_generated])
+    df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
+
+    # Reads the bag manifest into a dataframe.
+    # It is tab delimited and does not have a header row.
+    df_manifest = pd.read_csv(os.path.join(bag_dir, 'manifest-md5.txt'), delimiter='  data/', engine='python',
+                              names=['Bag_MD5', 'Bag_Path'], dtype=object)
+
+    # Merge the two dataframes to compare them.
+    df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='Bag_MD5', right_on='Acc_MD5', indicator='Match')
+
+    # Determines if everything matched (values in Match will all be both).
+    valid = df_compare['Match'].eq('both').all(axis=0)
+
+    # Updates the preservation log.
+    update_preservation_log(os.path.dirname(bag_dir), valid, 'bag manifest')
+
+    # If there were errors, updates the script report and makes a manifest log.
+    if not valid:
+
+        # Makes a list of each path, MD5, and source of the MD5 (manifest or file) that did not match.
+        error_list = []
+        df_left = df_compare[df_compare['Match'] == 'left_only']
+        df_left = df_left[['Bag_Path', 'Bag_MD5']]
+        df_left['MD5_Source'] = 'Manifest'
+        error_list.extend(df_left.values.tolist())
+        df_right = df_compare[df_compare['Match'] == 'right_only']
+        df_right = df_right[['Acc_Path', 'Acc_MD5']]
+        df_right['MD5_Source'] = 'Current'
+        error_list.extend(df_right.values.tolist())
+
+        # Adds a summary of the errors to the script report (fixity_validation.csv).
+        accession_number = os.path.basename(os.path.dirname(bag_dir))
+        update_report(accession_number, f'{len(error_list)} bag manifest errors', report_dir)
+
+        # Makes a log with every file that does not match (acc_manifest_validation_errors.csv).
+        manifest_validation_log(report_dir, accession_number, error_list)
+
+
 def validate_manifest(acc_dir, manifest):
     """Validate an accession that has a manifest instead of being bagged
 
