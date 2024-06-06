@@ -21,7 +21,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies errors_list has the correct value.
         expected = [['Z:\\2023_test005_001_er\\CD_1\\File1.txt', 'CA1EA02C10B7C37F425B9B7DD86D5E11', 'Manifest'],
-                    'Number of files does not match. 1 files in the accession folder and 2 in the manifest.']
+                    ['Number of files does not match. 1 files in the accession folder and 2 in the manifest.']]
         self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion, errors_list')
 
     def test_invalid_deletion_all_duplicates(self):
@@ -38,7 +38,7 @@ class MyTestCase(unittest.TestCase):
         # Verifies errors_list has the correct value.
         expected = [['Z:\\2023_test005_003_er\\CD_1\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
                     ['Z:\\2023_test005_003_er\\CD_2\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
-                    'Number of files does not match. 1 files in the accession folder and 3 in the manifest.']
+                    ['Number of files does not match. 1 files in the accession folder and 3 in the manifest.']]
         self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion all duplicates, errors_list')
 
     def test_invalid_deletion_some_duplicates(self):
@@ -54,7 +54,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(is_valid, False, 'Problem with test for invalid deletion some duplicates, is_valid')
 
         # Verifies errors_list has the correct value.
-        expected = ['Number of files does not match. 2 files in the accession folder and 4 in the manifest.']
+        expected = [['Number of files does not match. 2 files in the accession folder and 4 in the manifest.']]
         self.assertEqual(errors_list, expected, 'Problem with test for invalid deletion some duplicates, errors_list')
 
     def test_invalid_edit(self):

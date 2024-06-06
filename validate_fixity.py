@@ -158,7 +158,7 @@ def validate_bag(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument)
 
     :returns
-     None
+    None
     Updates the preservation_log.txt, and if it is not valid also updates the script report
     """
 
