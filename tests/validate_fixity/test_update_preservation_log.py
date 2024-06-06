@@ -17,6 +17,8 @@ class MyTestCase(unittest.TestCase):
         # List of paths for accessions with logs to replace.
         accessions = [join('test_data', 'test_003_log_update', '2023_test003_001_er'),
                       join('test_data', 'test_003_log_update', '2023_test003_002_er'),
+                      join('test_data', 'test_003_log_update', '2023_test003_003_er'),
+                      join('test_data', 'test_003_log_update', '2023_test003_004_er'),
                       join('test_data', 'test_003_log_update', '2023_test003_005_er'),
                       join('test_data', 'test_003_log_update', '2023_test003_006_er')]
 
@@ -56,6 +58,46 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag for accession 2023.3.2.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for bag, valid')
+
+    def test_bag_manifest_not_valid(self):
+        """Test for when the bag cannot be validated with bagit and bag manifest is not valid"""
+        # Makes the variables needed for function input and runs the function twice,
+        # first for bagit not being able to validate and then for validating with the bag manifest.
+        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_003_er')
+        update_preservation_log(accession_directory, False, 'bag', 'BagError: path is unsafe')
+        update_preservation_log(accession_directory, False, 'bag manifest')
+
+        # Verifies the contents of the log have been updated.
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['TEST.3', '2023.3.3.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.3.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag for accession 2023.3.3.ER. The bag could not be validated.', 'validate_fixity.py'],
+                    ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag manifest for accession 2023.3.3.ER. The bag manifest is not valid.',
+                     'validate_fixity.py']]
+        self.assertEqual(result, expected, 'Problem with test for bag manifest, not valid')
+
+    def test_bag_manifest_valid(self):
+        """Test for when the bag cannot be validated with bagit and the bag manifest is valid"""
+        # Makes the variables needed for function input and runs the function twice,
+        # first for bagit not being able to validate and then for validating with the bag manifest.
+        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_004_er')
+        update_preservation_log(accession_directory, False, 'bag', 'BagError: path is unsafe')
+        update_preservation_log(accession_directory, True, 'bag manifest')
+
+        # Verifies the contents of the log have been updated.
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['TEST.3', '2023.3.4.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.4.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag for accession 2023.3.4.ER. The bag could not be validated.', 'validate_fixity.py'],
+                    ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag manifest for accession 2023.3.4.ER. The bag manifest is valid.',
+                     'validate_fixity.py']]
+        self.assertEqual(result, expected, 'Problem with test for bag manifest, valid')
 
     def test_manifest_not_valid(self):
         """Test for when the manifest is not valid"""
