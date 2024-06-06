@@ -45,6 +45,27 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, directory"
 
 
+def manifest_validation_log(acc_dir, acc, errors):
+    """Make a CSV file with all validation errors from a single accession
+
+    This is too much information to include in the preservation log.
+    The file is saved in the directory with the accessions.
+
+    :parameter
+    acc_dir (string): the path to the directory where the report is saved (script argument)
+    acc (string): the accession number, used for naming the report
+    errors (list): a list of validation errors to include in the report
+
+    :returns
+    None
+    """
+
+    with open(os.path.join(acc_dir, f'{acc}_manifest_validation_errors.csv'), 'w', newline='') as f:
+        f_write = csv.writer(f)
+        f_write.writerow(['File', 'MD5', 'MD5_Source'])
+        f_write.writerows(errors)
+
+
 def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
     """Update an accession's preservation log with the bag validation results
 
@@ -121,27 +142,6 @@ def update_report(acc, error_msg, report_dir):
     with open(report_path, 'a', newline='') as open_report:
         report_writer = csv.writer(open_report)
         report_writer.writerow([acc, error_msg])
-
-
-def manifest_validation_log(acc_dir, acc, errors):
-    """Make a CSV file with all validation errors from a single accession
-
-    This is too much information to include in the preservation log.
-    The file is saved in the directory with the accessions.
-
-    :parameter
-    acc_dir (string): the path to the directory where the report is saved (script argument)
-    acc (string): the accession number, used for naming the report
-    errors (list): a list of validation errors to include in the report
-
-    :returns
-    None
-    """
-
-    with open(os.path.join(acc_dir, f'{acc}_manifest_validation_errors.csv'), 'w', newline='') as f:
-        f_write = csv.writer(f)
-        f_write.writerow(['File', 'MD5', 'MD5_Source'])
-        f_write.writerows(errors)
 
 
 def validate_bag(bag_dir, report_dir):
