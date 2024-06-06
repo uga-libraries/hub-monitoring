@@ -156,16 +156,20 @@ def validate_bag(bag_dir, report_dir):
     Updates the preservation_log.txt, and if it is not valid also updates the script report
     """
 
+    # The accession number is the name of the bag's parent folder.
+    accession_number = os.path.basename(os.path.dirname(bag_dir))
+
     # Tries to make a bag object, so that bagit library can validate it.
-    # There are cases where filenames prevent it from making a bag, in which case it returns the values
+    # There are cases where filenames prevent it from making a bag,
+    # in which case it updates the preservation log and script report
     # and also tries to validate the bag using the manifest.
     try:
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
+        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
+        update_report(accession_number, f'Cannot make bag for validation: {str(errors)}', report_dir)
         validate_bag_manifest(bag_dir, report_dir)
-        valid = False
-        error_msg = 'Cannot make bag for validation: ' + str(errors)
-        return valid, error_msg
+        return
 
     # Validates the bag and updates the preservation log.
     # If there is a validation error, also adds it to the script report.
@@ -174,7 +178,6 @@ def validate_bag(bag_dir, report_dir):
         update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
     except bagit.BagValidationError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
-        accession_number = os.path.basename(os.path.dirname(bag_dir))
         update_report(accession_number, str(errors), report_dir)
 
 
