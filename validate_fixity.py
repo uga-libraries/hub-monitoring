@@ -160,8 +160,16 @@ def validate_bag(bag_dir, report_dir):
     # The accession number is the name of the bag's parent folder.
     accession_number = os.path.basename(os.path.dirname(bag_dir))
 
-    # TODO: error handling
-    new_bag = bagit.Bag(bag_dir)
+    # Tries to make a bag object, so that bagit library can validate it.
+    # There are cases where filenames prevent it from making a bag,
+    # in which case it updates the preservation log and script report
+    # and also tries to validate the bag using the manifest.
+    try:
+        new_bag = bagit.Bag(bag_dir)
+    except bagit.BagError as errors:
+        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
+        update_report(accession_number, f'Could not make bag for validation: {str(errors)}', report_dir)
+        return
 
     # Validates the bag and updates the preservation log.
     # If there is a validation error, also adds it to the script report.

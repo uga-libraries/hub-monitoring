@@ -31,6 +31,32 @@ class MyTestCase(unittest.TestCase):
         if exists(join('test_data', f"fixity_validation_{today}.csv")):
             remove(join('test_data', f"fixity_validation_{today}.csv"))
 
+    # def test_bag_error(self):
+    #     """Template for test for when the bag cannot be validated because bagit gives a BagError
+    #     This is caused by path length and cannot be reliably replicated in the test data.
+    #     Instead, supply the path in root and folder to a bag known to have this error.
+    #     After the test runs, remove the data from preservation_log.txt and
+    #     delete any fixity_validation.csv and manifest_validation_errors.csv produced.
+    #     """
+    #     # Makes variables for function input and runs the function.
+    #     root = r'INSERT PATH TO ACCESSION FOLDER'
+    #     folder = 'INSERT NAME OF BAG FOLDER'
+    #     validate_bag(join(root, folder), r'INSERT PATH FOR WHERE TO SAVE REPORT')
+    #
+    #     # Verifies the preservation_log.txt has been updated correctly.
+    #     result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+    #     expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+    #                 ['INSERT DATA ROWS']]
+    #     self.assertEqual(result, expected, 'Problem with test for bag error, preservation_log.txt')
+    #
+    #     # Verifies the fixity validation CSV has the correct values.
+    #     # Only use for bags that are not valid.
+    #     result = csv_to_list(join(r'INSERT PATH FOR WHERE TO SAVE REPORT',
+    #                               f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+    #     expected = [['Accession', 'Validation_Error'],
+    #                 ['INSERT DATA ROW(s)']]
+    #     self.assertEqual(result, expected, 'Problem with test for bag error, fixity_validation.csv')
+
     def test_file_added(self):
         """Test for when the bag is not valid because a file was added"""
         # Makes variables for function input and runs the function.
