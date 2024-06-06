@@ -76,7 +76,7 @@ class MyTestCase(unittest.TestCase):
                     ['2023_test005_001_er', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for mix, validation report')
 
-        # Verifies the contents of the log for 2023_test001_002_er have been updated.
+        # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
         result = csv_to_list(join(directory, '2023_test001_002_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
@@ -84,9 +84,9 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.1', '2023.1.2.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
                     ['TEST.1', '2023.1.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag for accession 2023.1.2.ER. The bag is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_002_er log')
+        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_002_er preservation log')
 
-        # Verifies the contents of the log for 2023_test002_004_er have been updated.
+        # Verifies the contents of the preservation log for 2023_test002_004_er have been updated.
         result = csv_to_list(join(directory, '2023_test002_004_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
@@ -96,9 +96,9 @@ class MyTestCase(unittest.TestCase):
                      'Validated bag for accession 2023.2.4.ER. The bag is not valid. Bag validation failed: '
                      'data\\CD_2\\File2.txt md5 validation failed: expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" '
                      'found="85c8fbcb2ff1d73cb94ed9c355eb20d5"', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test002_004_er log')
+        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test002_004_er preservation log')
 
-        # Verifies the contents of the log for 2023_test005_001_er have been updated.
+        # Verifies the contents of the preservation log for 2023_test005_001_er have been updated.
         result = csv_to_list(join(directory, '2023_test005_001_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.001', 'Copied.', 'Jane Doe'],
@@ -108,7 +108,13 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.005', '2023.test005.001.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated manifest for accession 2023.test005.001.ER. The manifest is not valid.',
                      'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test005_001_er log')
+        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test005_001_er preservation log')
+
+        # Verifies the contents of the  manifest log for 2023_test005_001_er are correct.
+        result = csv_to_list(join(directory, '2023_test005_001_er_manifest_validation_errors.csv'))
+        expected = [['File', 'MD5', 'MD5_Source'],
+                    ['Z:\\2023_test005_001_er\\CD_1\\File1.txt', 'CA1EA02C10B7C37F425B9B7DD86D5E11', 'Manifest']]
+        self.assertEqual(result, expected, 'Problem with for mix, 2023_test005_001_er manifest log')
 
     def test_valid(self):
         """Test for when the script runs correctly and both accessions are valid
@@ -132,7 +138,7 @@ class MyTestCase(unittest.TestCase):
         report_made = exists(report_path)
         self.assertEqual(report_made, False, 'Problem with test for correct no errors, validation report')
 
-        # Verifies the contents of the log for 2023_test001_001_er have been updated.
+        # Verifies the contents of the preservation log for 2023_test001_001_er have been updated.
         result = csv_to_list(join(directory, '2023_test001_001_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
@@ -140,9 +146,9 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.1', '2023.1.1.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag for accession 2023.1.1.ER. The bag is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for valid, 2023_test001_001_er log')
+        self.assertEqual(result, expected, 'Problem with test for valid, 2023_test001_001_er preservation log')
 
-        # Verifies the contents of the log for 2023_test004_003_er have been updated.
+        # Verifies the contents of the preservation log for 2023_test004_003_er have been updated.
         result = csv_to_list(join(directory, '2023_test004_003_er', 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.001', 'Copied.', 'Jane Doe'],
@@ -152,7 +158,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.004', '2023.test004.003.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated manifest for accession 2023.test004.003.ER. The manifest is valid.',
                      'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for valid, 2023_test003_002_er log')
+        self.assertEqual(result, expected, 'Problem with test for valid, 2023_test003_002_er preservation log')
 
     def test_arg_error(self):
         """Test for when the script argument is not correct and the script exits"""
