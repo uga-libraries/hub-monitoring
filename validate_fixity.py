@@ -314,10 +314,7 @@ if __name__ == '__main__':
         for folder in dirs:
             if folder.endswith('_bag'):
                 print(f'Starting on accession {root} (bag)')
-                is_valid, error = validate_bag(os.path.join(root, folder), directory)
-                update_preservation_log(root, is_valid, 'bag', error)
-                if not is_valid:
-                    update_report(folder, error, directory)
+                validate_bag(os.path.join(root, folder), directory)
         for file in files:
             if file.startswith('initialmanifest'):
                 print(f'Starting on accession {root} (manifest)')
