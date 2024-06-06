@@ -19,8 +19,8 @@ class MyTestCase(unittest.TestCase):
                       join('test_data', 'test_006_log_update', '2023_test006_002_er'),
                       join('test_data', 'test_006_log_update', '2023_test006_003_er'),
                       join('test_data', 'test_006_log_update', '2023_test006_004_er'),
-                      join('test_data', 'test_006_log_update', '2023_test006_006_er'),
-                      join('test_data', 'test_006_log_update', '2023_test006_007_er')]
+                      join('test_data', 'test_006_log_update', '2023_test006_005_er'),
+                      join('test_data', 'test_006_log_update', '2023_test006_006_er')]
 
         # For each accession, replaces the updated log with a copy of the original log from the accession folder.
         for accession in accessions:
@@ -29,23 +29,17 @@ class MyTestCase(unittest.TestCase):
     def test_bag_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_006_log_update', '2023_test006_001_er')
-        is_valid = False
+        accession_directory = join('test_data', 'test_006_log_update', '2023_test006_001_er')
         error = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'
-        update_preservation_log(root, is_valid, 'bag', error)
+        update_preservation_log(accession_directory, False, 'bag', error)
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Bagged with accession.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD2', 'Bagged with accession.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.1.ER', '2023-02-28', 'nan', 'Validated bag for accession. Valid.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.1.ER. The bag is not valid. '
+                    ['TEST.6', '2023.6.1.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.1.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag for accession 2023.6.1.ER. The bag is not valid. '
                      'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes',
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for bag, not valid')
@@ -53,61 +47,46 @@ class MyTestCase(unittest.TestCase):
     def test_bag_valid(self):
         """Test for when the bag is valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_006_log_update', '2023_test006_002_er')
-        is_valid = True
-        error = None
-        update_preservation_log(root, is_valid, 'bag', error)
+        accession_directory = join('test_data', 'test_006_log_update', '2023_test006_002_er')
+        update_preservation_log(accession_directory, True, 'bag')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Bagged with accession.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD2', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD2', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD2', 'Bagged with accession.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.2.ER', '2023-02-28', 'nan', 'Validated bag for accession. Valid.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.2.ER. The bag is valid.', 'validate_fixity.py']]
+                    ['TEST.6', '2023.6.2.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.2.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag for accession 2023.6.2.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for bag, valid')
 
     def test_manifest_not_valid(self):
         """Test for when the manifest is not valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_006_log_update', '2023_test006_003_er')
-        is_valid = False
-        update_preservation_log(root, is_valid, 'manifest')
+        accession_directory = join('test_data', 'test_006_log_update', '2023_test006_005_er')
+        update_preservation_log(accession_directory, False, 'manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD2', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.3.ER', '2023-03-28', 'CD2', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.3.ER', '2023-03-28', 'nan', 'Cannot bag. Made manifest. Valid.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated manifest for accession 2023.3.3.ER. The manifest is not valid.', 'validate_fixity.py']]
+                    ['TEST.6', '2023.6.5.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.5.ER', '2023-02-28', 'nan', 'Made manifest, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.5.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated manifest for accession 2023.6.5.ER. The manifest is not valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for manifest, not valid')
 
     def test_manifest_valid(self):
         """Test for when the manifest is valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_006_log_update', '2023_test006_004_er')
-        is_valid = True
-        update_preservation_log(root, is_valid, 'manifest')
+        accession_directory = join('test_data', 'test_006_log_update', '2023_test006_006_er')
+        update_preservation_log(accession_directory, True, 'manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD1', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD1', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD2', 'Virus scanned. No threats.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.4.ER', '2023-04-28', 'CD2', 'Copied. No errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.4.ER', '2023-04-28', 'nan', 'Cannot bag. Made manifest. Valid.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated manifest for accession 2023.3.4.ER. The manifest is valid.', 'validate_fixity.py']]
+                    ['TEST.6', '2023.6.6.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.6.ER', '2023-02-28', 'nan', 'Made manifest, no errors.', 'Jane Doe'],
+                    ['TEST.6', '2023.6.6.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated manifest for accession 2023.6.6.ER. The manifest is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for manifest, valid')
 
 
