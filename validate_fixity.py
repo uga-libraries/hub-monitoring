@@ -69,13 +69,13 @@ def manifest_validation_log(acc_dir, acc, errors):
 def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
     """Update an accession's preservation log with the bag validation results
 
-    If there is no preservation log (rare), it will print an error and not do the rest of the function.
+    If there is no preservation log, it will print an error and not do the rest of the function.
     The validation result will only be in the fixity_validation.csv, not in the accession folder.
 
     :parameter
     acc_dir (string): the path to an accession folder, which contains the preservation log
     validation_result (Boolean): if an accession's file fixity is valid
-    validation_type (string): bag or manifest
+    validation_type (string): bag, bag manifest, or manifest
     error_msg (None or string; optional): included for bag validation so error details can be in the log
 
     :returns
@@ -101,14 +101,19 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     today = date.today().strftime('%Y-%m-%d')
 
     # Calculates the action to include in the log entry for the validation.
-    # It includes if it was a bag or manifest, if it was valid or not, and for invalid bags the error message.
-    # TODO: add bag manifest validation
+    # It includes the type of validation, if it was valid, and any bag validation error.
     if validation_result:
         action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
     else:
-        action = f'Validated {validation_type} for accession {accession}. The {validation_type} is not valid.'
-        if error_msg:
-            action = action + ' ' + error_msg
+        if validation_type == 'bag':
+            if error_msg.startswith('BagError'):
+                action = f'Validated bag for accession {accession}. The bag could not be validated.'
+            else:
+                action = f'Validated bag for accession {accession}. The bag is not valid. {error_msg}'
+        elif validation_type == 'bag manifest':
+            action = f'Validated bag manifest for accession {accession}. The bag manifest is not valid.'
+        else:
+            action = f'Validated manifest for accession {accession}. The manifest is not valid.'
 
     # Adds a row to the end of the preservation log for the bag validation.
     log_row = [collection, accession, today, None, action, 'validate_fixity.py']
