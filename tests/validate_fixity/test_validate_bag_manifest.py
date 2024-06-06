@@ -44,22 +44,12 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'),
                              delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'CD.001',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'CD.001',
-                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'CD.001',
-                     'Bagged with accession 2023.test002.001.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'CD.002',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'CD.002',
-                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'CD.002',
-                     'Bagged with accession 2023.test002.001.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.002', '2023.test002.001.ER', '2023-01-31', 'nan',
-                     'Validated bag for accession 2023.test002.001.ER. The bag was valid.', 'Jane Doe'],
-                    ['TEST.002', '2023.test002.001.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.test002.001.ER. The bag is not valid.', 'validate_fixity.py']]
+                    ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.1.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag manifest for accession 2023.2.1.ER. The bag manifest is not valid.',
+                     'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for not valid, preservation_log.txt')
 
         # Verifies the fixity validation CSV has the correct values.
@@ -85,22 +75,12 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_002_er', 'preservation_log.txt'),
                              delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
-                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-14', 'CD.001',
-                     'Bagged with accession 2023.test001.002.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002',
-                     'Virus scanned using Microsoft Defender. No security threats were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002',
-                     'Copied to external storage device using TeraCopy. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'CD.002',
-                     'Bagged with accession 2023.test001.002.ER. No errors were detected.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', '2023-11-15', 'nan',
-                     'Validated bag for accession 2023.test001.002.ER. The bag was valid.', 'Jane Doe'],
-                    ['TEST.001', '2023.test001.002.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.test001.002.ER. The bag is valid.', 'validate_fixity.py']]
+                    ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.2.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag manifest for accession 2023.1.2.ER. The bag manifest is valid.',
+                     'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, preservation_log.txt')
 
         # Verifies the fixity validation CSV was not made.
