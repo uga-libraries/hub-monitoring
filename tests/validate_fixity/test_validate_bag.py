@@ -35,7 +35,8 @@ class MyTestCase(unittest.TestCase):
     #     """Template for test for when the bag cannot be validated because bagit gives a BagError
     #     This is caused by path length and cannot be reliably replicated in the test data.
     #     Instead, supply the path in root and folder to a bag known to have this error.
-    #     After the test runs, remove the data from preservation_log.txt and delete fixity_validation.csv produced.
+    #     After the test runs, remove the data from preservation_log.txt and
+    #     delete any fixity_validation.csv and manifest_validation_errors.csv produced.
     #     """
     #     # Makes variables for function input and runs the function.
     #     root = r'INSERT PATH TO ACCESSION FOLDER'
@@ -49,6 +50,7 @@ class MyTestCase(unittest.TestCase):
     #     self.assertEqual(result, expected, 'Problem with test for bag error, preservation_log.txt')
     #
     #     # Verifies the fixity validation CSV has the correct values.
+    #     # Only use for bags that are not valid.
     #     result = csv_to_list(join(r'INSERT PATH FOR WHERE TO SAVE REPORT',
     #                               f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
     #     expected = [['Accession', 'Validation_Error'],
