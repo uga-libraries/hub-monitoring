@@ -15,10 +15,12 @@ class MyTestCase(unittest.TestCase):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder"""
         # List of paths for accessions with logs to replace.
-        accessions = [join('test_data', 'test_003_log_update', '2023_test003_001_er'),
-                      join('test_data', 'test_003_log_update', '2023_test003_002_er'),
-                      join('test_data', 'test_003_log_update', '2023_test003_003_er'),
-                      join('test_data', 'test_003_log_update', '2023_test003_004_er')]
+        accessions = [join('test_data', 'test_006_log_update', '2023_test006_001_er'),
+                      join('test_data', 'test_006_log_update', '2023_test006_002_er'),
+                      join('test_data', 'test_006_log_update', '2023_test006_003_er'),
+                      join('test_data', 'test_006_log_update', '2023_test006_004_er'),
+                      join('test_data', 'test_006_log_update', '2023_test006_006_er'),
+                      join('test_data', 'test_006_log_update', '2023_test006_007_er')]
 
         # For each accession, replaces the updated log with a copy of the original log from the accession folder.
         for accession in accessions:
@@ -27,7 +29,7 @@ class MyTestCase(unittest.TestCase):
     def test_bag_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_003_log_update', '2023_test003_001_er')
+        root = join('test_data', 'test_006_log_update', '2023_test006_001_er')
         is_valid = False
         error = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'
         update_preservation_log(root, is_valid, 'bag', error)
@@ -51,7 +53,7 @@ class MyTestCase(unittest.TestCase):
     def test_bag_valid(self):
         """Test for when the bag is valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_003_log_update', '2023_test003_002_er')
+        root = join('test_data', 'test_006_log_update', '2023_test006_002_er')
         is_valid = True
         error = None
         update_preservation_log(root, is_valid, 'bag', error)
@@ -73,7 +75,7 @@ class MyTestCase(unittest.TestCase):
     def test_manifest_not_valid(self):
         """Test for when the manifest is not valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_003_log_update', '2023_test003_003_er')
+        root = join('test_data', 'test_006_log_update', '2023_test006_003_er')
         is_valid = False
         update_preservation_log(root, is_valid, 'manifest')
 
@@ -92,7 +94,7 @@ class MyTestCase(unittest.TestCase):
     def test_manifest_valid(self):
         """Test for when the manifest is valid"""
         # Makes the variables needed for function input and runs the function.
-        root = join('test_data', 'test_003_log_update', '2023_test003_004_er')
+        root = join('test_data', 'test_006_log_update', '2023_test006_004_er')
         is_valid = True
         update_preservation_log(root, is_valid, 'manifest')
 
