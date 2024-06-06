@@ -1,0 +1,5 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+TEST.004	2023.test004.003.ER	2023-11-24	CD.001	Copied.	Jane Doe
+TEST.004	2023.test004.003.ER	2023-11-24	CD.002	Copied.	Jane Doe
+TEST.004	2023.test004.003.ER	2023-11-24		Can't bag; made manifest.	Jane Doe
+TEST.004	2023.test004.003.ER	2023-11-24		Validated manifest. Valid.	Jane Doe
