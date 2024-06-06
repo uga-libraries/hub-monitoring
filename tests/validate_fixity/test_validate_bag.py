@@ -65,8 +65,7 @@ class MyTestCase(unittest.TestCase):
         validate_bag(join(root, folder), 'test_data')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -92,8 +91,7 @@ class MyTestCase(unittest.TestCase):
         validate_bag(join(root, folder), 'test_data')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_002_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -119,8 +117,7 @@ class MyTestCase(unittest.TestCase):
         validate_bag(join(root, folder), 'test_data')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_003_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -146,8 +143,7 @@ class MyTestCase(unittest.TestCase):
         validate_bag(join(root, folder), 'test_data')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_004_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -175,8 +171,7 @@ class MyTestCase(unittest.TestCase):
         validate_bag(join(root, folder), 'test_data')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_005_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -201,8 +196,7 @@ class MyTestCase(unittest.TestCase):
         validate_bag(join(root, folder), 'test_data')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_001_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
