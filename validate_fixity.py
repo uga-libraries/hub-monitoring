@@ -102,6 +102,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
 
     # Calculates the action to include in the log entry for the validation.
     # It includes if it was a bag or manifest, if it was valid or not, and for invalid bags the error message.
+    # TODO: add bag manifest validation
     if validation_result:
         action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
     else:
@@ -144,28 +145,35 @@ def update_report(acc, error_msg, report_dir):
         report_writer.writerow([acc, error_msg])
 
 
-def validate_bag(bag_dir):
+def validate_bag(bag_dir, report_dir):
     """Validate an accession's bag
 
     :parameter
     bag_dir (string): the path to an accession bag
+    report_dir (string): directory where the report is saved (script argument)
 
     :returns
-    valid (Boolean): True if bag is valid, False if bag is not valid
-    error_msg (None, string): None if bag is valid, string with error if bag is not valid
+     None
+    Updates the preservation_log.txt, and if it is not valid also updates the script report
     """
 
+    # The accession number is the name of the bag's parent folder.
+    accession_number = os.path.basename(os.path.dirname(bag_dir))
+
+    # TODO: error handling
     new_bag = bagit.Bag(bag_dir)
+
+    # Validates the bag and updates the preservation log.
+    # If there is a validation error, also adds it to the script report.
     try:
         new_bag.validate()
-        valid = True
-        error_msg = None
+        update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
     except bagit.BagValidationError as errors:
-        valid = False
-        error_msg = str(errors)
-    return valid, error_msg
+        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
+        update_report(accession_number, str(errors), report_dir)
 
 
+#TODO: add function to validate bag using manifest.
 def validate_manifest(acc_dir, manifest):
     """Validate an accession that has a manifest instead of being bagged
 
@@ -252,10 +260,7 @@ if __name__ == '__main__':
             # First tries to validate by looking for a bag.
             if folder.endswith('_bag'):
                 print(f'Starting on accession {root} (bag)')
-                is_valid, error = validate_bag(os.path.join(root, folder))
-                update_preservation_log(root, is_valid, 'bag', error)
-                if not is_valid:
-                    update_report(folder, error, directory)
+                validate_bag(os.path.join(root, folder), directory)
             # If there is no bag, tries to validate by looking for an initial manifest.
             else:
                 for file in files:
