@@ -121,7 +121,7 @@ class MyTestCase(unittest.TestCase):
     def test_valid(self):
         """Test for when the script runs correctly and both accessions are valid
         There are also a folder and file that the script should skip
-        and accession 2023_test001_001_er contains a manifest as well as being in a bag.
+        and accession 2023_test001_001_er contains a manifest that the script should skip as well as being in a bag.
         """
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
