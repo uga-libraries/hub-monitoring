@@ -1,4 +1,5 @@
 Collection	Accession	Date	Media Identifier	Action	Staff
-T5	2023.T5.01.ER	2023-10-03	CD.2	Virus scanned and copied. No errors detected.	JD
-T5	2023.T5.01.ER	2023-10-03		Can't bag; made manifest	JD
+T5	2023.T5.01.ER	2023-10-03	CD.1	Virus scanned and copied. No errors.	JD
+T5	2023.T5.01.ER	2023-10-03	CD.2	Virus scanned and copied. No errors.	JD
+T5	2023.T5.01.ER	2023-10-03		Can't bag; made manifest.	JD
 T5	2023.T5.01.ER	2023-10-03		Validated manifest. Valid.	JD
