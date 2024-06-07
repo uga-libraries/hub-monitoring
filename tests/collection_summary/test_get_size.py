@@ -51,6 +51,17 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(files, 0, "Problem with test for organization error, files")
         self.assertEqual(size_gb, 0, "Problem with test for organization error, size_gb")
 
+    # def test_file_not_found_error(self):
+    #     """Template for test for when the path length is too long to calculate size
+    #     This is caused by path length and cannot be reliably replicated in the test data.
+    #     Instead, supply the path to an accession known to have this error.
+    #     """
+    #     # Makes variables for function input and runs the function.
+    #     acc_path = r'INSERT PATH TO ACCESSION FOLDER'
+    #     files, size_gb = get_size(acc_path)
+    #     self.assertEqual(files, 0, "Problem with test for file not found error, files")
+    #     self.assertEqual(size_gb, 0, "Problem with test for file not found error, size_gb")
+
 
 if __name__ == '__main__':
     unittest.main()
