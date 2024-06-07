@@ -241,7 +241,8 @@ def get_size(acc_path):
     """
 
     # Calculates the path to the folder with the accession content,
-    # which is either the bag's data folder or the folder within the accession folder that isn't for the FITS files.
+    # which should be in the bag's data folder or the folder within the accession folder that isn't for FITS files.
+    content_path = None
     accession_number = os.path.basename(acc_path)
     data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
     if os.path.exists(data_path):
@@ -251,24 +252,24 @@ def get_size(acc_path):
             if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
                 content_path = os.path.join(acc_path, item)
 
-    try:
-        # Adds the number and size of the files at each level within the folder with the accession's content.
-        file_count = 0
-        size_bytes = 0
-        for root, dirs, files in os.walk(content_path):
-            file_count += len(files)
-            for file in files:
-                file_path = os.path.join(root, file)
-                try:
-                    size_bytes += os.stat(file_path).st_size
-                except FileNotFoundError:
-                    with open('size_error.txt', 'a', newline='', encoding='utf-8') as f:
-                        f.write(file_path + '\n')
-        size_gb = round_non_zero(size_bytes / 1000000000)
-        return file_count, size_gb
-    except UnboundLocalError:
-        print('Cannot calculate size for', acc_path)
+    # If content_path could not be determined, returns a size of 0. Size will need to be calculated manually.
+    if not content_path:
         return 0, 0
+
+    # Adds the number and size of the files at each level within the folder with the accession's content.
+    file_count = 0
+    size_bytes = 0
+    for root, dirs, files in os.walk(content_path):
+        file_count += len(files)
+        for file in files:
+            file_path = os.path.join(root, file)
+            try:
+                size_bytes += os.stat(file_path).st_size
+            except FileNotFoundError:
+                with open('size_error.txt', 'a', newline='', encoding='utf-8') as f:
+                    f.write(file_path + '\n')
+    size_gb = round_non_zero(size_bytes / 1000000000)
+    return file_count, size_gb
 
 
 def round_non_zero(number):
