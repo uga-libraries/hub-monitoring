@@ -115,9 +115,16 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         else:
             action = f'Validated manifest for accession {accession}. The manifest is not valid.'
 
-    # Reads the contents of preservation_log.txt, for later checking if it ends with a line return or not.
+    # Reads the contents of preservation_log.txt for checking for legacy formatting.
     with open(log_path) as open_log:
         log_text = open_log.read()
+
+    # Checks if the log starts with the expected column row.
+    # If not, prints an error and does not update the log.
+    if not log_text.startswith('Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff'):
+        print(f'\nERROR: accession {os.path.basename(acc_dir)} has nonstandard columns in the preservation log; '
+              f'could not update with validation result.')
+        return
 
     # Adds a row to the end of the preservation log for the bag validation.
     # First adds a line return after existing text, if missing, so the new data is on its own row.
