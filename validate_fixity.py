@@ -248,7 +248,7 @@ def validate_bag_manifest(bag_dir, report_dir):
         manifest_validation_log(report_dir, accession_number, error_list)
 
 
-def validate_manifest(acc_dir, manifest):
+def validate_manifest(acc_dir, manifest, report_dir):
     """Validate an accession that has a manifest instead of being bagged
 
     Accession's with long file paths cannot be bagged.
@@ -258,11 +258,11 @@ def validate_manifest(acc_dir, manifest):
     :parameter
     acc_dir (string): the path to an accession folder
     manifest (string): the path to the accession manifest file
+    report_dir (string): directory where the report is saved (script argument)
 
     :returns
-    valid (Boolean): True if the accession matched the manifest, False if the accession did not match the manifest
-    error_list (list): Empty list if accession matched the manifest,
-                       otherwise a list with the path, md5, and source of any that did not match
+    None
+    Updates the preservation log, and if there are errors updates the report and makes a log
     """
 
     # Gets the path to the folder with the accession's files.
@@ -316,7 +316,15 @@ def validate_manifest(acc_dir, manifest):
     # Determines if there were any errors, based on the contents of errors_list.
     valid = len(error_list) == 0
 
-    return valid, error_list
+    # Updates the preservation log.
+    update_preservation_log(acc_dir, valid, 'manifest')
+
+    # If there are any validation errors, adds a summary of the errors to the script report (fixity_validation.csv)
+    # and makes a log with every file that does not match (acc_manifest_validation_errors.csv)
+    if not valid:
+        accession_number = os.path.basename(acc_dir)
+        update_report(accession_number, f'{len(error_list)} manifest errors', report_dir)
+        manifest_validation_log(report_dir, accession_number, error_list)
 
 
 if __name__ == '__main__':
@@ -340,12 +348,7 @@ if __name__ == '__main__':
                 for file in files:
                     if file.startswith('initialmanifest'):
                         print(f'Starting on accession {root} (manifest)')
-                        is_valid, errors_list = validate_manifest(root, file)
-                        update_preservation_log(root, is_valid, 'manifest')
-                        # Saves the list of each file with fixity differences to a CSV.
-                        if not is_valid:
-                            update_report(os.path.basename(root), f'{len(errors_list)} manifest errors', directory)
-                            manifest_validation_log(directory, os.path.basename(root), errors_list)
+                        validate_manifest(root, file, directory)
 
     # Prints if there were any validation errors, based on if the validation log was made or not.
     log = os.path.join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
