@@ -324,7 +324,7 @@ def save_accession_report(dir_path, row):
         with open(report_path, 'w', newline='') as report:
             report_writer = csv.writer(report)
             report_writer.writerow(['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
-                                    'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'])
     else:
         with open(report_path, 'a', newline='') as report:
             report_writer = csv.writer(report)
