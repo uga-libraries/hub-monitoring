@@ -37,12 +37,12 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(files, 8, "Problem with test for folder, files")
         self.assertEqual(size_gb, 0.0005, "Problem with test for folder, size_gb")
 
-    def test_unbagged(self):
+    def test_no_bag(self):
         """Test for an accession that is not in a bag"""
         acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er')
         files, size_gb = get_size(acc_path)
-        self.assertEqual(files, 6, "Problem with test for unbagged, files")
-        self.assertEqual(size_gb, 0.0002, "Problem with test for unbagged, size_gb")
+        self.assertEqual(files, 6, "Problem with test for no bag, files")
+        self.assertEqual(size_gb, 0.0002, "Problem with test for no bag, size_gb")
 
 
 if __name__ == '__main__':
