@@ -238,6 +238,7 @@ def get_size(acc_path):
     @:returns
     file_count (integer): the number of files in the accession folder
     size_gb (float): the size, in GB, of the accession folder
+    error (string; None): an error message if the size could not be calculated or None
     """
 
     # Calculates the path to the folder with the accession content,
@@ -254,7 +255,7 @@ def get_size(acc_path):
 
     # If content_path could not be determined, returns a size of 0. Size will need to be calculated manually.
     if not content_path:
-        return 0, 0
+        return 0, 0, f'Could not calculate size for accession {accession_number} due to folder organization. '
 
     # Adds the number and size of the files at each level within the folder with the accession's content.
     # If the size for any files cannot be calculated (usually due to path length), returns a size of 0.
@@ -268,9 +269,9 @@ def get_size(acc_path):
             try:
                 size_bytes += os.stat(file_path).st_size
             except FileNotFoundError:
-                return 0, 0
+                return 0, 0, f'Could not calculate size for accession {accession_number} due to path length. '
     size_gb = round_non_zero(size_bytes / 1000000000)
-    return file_count, size_gb
+    return file_count, size_gb, None
 
 
 def round_non_zero(number):
