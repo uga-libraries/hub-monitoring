@@ -338,17 +338,18 @@ if __name__ == '__main__':
 
     # Navigates to each accession, validates it, and updates the preservation log.
     for root, dirs, files in os.walk(directory):
+        # Identifies bags based on the folder name ending with "_bag".
         for folder in dirs:
-            # First tries to validate by looking for a bag.
             if folder.endswith('_bag'):
                 print(f'Starting on accession {root} (bag)')
                 validate_bag(os.path.join(root, folder), directory)
-            # If there is no bag, tries to validate by looking for an initial manifest.
-            else:
-                for file in files:
-                    if file.startswith('initialmanifest'):
-                        print(f'Starting on accession {root} (manifest)')
-                        validate_manifest(root, file, directory)
+        # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
+        # but only validates if it is not also an accession with a bag.
+        # If there are both, the bag folder and initial manifest will be in the same parent folder.
+        for file in files:
+            if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
+                print(f'Starting on accession {root} (manifest)')
+                validate_manifest(root, file, directory)
 
     # Prints if there were any validation errors, based on if the validation log was made or not.
     log = os.path.join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
