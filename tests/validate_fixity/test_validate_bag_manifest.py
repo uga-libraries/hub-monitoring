@@ -1,6 +1,7 @@
 """
-Start for tests for the function validate_bag_manifest(), which validates an accession using the bag manifest
-if bagit cannot do the validation.
+Tests for the function validate_bag_manifest(), which validates an accession using the bag manifest
+if bagit cannot do the validation, updates the preservation log,
+and if there are errors updates the script report and makes a manifest log.
 
 These tests use bags that would not cause a bagit error, since that is not reliably replicable.
 This function does not depend on the error, so it can use a normal bag.
