@@ -213,7 +213,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the bag manifest into a dataframe.
-    # It is tab delimited and does not have a header row.
+    # Each row is "MD5  data/path" and does not have a header row.
     df_manifest = pd.read_csv(os.path.join(bag_dir, 'manifest-md5.txt'), delimiter='  data/', engine='python',
                               names=['Bag_MD5', 'Bag_Path'], dtype=object)
 
