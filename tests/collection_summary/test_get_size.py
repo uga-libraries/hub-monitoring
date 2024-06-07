@@ -44,6 +44,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(files, 6, "Problem with test for no bag, files")
         self.assertEqual(size_gb, 0.0002, "Problem with test for no bag, size_gb")
 
+    def test_organization_error(self):
+        """Test for an accession that is not organized in an expected way and cannot calculate size"""
+        acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2024-31-er')
+        files, size_gb = get_size(acc_path)
+        self.assertEqual(files, 0, "Problem with test for organization error, files")
+        self.assertEqual(size_gb, 0, "Problem with test for organization error, size_gb")
+
 
 if __name__ == '__main__':
     unittest.main()
