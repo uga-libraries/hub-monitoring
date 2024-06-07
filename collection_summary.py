@@ -257,6 +257,8 @@ def get_size(acc_path):
         return 0, 0
 
     # Adds the number and size of the files at each level within the folder with the accession's content.
+    # If the size for any files cannot be calculated (usually due to path length), returns a size of 0.
+    # Size for these will need to be calculated manually.
     file_count = 0
     size_bytes = 0
     for root, dirs, files in os.walk(content_path):
@@ -266,8 +268,7 @@ def get_size(acc_path):
             try:
                 size_bytes += os.stat(file_path).st_size
             except FileNotFoundError:
-                with open('size_error.txt', 'a', newline='', encoding='utf-8') as f:
-                    f.write(file_path + '\n')
+                return 0, 0
     size_gb = round_non_zero(size_bytes / 1000000000)
     return file_count, size_gb
 
