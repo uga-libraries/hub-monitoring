@@ -133,7 +133,8 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
 
     @:returns
     acc_list (list): accession, collection, status, date, size (GB), files,
-    the number of files at each of the 4 risk levels, and a note for if the accession has no risk csv
+    the number of files at each of the 4 risk levels, a note for if the accession has no risk csv,
+    and a note for if the size and files could not be calculated
     """
 
     # Calculates the path to the accession folder, which combines the four function parameters.
@@ -146,13 +147,15 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     if acc_coll == 'rbrl246jhi':
         files = 0
         size_gb = 0
+        size_error = 'Did not calculate size for collection rbrl246jhi due to the time required. '
     else:
-        files, size_gb = get_size(acc_path)
+        files, size_gb, size_error = get_size(acc_path)
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
     acc_list = [acc_id, acc_coll, acc_status, date, size_gb, files]
     acc_list.extend(risk)
+    acc_list.append(size_error)
 
     return acc_list
 
