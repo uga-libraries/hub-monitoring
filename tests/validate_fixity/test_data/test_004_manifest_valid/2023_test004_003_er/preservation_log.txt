@@ -1,8 +1,5 @@
 Collection	Accession	Date	Media Identifier	Action	Staff
-TEST.004	2023.test004.002.ER	2023-11-24	CD.001	Virus scanned using Microsoft Defender. No security threats were detected.	Jane Doe
-TEST.004	2023.test004.002.ER	2023-11-24	CD.001	Copied to external storage device using TeraCopy. No errors were detected.	Jane Doe
-TEST.004	2023.test004.002.ER	2023-11-24	CD.001	Can't bag; made manifest instead.	Jane Doe
-TEST.004	2023.test004.002.ER	2023-11-24	CD.002	Virus scanned using Microsoft Defender. No security threats were detected.	Jane Doe
-TEST.004	2023.test004.002.ER	2023-11-24	CD.002	Copied to external storage device using TeraCopy. No errors were detected.	Jane Doe
-TEST.004	2023.test004.002.ER	2023-11-24	CD.002	Can't bag; made manifest instead.	Jane Doe
-TEST.004	2023.test004.002.ER	2023-11-24		Validated manifests for accession 2023.test004.002.ER. Valid.	Jane Doe
+T4	2023.T4.03.ER	2023-10-03	CD.1	Virus scanned and copied, no errors.	JD
+T4	2023.T4.03.ER	2023-10-03	CD.2	Virus scanned and copied, no errors.	JD
+T4	2023.T4.03.ER	2023-10-03		Can't bag; made manifest.	JD
+T4	2023.T4.03.ER	2023-10-03		Validated manifest. Valid.	JD
