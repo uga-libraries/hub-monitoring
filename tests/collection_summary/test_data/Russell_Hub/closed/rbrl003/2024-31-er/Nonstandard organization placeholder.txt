@@ -1,0 +1,1 @@
+Testing when an accession does not have content in either of the expected locations, a bag or another folder not ending in _FITS within the accession folder.
