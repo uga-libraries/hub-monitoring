@@ -20,7 +20,8 @@ class MyTestCase(unittest.TestCase):
                       join('test_data', 'test_003_log_update', '2023_test003_003_er'),
                       join('test_data', 'test_003_log_update', '2023_test003_004_er'),
                       join('test_data', 'test_003_log_update', '2023_test003_005_er'),
-                      join('test_data', 'test_003_log_update', '2023_test003_006_er')]
+                      join('test_data', 'test_003_log_update', '2023_test003_006_er'),
+                      join('test_data', 'test_003_log_update', '2023_test003_007_er')]
 
         # For each accession, replaces the updated log with a copy of the original log from the accession folder.
         for accession in accessions:
@@ -129,13 +130,28 @@ class MyTestCase(unittest.TestCase):
                      'Validated manifest for accession 2023.3.6.ER. The manifest is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for manifest, valid')
 
+    def test_no_end_return(self):
+        """Test for when the preservation_log.txt has no return at the end of the last line"""
+        # Makes the variables needed for function input and runs the function.
+        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_007_er')
+        update_preservation_log(accession_directory, True, 'manifest')
+
+        # Verifies the contents of the log have been updated.
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['TEST.3', '2023.3.7.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.7.ER', '2023-02-28', 'nan', 'Made manifest, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.7.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated manifest for accession 2023.3.7.ER. The manifest is valid.', 'validate_fixity.py']]
+        self.assertEqual(result, expected, 'Problem with test for no end return, valid')
+
     # def test_no_log(self):
     #     """Test for when there is no preservation log to update
     #     Haven't figured out how to test what a function prints automatically,
     #     so this will cause the function to print to the terminal when the test runs.
     #     """
     #     # Makes the variables needed for function input and runs the function.
-    #     accession_directory = join('test_data', 'test_003_log_update', '2023_test003_007_er')
+    #     accession_directory = join('test_data', 'test_003_log_update', '2023_test003_009_er')
     #     update_preservation_log(accession_directory, True, 'manifest')
     #     self.assertEqual(True, True)
 

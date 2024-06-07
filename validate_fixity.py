@@ -115,9 +115,16 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         else:
             action = f'Validated manifest for accession {accession}. The manifest is not valid.'
 
+    # Reads the contents of preservation_log.txt, for later checking if it ends with a line return or not.
+    with open(log_path) as open_log:
+        log_text = open_log.read()
+
     # Adds a row to the end of the preservation log for the bag validation.
+    # First adds a line return after existing text, if missing, so the new data is on its own row.
     log_row = [collection, accession, today, None, action, 'validate_fixity.py']
     with open(log_path, 'a', newline='') as open_log:
+        if not log_text.endswith('\n'):
+            open_log.write('\n')
         log_writer = csv.writer(open_log, delimiter='\t')
         log_writer.writerow(log_row)
 
