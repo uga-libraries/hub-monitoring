@@ -1,0 +1,4 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+T5	2023.T5.03.ER	2023-10-03	CD.2	Virus scanned and copied. No errors detected.	Jane Doe
+T5	2023.T5.03.ER	2023-10-03		Can't bag; made manifest.	Jane Doe
+T5	2023.T5.03.ER	2023-10-03		Validated manifest. Valid.	Jane Doe
