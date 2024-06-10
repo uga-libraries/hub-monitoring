@@ -108,7 +108,7 @@ class MyTestCase(unittest.TestCase):
                     ['2023-01-er', 'rbrl003', 'closed', '2024', 0.00001, 1, 0, 0, 1, 0, 'nan', 'nan'],
                     ['2023-12-er', 'rbrl003', 'closed', '2024', 0.0001, 2, 0, 0, 1, 1, 'nan', 'nan'],
                     ['2023-23-er', 'rbrl003', 'closed', '2024', 0.0005, 8, 0, 1, 4, 3, 'nan', 'nan'],
-                    ['2024-31-er', 'rbrl003', 'closed', '2004', 0, 0, 0, 0, 0, 0,
+                    ['2024-31-er', 'rbrl003', 'closed', '2024', 0.0, 0, 0, 0, 0, 0,
                      'Accession 2024-31-er has no risk csv. ',
                      'Could not calculate size for accession 2024-31-er due to folder organization. ']]
         self.assertEqual(result, expected, "Problem with test for Russell data, accession report")
