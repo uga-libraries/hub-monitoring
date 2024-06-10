@@ -54,7 +54,32 @@ class MyTestCase(unittest.TestCase):
                      'Accession acc2a has no risk csv. Accession acc2b has no risk csv. ',
                      'Could not calculate size for accession acc2a due to folder organization. '
                      'Could not calculate size for accession acc2b due to path length. ']]
-        self.assertEqual(result, expected, "Problem with test for an accession doesn't have a risk csv")
+        self.assertEqual(result, expected, "Problem with test for multiple accessions, all errors")
+
+    def test_multiple_some_errors(self):
+        """Test for when a collection has multiple accessions, some with and some without error messages"""
+        # Makes test input and runs the function.
+        rows = [['acc1a', 'coll1', 'backlogged', '2021', 30.01, 607, 0, 0, 0, 0,
+                 'Accession acc1a has no risk csv. ', None],
+                ['acc1b', 'coll1', 'backlogged', '2021', 0, 0, 0, 0, 0, 0, 'Accession acc1b has no risk csv. ',
+                 'Could not calculate size for accession acc1b due to path length. '],
+                ['acc1c', 'coll1', 'backlogged', '2022', 0, 0, 0, 9, 0, 1, '',
+                 'Could not calculate size for accession acc1c due to path length. '],
+                ['acc2a', 'coll2', 'closed', '2023', 90.12, 67, 30, 0, 0, 37, '', None],
+                ['acc2b', 'coll2', 'closed', '2023', 33.10, 15, 0, 0, 0, 0, 'Accession acc2b has no risk csv. ', None]]
+        acc_df = make_df(rows)
+        collection_df = combine_collection_data(acc_df)
+
+        # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
+        result = [collection_df.columns.tolist()] + collection_df.values.tolist()
+        expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
+                     'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
+                    ['coll1', '2021-2022', 'backlogged', 30.01, 607, 0, 9, 0, 1,
+                     'Accession acc1a has no risk csv. Accession acc1b has no risk csv. ',
+                     'Could not calculate size for accession acc1b due to path length. '
+                     'Could not calculate size for accession acc1c due to path length. '],
+                    ['coll2', '2023', 'closed', 123.22, 82, 30, 0, 0, 37, 'Accession acc2b has no risk csv. ', 0]]
+        self.assertEqual(result, expected, "Problem with test for multiple accessions, some errors")
 
     def test_one(self):
         """Test for when each collection has one accession with no error messages"""
@@ -90,7 +115,7 @@ class MyTestCase(unittest.TestCase):
                      'Could not calculate size for accession acc1a due to path length. '],
                     ['coll2', '2022', 'backlogged', 0, 0, 0, 0, 0, 0, 'Accession 2a has no risk csv. ',
                      'Could not calculate size for accession acc1b due to path length. ']]
-        self.assertEqual(result, expected, "Problem with test for no accessions have a risk csv")
+        self.assertEqual(result, expected, "Problem with test for one accession, all errors")
 
 
 if __name__ == '__main__':
