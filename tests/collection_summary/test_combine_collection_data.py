@@ -1,6 +1,9 @@
 """
 Tests for the function combine_collection_data(), which combines data from multiple accessions of the same collection.
 If there is only one accession, the collection information is the same as the accession's.
+
+If a column's values are all "None", they are 0 in the expected output for this function after list conversion,
+but will be saved to the report as blank.
 """
 import unittest
 from collection_summary import combine_collection_data
