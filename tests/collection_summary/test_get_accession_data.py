@@ -29,7 +29,7 @@ class MyTestCase(unittest.TestCase):
         accession = '2022-15-er'
         result = get_accession_data(directory, status, collection, accession)
 
-        expected = ['2022-15-er', 'ms0001 Person papers', 'backlogged', '2024', .00001, 3, 0, 0, 1, 2, '', None]
+        expected = ['2022-15-er', 'ms0001 Person papers', 'backlogged', '2024', .00001, 3, 0, 0, 1, 2, None, None]
         self.assertEqual(result, expected, "Problem with test for no error messages")
 
 

@@ -37,7 +37,7 @@ class MyTestCase(unittest.TestCase):
         """Test for making a report with a header and one row of accession data"""
         save_accession_report('test_data', 'header')
         save_accession_report('test_data', ['2015-01-er', 'ms0001', 'backlog', '2015', 1.00, 111, 11, 15, 45, 40,
-                                            '', None])
+                                            None, None])
 
         # Verifies the expected CSV was made with the correct file name.
         csv_path = join('test_data', f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
@@ -54,7 +54,7 @@ class MyTestCase(unittest.TestCase):
     def test_two_rows(self):
         """Test for making a report with a header and two rows of accession data"""
         save_accession_report('test_data', 'header')
-        save_accession_report('test_data', ['2015-01-er', 'ms0001', 'backlog', '2015', 0, 0, 11, 15, 45, 40, '',
+        save_accession_report('test_data', ['2015-01-er', 'ms0001', 'backlog', '2015', 0, 0, 11, 15, 45, 40, None,
                                             'Could not calculate size for accession 2015-01-er due to path length. '])
         save_accession_report('test_data', ['2019-01-er', 'ms0001', 'backlog', '2019', 2.02, 200, 0, 0, 0, 0,
                                             'Accession 2019-01-er has no risk csv. ', None])
