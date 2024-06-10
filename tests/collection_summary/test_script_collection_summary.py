@@ -62,19 +62,19 @@ class MyTestCase(unittest.TestCase):
         acc_path = join(directory, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(acc_path)
         expected = [['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
-                     'Moderate_Risk', 'Low_Risk', 'Notes'],
-                    ['2022-15-er', 'ms0001 Person papers', 'backlogged', '2024', 0.00001, 3, 0, 0, 1, 2, 'nan'],
-                    ['ua_01_032_ER', 'ua01-001 Dept records', 'backlogged', '2024', 0.00000001, 1, 0, 0, 0, 1, 'nan'],
-                    ['ua_01_033_ER', 'ua01-001 Dept records', 'backlogged', '2024', 0.00004, 3, 1, 0, 1, 1, 'nan']]
-        self.assertEqual(result, expected, "Problem with test for Hargrett data")
+                     'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
+                    ['2022-15-er', 'ms0001 Person papers', 'backlogged', '2024', 0.00001, 3, 0, 0, 1, 2, 'nan', 'nan'],
+                    ['ua_01_032_ER', 'ua01-001 Dept records', 'backlogged', '2024', 0.00000001, 1, 0, 0, 0, 1, 'nan', 'nan'],
+                    ['ua_01_033_ER', 'ua01-001 Dept records', 'backlogged', '2024', 0.00004, 3, 1, 0, 1, 1, 'nan', 'nan']]
+        self.assertEqual(result, expected, "Problem with test for Hargrett data, accession report")
 
         # Tests the contents of the collection report.
         coll_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(coll_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
-                     'Moderate_Risk', 'Low_Risk', 'Notes'],
-                    ['ms0001 Person papers', '2024', 'backlogged', 0.00001, 3, 0, 0, 1, 2, 'nan'],
-                    ['ua01-001 Dept records', '2024', 'backlogged', 0.00004, 4, 1, 0, 1, 2, 'nan']]
+                     'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
+                    ['ms0001 Person papers', '2024', 'backlogged', 0.00001, 3, 0, 0, 1, 2, 'nan', 'nan'],
+                    ['ua01-001 Dept records', '2024', 'backlogged', 0.00004, 4, 1, 0, 1, 2, 'nan', 'nan']]
         self.assertEqual(result, expected, "Problem with test for Hargrett data, collection report")
 
     def test_russell(self):
@@ -87,38 +87,43 @@ class MyTestCase(unittest.TestCase):
         acc_path = join(directory, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(acc_path)
         expected = [['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
-                     'Moderate_Risk', 'Low_Risk', 'Notes'],
-                    ['2015-01-er', 'rbrl001', 'backlogged', '2024', 0.00005, 1, 0, 0, 0, 1, 'nan'],
-                    ['2015-12-er', 'rbrl001', 'backlogged', '2024', 0.00004, 1, 0, 0, 0, 1, 'nan'],
-                    ['2016-03-er', 'rbrl001', 'backlogged', '2024', 0.00005, 2, 0, 0, 0, 2, 'nan'],
-                    ['2018-04-er', 'rbrl001', 'backlogged', '2024', 0.0001, 5, 0, 0, 0, 5, 'nan'],
-                    ['2019-12-er', 'rbrl001', 'backlogged', '2024', 0.000001, 2, 0, 0, 0, 2, 'nan'],
-                    ['2021-11-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 1, 0, 1, 2, 'nan'],
-                    ['2021-12-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 2, 1, 2, 3, 'nan'],
-                    ['2021-13-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 1, 1, 0, 2, 'nan'],
+                     'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
+                    ['2015-01-er', 'rbrl001', 'backlogged', '2024', 0.00005, 1, 0, 0, 0, 1, 'nan', 'nan'],
+                    ['2015-12-er', 'rbrl001', 'backlogged', '2024', 0.00004, 1, 0, 0, 0, 1, 'nan', 'nan'],
+                    ['2016-03-er', 'rbrl001', 'backlogged', '2024', 0.00005, 2, 0, 0, 0, 2, 'nan', 'nan'],
+                    ['2018-04-er', 'rbrl001', 'backlogged', '2024', 0.0001, 5, 0, 0, 0, 5, 'nan', 'nan'],
+                    ['2019-12-er', 'rbrl001', 'backlogged', '2024', 0.000001, 2, 0, 0, 0, 2, 'nan', 'nan'],
+                    ['2021-11-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 1, 0, 1, 2, 'nan', 'nan'],
+                    ['2021-12-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 2, 1, 2, 3, 'nan', 'nan'],
+                    ['2021-13-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 1, 1, 0, 2, 'nan', 'nan'],
                     ['2021-40-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 0, 0, 0, 0,
-                     'Accession 2021-40-er has no risk csv. '],
-                    ['2022-01-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 1, 1, 1, 1, 'nan'],
-                    ['2022-02-er', 'rbrl002', 'backlogged', '2024', 0.0001, 14, 5, 4, 3, 2, 'nan'],
-                    ['2022-03-er', 'rbrl002', 'backlogged', '2024', 0.00001, 1, 0, 0, 0, 1, 'nan'],
-                    ['2022-04-er', 'rbrl002', 'backlogged', '2024', 0.00001, 1, 0, 0, 1, 1, 'nan'],
-                    ['2022-05-er', 'rbrl002', 'backlogged', '2024', 0.00003, 5, 0, 2, 3, 0, 'nan'],
-                    ['2019-13-er', 'rbrl003', 'closed', '2024', 0.0002, 6, 0, 0, 0, 6, 'nan'],
-                    ['2022-27-er', 'rbrl003', 'closed', '2024', 0.00001, 1, 0, 0, 1, 0, 'nan'],
-                    ['2023-01-er', 'rbrl003', 'closed', '2024', 0.00001, 1, 0, 0, 1, 0, 'nan'],
-                    ['2023-12-er', 'rbrl003', 'closed', '2024', 0.0001, 2, 0, 0, 1, 1, 'nan'],
-                    ['2023-23-er', 'rbrl003', 'closed', '2024', 0.0005, 8, 0, 1, 4, 3, 'nan']]
+                     'Accession 2021-40-er has no risk csv. ', 'nan'],
+                    ['2022-01-er', 'rbrl002', 'backlogged', '2024', 0.00003, 4, 1, 1, 1, 1, 'nan', 'nan'],
+                    ['2022-02-er', 'rbrl002', 'backlogged', '2024', 0.0001, 14, 5, 4, 3, 2, 'nan', 'nan'],
+                    ['2022-03-er', 'rbrl002', 'backlogged', '2024', 0.00001, 1, 0, 0, 0, 1, 'nan', 'nan'],
+                    ['2022-04-er', 'rbrl002', 'backlogged', '2024', 0.00001, 1, 0, 0, 1, 1, 'nan', 'nan'],
+                    ['2022-05-er', 'rbrl002', 'backlogged', '2024', 0.00003, 5, 0, 2, 3, 0, 'nan', 'nan'],
+                    ['2019-13-er', 'rbrl003', 'closed', '2024', 0.0002, 6, 0, 0, 0, 6, 'nan', 'nan'],
+                    ['2022-27-er', 'rbrl003', 'closed', '2024', 0.00001, 1, 0, 0, 1, 0, 'nan', 'nan'],
+                    ['2023-01-er', 'rbrl003', 'closed', '2024', 0.00001, 1, 0, 0, 1, 0, 'nan', 'nan'],
+                    ['2023-12-er', 'rbrl003', 'closed', '2024', 0.0001, 2, 0, 0, 1, 1, 'nan', 'nan'],
+                    ['2023-23-er', 'rbrl003', 'closed', '2024', 0.0005, 8, 0, 1, 4, 3, 'nan', 'nan'],
+                    ['2024-31-er', 'rbrl003', 'closed', '2004', 0, 0, 0, 0, 0, 0,
+                     'Accession 2024-31-er has no risk csv. ',
+                     'Could not calculate size for accession 2024-31-er due to folder organization. ']]
         self.assertEqual(result, expected, "Problem with test for Russell data, accession report")
 
         # Tests the contents of the collection report.
         coll_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(coll_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
-                     'Moderate_Risk', 'Low_Risk', 'Notes'],
-                    ['rbrl001', '2024', 'backlogged', 0.0002, 11, 0, 0, 0, 11, 'nan'],
+                     'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
+                    ['rbrl001', '2024', 'backlogged', 0.0002, 11, 0, 0, 0, 11, 'nan', 'nan'],
                     ['rbrl002', '2024', 'backlogged', 0.0003, 41, 10, 9, 11, 12,
-                     'Accession 2021-40-er has no risk csv. '],
-                    ['rbrl003', '2024', 'closed', 0.001, 18, 0, 1, 7, 10, 'nan']]
+                     'Accession 2021-40-er has no risk csv. ', 'nan'],
+                    ['rbrl003', '2024', 'closed', 0.001, 18, 0, 1, 7, 10,
+                     'Accession 2024-31-er has no risk csv. ',
+                     'Could not calculate size for accession 2024-31-er due to folder organization. ']]
         self.assertEqual(result, expected, "Problem with test for Russell data, collection report")
 
 
