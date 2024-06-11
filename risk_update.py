@@ -247,7 +247,7 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
     """
 
     # Reads the risk csv into a dataframe and makes a second dataframe without the older NARA information.
-    current_df = pd.read_csv(os.path.join(parent_folder, risk_csv))
+    current_df = pd.read_csv(os.path.join(parent_folder, risk_csv), low_memory=False)
     update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message']
 
     # Adds the new NARA information to the format identifications from the risk csv.
@@ -275,7 +275,7 @@ def read_nara_csv(nara_csv_path):
     :return
     nara_df (pandas DataFrame): dataframe with all data from the NARA spreadsheet and select columns renamed
     """
-    nara_df = pd.read_csv(nara_csv_path)
+    nara_df = pd.read_csv(nara_csv_path, low_memory=False)
     nara_df = nara_df.rename(columns={'Format Name': 'NARA_Format_Name',
                                       'File Extension(s)': 'NARA_File_Extensions',
                                       'PRONOM URL': 'NARA_PRONOM_URL',
