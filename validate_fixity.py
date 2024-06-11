@@ -60,7 +60,7 @@ def manifest_validation_log(acc_dir, acc, errors):
     None
     """
 
-    with open(os.path.join(acc_dir, f'{acc}_manifest_validation_errors.csv'), 'w', newline='') as f:
+    with open(os.path.join(acc_dir, f'{acc}_manifest_validation_errors.csv'), 'w', newline='', encoding='utf-8') as f:
         f_write = csv.writer(f)
         f_write.writerow(['File', 'MD5', 'MD5_Source'])
         f_write.writerows(errors)
@@ -159,7 +159,7 @@ def update_report(acc, error_msg, report_dir):
             report_writer.writerow(['Accession', 'Validation_Error'])
 
     # Adds the error text to the report.
-    with open(report_path, 'a', newline='') as open_report:
+    with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
         report_writer = csv.writer(open_report)
         report_writer.writerow([acc, error_msg])
 
