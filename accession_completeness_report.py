@@ -113,7 +113,7 @@ if __name__ == '__main__':
     # Script argument is the parent directory of the status folders.
     input_directory = sys.argv[1]
 
-    # First level within the input_directory is folders named with the status (backlogged or closed),
+    # First level within the input_directory is folders named with the status (backlogged and/or closed),
     # as well as additional folders and files that are not part of this analysis.
     for status in os.listdir(input_directory):
         if status == 'backlogged' or status == 'closed':
@@ -121,7 +121,7 @@ if __name__ == '__main__':
             # All folders within the status folders should be collections.
             for collection in os.listdir(os.path.join(input_directory, status)):
 
-                # Skips unconventional collections.
+                # Skips unconventional collections, which are not expected to follow these rules.
                 unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
                 if collection in unconventional:
                     continue
@@ -135,9 +135,9 @@ if __name__ == '__main__':
                     if False in completeness_dict.values():
                         update_report(status, collection, accession_path, completeness_dict)
 
-    # Prints if there were any incomplete accessions (the report was made) or not.
-    report_path = os.path.join(input_directory, 'accession_completeness_report.csv')
-    if os.path.exists(report_path):
+    # Prints if there were any incomplete accessions (the report was made or not).
+    completeness_report = os.path.join(input_directory, 'accession_completeness_report.csv')
+    if os.path.exists(completeness_report):
         print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {input_directory}.')
     else:
         print(f'\nAll accessions are complete.')
