@@ -1,4 +1,4 @@
-"""Analyze all accessions in a given folder for completeness and make a report of any that are not complete.
+"""Analyze all accessions in a given folder (input_directory) for completeness and make a report of any that are not complete.
 
 Testing that the preservation log and full risk report are present and the files are bagged.
 Accessions may be incomplete because they were created prior to current procedures
@@ -25,7 +25,7 @@ def accession_paths(status, coll):
     """
 
     acc_paths = []
-    coll_path = os.path.join(collection_directory, status, coll)
+    coll_path = os.path.join(input_directory, status, coll)
 
     # Navigates the collection folder looking for the folder with the accession content.
     for acc in os.listdir(coll_path):
@@ -94,7 +94,7 @@ def update_report(status, coll, acc_path, result):
     """
 
     # If the report does not already exist, makes a report with a header row.
-    report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
+    report_path = os.path.join(input_directory, 'accession_completeness_report.csv')
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
@@ -110,15 +110,16 @@ def update_report(status, coll, acc_path, result):
 
 
 if __name__ == '__main__':
-    collection_directory = sys.argv[1]
+    # Script argument is the parent directory of the status folders.
+    input_directory = sys.argv[1]
 
     # First level within the collection_directory is status folders (backlogged or closed),
     # as well as additional folders and files that are not part of this analysis.
-    for status_folder in os.listdir(collection_directory):
+    for status_folder in os.listdir(input_directory):
         if status_folder == 'backlogged' or status_folder == 'closed':
 
             # All folders within the status folders should be collections.
-            for collection in os.listdir(os.path.join(collection_directory, status_folder)):
+            for collection in os.listdir(os.path.join(input_directory, status_folder)):
 
                 # Skips unconventional collections.
                 unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
@@ -135,8 +136,8 @@ if __name__ == '__main__':
                         update_report(status_folder, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made) or not.
-    report_path = os.path.join(collection_directory, 'accession_completeness_report.csv')
+    report_path = os.path.join(input_directory, 'accession_completeness_report.csv')
     if os.path.exists(report_path):
-        print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {collection_directory}.')
+        print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {input_directory}.')
     else:
         print(f'\nAll accessions are complete.')
