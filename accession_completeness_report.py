@@ -9,7 +9,7 @@ import os
 import sys
 
 
-def accession_paths(status, coll):
+def accession_paths(acc_status, coll):
     """Find the accession folder(s), which can be in a few places in the collection folder
 
     Most accessions are in folders named with the accession number within the collection folder.
@@ -17,7 +17,7 @@ def accession_paths(status, coll):
     A few are in the collection folder without any additional folders.
 
     @:parameter
-    status (string): parent folder of collection folder, either "backlogged" or "closed"
+    acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
 
     @:returns
@@ -25,7 +25,7 @@ def accession_paths(status, coll):
     """
 
     acc_paths = []
-    coll_path = os.path.join(input_directory, status, coll)
+    coll_path = os.path.join(input_directory, acc_status, coll)
 
     # Navigates the collection folder looking for the folder with the accession content.
     for acc in os.listdir(coll_path):
@@ -78,13 +78,13 @@ def check_completeness(acc_path):
     return result
 
 
-def update_report(status, coll, acc_path, result):
+def update_report(acc_status, coll, acc_path, result):
     """Adds an accession to the completeness report
 
     The report is saved in the collections_directory.
 
     @:parameter
-    status (string): parent folder of collection folder, either "backlogged" or "closed"
+    acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
     acc_path (string): the full path to the accession folder
     result (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
@@ -106,7 +106,7 @@ def update_report(status, coll, acc_path, result):
     # Saves the information to the report.
     with open(report_path, 'a', newline='') as report:
         writer = csv.writer(report)
-        writer.writerow([status, coll, acc, result['pres_log'], result['full_risk'], result['bag']])
+        writer.writerow([acc_status, coll, acc, result['pres_log'], result['full_risk'], result['bag']])
 
 
 if __name__ == '__main__':
