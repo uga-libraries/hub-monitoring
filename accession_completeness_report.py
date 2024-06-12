@@ -3,7 +3,7 @@ and make a report of any that are not complete.
 
 An accession is complete if it contains a preservation log (preservation_log.txt),
  a full risk report (acc_full_risk_data.csv), and the files are bagged (folder ends with '_bag').
- 
+
 Accessions may be incomplete because they were created prior to current procedures
 or because file path lengths or other errors prevent current procedures from being done.
 
@@ -20,11 +20,9 @@ import sys
 
 
 def accession_paths(acc_status, coll):
-    """Find the accession folder(s), which can be in a few places in the collection folder
+    """Find the paths for the accession folder(s) in a collection folder
 
-    Most accessions are in folders named with the accession number within the collection folder.
-    Some are in a folder named Preservation Copies, which may or may not include folders by accession number.
-    A few are in the collection folder without any additional folders.
+    The collection folder also contains other folders and files.
 
     @:parameter
     acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
@@ -89,9 +87,9 @@ def check_completeness(acc_path):
 
 
 def update_report(acc_status, coll, acc_path, result):
-    """Adds an accession to the completeness report
+    """Make the completeness report, if it doesn't already exist, and add an accession to the report
 
-    The report is saved in the collections_directory.
+    The report is saved in the input_directory.
 
     @:parameter
     acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
@@ -101,6 +99,7 @@ def update_report(acc_status, coll, acc_path, result):
 
     @:returns
     None
+    A row is added to the completeness report
     """
 
     # If the report does not already exist, makes a report with a header row.
