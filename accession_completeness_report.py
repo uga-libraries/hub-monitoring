@@ -1,8 +1,18 @@
-"""Analyze all accessions in a given folder (input_directory) for completeness and make a report of any that are not complete.
+"""Analyze all accessions in a given folder (input_directory) for completeness
+and make a report of any that are not complete.
 
-Testing that the preservation log and full risk report are present and the files are bagged.
+An accession is complete if it contains a preservation log (preservation_log.txt),
+ a full risk report (acc_full_risk_data.csv), and the files are bagged (folder ends with '_bag').
+ 
 Accessions may be incomplete because they were created prior to current procedures
 or because file path lengths or other errors prevent current procedures from being done.
+
+Parameter:
+    input_directory (required): the directory with the folders to be summarized,
+                                which should be the parent folder of the status (backlogged and/or closed) folders
+
+Returns:
+    accession_completeness_report.csv, saved in input_directory
 """
 import csv
 import os
