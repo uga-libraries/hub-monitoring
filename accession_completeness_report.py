@@ -113,13 +113,13 @@ if __name__ == '__main__':
     # Script argument is the parent directory of the status folders.
     input_directory = sys.argv[1]
 
-    # First level within the collection_directory is status folders (backlogged or closed),
+    # First level within the input_directory is folders named with the status (backlogged or closed),
     # as well as additional folders and files that are not part of this analysis.
-    for status_folder in os.listdir(input_directory):
-        if status_folder == 'backlogged' or status_folder == 'closed':
+    for status in os.listdir(input_directory):
+        if status == 'backlogged' or status == 'closed':
 
             # All folders within the status folders should be collections.
-            for collection in os.listdir(os.path.join(input_directory, status_folder)):
+            for collection in os.listdir(os.path.join(input_directory, status)):
 
                 # Skips unconventional collections.
                 unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
@@ -127,13 +127,13 @@ if __name__ == '__main__':
                     continue
 
                 # Gets a list of the path to every folder with accession content and tests their completeness.
-                accession_list = accession_paths(status_folder, collection)
+                accession_list = accession_paths(status, collection)
                 for accession_path in accession_list:
                     print('Starting on accession', accession_path)
                     completeness_dict = check_completeness(accession_path)
                     # If any of the criteria are missing, saves the information to the report.
                     if False in completeness_dict.values():
-                        update_report(status_folder, collection, accession_path, completeness_dict)
+                        update_report(status, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made) or not.
     report_path = os.path.join(input_directory, 'accession_completeness_report.csv')
