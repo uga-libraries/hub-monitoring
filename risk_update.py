@@ -279,7 +279,8 @@ def read_nara_csv(nara_csv_path):
     # This will raise a KeyError if the columns do not have the expected names,
     # which happens if an old copy of the NARA CSV is used or if NARA changes how they name their columns.
     df = pd.read_csv(nara_csv_path, low_memory=False)
-    used_columns = ['Format Name', 'File Extension(s)', 'PRONOM URL', 'NARA Risk Level', 'NARA Proposed Preservation Plan']
+    used_columns = ['Format Name', 'File Extension(s)', 'PRONOM URL', 'NARA Risk Level',
+                    'NARA Proposed Preservation Plan']
     nara_df = df[used_columns].copy()
 
     # Rename the columns to start with NARA and use underscores instead of spaces.
