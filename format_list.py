@@ -23,7 +23,7 @@ from validate_fixity import check_argument
 
 
 def combine_risk_csvs(dir_path):
-    """Combine the data from the most recent risk csv for every accession in the directory into one dataframe
+    """Combine the data from the most recent risk csv for every accession into one dataframe
 
     @:parameter
     dir_path (string): path to the directory with risk csvs (script argument)
@@ -55,13 +55,13 @@ def combine_risk_csvs(dir_path):
 
 
 def df_cleanup(df):
-    """Remove unneeded columns, rename a column, remove duplicates, fill empty NARA risk levels
+    """Remove unneeded columns, rename a column, remove duplicates, and fill empty NARA risk levels
 
     @:parameter
     df (pandas DataFrame): dataframe with all columns from the most recent risk csv for every accession
 
     @:returns
-    df (pandas DataFrame): dataframe with select columns from the most recent risk csv for every accession
+    df (pandas DataFrame): dataframe with a subset of cleaned data from the most recent risk csv for every accession
     """
 
     # Keeps only the needed columns.
@@ -87,7 +87,7 @@ def files_per_format(df):
     """Calculate the number of files for each format name, version, and NARA risk level combination
 
     @:parameter
-    df (pandas DataFrame): dataframe with select columns from the most recent risk csv for every accession
+    df (pandas DataFrame): dataframe with a subset of cleaned data from the most recent risk csv for every accession
 
     @:returns
     files (pandas DataFrame): dataframe with format name, version, NARA risk level, and number of files
@@ -109,7 +109,7 @@ def size_per_format(df):
     """Calculate the size in GB for each format name, version, and NARA risk level combination
 
     @:parameter
-    df (pandas Dataframe): dataframe with select columns from the most recent risk csv for every accession
+    df (pandas Dataframe): dataframe with a subset of cleaned data from the most recent risk csv for every accession
 
     @:returns
     size (pandas Dataframe): dataframe with format name, version, NARA risk level, and size in GB
