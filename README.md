@@ -66,8 +66,15 @@ or have fake data to give the needed variations for the test.
 Tests for format_list.py are preliminary and all use the same input test data.
 It is the common data variations, but is not explicitly testing for all possible variations.
 
-There are no tests for accession_completeness_report.py.
+There are no automated tests for accession_completeness_report.py.
 Check a sample of the accessions to see the report has the correct information.
+- Print statements
+  - No accessions for collections in the "unconventional" list are printed.
+  - Accessions are all accession numbers (end in "-er"), any other folder is skipped.
+- Report
+  - No rows have all True.
+  - Verify anything with False is missing.
+  - Sample includes at least one False for all three categories (add more if not).
 
 ## Workflow
 
