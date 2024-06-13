@@ -160,7 +160,29 @@ class MyTestCase(unittest.TestCase):
         result = output.stdout.decode('utf-8')
         expected = "Directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"
-        self.assertEqual(result, expected, 'Problem with test for printed error')
+        self.assertEqual(result, expected, 'Problem with test for argument error, printing')
+
+    def test_nara_csv_error(self):
+        """Test for when the column names in the NARA CSV for the columns used are not correct and the script exits"""
+        # Makes the variables used for script input.
+        # The script will be run twice in this test.
+        script = join(getcwd(), '..', '..', 'risk_update.py')
+        directory = join('test_data', 'Russell_Hub', 'rbrl004')
+        nara_csv = join('test_data', 'NARA_PreservationActionPlan_Outdated.csv')
+
+        # Runs the script and tests that it exits.
+        with self.assertRaises(subprocess.CalledProcessError):
+            subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True, check=True,
+                           stdout=subprocess.PIPE)
+
+        # Runs the script a second time and tests that it prints the correct errors.
+        output = subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
+        result = output.stdout.decode('utf-8')
+        expected = '\r\nThe NARA Preservation Action Plan spreadsheet does not have at least one of the expected ' \
+                   'columns: Format Name, File Extension(s), PRONOM URL, NARA Risk Level, and NARA Proposed ' \
+                   'Preservation Plan. The spreadsheet used may be out of date, or NARA may have changed their ' \
+                   'spreadsheet organization.\r\n'
+        self.assertEqual(result, expected, 'Problem with test for nara csv error, printing')
 
 
 if __name__ == '__main__':
