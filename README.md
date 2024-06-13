@@ -45,7 +45,8 @@ collection_summary.py
 
 format_list.py
 
-- directory (required): the directory with the folders to be summarized
+- input_directory (required): the directory with the folders to be summarized, 
+  which may be any folder file directory structure
 
 risk_update.py
 
@@ -63,7 +64,7 @@ The tests mostly use files stored in the repo (test_data) as input.
 Preservation metadata files may be missing if they are not needed for a test 
 or have fake data to give the needed variations for the test.
  
-Tests for format_list.py are preliminary and all use the same input test data.
+For quicker development the tests for format_list.py all use the same input test data.
 It is the common data variations, but is not explicitly testing for all possible variations.
 
 There are no automated tests for accession_completeness_report.py.
@@ -78,13 +79,13 @@ Check a sample of the accessions to see the report has the correct information.
 
 ## Workflow
 
-TBD
-
-For the file list, after the script runs:
+Manual edits for the format_list.py output:
 1. Add a "Source" column as the first column with the Hub DEPARTMENT for combining it with other format data.
-2. Merge rows where only the NARA risk level is different.  
+2. Normalize format names that are different for each file, e.g., Cannot open PATH or Cabinet # Files.
+3. Merge rows where the format name and version are the same and the NARA risk level is different.  
    a. If one of the NARA risk levels is No Match, only include the other risk level(s).  
    b. For multiple other risk levels, convert to a range, e.g. Low-High Risk or Low-Moderate Risk.
+   c. Add the File_Count and Size_GB for all rows.
 
 ## Author
 

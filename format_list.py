@@ -1,12 +1,19 @@
 """Makes a spreadsheet with the format data from every full risk spreadsheet in a given directory
 
-Data included: format name, version, NARA risk level, number of files, and size in GB
+The risk spreadsheets are named accession#_full_risk_data.csv.
+
+The script result (combined_format_data.csv) includes:
+- FITS_Format_Name
+- FITS_Format_Version
+- NARA_Risk_Level
+- File_Count
+- Size_GB
 
 Parameter:
-    directory (required): the path to the directory with spreadsheets to be combined
+    input_directory (required): the path to the directory with spreadsheets to be combined, which can be any folder
 
 Returns:
-    CSV with all format data, in the directory folder (script argument)
+    combined_format_data.csv, saved in the input_directory folder (script argument)
 """
 import os
 import pandas as pd
@@ -16,7 +23,7 @@ from validate_fixity import check_argument
 
 
 def combine_risk_csvs(dir_path):
-    """Combine the data from the most recent risk csv for every accession in the directory into one dataframe
+    """Combine the data from the most recent risk csv for every accession into one dataframe
 
     @:parameter
     dir_path (string): path to the directory with risk csvs (script argument)
@@ -39,22 +46,23 @@ def combine_risk_csvs(dir_path):
     # Combines every spreadsheet into one dataframe.
     df = pd.concat([pd.read_csv(f, low_memory=False) for f in csv_list])
 
-    # Converts the version column to a string.
+    # Replace blank versions with text and then converts the version column to a string.
     # By default, if a CSV has all numeric versions, it is a float, but otherwise a string.
     # The data type needs to be the same for combining different instances of the same format version later.
+    df['FITS_Format_Version'] = df['FITS_Format_Version'].fillna('no-version')
     df['FITS_Format_Version'] = df['FITS_Format_Version'].astype(str)
 
     return df
 
 
 def df_cleanup(df):
-    """Remove unneeded columns, rename a column, remove duplicates, fill empty NARA risk levels
+    """Remove unneeded columns, rename a column, remove duplicates, and fill empty NARA risk levels
 
     @:parameter
     df (pandas DataFrame): dataframe with all columns from the most recent risk csv for every accession
 
     @:returns
-    df (pandas DataFrame): dataframe with select columns from the most recent risk csv for every accession
+    df (pandas DataFrame): dataframe with a subset of cleaned data from the most recent risk csv for every accession
     """
 
     # Keeps only the needed columns.
@@ -80,7 +88,7 @@ def files_per_format(df):
     """Calculate the number of files for each format name, version, and NARA risk level combination
 
     @:parameter
-    df (pandas DataFrame): dataframe with select columns from the most recent risk csv for every accession
+    df (pandas DataFrame): dataframe with a subset of cleaned data from the most recent risk csv for every accession
 
     @:returns
     files (pandas DataFrame): dataframe with format name, version, NARA risk level, and number of files
@@ -102,7 +110,7 @@ def size_per_format(df):
     """Calculate the size in GB for each format name, version, and NARA risk level combination
 
     @:parameter
-    df (pandas Dataframe): dataframe with select columns from the most recent risk csv for every accession
+    df (pandas Dataframe): dataframe with a subset of cleaned data from the most recent risk csv for every accession
 
     @:returns
     size (pandas Dataframe): dataframe with format name, version, NARA risk level, and size in GB
@@ -128,13 +136,13 @@ if __name__ == '__main__':
 
     # Gets the path to the directory with the risk CSVs to be combined from the script argument.
     # Exits the script if there is an error.
-    directory, error = check_argument(sys.argv)
+    input_directory, error = check_argument(sys.argv)
     if error:
         print(error)
         sys.exit(1)
 
     # Combines the most recent risk csv for each accession into one dataframe.
-    df_all = combine_risk_csvs(directory)
+    df_all = combine_risk_csvs(input_directory)
 
     # Transforms the dataframe with all risk data to a dataframe with the desired data.
     df_formats = df_cleanup(df_all)
@@ -145,5 +153,5 @@ if __name__ == '__main__':
     df_size = size_per_format(df_formats)
     df_format_list = pd.merge(df_files, df_size, how='outer')
 
-    # Saves the result to a CSV in the directory.
-    df_format_list.to_csv(os.path.join(directory, 'combined_format_data.csv'), index=False)
+    # Saves the result to a CSV in the input directory (script argument).
+    df_format_list.to_csv(os.path.join(input_directory, 'combined_format_data.csv'), index=False)
