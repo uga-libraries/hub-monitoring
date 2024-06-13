@@ -21,11 +21,11 @@ class MyTestCase(unittest.TestCase):
                     ['JPEG File Interchange Format', '1.01', 'Low Risk', 2],
                     ['JPEG File Interchange Format', '1.02', 'Low Risk', 3],
                     ['PDF/A', '1b', 'Low Risk', 1],
-                    ['Plain text', 'nan', 'Moderate Risk', 1],
+                    ['Plain text', 'no-version', 'Moderate Risk', 1],
                     ['Portable Document Format', '1.4', 'Moderate Risk', 2],
                     ['Portable Network Graphics', '1', 'High Risk', 1],
                     ['Portable Network Graphics', '1', 'Moderate Risk', 1],
-                    ['Unknown Binary', 'nan', 'No Match', 1]]
+                    ['Unknown Binary', 'no-version', 'No Match', 1]]
         self.assertEqual(result, expected)
 
 

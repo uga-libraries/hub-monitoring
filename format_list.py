@@ -46,9 +46,10 @@ def combine_risk_csvs(dir_path):
     # Combines every spreadsheet into one dataframe.
     df = pd.concat([pd.read_csv(f, low_memory=False) for f in csv_list])
 
-    # Converts the version column to a string.
+    # Replace blank versions with text and then converts the version column to a string.
     # By default, if a CSV has all numeric versions, it is a float, but otherwise a string.
     # The data type needs to be the same for combining different instances of the same format version later.
+    df['FITS_Format_Version'] = df['FITS_Format_Version'].fillna('no-version')
     df['FITS_Format_Version'] = df['FITS_Format_Version'].astype(str)
 
     return df
