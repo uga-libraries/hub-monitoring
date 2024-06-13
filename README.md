@@ -5,6 +5,8 @@
 Scripts for summarizing and validating content on the Digital Production Hub, 
 the UGA Libraries' centralized storage for digital objects that are not suitable for our digital preservation system.
 
+The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
+
 ## Getting Started
 
 ### Dependencies
@@ -34,7 +36,8 @@ For validating fixity, accessions should be bags or have a manifest. (UPDATE WIT
 
 accession_completeness_report.py
 
-- directory (required): the directory with the folders to be checked for completeness
+- input_directory (required): the directory with the folders to be checked for completeness, 
+  which must be the directory containing the status folders 
 
 collection_summary.py
 
@@ -63,10 +66,15 @@ or have fake data to give the needed variations for the test.
 Tests for format_list.py are preliminary and all use the same input test data.
 It is the common data variations, but is not explicitly testing for all possible variations.
 
-There are no tests yet for accession_completeness_report.py.
+There are no automated tests for accession_completeness_report.py.
 Check a sample of the accessions to see the report has the correct information.
-
-The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
+- Print statements
+  - No accessions for collections in the "unconventional" list are printed.
+  - Accessions are all accession numbers (end in "-er"), any other folder is skipped.
+- Report
+  - No rows have all True.
+  - Verify anything with False is missing.
+  - Sample includes at least one False for all three categories (add more if not).
 
 ## Workflow
 
