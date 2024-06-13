@@ -1,12 +1,19 @@
 """Makes a spreadsheet with the format data from every full risk spreadsheet in a given directory
 
-Data included: format name, version, NARA risk level, number of files, and size in GB
+The risk spreadsheets are named accession#_full_risk_data.csv.
+
+The script result (combined_format_data.csv) includes:
+- FITS_Format_Name
+- FITS_Format_Version
+- NARA_Risk_Level
+- File_Count
+- Size_GB
 
 Parameter:
     input_directory (required): the path to the directory with spreadsheets to be combined, which can be any folder
 
 Returns:
-    CSV with all format data, in the input_directory folder (script argument)
+    combined_format_data.csv, saved in the input_directory folder (script argument)
 """
 import os
 import pandas as pd
