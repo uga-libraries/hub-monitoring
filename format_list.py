@@ -3,10 +3,10 @@
 Data included: format name, version, NARA risk level, number of files, and size in GB
 
 Parameter:
-    directory (required): the path to the directory with spreadsheets to be combined
+    input_directory (required): the path to the directory with spreadsheets to be combined, which can be any folder
 
 Returns:
-    CSV with all format data, in the directory folder (script argument)
+    CSV with all format data, in the input_directory folder (script argument)
 """
 import os
 import pandas as pd
@@ -128,13 +128,13 @@ if __name__ == '__main__':
 
     # Gets the path to the directory with the risk CSVs to be combined from the script argument.
     # Exits the script if there is an error.
-    directory, error = check_argument(sys.argv)
+    input_directory, error = check_argument(sys.argv)
     if error:
         print(error)
         sys.exit(1)
 
     # Combines the most recent risk csv for each accession into one dataframe.
-    df_all = combine_risk_csvs(directory)
+    df_all = combine_risk_csvs(input_directory)
 
     # Transforms the dataframe with all risk data to a dataframe with the desired data.
     df_formats = df_cleanup(df_all)
@@ -145,5 +145,5 @@ if __name__ == '__main__':
     df_size = size_per_format(df_formats)
     df_format_list = pd.merge(df_files, df_size, how='outer')
 
-    # Saves the result to a CSV in the directory.
-    df_format_list.to_csv(os.path.join(directory, 'combined_format_data.csv'), index=False)
+    # Saves the result to a CSV in the input directory (script argument).
+    df_format_list.to_csv(os.path.join(input_directory, 'combined_format_data.csv'), index=False)
