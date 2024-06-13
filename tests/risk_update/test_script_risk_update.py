@@ -144,7 +144,7 @@ class MyTestCase(unittest.TestCase):
                      'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
         self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2006-30-er')
 
-    def test_error(self):
+    def test_argument_error(self):
         """Test for when the script arguments are not correct and the script exits"""
         # Makes the variables used for script input.
         # The script will be run twice in this test.
@@ -160,7 +160,7 @@ class MyTestCase(unittest.TestCase):
         result = output.stdout.decode('utf-8')
         expected = "Directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"
-        self.assertEqual(result, expected, "Problem with test for printed error")
+        self.assertEqual(result, expected, 'Problem with test for printed error')
 
 
 if __name__ == '__main__':
