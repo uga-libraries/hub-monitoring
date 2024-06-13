@@ -19,8 +19,8 @@ def df_to_list(df):
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
-        directory = join(getcwd(), 'test_data')
-        df_all = combine_risk_csvs(directory)
+        input_directory = join(getcwd(), 'test_data')
+        df_all = combine_risk_csvs(input_directory)
         df_formats = df_cleanup(df_all)
 
         result = df_to_list(df_formats)

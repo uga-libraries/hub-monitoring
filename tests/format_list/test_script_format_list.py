@@ -27,8 +27,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')
-        directory = 'test_data'
-        run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
+        input_directory = 'test_data'
+        run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
 
         result = csv_to_list(join('test_data', 'combined_format_data.csv'))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'File_Count', 'Size_GB'],
@@ -47,14 +47,14 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input.
         # The script will be run twice in this test.
         script = join(getcwd(), '..', '..', 'format_list.py')
-        directory = join('test_data', 'Error')
+        input_directory = join('test_data', 'Error')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(CalledProcessError):
-            run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=PIPE)
+            run(f'python "{script}" "{input_directory}"', shell=True, check=True, stdout=PIPE)
 
         # Runs the script a second time and tests that it prints the correct error.
-        output = run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
+        output = run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, 'Problem with test for printed error')

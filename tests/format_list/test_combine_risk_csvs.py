@@ -11,8 +11,8 @@ from os.path import join
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
-        directory = join(getcwd(), 'test_data')
-        df_all = combine_risk_csvs(directory)
+        input_directory = join(getcwd(), 'test_data')
+        df_all = combine_risk_csvs(input_directory)
 
         result = df_to_list(df_all)
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 
