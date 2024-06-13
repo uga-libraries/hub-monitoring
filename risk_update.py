@@ -264,10 +264,10 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
 
 
 def read_nara_csv(nara_csv_path):
-    """Read the NARA Preservation Action Plan spreadsheet into a dataframe and rename columns
+    """Read select columns from the NARA Preservation Action Plan spreadsheet into a dataframe and rename
 
-    Columns used in the final script output are renamed to have a "NARA" prefix
-    and underscores instead of spaces.
+    Columns are renamed to have a "NARA" prefix and underscores instead of spaces.
+    If the columns do not have the expected names, an error is raised and the script will exit.
 
     :parameter
     nara_csv_path (string): path to the NARA spreadsheet, which is a script argument
@@ -275,7 +275,8 @@ def read_nara_csv(nara_csv_path):
     :return
     nara_df (pandas DataFrame): dataframe with all data from the NARA spreadsheet and select columns renamed
     """
-    nara_df = pd.read_csv(nara_csv_path, low_memory=False)
+    df = pd.read_csv(nara_csv_path, low_memory=False)
+    nara_df = df[['Format Name', 'File Extension(s)', 'PRONOM URL', 'NARA Risk Level', 'NARA Proposed Preservation Plan']].copy()
     nara_df = nara_df.rename(columns={'Format Name': 'NARA_Format_Name',
                                       'File Extension(s)': 'NARA_File_Extensions',
                                       'PRONOM URL': 'NARA_PRONOM_URL',
