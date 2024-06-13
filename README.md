@@ -5,6 +5,8 @@
 Scripts for summarizing and validating content on the Digital Production Hub, 
 the UGA Libraries' centralized storage for digital objects that are not suitable for our digital preservation system.
 
+The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
+
 ## Getting Started
 
 ### Dependencies
@@ -66,8 +68,6 @@ It is the common data variations, but is not explicitly testing for all possible
 
 There are no tests for accession_completeness_report.py.
 Check a sample of the accessions to see the report has the correct information.
-
-The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
 
 ## Workflow
 
