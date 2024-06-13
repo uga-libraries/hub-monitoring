@@ -333,7 +333,14 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Reads the NARA CSV into a dataframe and updates column names.
-    nara_risk_df = read_nara_csv(nara_csv)
+    # Exits the script if the NARA CSV does not have the expected column names.
+    try:
+        nara_risk_df = read_nara_csv(nara_csv)
+    except KeyError:
+        print('\nThe NARA Preservation Action Plan spreadsheet does not have at least one of the expected columns: '
+              'Format Name, File Extension(s), PRONOM URL, NARA Risk Level, and NARA Proposed Preservation Plan. '
+              'The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.')
+        sys.exit(1)
 
     # Navigates to each folder with a risk spreadsheet
     # and makes a new version of it using the most recent risk spreadsheet in each folder.
