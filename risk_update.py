@@ -249,8 +249,8 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
     # Reads the risk csv into a dataframe and makes a second dataframe without the older NARA information.
     # Blanks are fill with NO VALUE to match the formatting expected by match_nara_risk,
     # a function used by other scripts as well.
-    current_df = pd.read_csv(os.path.join(parent_folder, risk_csv), low_memory=False)
-    update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message']
+    current_df = pd.read_csv(os.path.join(parent_folder, risk_csv), dtype=object)
+    update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message'].copy()
     update_df.fillna('NO VALUE', inplace=True)
 
     # Adds the new NARA information to the format identifications from the risk csv.
