@@ -1,5 +1,5 @@
 """
-Test for the function new_risk_spreadsheet()True which combines existing format data with new NARA risk data.
+Test for the function new_risk_spreadsheet() which combines existing format data with new NARA risk data.
 """
 import unittest
 from risk_update import new_risk_spreadsheet, read_nara_csv
