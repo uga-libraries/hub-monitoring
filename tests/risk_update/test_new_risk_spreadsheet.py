@@ -23,9 +23,8 @@ class MyTestCase(unittest.TestCase):
             if exists(output):
                 remove(output)
 
-    def test_function(self):
-        """Test for the function
-        All variation is covered by match_nara_risk(), which this function calls."""
+    def test_no_blank_columns(self):
+        """Test for when there are no blank version or PUID columns"""
         # Creates input variables and runs the function.
         root = join('test_data', 'Russell_Hub', 'rbrl004', '2005-10-er')
         file = '2005-10-er_full_risk_data.csv'
@@ -36,16 +35,15 @@ class MyTestCase(unittest.TestCase):
         # Tests the expected log CSV was made.
         log_path = join('test_data', 'Russell_Hub', 'update_risk_log.csv')
         log_made = exists(log_path)
-        self.assertEqual(log_made, True, "Problem with test for log CSV was made")
+        self.assertEqual(log_made, True, "Problem with test for no blank columns, log CSV was made")
 
         # Tests the expected risk CSV was made with the correct file name.
         risk_csv_path = join('test_data', 'Russell_Hub', 'rbrl004', '2005-10-er',
                              f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv")
         risk_csv_made = exists(risk_csv_path)
-        self.assertEqual(risk_csv_made, True, "Problem with test for risk CSV was made")
+        self.assertEqual(risk_csv_made, True, "Problem with test for no blank columns, risk CSV was made")
 
         # Tests the risk CSV has the expected contents.
-        # Replacing blanks with the string "nan" because PyCharm didn't see np.nan as an exact match.
         result = csv_to_list(risk_csv_path)
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
@@ -77,7 +75,7 @@ class MyTestCase(unittest.TestCase):
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
                      'No NARA Match']]
-        self.assertEqual(result, expected, "Problem with test for risk CSV contents")
+        self.assertEqual(result, expected, "Problem with test for no blank columns, risk CSV contents")
 
 
 if __name__ == '__main__':
