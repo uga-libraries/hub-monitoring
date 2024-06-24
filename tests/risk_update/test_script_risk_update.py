@@ -29,6 +29,7 @@ class MyTestCase(unittest.TestCase):
         outputs = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
+                   join(coll_folder, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
                    join(coll_folder, 'update_risk_log.csv'))
 
         # Deletes any test output that is present.
@@ -54,21 +55,23 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession'],
                     ['rbrl004', '2005-10-er'],
                     ['rbrl004', '2005-20-er'],
-                    ['rbrl004', '2006-30-er']]
+                    ['rbrl004', '2006-30-er'],
+                    ['rbrl004', '2021-40-er']]
         self.assertEqual(result, expected, 'Problem with test for log contents')
 
-        # Paths to the three risk CSVs that should have been made.
+        # Paths to the four risk CSVs that should have been made.
         today = datetime.today().strftime('%Y-%m-%d')
         coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
         csv_paths = [join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
-                     join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv')]
+                     join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
+                     join(coll_folder, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv')]
 
-        # Tests all three risk CSVs were made and have the correct file names.
+        # Tests all four risk CSVs were made and have the correct file names.
         csvs_made = []
         for csv_path in csv_paths:
             csvs_made.append(exists(csv_path))
-        self.assertEqual(csvs_made, [True, True, True], 'Problem with test for risk CSVs were made')
+        self.assertEqual(csvs_made, [True, True, True, True], 'Problem with test for risk CSVs were made')
 
         # Tests the contents of accession 2005-10-er CSV are correct.
         result = csv_to_list(csv_paths[0])
@@ -147,6 +150,24 @@ class MyTestCase(unittest.TestCase):
                      'Droid version 6.4', False, '3/4/2024', 4, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
                      'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
         self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2006-30-er')
+
+        # Tests the contents of accession 2021-40-er CSV are correct.
+        result = csv_to_list(csv_paths[3])
+        expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
+                     'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
+                     'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
+                     'NARA_Format_Name', 'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level',
+                     'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.pdf',
+                     'Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'NO VALUE',
+                     'Droid version 6.4', False, '3/4/2024', 26, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Portable Document Format/Archiving (PDF/A-1a) accessible', 'pdf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/95', 'Low Risk', 'Retain', 'Format Name'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.docx', 'Word',
+                     'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
+                     'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
+                     'No NARA Match']]
+        self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2005-20-er')
 
     def test_argument_error(self):
         """Test for when the script arguments are not correct and the script exits"""
