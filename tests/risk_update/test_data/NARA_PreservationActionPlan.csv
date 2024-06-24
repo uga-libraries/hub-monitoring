@@ -7,4 +7,3 @@ Portable Document Format/Archiving (PDF/A-1a) accessible,pdf,https://www.nationa
 Rich Text Format 1.5,rtf,https://www.nationalarchives.gov.uk/pronom/fmt/50,Moderate Risk,Transform to PDF
 Rich Text Format 1.6,rtf,https://www.nationalarchives.gov.uk/pronom/fmt/50,Moderate Risk,Transform to PDF
 WordPerfect Template,wpt,,Moderate Risk,Transform to PDF if possible
-Hypertext Markup Language,htm|html,https://www.nationalarchives.gov.uk/pronom/fmt/96,Low Risk,Retain
