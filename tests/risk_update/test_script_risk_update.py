@@ -29,6 +29,7 @@ class MyTestCase(unittest.TestCase):
         outputs = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
+                   join(coll_folder, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
                    join(coll_folder, 'update_risk_log.csv'))
 
         # Deletes any test output that is present.
@@ -54,21 +55,23 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession'],
                     ['rbrl004', '2005-10-er'],
                     ['rbrl004', '2005-20-er'],
-                    ['rbrl004', '2006-30-er']]
+                    ['rbrl004', '2006-30-er'],
+                    ['rbrl004', '2021-40-er']]
         self.assertEqual(result, expected, 'Problem with test for log contents')
 
-        # Paths to the three risk CSVs that should have been made.
+        # Paths to the four risk CSVs that should have been made.
         today = datetime.today().strftime('%Y-%m-%d')
         coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
         csv_paths = [join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
-                     join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv')]
+                     join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
+                     join(coll_folder, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv')]
 
-        # Tests all three risk CSVs were made and have the correct file names.
+        # Tests all four risk CSVs were made and have the correct file names.
         csvs_made = []
         for csv_path in csv_paths:
             csvs_made.append(exists(csv_path))
-        self.assertEqual(csvs_made, [True, True, True], 'Problem with test for risk CSVs were made')
+        self.assertEqual(csvs_made, [True, True, True, True], 'Problem with test for risk CSVs were made')
 
         # Tests the contents of accession 2005-10-er CSV are correct.
         result = csv_to_list(csv_paths[0])
@@ -79,27 +82,29 @@ class MyTestCase(unittest.TestCase):
                      'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Text Document.rtf',
                      'Rich Text Format', '1.6', 'https://www.nationalarchives.gov.uk/pronom/fmt/50',
-                     'Droid version 6.4', False, '3/4/2024', 43, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
-                     'Rich Text Format 1.6', 'rtf', 'https://www.nationalarchives.gov.uk/pronom/fmt/50',
+                     'Droid version 6.4', False, '3/4/2024', 43, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/50',
                      'Moderate Risk', 'Transform to PDF', 'PRONOM and Version'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Web Page.html',
                      'HYPERTEXT MARKUP LANGUAGE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/96',
-                     'Droid version 6.4', False, '3/4/2024', 30, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
-                     'Hypertext Markup Language 5.2', 'htm|html',
+                     'Droid version 6.4', False, '3/4/2024', 30, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Hypertext Markup Language 5.2', 'htm|html',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/96', 'Low Risk', 'Retain', 'PRONOM'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Web Page.html',
                      'HYPERTEXT MARKUP LANGUAGE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/96',
-                     'Droid version 6.4', False, '3/4/2024', 30, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
-                     'Hypertext Markup Language unspecified version', 'htm|html',
+                     'Droid version 6.4', False, '3/4/2024', 30, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Hypertext Markup Language unspecified version', 'htm|html',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/96', 'Low Risk', 'Retain', 'PRONOM'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Document.pdf',
                      'Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'NO VALUE',
-                     'Droid version 6.4', False, '3/4/2024', 26, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
-                     'Portable Document Format/Archiving (PDF/A-1a) accessible', 'pdf',
+                     'Droid version 6.4', False, '3/4/2024', 26, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Portable Document Format/Archiving (PDF/A-1a) accessible', 'pdf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/95', 'Low Risk', 'Retain', 'Format Name'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Document.docx', 'Word',
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
-                     'nan', 'nan', 'nan', 'nan', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
+                     'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
+                     'No NARA Match']]
         self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2005-10-er')
 
         # Tests the contents of accession 2005-20-er CSV are correct.
@@ -112,12 +117,13 @@ class MyTestCase(unittest.TestCase):
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-20-er\\2005-20-er_bag\\data\\Folder\\Document.pdf',
                      'Portable Document Format (PDF) version 1.0', 'NO VALUE',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/14', 'Tika version 1.0', True, '3/4/2024', 29,
-                     'fixity_placeholder', 'nan', 'nan', 'nan', 'nan', 'Portable Document Format (PDF) version 1.0',
-                     'pdf', 'https://www.nationalarchives.gov.uk/pronom/fmt/14', 'Moderate Risk', 'Retain',
+                     'fixity_placeholder', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE',
+                     'Portable Document Format (PDF) version 1.0', 'pdf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/14', 'Moderate Risk', 'Retain',
                      'PRONOM and Name'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-20-er\\2005-20-er_bag\\data\\Folder\\Document.pdf',
                      'PDF', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/14', 'Droid version 6.4',
-                     True, '3/4/2024', 29, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
+                     True, '3/4/2024', 29, 'fixity_placeholder', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE',
                      'Portable Document Format (PDF) version 1.0', 'pdf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/14', 'Moderate Risk', 'Retain', 'PRONOM']]
         self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2005-20-er')
@@ -131,18 +137,37 @@ class MyTestCase(unittest.TestCase):
                      'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Text Document.rtf',
                      'Rich Text Format', '1.6', 'https://www.nationalarchives.gov.uk/pronom/fmt/50',
-                     'Droid version 6.4', False, '3/4/2024', 41, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
-                     'Rich Text Format 1.6', 'rtf', 'https://www.nationalarchives.gov.uk/pronom/fmt/50',
+                     'Droid version 6.4', False, '3/4/2024', 41, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/50',
                      'Moderate Risk', 'Transform to PDF', 'PRONOM and Version'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Plain Text Document.txt',
                      'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
-                     'Droid version 6.4', False, '3/4/2024', 2, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
-                     'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match'],
+                     'Droid version 6.4', False, '3/4/2024', 2, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Plain Text Document2.txt',
                      'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
-                     'Droid version 6.4', False, '3/4/2024', 4, 'fixity_placeholder', 'nan', 'nan', 'nan', 'nan',
-                     'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
+                     'Droid version 6.4', False, '3/4/2024', 4, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
         self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2006-30-er')
+
+        # Tests the contents of accession 2021-40-er CSV are correct.
+        result = csv_to_list(csv_paths[3])
+        expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
+                     'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
+                     'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
+                     'NARA_Format_Name', 'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level',
+                     'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.pdf',
+                     'Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'NO VALUE',
+                     'Droid version 6.4', False, '3/4/2024', 26, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Portable Document Format/Archiving (PDF/A-1a) accessible', 'pdf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/95', 'Low Risk', 'Retain', 'Format Name'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.docx', 'Word',
+                     'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
+                     'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
+                     'No NARA Match']]
+        self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2005-20-er')
 
     def test_argument_error(self):
         """Test for when the script arguments are not correct and the script exits"""
