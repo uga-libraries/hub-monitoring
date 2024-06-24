@@ -38,6 +38,14 @@ class MyTestCase(unittest.TestCase):
             if exists(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv')):
                 remove(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv'))
 
+    def test_filenotfound_attempt(self):
+        """Trying to replicate file not found error"""
+        root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_006_er')
+        file = 'initialmanifest_20231031.csv'
+        directory = 'test_data'
+        validate_manifest(root, file, directory)
+        self.assertEqual(True, True)
+
     def test_not_valid_deletion(self):
         """Test for when the accession does not match the manifest due to file deletions."""
         # Makes the variables for function input and runs the function.
