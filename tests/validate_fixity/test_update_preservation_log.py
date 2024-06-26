@@ -143,7 +143,21 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.7.ER', '2023-02-28', 'nan', 'Made manifest, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.7.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated manifest for accession 2023.3.7.ER. The manifest is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for no end return, valid')
+        self.assertEqual(result, expected, 'Problem with test for no end return')
+
+    def test_nonstandard(self):
+        """Test for when the preservation_log.txt does not have the standard columns
+        Also check that the function prints a message
+        """
+        # Makes the variables needed for function input and runs the function.
+        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_008_er')
+        update_preservation_log(accession_directory, True, 'manifest')
+
+        # Verifies the contents of the log have NOT been updated.
+        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        expected = [['Date', 'Electronic Media Identifier', 'Action', 'Staff'],
+                    ['2023-02-28', 'Test003.008.CD1', 'Copied, no errors.', 'Jane Doe']]
+        self.assertEqual(result, expected, 'Problem with test for nonstandard')
 
     # def test_no_log(self):
     #     """Test for when there is no preservation log to update
