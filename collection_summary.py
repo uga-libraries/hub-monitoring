@@ -71,11 +71,20 @@ def combine_collection_data(acc_df):
     # Removes the Accession folder, which is only needed for the accession report.
     acc_df.drop(['Accession'], axis=1, inplace=True)
 
-    # Adds the values in GB, Files, and the four risk category columns for each collection.
+    # Combines the values in GB, Files, and the four risk category columns for each collection.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
-    # Rounds the size to 2 decimal places, or more places if needed to not be 0.
+    # Rounds the GB to 2 decimal places, or more places if needed to not be 0.
     coll_df['GB'] = coll_df['GB'].map(round_non_zero)
+
+    # Resets GB and Files to 0 if there were any accessions with a size error
+    # to make it clearer that the size for the collection needs to be calculated manually.
+    # If there is an AttributeError, it means none of the rows have a value in Size_Error and no change is needed.
+    try:
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'GB'] = 0
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'Files'] = 0
+    except AttributeError:
+        pass
 
     # Combines the dates into a date range and adds to the dataframe.
     # Removes the existing "Date" column, so it doesn't conflict with the new "Date" column made by the function.
@@ -133,7 +142,8 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
 
     @:returns
     acc_list (list): accession, collection, status, date, size (GB), files,
-    the number of files at each of the 4 risk levels, and a note for if the accession has no risk csv
+    the number of files at each of the 4 risk levels, a note for if the accession has no risk csv,
+    and a note for if the size and files could not be calculated
     """
 
     # Calculates the path to the accession folder, which combines the four function parameters.
@@ -146,13 +156,15 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     if acc_coll == 'rbrl246jhi':
         files = 0
         size_gb = 0
+        size_error = 'Did not calculate size for collection rbrl246jhi due to the time required. '
     else:
-        files, size_gb = get_size(acc_path)
+        files, size_gb, size_error = get_size(acc_path)
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
     acc_list = [acc_id, acc_coll, acc_status, date, size_gb, files]
     acc_list.extend(risk)
+    acc_list.append(size_error)
 
     return acc_list
 
@@ -187,7 +199,7 @@ def get_risk(acc_path):
 
     @:returns
     risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
-                      and a note, either an empty string or that the accession has no risk csv
+                      and a note, either None or that the accession has no risk csv
     """
 
     # Uses a function from risk_update.py (also in this repo) to get the name of the most recent risk csv.
@@ -219,9 +231,9 @@ def get_risk(acc_path):
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
         risk_list.append((risk_dedup_df['NARA_Risk Level'] == risk).sum())
 
-    # Adds an empty string to the end of the list, which is for the Notes column.
+    # Adds None to the end of the list, which is for the Notes column.
     # There is no information for Notes if there is a risk csv.
-    risk_list.append('')
+    risk_list.append(None)
 
     return risk_list
 
@@ -238,10 +250,12 @@ def get_size(acc_path):
     @:returns
     file_count (integer): the number of files in the accession folder
     size_gb (float): the size, in GB, of the accession folder
+    error (string; None): an error message if the size could not be calculated or None
     """
 
     # Calculates the path to the folder with the accession content,
-    # which is either the bag's data folder or the folder within the accession folder that isn't for the FITS files.
+    # which should be in the bag's data folder or the folder within the accession folder that isn't for FITS files.
+    content_path = None
     accession_number = os.path.basename(acc_path)
     data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
     if os.path.exists(data_path):
@@ -251,24 +265,25 @@ def get_size(acc_path):
             if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
                 content_path = os.path.join(acc_path, item)
 
-    try:
-        # Adds the number and size of the files at each level within the folder with the accession's content.
-        file_count = 0
-        size_bytes = 0
-        for root, dirs, files in os.walk(content_path):
-            file_count += len(files)
-            for file in files:
-                file_path = os.path.join(root, file)
-                try:
-                    size_bytes += os.stat(file_path).st_size
-                except FileNotFoundError:
-                    with open('size_error.txt', 'a', newline='', encoding='utf-8') as f:
-                        f.write(file_path + '\n')
-        size_gb = round_non_zero(size_bytes / 1000000000)
-        return file_count, size_gb
-    except UnboundLocalError:
-        print('Cannot calculate size for', acc_path)
-        return 0, 0
+    # If content_path could not be determined, returns a size of 0. Size will need to be calculated manually.
+    if not content_path:
+        return 0, 0, f'Did not calculate size for accession {accession_number} due to folder organization. '
+
+    # Adds the number and size of the files at each level within the folder with the accession's content.
+    # If the size for any files cannot be calculated (usually due to path length), returns a size of 0.
+    # Size for these will need to be calculated manually.
+    file_count = 0
+    size_bytes = 0
+    for root, dirs, files in os.walk(content_path):
+        file_count += len(files)
+        for file in files:
+            file_path = os.path.join(root, file)
+            try:
+                size_bytes += os.stat(file_path).st_size
+            except FileNotFoundError:
+                return 0, 0, f'Could not calculate size for accession {accession_number} due to path length. '
+    size_gb = round_non_zero(size_bytes / 1000000000)
+    return file_count, size_gb, None
 
 
 def round_non_zero(number):
@@ -318,7 +333,7 @@ def save_accession_report(dir_path, row):
         with open(report_path, 'w', newline='') as report:
             report_writer = csv.writer(report)
             report_writer.writerow(['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
-                                    'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'])
     else:
         with open(report_path, 'a', newline='') as report:
             report_writer = csv.writer(report)
