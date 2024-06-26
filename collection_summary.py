@@ -71,11 +71,20 @@ def combine_collection_data(acc_df):
     # Removes the Accession folder, which is only needed for the accession report.
     acc_df.drop(['Accession'], axis=1, inplace=True)
 
-    # Adds the values in GB, Files, and the four risk category columns for each collection.
+    # Combines the values in GB, Files, and the four risk category columns for each collection.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
-    # Rounds the size to 2 decimal places, or more places if needed to not be 0.
+    # Rounds the GB to 2 decimal places, or more places if needed to not be 0.
     coll_df['GB'] = coll_df['GB'].map(round_non_zero)
+
+    # Resets GB and Files to 0 if there were any accessions with a size error
+    # to make it clearer that the size for the collection needs to be calculated manually.
+    # If there is an AttributeError, it means none of the rows have a value in Size_Error and no change is needed.
+    try:
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'GB'] = 0
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'Files'] = 0
+    except AttributeError:
+        pass
 
     # Combines the dates into a date range and adds to the dataframe.
     # Removes the existing "Date" column, so it doesn't conflict with the new "Date" column made by the function.
@@ -258,7 +267,7 @@ def get_size(acc_path):
 
     # If content_path could not be determined, returns a size of 0. Size will need to be calculated manually.
     if not content_path:
-        return 0, 0, f'Could not calculate size for accession {accession_number} due to folder organization. '
+        return 0, 0, f'Did not calculate size for accession {accession_number} due to folder organization. '
 
     # Adds the number and size of the files at each level within the folder with the accession's content.
     # If the size for any files cannot be calculated (usually due to path length), returns a size of 0.
