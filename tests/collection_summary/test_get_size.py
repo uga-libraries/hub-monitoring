@@ -55,7 +55,7 @@ class MyTestCase(unittest.TestCase):
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(files, 0, "Problem with test for organization error, files")
         self.assertEqual(size_gb, 0, "Problem with test for organization error, size_gb")
-        self.assertEqual(size_error, 'Could not calculate size for accession 2024-31-er due to folder organization. ',
+        self.assertEqual(size_error, 'Did not calculate size for accession 2024-31-er due to folder organization. ',
                          'Problem with test for organization error, size_error')
 
     # def test_file_not_found_error(self):
@@ -68,7 +68,7 @@ class MyTestCase(unittest.TestCase):
     #     files, size_gb, size_error = get_size(acc_path)
     #     self.assertEqual(files, 0, "Problem with test for file not found error, files")
     #     self.assertEqual(size_gb, 0, "Problem with test for file not found error, size_gb")
-    #     self.assertEqual(size_error, 'Could not calculate size for accession INSERT ### due to path length. ',
+    #     self.assertEqual(size_error, 'Did not calculate size for accession INSERT ### due to path length. ',
     #                          'Problem with test for file not found error, size_error')
 
 

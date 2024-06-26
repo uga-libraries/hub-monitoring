@@ -110,7 +110,7 @@ class MyTestCase(unittest.TestCase):
                     ['2023-23-er', 'rbrl003', 'closed', '2024', 0.0005, 8, 0, 1, 4, 3, 'nan', 'nan'],
                     ['2024-31-er', 'rbrl003', 'closed', '2024', 0.0, 0, 0, 0, 0, 0,
                      'Accession 2024-31-er has no risk csv. ',
-                     'Could not calculate size for accession 2024-31-er due to folder organization. ']]
+                     'Did not calculate size for accession 2024-31-er due to folder organization. ']]
         self.assertEqual(result, expected, "Problem with test for Russell data, accession report")
 
         # Tests the contents of the collection report.
@@ -123,7 +123,7 @@ class MyTestCase(unittest.TestCase):
                      'Accession 2021-40-er has no risk csv. ', 'nan'],
                     ['rbrl003', '2024', 'closed', 0.001, 18, 0, 1, 7, 10,
                      'Accession 2024-31-er has no risk csv. ',
-                     'Could not calculate size for accession 2024-31-er due to folder organization. ']]
+                     'Did not calculate size for accession 2024-31-er due to folder organization. ']]
         self.assertEqual(result, expected, "Problem with test for Russell data, collection report")
 
 
