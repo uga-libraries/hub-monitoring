@@ -1,0 +1,1 @@
+Placeholder to represent a bag that is not an accession and should not be processed.

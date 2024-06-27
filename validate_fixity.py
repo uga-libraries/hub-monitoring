@@ -19,6 +19,38 @@ import sys
 import pandas as pd
 
 
+def accession_test(bag_name):
+    """Determine if a bagged folder within an accession folder is accession content based on the folder name
+
+    Some accession folders also contain bagged AIPs for risk remediation work.
+
+    This is similar to the function accession_test in collection_summary.py,
+    but expects the accession id to end in _bag and does not need to evaluate if it is a file or folder.
+
+    @:parameter
+    bag_name (string): the name of the bag, which will be accession-number_bag if it is an accession
+
+    @:return
+    Boolean: True if it is an accession folder and False if not
+    """
+
+    # Folder name without "_bag" at the end, which should be an accession number.
+    acc_id = bag_name[:-4]
+
+    # Pattern one: ends with -er or -ER.
+    if acc_id.lower().endswith('-er'):
+        return True
+    # Pattern two: ends with _er or _ER.
+    elif acc_id.lower().endswith('_er'):
+        return True
+    # Temporary designation for legacy content while determining an accession number.
+    elif acc_id == 'no-acc-num':
+        return True
+    # Folder that matches none of the patterns for an accession.
+    else:
+        return False
+
+
 def check_argument(arg_list):
     """Check if the required argument is present and a valid directory
 
@@ -356,9 +388,9 @@ if __name__ == '__main__':
 
     # Navigates to each accession, validates it, and updates the preservation log.
     for root, dirs, files in os.walk(directory):
-        # Identifies bags based on the folder name ending with "_bag".
+        # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
         for folder in dirs:
-            if folder.endswith('_bag'):
+            if folder.endswith('_bag') and accession_test(folder):
                 print(f'Starting on accession {root} (bag)')
                 validate_bag(os.path.join(root, folder), directory)
         # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
