@@ -38,13 +38,19 @@ class MyTestCase(unittest.TestCase):
             if exists(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv')):
                 remove(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv'))
 
-    def test_filenotfound_attempt(self):
-        """Trying to replicate file not found error"""
-        root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_006_er')
-        file = 'initialmanifest_20231031.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
-        self.assertEqual(True, True)
+    # def test_file_not_found(self):
+    #     """Use this as a template to test against an accession known to have the error,
+    #     which is from file path length and cannot be replicated in the repo test data.
+    #     The test will alter the preservation log, so either make a copy first to revert to after the test
+    #     or edit the preservation log to remove the test outputs. Also delete the script report and manifest log.
+    #     """
+    #     root = 'INSERT-PATH-TO-ACCESSION'
+    #     file = 'initialmanifest_INSERT-DATE.csv'
+    #     directory = 'INSERT-PATH-TO-SAVE-SCRIPT-OUTPUT'
+    #     validate_manifest(root, file, directory)
+    #     # Test will always pass. Look at the results to determine if it worked correctly,
+    #     # or use the other tests below to set up tests of the logs with expected values.
+    #     self.assertEqual(True, True)
 
     def test_not_valid_deletion(self):
         """Test for when the accession does not match the manifest due to file deletions."""
