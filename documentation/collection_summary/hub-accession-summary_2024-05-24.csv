@@ -1,0 +1,22 @@
+Accession,Collection,Status,Date,GB,Files,No_Match_Risk,High_Risk,Moderate_Risk,Low_Risk,Notes,Size_Error
+2015-01-er,rbrl001,backlogged,2024,0.00005,1,0,0,0,1,,
+2015-12-er,rbrl001,backlogged,2024,0.00004,1,0,0,0,1,,
+2016-03-er,rbrl001,backlogged,2024,0.00005,2,0,0,0,2,,
+2018-04-er,rbrl001,backlogged,2024,0.0001,5,0,0,0,5,,
+2019-12-er,rbrl001,backlogged,2024,0.000001,2,0,0,0,2,,
+2021-11-er,rbrl002,backlogged,2024,0.00003,4,1,0,1,2,,
+2021-12-er,rbrl002,backlogged,2024,0.00003,4,2,1,2,3,,
+2021-13-er,rbrl002,backlogged,2024,0.00003,4,1,1,0,2,,
+2021-40-er,rbrl002,backlogged,2024,0.00003,4,0,0,0,0,Accession 2021-40-er has no risk csv. ,
+2022-01-er,rbrl002,backlogged,2024,0.00003,4,1,1,1,1,,
+2022-02-er,rbrl002,backlogged,2024,0.0001,14,5,4,3,2,,
+2022-03-er,rbrl002,backlogged,2024,0.00001,1,0,0,0,1,,
+2022-04-er,rbrl002,backlogged,2024,0.00001,1,0,0,1,1,,
+2022-05-er,rbrl002,backlogged,2024,0.00003,5,0,2,3,0,,
+2019-13-er,rbrl003,closed,2024,0.0002,6,0,0,0,6,,
+2022-27-er,rbrl003,closed,2024,0.00001,1,0,0,1,0,,
+2023-01-er,rbrl003,closed,2024,0.00001,1,0,0,1,0,,
+2023-12-er,rbrl003,closed,2024,0.0001,2,0,0,1,1,,
+2023-23-er,rbrl003,closed,2024,0.0005,8,0,1,4,3,,
+2024-31-er,rbrl003,closed,2024,0.0,0,0,0,0,0,Accession 2024-31-er has no risk csv. ,Could not calculate size for accession 2024-31-er due to folder organization. 
+

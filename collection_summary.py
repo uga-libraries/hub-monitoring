@@ -1,21 +1,25 @@
-"""Makes a spreadsheet with summary data about each collection in a given department folder
+"""Makes spreadsheets with summary data about each accession and collection in a given department folder
 
 Data included:
+- Accession (accession report only)
 - Collection
 - Status (if backlog or closed)
 - Accession date (date range if more than one)
 - Size (GB and number of files)
-- Risk percentages (based on the number of files at each NARA risk level)
-- Notes (empty column for archivist notes)
+- Risk (number of files at each NARA risk level)
+- Notes (if there was no risk csv and for additional archivist notes)
 
-If there is more than one accession for the collection, the information is combined.
+If there is more than one accession for the collection,
+the information is combined in the collection report.
 
 Parameter:
     directory (required): the directory with the folders to be summarized
 
 Returns:
-    CSV with one row per collection
+    hub-accession-summary_DATE.csv
+    hub-collection-summary_DATE.csv
 """
+import csv
 from datetime import datetime
 import numpy as np
 import os
@@ -64,11 +68,23 @@ def combine_collection_data(acc_df):
     coll_df (Pandas dataframe): the data for every collection
     """
 
-    # Adds the values in GB, Files, and the four risk category columns for each collection.
+    # Removes the Accession folder, which is only needed for the accession report.
+    acc_df.drop(['Accession'], axis=1, inplace=True)
+
+    # Combines the values in GB, Files, and the four risk category columns for each collection.
     coll_df = acc_df.groupby(['Collection', 'Status'], as_index=False).sum()
 
-    # Rounds the size to 2 decimal places, or more places if needed to not be 0.
+    # Rounds the GB to 2 decimal places, or more places if needed to not be 0.
     coll_df['GB'] = coll_df['GB'].map(round_non_zero)
+
+    # Resets GB and Files to 0 if there were any accessions with a size error
+    # to make it clearer that the size for the collection needs to be calculated manually.
+    # If there is an AttributeError, it means none of the rows have a value in Size_Error and no change is needed.
+    try:
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'GB'] = 0
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'Files'] = 0
+    except AttributeError:
+        pass
 
     # Combines the dates into a date range and adds to the dataframe.
     # Removes the existing "Date" column, so it doesn't conflict with the new "Date" column made by the function.
@@ -125,7 +141,9 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     acc_id (string): the accession id, which is a folder within acc_coll
 
     @:returns
-    acc_list (list): collection, status, date, size (GB), files, and the number of files at each of the 4 risk levels
+    acc_list (list): accession, collection, status, date, size (GB), files,
+    the number of files at each of the 4 risk levels, a note for if the accession has no risk csv,
+    and a note for if the size and files could not be calculated
     """
 
     # Calculates the path to the accession folder, which combines the four function parameters.
@@ -136,16 +154,17 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     # Skips size for an extremely large collection so the report finishes sooner.
     date = get_date(acc_path)
     if acc_coll == 'rbrl246jhi':
-        size = 0
         files = 0
+        size_gb = 0
+        size_error = 'Did not calculate size for collection rbrl246jhi due to the time required. '
     else:
-        size = get_size(acc_path)
-        files = get_file_count(acc_path)
+        files, size_gb, size_error = get_size(acc_path)
     risk = get_risk(acc_path)
 
     # Combines the data into a single list.
-    acc_list = [acc_coll, acc_status, date, size, files]
+    acc_list = [acc_id, acc_coll, acc_status, date, size_gb, files]
     acc_list.extend(risk)
+    acc_list.append(size_error)
 
     return acc_list
 
@@ -169,41 +188,6 @@ def get_date(acc_path):
     return date
 
 
-def get_file_count(acc_path):
-    """Calculate the number of files in an accession
-
-    For bagged accessions, this is the number of files in the bag data folder.
-    For unbagged accessions, this is the number of files in the folder within the accession folder
-    that is not for the FITS files.
-
-    @:parameter
-    acc_path (string): the path to the accession folder
-
-    @:returns
-    file_count (integer): the number of files in the accession folder
-    """
-
-    # Calculates the path with the accession content,
-    # which is either the bag's data folder or the folder within the accession folder that isn't for the FITS files.
-    accession_number = os.path.basename(acc_path)
-    data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
-    if os.path.exists(data_path):
-        content_path = data_path
-    else:
-        for item in os.listdir(acc_path):
-            if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
-                content_path = os.path.join(acc_path, item)
-    try:
-        # Counts the files at each level within the folder with the accession's content.
-        file_count = 0
-        for root, dirs, files in os.walk(content_path):
-            file_count += len(files)
-
-        return file_count
-    except UnboundLocalError:
-        return 0
-
-
 def get_risk(acc_path):
     """Calculate the number of files at each of the four NARA risk levels in an accession
 
@@ -215,7 +199,7 @@ def get_risk(acc_path):
 
     @:returns
     risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
-                      and a note, either an empty string or that the accession has no risk csv
+                      and a note, either None or that the accession has no risk csv
     """
 
     # Uses a function from risk_update.py (also in this repo) to get the name of the most recent risk csv.
@@ -247,28 +231,31 @@ def get_risk(acc_path):
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
         risk_list.append((risk_dedup_df['NARA_Risk Level'] == risk).sum())
 
-    # Adds an empty string to the end of the list, which is for the Notes column.
+    # Adds None to the end of the list, which is for the Notes column.
     # There is no information for Notes if there is a risk csv.
-    risk_list.append('')
+    risk_list.append(None)
 
     return risk_list
 
 
 def get_size(acc_path):
-    """Calculate the size of the accession in GB
+    """Calculate the size of the accession in number of files and GB
 
-    For bagged accessions, this is the size of the bag data folder.
-    For unbagged accessions, this is the size of the folder within the accession folder that is not for FITS files.
+    For bagged accessions, this is for the contents of the bag data folder.
+    Otherwise, this is for the contents of the folder within the accession folder that is not for FITS files.
 
     @:parameter
     acc_path (string): the path to the accession folder
 
     @:returns
+    file_count (integer): the number of files in the accession folder
     size_gb (float): the size, in GB, of the accession folder
+    error (string; None): an error message if the size could not be calculated or None
     """
 
-    # Calculates the path with the accession content,
-    # which is either the bag's data folder or the folder within the accession folder that isn't for the FITS files.
+    # Calculates the path to the folder with the accession content,
+    # which should be in the bag's data folder or the folder within the accession folder that isn't for FITS files.
+    content_path = None
     accession_number = os.path.basename(acc_path)
     data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
     if os.path.exists(data_path):
@@ -278,22 +265,25 @@ def get_size(acc_path):
             if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
                 content_path = os.path.join(acc_path, item)
 
-    try:
-        # Adds the size of the files at each level within the folder with the accession's content.
-        size_bytes = 0
-        for root, dirs, files in os.walk(content_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                try:
-                    size_bytes += os.stat(file_path).st_size
-                except FileNotFoundError:
-                    with open('size_error.txt', 'a', newline='', encoding='utf-8') as f:
-                        f.write(file_path + '\n')
-        size_gb = round_non_zero(size_bytes / 1000000000)
-        return size_gb
-    except UnboundLocalError:
-        print('Cannot find the content path for', acc_path)
-        return 0
+    # If content_path could not be determined, returns a size of 0. Size will need to be calculated manually.
+    if not content_path:
+        return 0, 0, f'Did not calculate size for accession {accession_number} due to folder organization. '
+
+    # Adds the number and size of the files at each level within the folder with the accession's content.
+    # If the size for any files cannot be calculated (usually due to path length), returns a size of 0.
+    # Size for these will need to be calculated manually.
+    file_count = 0
+    size_bytes = 0
+    for root, dirs, files in os.walk(content_path):
+        file_count += len(files)
+        for file in files:
+            file_path = os.path.join(root, file)
+            try:
+                size_bytes += os.stat(file_path).st_size
+            except FileNotFoundError:
+                return 0, 0, f'Could not calculate size for accession {accession_number} due to path length. '
+    size_gb = round_non_zero(size_bytes / 1000000000)
+    return file_count, size_gb, None
 
 
 def round_non_zero(number):
@@ -326,22 +316,28 @@ def round_non_zero(number):
     return round_number
 
 
-def save_report(coll_df, dir_path):
-    """Save the collection data to a CSV in the directory provided as the script argument
+def save_accession_report(dir_path, row):
+    """Save a row of data to a CSV in the directory provided as the script argument
 
     @:parameter
-    coll_df (Pandas dataframe): the data for each collection
     dir_path (string): the path to the folder with data to be summarized (script argument)
-
-    @:returns
-    None
+    row (list or string): list with data for a row in the CSV or "header"
     """
 
-    # Calculates today's date, formatted YYYY-MM-DD, to include in the report name.
+    # Path to the accession report.
     today = datetime.today().strftime('%Y-%m-%d')
+    report_path = os.path.join(dir_path, f'hub-accession-summary_{today}.csv')
 
-    # Saves the dataframe to a CSV in the directory (script argument).
-    coll_df.to_csv(os.path.join(dir_path, f'hub-collection-summary_{today}.csv'), index=False)
+    # Makes the report with a header row if row is "header". Otherwise, adds the row to the report.
+    if row == 'header':
+        with open(report_path, 'w', newline='') as report:
+            report_writer = csv.writer(report)
+            report_writer.writerow(['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
+                                    'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'])
+    else:
+        with open(report_path, 'a', newline='') as report:
+            report_writer = csv.writer(report)
+            report_writer.writerow(row)
 
 
 if __name__ == '__main__':
@@ -353,10 +349,8 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Starts a dataframe for information about each accession.
-    # It will be summarized later to be by collection.
-    accession_df = pd.DataFrame(columns=['Collection', 'Status', 'Date', 'GB', 'Files',
-                                         'No_Match_Risk', 'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes'])
+    # Starts a CSV for information about each accession. It will also be summarized later by collection.
+    save_accession_report(directory, 'header')
 
     # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
     # Folders used for other purposes at the status and accession level are skipped.
@@ -366,13 +360,15 @@ if __name__ == '__main__':
                 # Do not include ua22-008 in the report, since it is not our collection.
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
-                print('\nStarting on collection', collection)
                 for accession in os.listdir(os.path.join(directory, status, collection)):
                     is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
                     if is_accession:
+                        print('Starting on accession', os.path.join(directory, status, collection, accession))
                         accession_data = get_accession_data(directory, status, collection, accession)
-                        accession_df.loc[len(accession_df)] = accession_data
+                        save_accession_report(directory, accession_data)
 
     # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
+    today = datetime.today().strftime('%Y-%m-%d')
+    accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv')).fillna('')
     collection_df = combine_collection_data(accession_df)
-    save_report(collection_df, directory)
+    collection_df.to_csv(os.path.join(directory, f'hub-collection-summary_{today}.csv'), index=False)

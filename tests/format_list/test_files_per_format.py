@@ -11,8 +11,8 @@ from os.path import join
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
-        directory = join(getcwd(), 'test_data')
-        df_all = combine_risk_csvs(directory)
+        input_directory = join(getcwd(), 'test_data')
+        df_all = combine_risk_csvs(input_directory)
         df_formats = df_cleanup(df_all)
         df_files = files_per_format(df_formats)
 
@@ -21,11 +21,11 @@ class MyTestCase(unittest.TestCase):
                     ['JPEG File Interchange Format', '1.01', 'Low Risk', 2],
                     ['JPEG File Interchange Format', '1.02', 'Low Risk', 3],
                     ['PDF/A', '1b', 'Low Risk', 1],
-                    ['Plain text', 'nan', 'Moderate Risk', 1],
+                    ['Plain text', 'no-version', 'Moderate Risk', 1],
                     ['Portable Document Format', '1.4', 'Moderate Risk', 2],
                     ['Portable Network Graphics', '1', 'High Risk', 1],
                     ['Portable Network Graphics', '1', 'Moderate Risk', 1],
-                    ['Unknown Binary', 'nan', 'No Match', 1]]
+                    ['Unknown Binary', 'no-version', 'No Match', 1]]
         self.assertEqual(result, expected)
 
 

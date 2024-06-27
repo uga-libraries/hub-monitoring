@@ -247,11 +247,18 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
     """
 
     # Reads the risk csv into a dataframe and makes a second dataframe without the older NARA information.
-    current_df = pd.read_csv(os.path.join(parent_folder, risk_csv))
-    update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message']
+    # Blanks are fill with NO VALUE to match the formatting expected by match_nara_risk,
+    # a function used by other scripts as well.
+    current_df = pd.read_csv(os.path.join(parent_folder, risk_csv), dtype=object)
+    update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message'].copy()
+    update_df.fillna('NO VALUE', inplace=True)
 
     # Adds the new NARA information to the format identifications from the risk csv.
     update_df = match_nara_risk(update_df, nara_df)
+
+    # Removes duplicate rows.
+    # These are cases where the original data accidentally has a file, with the same identification, multiple times.
+    update_df.drop_duplicates(inplace=True)
 
     # Saves the dataframe to a csv in the same folder as the original risk_csv.
     accession_number = os.path.basename(parent_folder)
@@ -264,18 +271,26 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
 
 
 def read_nara_csv(nara_csv_path):
-    """Read the NARA Preservation Action Plan spreadsheet into a dataframe and rename columns
+    """Read select columns from the NARA Preservation Action Plan spreadsheet into a dataframe and rename
 
-    Columns used in the final script output are renamed to have a "NARA" prefix
-    and underscores instead of spaces.
+    If the columns do not have the expected names, a KeyError is raised and the script will exit.
 
     :parameter
     nara_csv_path (string): path to the NARA spreadsheet, which is a script argument
 
     :return
     nara_df (pandas DataFrame): dataframe with all data from the NARA spreadsheet and select columns renamed
+    or raises a KeyError if the select columns are not present
     """
-    nara_df = pd.read_csv(nara_csv_path)
+    # Reads the NARA CSV into a dataframe, and makes another dataframe with just the 5 columns used in the report.
+    # This will raise a KeyError if the columns do not have the expected names,
+    # which happens if an old copy of the NARA CSV is used or if NARA changes how they name their columns.
+    df = pd.read_csv(nara_csv_path, low_memory=False)
+    used_columns = ['Format Name', 'File Extension(s)', 'PRONOM URL', 'NARA Risk Level',
+                    'NARA Proposed Preservation Plan']
+    nara_df = df[used_columns].copy()
+
+    # Rename the columns to start with NARA and use underscores instead of spaces.
     nara_df = nara_df.rename(columns={'Format Name': 'NARA_Format_Name',
                                       'File Extension(s)': 'NARA_File_Extensions',
                                       'PRONOM URL': 'NARA_PRONOM_URL',
@@ -325,11 +340,19 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Reads the NARA CSV into a dataframe and updates column names.
-    nara_risk_df = read_nara_csv(nara_csv)
+    # Exits the script if the NARA CSV does not have the expected column names.
+    try:
+        nara_risk_df = read_nara_csv(nara_csv)
+    except KeyError:
+        print('\nThe NARA Preservation Action Plan spreadsheet does not have at least one of the expected columns: '
+              'Format Name, File Extension(s), PRONOM URL, NARA Risk Level, and NARA Proposed Preservation Plan. '
+              'The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.')
+        sys.exit(1)
 
     # Navigates to each folder with a risk spreadsheet
     # and makes a new version of it using the most recent risk spreadsheet in each folder.
     for root, directories, files in os.walk(directory):
         if any('full_risk_data' in x for x in files):
+            print('Starting on accession', root)
             file = most_recent_risk_csv(files)
             new_risk_spreadsheet(root, file, nara_risk_df, directory)

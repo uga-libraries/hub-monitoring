@@ -1,0 +1,9 @@
+Format Name,File Extension(s),PRONOM URL,Risk Level,Proposed Preservation Plan
+Hypertext Markup Language 5.2,htm|html,https://www.nationalarchives.gov.uk/pronom/fmt/96,Low Risk,Retain
+Hypertext Markup Language unspecified version,htm|html,https://www.nationalarchives.gov.uk/pronom/fmt/96,Low Risk,Retain
+Portable Document Format (PDF) Portfolio 2.0,pdf,,Moderate Risk,Retain but possibly extract files from the container
+Portable Document Format (PDF) version 1.0,pdf,https://www.nationalarchives.gov.uk/pronom/fmt/14,Moderate Risk,Retain
+Portable Document Format/Archiving (PDF/A-1a) accessible,pdf,https://www.nationalarchives.gov.uk/pronom/fmt/95,Low Risk,Retain
+Rich Text Format 1.5,rtf,https://www.nationalarchives.gov.uk/pronom/fmt/50,Moderate Risk,Transform to PDF
+Rich Text Format 1.6,rtf,https://www.nationalarchives.gov.uk/pronom/fmt/50,Moderate Risk,Transform to PDF
+WordPerfect Template,wpt,,Moderate Risk,Transform to PDF if possible

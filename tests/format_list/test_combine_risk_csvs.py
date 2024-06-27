@@ -11,8 +11,8 @@ from os.path import join
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
-        directory = join(getcwd(), 'test_data')
-        df_all = combine_risk_csvs(directory)
+        input_directory = join(getcwd(), 'test_data')
+        df_all = combine_risk_csvs(input_directory)
 
         result = df_to_list(df_all)
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 
@@ -49,7 +49,7 @@ class MyTestCase(unittest.TestCase):
                      '0c4ba891fbfeee2141fa5ccbf54dd644', 'nan', True, True, 'nan', 'JPEG File Interchange Format 1.02',
                      'jpg|jpeg', 'pronom/fmt/44', 'Low Risk', 'Retain', 'PRONOM and Version', 'nan', 'nan', 'nan',
                      'Not for TA', 'Not for Other'],
-                    ['C:\\coll1\\acc1b\\Unknown.ext', 'Unknown Binary', 'nan', 'nan', 'Droid version 6.4', False,
+                    ['C:\\coll1\\acc1b\\Unknown.ext', 'Unknown Binary', 'no-version', 'nan', 'Droid version 6.4', False,
                      '6/5/2022', 195.06, '0x4ba891fbxxxx2001fa0ccbf54xx644', 'nan', 'nan', 'nan', 'nan', 'nan',
                      'nan', 'nan', 'nan', 'nan', 'nan', 'nan', 'nan', 'nan', 'nan', 'Unknown'],
                     ['C:\\coll2\\acc2a\\Documents\\7304.jpg', 'JPEG File Interchange Format', '1.01', 'pronom/fmt/43',
@@ -64,7 +64,7 @@ class MyTestCase(unittest.TestCase):
                      'Droid version 6.4', False, '4/12/2021', 205688000.0, 'e3e67ae007d38d7d3a48cdab087bae31', 'nan',
                      'nan', 'nan', 'nan', 'Portable Network Graphics 1.0', 'png', 'pronom/fmt/11', 'High Risk',
                      'Retain', 'PRONOM', False, False, False, 'nan', 'nan'],
-                    ['C:\\coll2\\acc2a\\Documents\\201.txt', 'Plain text', 'nan', 'pronom/x-fmt/111',
+                    ['C:\\coll2\\acc2a\\Documents\\201.txt', 'Plain text', 'no-version', 'pronom/x-fmt/111',
                      'Droid version 6.4', False, '11/4/2013', 5113000.0, '1a4c1cbf30ebbe6bbd74ad346d8c3d69', 'nan',
                      True, True, 'nan', 'Plain Text', 'Plain_Text|txt|text|asc|rte', 'pronom/x-fmt/111',
                      'Moderate Risk', 'Retain', 'PRONOM', False, False, False, 'nan', 'nan'],
