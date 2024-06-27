@@ -256,6 +256,10 @@ def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
     # Adds the new NARA information to the format identifications from the risk csv.
     update_df = match_nara_risk(update_df, nara_df)
 
+    # Removes duplicate rows.
+    # These are cases where the original data accidentally has a file, with the same identification, multiple times.
+    update_df.drop_duplicates(inplace=True)
+
     # Saves the dataframe to a csv in the same folder as the original risk_csv.
     accession_number = os.path.basename(parent_folder)
     today = datetime.today().strftime('%Y-%m-%d')
