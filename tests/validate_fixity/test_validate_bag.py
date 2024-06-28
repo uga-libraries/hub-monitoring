@@ -2,7 +2,7 @@
 Tests for the function validate_bag(), which validates an accession's bag, updates the preservation log,
 and updates the script report if it is not valid.
 
-The test data is not organized into the usual status folders, so status will be "test".
+The test data is not organized into the usual status folders, so status will be "test_data".
 """
 import unittest
 from validate_fixity import validate_bag
