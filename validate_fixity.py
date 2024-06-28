@@ -187,7 +187,7 @@ def update_report(acc_dir, error_msg, report_dir):
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as open_report:
             report_writer = csv.writer(open_report)
-            report_writer.writerow(['Accession', 'Validation_Error'])
+            report_writer.writerow(['Status', 'Collection', 'Accession', 'Validation_Error'])
 
     # Adds the error text to the report.
     with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
