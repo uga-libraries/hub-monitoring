@@ -1,5 +1,7 @@
 """
 Tests for the function update_report(), which adds validation information to the script report.
+
+To simplify testing, the acc_dir paths do not exist. The test just needs something in path form to parse the data.
 """
 import unittest
 from validate_fixity import update_report
@@ -20,57 +22,57 @@ class MyTestCase(unittest.TestCase):
     def test_bag_not_valid(self):
         """Test for adding validation information for bags that are not valid to an existing report"""
         # First call of the function to add a bag that is not valid.
-        folder = '2023_test003_001_er'
-        error = 'Payload-Oxum validation failed.'
-        directory = getcwd()
-        update_report(folder, error, directory)
+        bag_dir = join(getcwd(), 'backlogged', 'test_003', '2023_test003_001_er', '2023_test003_001_er_bag')
+        error_msg = 'Payload-Oxum validation failed.'
+        report_dir = getcwd()
+        update_report(bag_dir, error_msg, report_dir)
 
         # Second call of the function to add another bag that is not valid.
-        folder = '2023_test003_002_er'
-        error = 'Bag validation failed.'
-        directory = getcwd()
-        update_report(folder, error, directory)
+        bag_dir = join(getcwd(), 'backlogged', 'test_003', '2023_test003_002_er', '2023_test003_002_er_bag')
+        error_msg = 'Bag validation failed.'
+        report_dir = getcwd()
+        update_report(bag_dir, error_msg, report_dir)
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(getcwd(), f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test003_001_er', 'Payload-Oxum validation failed.'],
-                    ['2023_test003_002_er', 'Bag validation failed.']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['backlogged', 'test_003', '2023_test003_001_er', 'Payload-Oxum validation failed.'],
+                    ['backlogged', 'test_003', '2023_test003_002_er', 'Bag validation failed.']]
         self.assertEqual(result, expected, 'Problem with test for bag not valid')
 
     def test_one_row(self):
         """Test for when the report is made for the first time"""
         # Call of the function to add a bag that is not valid.
-        folder = '2023_test003_001_er'
-        error = 'Bag validation failed.'
-        directory = getcwd()
-        update_report(folder, error, directory)
+        bag_dir = join(getcwd(), 'backlogged', 'test_003', '2023_test003_001_er', '2023_test003_001_er_bag')
+        error_msg = 'Bag validation failed.'
+        report_dir = getcwd()
+        update_report(bag_dir, error_msg, report_dir)
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(getcwd(), f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test003_001_er', 'Bag validation failed.']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['backlogged', 'test_003', '2023_test003_001_er', 'Bag validation failed.']]
         self.assertEqual(result, expected, 'Problem with test for one row')
 
     def test_manifest_not_valid(self):
         """Test for adding validation information for manifests that are not valid to an existing report"""
         # First call of the function to add a manifest that is not valid.
-        root = join(getcwd(), '2023_test003_003_er')
-        errors_list = [['error']]
-        directory = getcwd()
-        update_report(basename(root), f'{len(errors_list)} manifest errors', directory)
+        acc_dir = join(getcwd(), 'closed', 'test_004', '2023_test004_003_er')
+        error_msgs_list = [['error_msg']]
+        report_dir = getcwd()
+        update_report(acc_dir, f'{len(error_msgs_list)} manifest error_msgs', report_dir)
 
         # Second call of the function to add a manifest that is not valid.
-        root = join(getcwd(), '2023_test003_004_er')
-        errors_list = [['error'], ['error']]
-        directory = getcwd()
-        update_report(basename(root), f'{len(errors_list)} manifest errors', directory)
+        acc_dir = join(getcwd(), 'closed', 'test_004', '2023_test004_004_er')
+        error_msgs_list = [['error_msg'], ['error_msg']]
+        report_dir = getcwd()
+        update_report(acc_dir, f'{len(error_msgs_list)} manifest error_msgs', report_dir)
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(getcwd(), f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test003_003_er', '1 manifest errors'],
-                    ['2023_test003_004_er', '2 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['closed', 'test_004', '2023_test004_003_er', '1 manifest error_msgs'],
+                    ['closed', 'test_004', '2023_test004_004_er', '2 manifest error_msgs']]
         self.assertEqual(result, expected, 'Problem with test for manifest not valid')
 
 
