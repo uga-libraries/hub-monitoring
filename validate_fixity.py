@@ -168,13 +168,13 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         log_writer.writerow(log_row)
 
 
-def update_report(acc, error_msg, report_dir):
+def update_report(acc_dir, error_msg, report_dir):
     """Add a line of text to the summary report
 
     If it doesn't already exist, it makes the report with the header before adding the text.
 
     :parameter
-    acc (string): the folder name of the accession with the error
+    acc_dir (string): the path to an accession folder, which may be a bag
     error_msg (string): validation error
     report_dir (string): directory where the report is saved (script argument)
 
@@ -182,18 +182,30 @@ def update_report(acc, error_msg, report_dir):
     None
     """
 
-    report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+    # Parse status (backlogged or closed), collection, and accession from acc_dir.
+    # If it is a bag, the acc_dir is root/status/collection/accession/accession_bag
+    # and if it is a manifest, the acc_dir is root/status/collection/accession
+    acc_dir_list = acc_dir.split('\\')
+    if acc_dir.endswith('_bag'):
+        status = acc_dir_list[-4]
+        collection = acc_dir_list[-3]
+        accession = acc_dir_list[-2]
+    else:
+        status = acc_dir_list[-3]
+        collection = acc_dir_list[-2]
+        accession = acc_dir_list[-1]
 
     # If the report doesn't already exist, starts a report with a header.
+    report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as open_report:
             report_writer = csv.writer(open_report)
-            report_writer.writerow(['Accession', 'Validation_Error'])
+            report_writer.writerow(['Status', 'Collection', 'Accession', 'Validation_Error'])
 
     # Adds the error text to the report.
     with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
         report_writer = csv.writer(open_report)
-        report_writer.writerow([acc, error_msg])
+        report_writer.writerow([status, collection, accession, error_msg])
 
 
 def validate_bag(bag_dir, report_dir):
@@ -208,9 +220,6 @@ def validate_bag(bag_dir, report_dir):
     Updates the preservation_log.txt, and if it is not valid also updates the script report
     """
 
-    # The accession number is the name of the bag's parent folder.
-    accession_number = os.path.basename(os.path.dirname(bag_dir))
-
     # Tries to make a bag object, so that bagit library can validate it.
     # There are cases where filenames prevent it from making a bag,
     # in which case it updates the preservation log and script report
@@ -219,7 +228,7 @@ def validate_bag(bag_dir, report_dir):
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
-        update_report(accession_number, f'Could not make bag for validation: {str(errors)}', report_dir)
+        update_report(bag_dir, f'Could not make bag for validation: {str(errors)}', report_dir)
         validate_bag_manifest(bag_dir, report_dir)
         return
 
@@ -230,7 +239,7 @@ def validate_bag(bag_dir, report_dir):
         update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
     except bagit.BagValidationError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
-        update_report(accession_number, str(errors), report_dir)
+        update_report(bag_dir, str(errors), report_dir)
 
 
 def validate_bag_manifest(bag_dir, report_dir):
@@ -287,10 +296,10 @@ def validate_bag_manifest(bag_dir, report_dir):
         error_list.extend(df_right.values.tolist())
 
         # Adds a summary of the errors to the script report (fixity_validation.csv).
-        accession_number = os.path.basename(os.path.dirname(bag_dir))
-        update_report(accession_number, f'{len(error_list)} bag manifest errors', report_dir)
+        update_report(bag_dir, f'{len(error_list)} bag manifest errors', report_dir)
 
         # Makes a log with every file that does not match (acc_manifest_validation_errors.csv).
+        accession_number = os.path.basename(os.path.dirname(bag_dir))
         manifest_validation_log(report_dir, accession_number, error_list)
 
 
@@ -323,14 +332,10 @@ def validate_manifest(acc_dir, manifest, report_dir):
     for root, dirs, files in os.walk(acc_files):
         for file in files:
             filepath = os.path.join(root, file)
-            #TODO: temporary to get through testing
-            try:
-                with open(filepath, 'rb') as f:
-                    data = f.read()
-                    md5_generated = hashlib.md5(data).hexdigest()
-                files_list.append([filepath, md5_generated.upper()])
-            except FileNotFoundError:
-                print('Cannot get md5 for file in ', acc_dir)
+            with open(filepath, 'rb') as f:
+                data = f.read()
+                md5_generated = hashlib.md5(data).hexdigest()
+            files_list.append([filepath, md5_generated.upper()])
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the manifest into a dataframe.
@@ -372,8 +377,8 @@ def validate_manifest(acc_dir, manifest, report_dir):
     # If there are any validation errors, adds a summary of the errors to the script report (fixity_validation.csv)
     # and makes a log with every file that does not match (acc_manifest_validation_errors.csv)
     if not valid:
+        update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
         accession_number = os.path.basename(acc_dir)
-        update_report(accession_number, f'{len(error_list)} manifest errors', report_dir)
         manifest_validation_log(report_dir, accession_number, error_list)
 
 

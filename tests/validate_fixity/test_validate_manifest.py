@@ -1,6 +1,8 @@
 """
 Tests for the function validate_manifest(), which validates an accession using a manifest, updates the preservation log,
 and if there are errors updates the script report and makes a manifest log.
+
+The test data is not organized into the usual status folders, so status will be "test_data".
 """
 import unittest
 from validate_fixity import validate_manifest
@@ -41,13 +43,13 @@ class MyTestCase(unittest.TestCase):
     def test_not_valid_deletion(self):
         """Test for when the accession does not match the manifest due to file deletions."""
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_001_er')
+        acc_dir = join('test_data', 'test_005_manifest_not_valid', '2023_test005_001_er')
         file = 'initialmanifest_20230501.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T5', '2023.T5.01.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.01.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
@@ -60,8 +62,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_001_er', '2 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_001_er', '2 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -76,13 +78,13 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession does not match the manifest due to file deletions.
         All copies of a duplicate file have been deleted."""
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_003_er')
+        acc_dir = join('test_data', 'test_005_manifest_not_valid', '2023_test005_003_er')
         file = 'initialmanifest_20230511.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T5', '2023.T5.03.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.03.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
@@ -95,8 +97,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_003_er', '3 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_003_er', '3 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del all, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -113,13 +115,13 @@ class MyTestCase(unittest.TestCase):
         Change is detected based on the number of files, not fixity.
         """
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_005_er')
+        acc_dir = join('test_data', 'test_005_manifest_not_valid', '2023_test005_005_er')
         file = 'initialmanifest_20231031.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T5', '2023.T5.05.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.05.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
@@ -132,8 +134,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_005_er', '1 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_005_er', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del some, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -146,13 +148,13 @@ class MyTestCase(unittest.TestCase):
     def test_not_valid_edit(self):
         """Test for when the accession does not match the manifest due to files being edited."""
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_002_er')
+        acc_dir = join('test_data', 'test_005_manifest_not_valid', '2023_test005_002_er')
         file = 'initialmanifest_20230601.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T5', '2023.T5.02.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.02.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
@@ -165,8 +167,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_002_er', '4 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_002_er', '4 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -174,21 +176,21 @@ class MyTestCase(unittest.TestCase):
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Z:\\2023_test005_002_er\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
                     ['Z:\\2023_test005_002_er\\CD_1\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
-                    [join(root, '2023_test005_002_er', 'CD_1', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E', 'Current'],
-                    [join(root, '2023_test005_002_er', 'CD_2', 'File02.txt'), '8078CD550FCF6755750A59378AFC7D30', 'Current']]
+                    [join(acc_dir, '2023_test005_002_er', 'CD_1', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E', 'Current'],
+                    [join(acc_dir, '2023_test005_002_er', 'CD_2', 'File02.txt'), '8078CD550FCF6755750A59378AFC7D30', 'Current']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit, manifest_validation_errors.csv')
 
     def test_not_valid_edit_duplicates(self):
         """Test for when the accession does not match the manifest due to files being edited.
         The edited file was one of three copies. The other two copies were not edited."""
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_004_er')
+        acc_dir = join('test_data', 'test_005_manifest_not_valid', '2023_test005_004_er')
         file = 'initialmanifest_20230521.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
@@ -201,26 +203,26 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_004_er', '1 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_004_er', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit dup, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
         result = csv_to_list(join(directory, '2023_test005_004_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
-                    [join(root, '2023_test005_004_er', 'CD_2', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E', 'Current']]
+                    [join(acc_dir, '2023_test005_004_er', 'CD_2', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E', 'Current']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit dup, manifest_validation_errors.csv')
 
     def test_valid(self):
         """Test for when the accession matches the manifest."""
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_004_manifest_valid', '2023_test004_001_er')
+        acc_dir = join('test_data', 'test_004_manifest_valid', '2023_test004_001_er')
         file = 'initialmanifest_20231003.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T4', '2023.T4.01.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied, no errors.', 'JD'],
                     ['T4', '2023.T4.01.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied, no errors.', 'JD'],
@@ -242,13 +244,13 @@ class MyTestCase(unittest.TestCase):
     def test_valid_duplicate(self):
         """Test for when the accession matches the manifest. It includes duplicate files."""
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_004_manifest_valid', '2023_test004_002_er')
+        acc_dir = join('test_data', 'test_004_manifest_valid', '2023_test004_002_er')
         file = 'initialmanifest_20231124.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied, no errors.', 'JD'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied, no errors.', 'JD'],
@@ -270,13 +272,13 @@ class MyTestCase(unittest.TestCase):
     def test_valid_FITS(self):
         """Test for when the accession matches the manifest. It also has a FITS folder."""
         # Makes the variables for function input and runs the function.
-        root = join('test_data', 'test_004_manifest_valid', '2023_test004_003_er')
+        acc_dir = join('test_data', 'test_004_manifest_valid', '2023_test004_003_er')
         file = 'initialmanifest_20240426.csv'
         directory = 'test_data'
-        validate_manifest(root, file, directory)
+        validate_manifest(acc_dir, file, directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T4', '2023.T4.03.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied, no errors.', 'JD'],
                     ['T4', '2023.T4.03.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied, no errors.', 'JD'],

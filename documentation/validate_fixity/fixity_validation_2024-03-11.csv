@@ -1,6 +1,6 @@
-Accession,Validation_Error
-2023_test002_001_er_bag,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes
-2023_test002_002_er_bag,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes
-2023_test002_004_er_bag,"Bag validation failed: data\CD_2\File2.txt md5 validation failed: expected=""00a0aaaa0aa0a00ab00ad0a000aa00a0"" found=""85c8fbcb2ff1d73cb94ed9c355eb20d5"""
-2023_test005_001_er,1 manifest errors
-2023_test005_003_er,2 manifest errors
+Status,Collection,Accession,Validation_Error
+backlogged,test002,2023_test002_001_er_bag,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes
+backlogged,test002,2023_test002_002_er_bag,Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes
+backlogged,test002,2023_test002_004_er_bag,"Bag validation failed: data\CD_2\File2.txt md5 validation failed: expected=""00a0aaaa0aa0a00ab00ad0a000aa00a0"" found=""85c8fbcb2ff1d73cb94ed9c355eb20d5"""
+closed,test005,2023_test005_001_er,1 manifest errors
+closed,test005,2023_test005_003_er,2 manifest errors
