@@ -332,14 +332,10 @@ def validate_manifest(acc_dir, manifest, report_dir):
     for root, dirs, files in os.walk(acc_files):
         for file in files:
             filepath = os.path.join(root, file)
-            #TODO: temporary to get through testing
-            try:
-                with open(filepath, 'rb') as f:
-                    data = f.read()
-                    md5_generated = hashlib.md5(data).hexdigest()
-                files_list.append([filepath, md5_generated.upper()])
-            except FileNotFoundError:
-                print('Cannot get md5 for file in ', acc_dir)
+            with open(filepath, 'rb') as f:
+                data = f.read()
+                md5_generated = hashlib.md5(data).hexdigest()
+            files_list.append([filepath, md5_generated.upper()])
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the manifest into a dataframe.
