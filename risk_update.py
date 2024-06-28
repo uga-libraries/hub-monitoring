@@ -228,48 +228,6 @@ def most_recent_risk_csv(file_list):
     return recent_file
 
 
-def new_risk_spreadsheet(parent_folder, risk_csv, nara_df, log_dir):
-    """Make a new risk spreadsheet from the most current risk spreadsheet and NARA risk data
-
-    The new spreadsheet is named accession_full_risk_data_date.csv,
-    and is saved in the same folder as the original risk spreadsheet.
-
-    A log with every accession that is updated is also updated.
-
-    :parameter
-    parent_folder (string): path to the folder which contains the risk spreadsheet to be updated
-    risk_csv (string): name of the risk spreadsheet to be updated
-    nara_df (Pandas DataFrame): dataframe with all columns from NARA's Preservation Action Plan spreadsheet
-    log_dir (string): the path to the directory for saving the log (script argument directory)
-
-    :returns
-    None
-    """
-
-    # Reads the risk csv into a dataframe and makes a second dataframe without the older NARA information.
-    # Blanks are fill with NO VALUE to match the formatting expected by match_nara_risk,
-    # a function used by other scripts as well.
-    current_df = pd.read_csv(os.path.join(parent_folder, risk_csv), dtype=object)
-    update_df = current_df.loc[:, 'FITS_File_Path':'FITS_Status_Message'].copy()
-    update_df.fillna('NO VALUE', inplace=True)
-
-    # Adds the new NARA information to the format identifications from the risk csv.
-    update_df = match_nara_risk(update_df, nara_df)
-
-    # Removes duplicate rows.
-    # These are cases where the original data accidentally has a file, with the same identification, multiple times.
-    update_df.drop_duplicates(inplace=True)
-
-    # Saves the dataframe to a csv in the same folder as the original risk_csv.
-    accession_number = os.path.basename(parent_folder)
-    today = datetime.today().strftime('%Y-%m-%d')
-    update_csv_path = os.path.join(parent_folder, f'{accession_number}_full_risk_data_{today}.csv')
-    update_df.to_csv(update_csv_path, index=False)
-
-    # Adds the accession to the log of updated risk spreadsheets.
-    update_log(parent_folder, log_dir)
-
-
 def read_nara_csv(nara_csv_path):
     """Read select columns from the NARA Preservation Action Plan spreadsheet into a dataframe and rename
 
@@ -297,6 +255,54 @@ def read_nara_csv(nara_csv_path):
                                       'NARA Risk Level': 'NARA_Risk_Level',
                                       'NARA Proposed Preservation Plan': 'NARA_Proposed_Preservation_Plan'})
     return nara_df
+
+
+def read_risk_csv(risk_csv_path):
+    """Read the FITS format identification columns from the risk CSV into a dataframe
+
+    :parameter
+    risk_csv_path (string): path to the most recent risk csv in the accession folder
+
+    :return
+    risk_df (pandas Dataframe): dataframe with all FITS data from the risk CSV
+    """
+    # Reads the risk csv into a dataframe.
+    # Specifies dtype=object so blank columns are not interpreted as floats, which causes type errors during merges.
+    df = pd.read_csv(risk_csv_path, dtype=object)
+
+    # Makes a second dataframe without the older NARA information.
+    risk_df = df.loc[:, 'FITS_File_Path':'FITS_Status_Message'].copy()
+
+    # Blanks are fill with NO VALUE to match the formatting expected by match_nara_risk,
+    # a function used by other scripts as well.
+    risk_df.fillna('NO VALUE', inplace=True)
+
+    return risk_df
+
+
+def save_risk_csv(accession_path, risk_df):
+    """Make a new risk spreadsheet from the combined most current risk spreadsheet and NARA risk data
+
+    The new spreadsheet is named accession_full_risk_data_date.csv,
+    and is saved in the same folder as the original risk spreadsheet.
+
+    :parameter
+    accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
+    risk_df (Pandas DataFrame): dataframe with the FITS data and NARA risk data
+
+    :returns
+    None
+    """
+
+    # Removes duplicate rows.
+    # These are cases where the original data accidentally has a file, with the same identification, multiple times.
+    risk_df.drop_duplicates(inplace=True)
+
+    # Saves the dataframe to a csv in the same folder as the original risk_csv.
+    accession_number = os.path.basename(accession_path)
+    today = datetime.today().strftime('%Y-%m-%d')
+    update_csv_path = os.path.join(accession_path, f'{accession_number}_full_risk_data_{today}.csv')
+    risk_df.to_csv(update_csv_path, index=False)
 
 
 def update_log(accession_path, log_dir):
@@ -349,10 +355,14 @@ if __name__ == '__main__':
               'The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.')
         sys.exit(1)
 
-    # Navigates to each folder with a risk spreadsheet
-    # and makes a new version of it using the most recent risk spreadsheet in each folder.
+    # Navigates to each folder with a risk spreadsheet and makes a new version of the risk spreadsheet
+    # using the most recent risk spreadsheet in each folder and the current NARA risk CSV.
+    # Also adds the accession to a log.
     for root, directories, files in os.walk(directory):
         if any('full_risk_data' in x for x in files):
             print('Starting on accession', root)
             file = most_recent_risk_csv(files)
-            new_risk_spreadsheet(root, file, nara_risk_df, directory)
+            new_risk_df = read_risk_csv(os.path.join(root, file))
+            new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
+            save_risk_csv(root, new_risk_df)
+            update_log(root, directory)
