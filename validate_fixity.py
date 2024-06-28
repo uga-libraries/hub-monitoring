@@ -281,8 +281,11 @@ def validate_bag_manifest(bag_dir, report_dir):
     # Updates the preservation log.
     update_preservation_log(os.path.dirname(bag_dir), valid, 'bag manifest')
 
-    # If there were errors, updates the script report and makes a manifest log.
-    if not valid:
+    # If there were no errors, updates the script report to show the earlier bag error is resolved.
+    # If there were errors, updates the script report with the error count and makes a manifest log.
+    if valid:
+        update_report(bag_dir, 'Validated with bag manifest instead of bagit. The bag manifest is valid.', report_dir)
+    else:
 
         # Makes a list of each path, MD5, and source of the MD5 (manifest or file) that did not match.
         error_list = []

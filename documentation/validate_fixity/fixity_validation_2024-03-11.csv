@@ -4,3 +4,7 @@ backlogged,test002,2023_test002_002_er_bag,Payload-Oxum validation failed. Expec
 backlogged,test002,2023_test002_004_er_bag,"Bag validation failed: data\CD_2\File2.txt md5 validation failed: expected=""00a0aaaa0aa0a00ab00ad0a000aa00a0"" found=""85c8fbcb2ff1d73cb94ed9c355eb20d5"""
 closed,test005,2023_test005_001_er,1 manifest errors
 closed,test005,2023_test005_003_er,2 manifest errors
+closed,test123,test123_001_er,Could not make bag for validation: not safe
+closed,test123,test123_001_er,Validated with bag manifest instead of bagit. The bag manifest is valid.
+closed,test123,test123_002_er,Could not make bag for validation: not safe
+closed,test123,test123_002_er,7 bag manifest errors
