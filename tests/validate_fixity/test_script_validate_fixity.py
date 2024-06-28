@@ -69,11 +69,11 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the contents of the validation report are correct.
         result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test002_004_er', 'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
-                                            'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" '
-                                            'found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
-                    ['2023_test005_001_er', '2 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_script_mix', '2023_test002_004_er',
+                     'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
+                     'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
+                    ['test_data', 'test_script_mix', '2023_test005_001_er', '2 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
