@@ -182,6 +182,12 @@ def update_report(acc_dir, error_msg, report_dir):
     None
     """
 
+    # Parse status (backlogged or closed), collection, and accession from acc_dir.
+    acc_dir_list = acc_dir.split('\\')
+    status = acc_dir_list[:-4]
+    collection = acc_dir_list[:-3]
+    accession = acc_dir_list[:-2]
+
     # If the report doesn't already exist, starts a report with a header.
     report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
     if not os.path.exists(report_path):
