@@ -5,6 +5,8 @@ and if there are errors updates the script report and makes a manifest log.
 
 These tests use bags that would not cause a bagit error, since that is not reliably replicable.
 This function does not depend on the error, so it can use a normal bag.
+
+The test data is not organized into the usual status folders, so status will be "test_data".
 """
 import unittest
 from validate_fixity import validate_bag_manifest
@@ -55,8 +57,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test002_001_er', '1 bag manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_002_bags_invalid', '2023_test002_001_er', '1 bag manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
