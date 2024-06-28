@@ -381,8 +381,8 @@ def validate_manifest(acc_dir, manifest, report_dir):
     # If there are any validation errors, adds a summary of the errors to the script report (fixity_validation.csv)
     # and makes a log with every file that does not match (acc_manifest_validation_errors.csv)
     if not valid:
+        update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
         accession_number = os.path.basename(acc_dir)
-        update_report(accession_number, f'{len(error_list)} manifest errors', report_dir)
         manifest_validation_log(report_dir, accession_number, error_list)
 
 
