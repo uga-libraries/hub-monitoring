@@ -168,13 +168,13 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         log_writer.writerow(log_row)
 
 
-def update_report(acc, error_msg, report_dir):
+def update_report(acc_dir, error_msg, report_dir):
     """Add a line of text to the summary report
 
     If it doesn't already exist, it makes the report with the header before adding the text.
 
     :parameter
-    acc (string): the folder name of the accession with the error
+    acc_dir (string): the path to an accession folder, which may be a bag
     error_msg (string): validation error
     report_dir (string): directory where the report is saved (script argument)
 
@@ -182,9 +182,8 @@ def update_report(acc, error_msg, report_dir):
     None
     """
 
-    report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-
     # If the report doesn't already exist, starts a report with a header.
+    report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as open_report:
             report_writer = csv.writer(open_report)
@@ -193,7 +192,7 @@ def update_report(acc, error_msg, report_dir):
     # Adds the error text to the report.
     with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
         report_writer = csv.writer(open_report)
-        report_writer.writerow([acc, error_msg])
+        report_writer.writerow([acc_dir, error_msg])
 
 
 def validate_bag(bag_dir, report_dir):
