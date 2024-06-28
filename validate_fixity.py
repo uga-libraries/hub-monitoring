@@ -296,10 +296,10 @@ def validate_bag_manifest(bag_dir, report_dir):
         error_list.extend(df_right.values.tolist())
 
         # Adds a summary of the errors to the script report (fixity_validation.csv).
-        accession_number = os.path.basename(os.path.dirname(bag_dir))
-        update_report(accession_number, f'{len(error_list)} bag manifest errors', report_dir)
+        update_report(bag_dir, f'{len(error_list)} bag manifest errors', report_dir)
 
         # Makes a log with every file that does not match (acc_manifest_validation_errors.csv).
+        accession_number = os.path.basename(os.path.dirname(bag_dir))
         manifest_validation_log(report_dir, accession_number, error_list)
 
 
