@@ -198,7 +198,7 @@ def update_report(acc_dir, error_msg, report_dir):
     # Adds the error text to the report.
     with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
         report_writer = csv.writer(open_report)
-        report_writer.writerow([acc_dir, error_msg])
+        report_writer.writerow([status, collection, accession, error_msg])
 
 
 def validate_bag(bag_dir, report_dir):
