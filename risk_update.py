@@ -68,7 +68,7 @@ def match_nara_risk(risk_df, nara_df):
     Adopted from https://github.com/uga-libraries/accessioning-scripts/blob/main/format_analysis_functions.py
 
     @:parameter
-    risk_df (Pandas dataframe): a dataframe with FITS columns from a risk spreadsheet
+    risk_df (Pandas dataframe): a dataframe with FITS format information columns from a risk spreadsheet
     nara_df (Pandas dataframe): a dataframe with all columns from the NARA Preservation Action Plan spreadsheet
 
     @:returns
@@ -264,7 +264,7 @@ def read_risk_csv(risk_csv_path):
     risk_csv_path (string): path to the most recent risk csv in the accession folder
 
     @:returns
-    risk_df (pandas Dataframe): dataframe with all FITS data from the risk CSV
+    risk_df (pandas Dataframe): dataframe with all FITS formation information columns from the risk CSV
     """
     # Reads the risk csv into a dataframe.
     # Specifies dtype=object so blank columns are not interpreted as floats, which causes type errors during merges.
@@ -311,7 +311,7 @@ def update_log(accession_path, log_dir):
     The log includes the collection and accession number, which are both part of the accession path.
 
     @:parameter
-    accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
+    accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s)
     log_dir (string): the path to the directory for saving the log (script argument input_directory)
 
     @:returns
