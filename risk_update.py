@@ -196,12 +196,12 @@ def most_recent_risk_csv(file_list):
     file_list (list): list of all file names in a folder with at least one risk spreadsheet
 
     :returns
-    recent_file (string): the name of the preservation spreadsheet that is the most recent
+    most_recent_file (string): the name of the preservation spreadsheet that is the most recent
     """
 
     # Variables for tracking which file is the most recent.
     most_recent_file = None
-    recent_date = None
+    most_recent_date = None
 
     # Tests each file in the file list looking for the most recent one, based on the date in the file name.
     for file_name in file_list:
@@ -219,11 +219,11 @@ def most_recent_risk_csv(file_list):
         except AttributeError:
             file_date = date(1900, 1, 1)
 
-        # If this is the first file evaluated, or this file's date is more recent than the current recent_date,
-        # updates recent_file and recent_date with the current file and its date.
-        if recent_date is None or recent_date < file_date:
+        # If this is the first file evaluated, or this file's date is more recent than the current most_recent_date,
+        # updates recent_file and most_recent_date with the current file and its date.
+        if most_recent_date is None or most_recent_date < file_date:
             most_recent_file = file_name
-            recent_date = file_date
+            most_recent_date = file_date
 
     return most_recent_file
 
