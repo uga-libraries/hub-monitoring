@@ -200,7 +200,7 @@ def most_recent_risk_csv(file_list):
     """
 
     # Variables for tracking which file is the most recent.
-    recent_file = None
+    most_recent_file = None
     recent_date = None
 
     # Tests each file in the file list looking for the most recent one, based on the date in the file name.
@@ -222,10 +222,10 @@ def most_recent_risk_csv(file_list):
         # If this is the first file evaluated, or this file's date is more recent than the current recent_date,
         # updates recent_file and recent_date with the current file and its date.
         if recent_date is None or recent_date < file_date:
-            recent_file = file_name
+            most_recent_file = file_name
             recent_date = file_date
 
-    return recent_file
+    return most_recent_file
 
 
 def read_nara_csv(nara_csv_path):
