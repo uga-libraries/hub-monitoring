@@ -1,12 +1,12 @@
 """Makes an updated risk spreadsheet for every accession in a directory
 
 Parameters:
-    directory (required): the directory that contains the risk spreadsheets
+    input_directory (required): the directory that contains the risk spreadsheets
     nara_csv (required): the path to the most recent NARA Preservation Action Plan spreadsheet
 
 Returns:
     New risk spreadsheet is added to each accession folder
-    Log of all accessions (with collection and accession number) that were updated is made in the directory
+    Log of all accessions (with collection and accession number) that were updated is made in the input_directory
 """
 from datetime import date, datetime
 import os
@@ -16,7 +16,7 @@ import sys
 
 
 def check_arguments(argument_list):
-    """Check the required arguments, directory and nara_csv, are present and correct
+    """Check the required arguments, input_directory and nara_csv, are present and correct
 
     Adapted from https://github.com/uga-libraries/format-report/blob/main/merge_format_reports.py
 
@@ -34,14 +34,14 @@ def check_arguments(argument_list):
     nara_path = None
     errors = []
 
-    # Verifies that the first required argument (directory) is present,
+    # Verifies that the first required argument (input_directory) is present,
     # and if it is present that it is a valid path.
     if len(argument_list) > 1:
         dir_path = argument_list[1]
         if not os.path.exists(dir_path):
-            errors.append(f"Directory '{dir_path}' does not exist")
+            errors.append(f"Input directory '{dir_path}' does not exist")
     else:
-        errors.append('Required argument directory is missing')
+        errors.append('Required argument input_directory is missing')
 
     # Verifies that the second required argument (nara_csv) is present,
     # and if it is present that it is a valid path.
@@ -54,7 +54,7 @@ def check_arguments(argument_list):
 
     # Verifies that there are not too many arguments, which could mean the input was not in the correct order.
     if len(argument_list) > 3:
-        errors.append('Too many arguments. Should just have two, directory and nara_csv')
+        errors.append('Too many arguments. Should just have two, input_directory and nara_csv')
 
     return dir_path, nara_path, errors
 
@@ -312,7 +312,7 @@ def update_log(accession_path, log_dir):
 
     :parameter
     accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
-    log_dir (string): the path to the directory for saving the log (script argument directory)
+    log_dir (string): the path to the directory for saving the log (script argument input_directory)
 
     :return
     None. Makes or updates the log.
@@ -337,9 +337,9 @@ def update_log(accession_path, log_dir):
 
 if __name__ == '__main__':
 
-    # Gets the paths to the directory and NARA Preservation Action Plan spreadsheet from the script arguments.
+    # Gets the paths to the input directory and NARA Preservation Action Plan spreadsheet from the script arguments.
     # Exits the script if there are errors.
-    directory, nara_csv, errors_list = check_arguments(sys.argv)
+    input_directory, nara_csv, errors_list = check_arguments(sys.argv)
     if len(errors_list) > 0:
         for error in errors_list:
             print(error)
@@ -358,11 +358,11 @@ if __name__ == '__main__':
     # Navigates to each folder with a risk spreadsheet and makes a new version of the risk spreadsheet
     # using the most recent risk spreadsheet in each folder and the current NARA risk CSV.
     # Also adds the accession to a log.
-    for root, directories, files in os.walk(directory):
+    for root, directories, files in os.walk(input_directory):
         if any('full_risk_data' in x for x in files):
             print('Starting on accession', root)
             file = most_recent_risk_csv(files)
             new_risk_df = read_risk_csv(os.path.join(root, file))
             new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
             save_risk_csv(root, new_risk_df)
-            update_log(root, directory)
+            update_log(root, input_directory)

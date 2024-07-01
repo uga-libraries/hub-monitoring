@@ -183,7 +183,7 @@ class MyTestCase(unittest.TestCase):
         # Runs the script a second time and tests that it prints the correct errors.
         output = subprocess.run(f'python "{script}" "{directory}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
-        expected = "Directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
+        expected = "Input directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"
         self.assertEqual(result, expected, 'Problem with test for argument error, printing')
 
