@@ -1,7 +1,8 @@
 """Makes an updated risk spreadsheet for every accession in a directory
 
 Parameters:
-    input_directory (required): the directory that contains the risk spreadsheets
+    input_directory (required): the directory that contains the risk spreadsheets,
+                                which can be any folder (status, collection, etc.)
     nara_csv (required): the path to the most recent NARA Preservation Action Plan spreadsheet
 
 Returns:
