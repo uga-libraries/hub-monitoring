@@ -20,10 +20,10 @@ def check_arguments(argument_list):
 
     Adapted from https://github.com/uga-libraries/format-report/blob/main/merge_format_reports.py
 
-    :parameter
+    @:parameter
     argument_list (list): the contents of sys.argv after the script is run
 
-    :returns
+    @:returns
     dir_path (string, None): string with the path to the directory to check for risk spreadsheets, or None if missing
     nara_path (string, None): string with the path to NARA's Preservation Action Plan spreadsheet, or None if missing
     errors (list): the list of errors encountered, if any, or an empty list
@@ -67,11 +67,11 @@ def match_nara_risk(risk_df, nara_df):
 
     Adopted from https://github.com/uga-libraries/accessioning-scripts/blob/main/format_analysis_functions.py
 
-    :parameter
+    @:parameter
     risk_df (Pandas dataframe): a dataframe with FITS columns from a risk spreadsheet
     nara_df (Pandas dataframe): a dataframe with all columns from the NARA Preservation Action Plan spreadsheet
 
-    :returns
+    @:returns
     df_result (Pandas dataframe): a dataframe with the FITS format information and NARA risk information
     """
 
@@ -192,10 +192,10 @@ def most_recent_risk_csv(file_list):
     The list will also include other types of files, such as preservation logs, which are ignored.
     This function is also used in collection_summary.py
 
-    :parameter
+    @:parameter
     file_list (list): list of all file names in a folder with at least one risk spreadsheet
 
-    :returns
+    @:returns
     most_recent_file (string): the name of the preservation spreadsheet that is the most recent
     """
 
@@ -233,10 +233,10 @@ def read_nara_csv(nara_csv_path):
 
     If the columns do not have the expected names, a KeyError is raised and the script will exit.
 
-    :parameter
+    @:parameter
     nara_csv_path (string): path to the NARA spreadsheet, which is a script argument
 
-    :return
+    @:returns
     nara_df (pandas DataFrame): dataframe with all data from the NARA spreadsheet and select columns renamed
     or raises a KeyError if the select columns are not present
     """
@@ -260,10 +260,10 @@ def read_nara_csv(nara_csv_path):
 def read_risk_csv(risk_csv_path):
     """Read the FITS format identification columns from the risk CSV into a dataframe
 
-    :parameter
+    @:parameter
     risk_csv_path (string): path to the most recent risk csv in the accession folder
 
-    :return
+    @:returns
     risk_df (pandas Dataframe): dataframe with all FITS data from the risk CSV
     """
     # Reads the risk csv into a dataframe.
@@ -286,11 +286,11 @@ def save_risk_csv(accession_path, risk_df):
     The new spreadsheet is named accession_full_risk_data_date.csv,
     and is saved in the same folder as the original risk spreadsheet.
 
-    :parameter
+    @:parameter
     accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
     risk_df (Pandas DataFrame): dataframe with the FITS data and NARA risk data
 
-    :returns
+    @:returns
     None
     """
 
@@ -306,15 +306,15 @@ def save_risk_csv(accession_path, risk_df):
 
 
 def update_log(accession_path, log_dir):
-    """Log accessions that had their risk csvs  updated
+    """Log accessions that had their risk csvs updated
 
     The log includes the collection and accession number, which are both part of the accession path.
 
-    :parameter
+    @:parameter
     accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
     log_dir (string): the path to the directory for saving the log (script argument input_directory)
 
-    :return
+    @:returns
     None. Makes or updates the log.
     """
 
