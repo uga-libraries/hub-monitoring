@@ -59,7 +59,7 @@ def check_arguments(argument_list):
     return dir_path, nara_path, errors
 
 
-def match_nara_risk(update_df, nara_df):
+def match_nara_risk(risk_df, nara_df):
     """Match format identifications to NARA's Preservation Action Plan spreadsheet
 
     The match techniques are applied in order of accuracy,
@@ -68,7 +68,7 @@ def match_nara_risk(update_df, nara_df):
     Adopted from https://github.com/uga-libraries/accessioning-scripts/blob/main/format_analysis_functions.py
 
     :parameter
-    update_df (Pandas dataframe): a dataframe with FITS columns from a risk spreadsheet
+    risk_df (Pandas dataframe): a dataframe with FITS columns from a risk spreadsheet
     nara_df (Pandas dataframe): a dataframe with all columns from the NARA Preservation Action Plan spreadsheet
 
     :returns
@@ -78,15 +78,15 @@ def match_nara_risk(update_df, nara_df):
     # PART ONE: ADD TEMPORARY COLUMNS TO BOTH DATAFRAMES FOR BETTER MATCHING
 
     # Formats FITS version as a string to avoid type errors during merging.
-    update_df['version_string'] = update_df['FITS_Format_Version'].astype(str)
+    risk_df['version_string'] = risk_df['FITS_Format_Version'].astype(str)
 
     # Combines FITS format name (lowercase) and version, since NARA has that information in one column.
     # Removes " NO VALUE" from the combined column, which happens if there is no version.
-    update_df['name_version'] = update_df['FITS_Format_Name'].str.lower() + ' ' + update_df['version_string']
-    update_df['name_version'] = update_df['name_version'].str.replace(' NO VALUE', '')
+    risk_df['name_version'] = risk_df['FITS_Format_Name'].str.lower() + ' ' + risk_df['version_string']
+    risk_df['name_version'] = risk_df['name_version'].str.replace(' NO VALUE', '')
 
     # Makes lowercase versions of FITS and NARA format names for case-insensitive matching.
-    update_df['name_lower'] = update_df['FITS_Format_Name'].str.lower()
+    risk_df['name_lower'] = risk_df['FITS_Format_Name'].str.lower()
     nara_df['nara_format_lower'] = nara_df['NARA_Format_Name'].str.lower()
 
     # Makes a column with the NARA version, since FITS has that in a separate column.
@@ -111,7 +111,7 @@ def match_nara_risk(update_df, nara_df):
 
     # PART TWO: FORMAT IDENTIFICATIONS THAT HAVE A PUID
     # If an FITS format id has a PUID, it should only match something in NARA with the same PUID or no PUID.
-    df_format_puid = update_df[update_df['FITS_PUID'] != 'NO VALUE'].copy()
+    df_format_puid = risk_df[risk_df['FITS_PUID'] != 'NO VALUE'].copy()
     df_nara_no_puid = nara_df[nara_df['NARA_PRONOM_URL'].isnull()]
 
     # Technique 1: PRONOM Identifier and Format Version are both a match.
@@ -158,7 +158,7 @@ def match_nara_risk(update_df, nara_df):
 
     # PART THREE: FORMAT IDENTIFICATIONS THAT DO NOT HAVE A PUID
     # If an FITS format id has no PUID, it can match anything in NARA (has a PUID or no PUID).
-    df_format_no_puid = update_df[update_df['FITS_PUID'] == 'NO VALUE'].copy()
+    df_format_no_puid = risk_df[risk_df['FITS_PUID'] == 'NO VALUE'].copy()
 
     # Technique 4 (repeated with different format DF): Format Name, and Format Version if it has one, are both a match.
     # This only works if the NARA Format Name is structured name[SPACE]version.
