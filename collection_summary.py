@@ -1,4 +1,4 @@
-"""Makes spreadsheets with summary data about each accession and collection in a given department folder
+"""Makes two spreadsheets with summary data about each accession and collection in a given department folder
 
 Data included:
 - Accession (accession report only)
@@ -8,6 +8,7 @@ Data included:
 - Size (GB and number of files)
 - Risk (number of files at each NARA risk level)
 - Notes (if there was no risk csv and for additional archivist notes)
+- Size_Error (if size could not be calculated and needs to be calculated manually using file properties)
 
 If there is more than one accession for the collection,
 the information is combined in the collection report.
