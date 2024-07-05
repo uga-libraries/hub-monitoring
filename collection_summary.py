@@ -325,8 +325,7 @@ def save_accession_report(dir_path, row):
     """
 
     # Path to the accession report.
-    today = datetime.today().strftime('%Y-%m-%d')
-    report_path = os.path.join(dir_path, f'hub-accession-summary_{today}.csv')
+    report_path = os.path.join(dir_path, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
 
     # Makes the report with a header row if row is "header". Otherwise, adds the row to the report.
     if row == 'header':
