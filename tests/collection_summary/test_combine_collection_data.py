@@ -28,8 +28,8 @@ class MyTestCase(unittest.TestCase):
                 ['acc1c', 'coll1', 'backlogged', '2022', 0.25, 9, 0, 9, 0, 0, None, None],
                 ['acc2a', 'coll2', 'closed', '2023', 90.12, 67, 30, 0, 0, 37, None, None],
                 ['acc2b', 'coll2', 'closed', '2023', 33.10, 15, 0, 0, 0, 15, None, None]]
-        acc_df = make_df(rows)
-        collection_df = combine_collection_data(acc_df)
+        accession_df = make_df(rows)
+        collection_df = combine_collection_data(accession_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         result = [collection_df.columns.tolist()] + collection_df.values.tolist()
@@ -46,8 +46,8 @@ class MyTestCase(unittest.TestCase):
                  'Did not calculate size for accession acc2a due to folder organization. '],
                 ['acc2b', 'coll2', 'closed', '2023', 0, 0, 0, 0, 0, 0, 'Accession acc2b has no risk csv. ',
                  'Did not calculate size for accession acc2b due to path length. ']]
-        acc_df = make_df(rows)
-        collection_df = combine_collection_data(acc_df)
+        accession_df = make_df(rows)
+        collection_df = combine_collection_data(accession_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         result = [collection_df.columns.tolist()] + collection_df.values.tolist()
@@ -70,8 +70,8 @@ class MyTestCase(unittest.TestCase):
                  'Did not calculate size for accession acc1c due to path length. '],
                 ['acc2a', 'coll2', 'closed', '2023', 90.12, 67, 30, 0, 0, 37, None, None],
                 ['acc2b', 'coll2', 'closed', '2023', 33.10, 15, 0, 0, 0, 0, 'Accession acc2b has no risk csv. ', None]]
-        acc_df = make_df(rows)
-        collection_df = combine_collection_data(acc_df)
+        accession_df = make_df(rows)
+        collection_df = combine_collection_data(accession_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         result = [collection_df.columns.tolist()] + collection_df.values.tolist()
@@ -89,8 +89,8 @@ class MyTestCase(unittest.TestCase):
         # Makes test input and runs the function.
         rows = [['acc1a', 'coll1', 'backlogged', '2023', 23.52, 51, 2, 0, 17, 32, None, None],
                 ['acc2a', 'coll2', 'backlogged', '2024', 123.20, 250, 100, 54, 33, 63, None, None]]
-        acc_df = make_df(rows)
-        collection_df = combine_collection_data(acc_df)
+        accession_df = make_df(rows)
+        collection_df = combine_collection_data(accession_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         result = [collection_df.columns.tolist()] + collection_df.values.tolist()
@@ -107,8 +107,8 @@ class MyTestCase(unittest.TestCase):
                  'Did not calculate size for accession acc1a due to path length. '],
                 ['acc2a', 'coll2', 'backlogged', '2022', 0, 0, 0, 0, 0, 0, 'Accession 2a has no risk csv. ', 
                  'Did not calculate size for accession acc1b due to path length. ']]
-        acc_df = make_df(rows)
-        collection_df = combine_collection_data(acc_df)
+        accession_df = make_df(rows)
+        collection_df = combine_collection_data(accession_df)
 
         # Converts the resulting dataframe into a list for easier comparison, and compares to the expected result.
         result = [collection_df.columns.tolist()] + collection_df.values.tolist()
