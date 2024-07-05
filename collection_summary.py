@@ -13,7 +13,7 @@ If there is more than one accession for the collection,
 the information is combined in the collection report.
 
 Parameter:
-    directory (required): the directory with the folders to be summarized
+    input_directory (required): the directory with the folders to be summarized
 
 Returns:
     hub-accession-summary_DATE.csv
@@ -317,7 +317,7 @@ def round_non_zero(number):
 
 
 def save_accession_report(dir_path, row):
-    """Save a row of data to a CSV in the directory provided as the script argument
+    """Save a row of data to a CSV in the input_directory provided as the script argument
 
     @:parameter
     dir_path (string): the path to the folder with data to be summarized (script argument)
@@ -342,33 +342,33 @@ def save_accession_report(dir_path, row):
 
 if __name__ == '__main__':
 
-    # Gets the path to the directory with the information to be summarized from the script argument.
+    # Gets the path to the input_directory with the information to be summarized from the script argument.
     # Exits the script if there is an error.
-    directory, error = check_argument(sys.argv)
+    input_directory, error = check_argument(sys.argv)
     if error:
         print(error)
         sys.exit(1)
 
     # Starts a CSV for information about each accession. It will also be summarized later by collection.
-    save_accession_report(directory, 'header')
+    save_accession_report(input_directory, 'header')
 
     # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
     # Folders used for other purposes at the status and accession level are skipped.
-    for status in os.listdir(directory):
+    for status in os.listdir(input_directory):
         if status in ('backlogged', 'closed'):
-            for collection in os.listdir(os.path.join(directory, status)):
+            for collection in os.listdir(os.path.join(input_directory, status)):
                 # Do not include ua22-008 in the report, since it is not our collection.
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
-                for accession in os.listdir(os.path.join(directory, status, collection)):
-                    is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
+                for accession in os.listdir(os.path.join(input_directory, status, collection)):
+                    is_accession = accession_test(accession, os.path.join(input_directory, status, collection, accession))
                     if is_accession:
-                        print('Starting on accession', os.path.join(directory, status, collection, accession))
-                        accession_data = get_accession_data(directory, status, collection, accession)
-                        save_accession_report(directory, accession_data)
+                        print('Starting on accession', os.path.join(input_directory, status, collection, accession))
+                        accession_data = get_accession_data(input_directory, status, collection, accession)
+                        save_accession_report(input_directory, accession_data)
 
     # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
     today = datetime.today().strftime('%Y-%m-%d')
-    accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv')).fillna('')
+    accession_df = pd.read_csv(os.path.join(input_directory, f'hub-accession-summary_{today}.csv')).fillna('')
     collection_df = combine_collection_data(accession_df)
-    collection_df.to_csv(os.path.join(directory, f'hub-collection-summary_{today}.csv'), index=False)
+    collection_df.to_csv(os.path.join(input_directory, f'hub-collection-summary_{today}.csv'), index=False)
