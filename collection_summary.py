@@ -131,11 +131,11 @@ def combine_collection_dates(acc_df):
     return date_df
 
 
-def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
+def get_accession_data(input_dir, acc_status, acc_coll, acc_id):
     """Calculate the data about a single accession folder, mostly using other functions
 
     @:parameter
-    acc_dir (string): the path to the folder with data to be summarized (script argument)
+    input_dir (string): the path to the folder with data to be summarized (script argument)
     acc_status (string): if the accession is backlogged or closed, which is a folder within acc_dir
     acc_coll (string): the collection the accession is part of, which is a folder within acc_status
     acc_id (string): the accession id, which is a folder within acc_coll
@@ -147,7 +147,7 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     """
 
     # Calculates the path to the accession folder, which combines the four function parameters.
-    acc_path = os.path.join(acc_dir, acc_status, acc_coll, acc_id)
+    acc_path = os.path.join(input_dir, acc_status, acc_coll, acc_id)
 
     # Gets the data which requires additional calculation.
     # Size, Files, and Date are single data points, while risk is a list of four items.
