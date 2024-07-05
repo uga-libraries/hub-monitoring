@@ -360,9 +360,10 @@ if __name__ == '__main__':
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
                 for accession in os.listdir(os.path.join(input_directory, status, collection)):
-                    is_accession = accession_test(accession, os.path.join(input_directory, status, collection, accession))
+                    accession_dir = os.path.join(input_directory, status, collection, accession)
+                    is_accession = accession_test(accession, accession_dir)
                     if is_accession:
-                        print('Starting on accession', os.path.join(input_directory, status, collection, accession))
+                        print('Starting on accession', accession_dir)
                         accession_data = get_accession_data(input_directory, status, collection, accession)
                         save_accession_report(input_directory, accession_data)
 
