@@ -30,7 +30,10 @@ from validate_fixity import check_argument
 
 
 def accession_test(acc_id, acc_path):
-    """Determine if a folder within a collection folder is an accession based on the folder name
+    """Determine if a folder is an accession based on the folder name
+
+    There may be other folders used for other purposes, like risk remediation or appraisal, as well.
+    These other folders are not part of the collection summary report.
 
     @:parameter
     acc_id (string): the accession id, which is the name of a folder within acc_coll
@@ -60,6 +63,8 @@ def accession_test(acc_id, acc_path):
 
 def combine_collection_data(acc_df):
     """Combine data for collections with multiple accessions
+
+    If a collection has one accession, the accession data is assigned to the collection as is.
 
     @:parameter
     acc_df (Pandas dataframe): the data for every accession
@@ -192,13 +197,14 @@ def get_risk(acc_path):
     """Calculate the number of files at each of the four NARA risk levels in an accession
 
     The accession's risk spreadsheet is used to calculate the data.
-    If there is more than one, the most recent spreadsheet is used.
+    If there is more than one spreadsheet, the most recent spreadsheet is used.
+    If there is no risk spreadsheet, all risk level counts are set to 0.
 
     @:parameter
     acc_path (string): the path to the accession folder
 
     @:returns
-    risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
+    risk_list (list): a list of 4 integers that are the number of files each risk level ordered highest-lowest risk
                       and a note, either None or that the accession has no risk csv
     """
 
@@ -243,6 +249,7 @@ def get_size(acc_path):
 
     For bagged accessions, this is for the contents of the bag data folder.
     Otherwise, this is for the contents of the folder within the accession folder that is not for FITS files.
+    If the folder cannot be found or size cannot be calculated for any file, size is set to 0.
 
     @:parameter
     acc_path (string): the path to the accession folder
@@ -287,7 +294,7 @@ def get_size(acc_path):
 
 
 def round_non_zero(number):
-    """Round a number to the fewest decimal places that don't make the number 0
+    """Round a number to the fewest decimal places that don't make the number 0, but at least 2 decimal places
 
     This is used in calculating percentage of files at each risk level in combine_collection_data()
     and size (converted to GB) in get_size()
