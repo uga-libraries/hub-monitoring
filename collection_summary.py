@@ -351,8 +351,8 @@ if __name__ == '__main__':
     # Starts a CSV for information about each accession. It will also be summarized later by collection.
     save_accession_report(input_directory, 'header')
 
-    # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
-    # Folders used for other purposes at the status and accession level are skipped.
+    # Navigates to each accession folder, gets the information, and saves it to the accession CSV.
+    # Folders used for other purposes at each level are skipped.
     for status in os.listdir(input_directory):
         if status in ('backlogged', 'closed'):
             for collection in os.listdir(os.path.join(input_directory, status)):
@@ -367,7 +367,7 @@ if __name__ == '__main__':
                         accession_data = get_accession_data(input_directory, status, collection, accession)
                         save_accession_report(input_directory, accession_data)
 
-    # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
+    # Combines accession information for each collection and saves to a CSV in "input_directory" (the script argument).
     today = datetime.today().strftime('%Y-%m-%d')
     accession_df = pd.read_csv(os.path.join(input_directory, f'hub-accession-summary_{today}.csv')).fillna('')
     collection_df = combine_collection_data(accession_df)
