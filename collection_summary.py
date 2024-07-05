@@ -316,16 +316,16 @@ def round_non_zero(number):
     return round_number
 
 
-def save_accession_report(dir_path, row):
+def save_accession_report(input_dir, row):
     """Save a row of data to a CSV in the input_directory provided as the script argument
 
     @:parameter
-    dir_path (string): the path to the folder with data to be summarized (script argument)
+    input_dir (string): the path to the folder with data to be summarized (script argument)
     row (list or string): list with data for a row in the CSV or "header"
     """
 
     # Path to the accession report.
-    report_path = os.path.join(dir_path, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+    report_path = os.path.join(input_dir, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
 
     # Makes the report with a header row if row is "header". Otherwise, adds the row to the report.
     if row == 'header':
