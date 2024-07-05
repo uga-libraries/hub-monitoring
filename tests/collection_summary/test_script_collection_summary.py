@@ -40,14 +40,14 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script argument is not correct and the script exits"""
         # Makes the variables needed for the script input.
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        directory = join('test_data', 'Error')
+        input_directory = join('test_data', 'Error')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(CalledProcessError):
-            run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=PIPE)
+            run(f'python "{script}" "{input_directory}"', shell=True, check=True, stdout=PIPE)
 
         # Runs the script a second time and tests that it prints the correct error.
-        output = run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
+        output = run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, "Problem with test for printed error")
@@ -55,11 +55,11 @@ class MyTestCase(unittest.TestCase):
     def test_hargrett(self):
         """Test running the script with Hargrett test data"""
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        directory = join('test_data', 'Hargrett_Hub')
-        run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
+        input_directory = join('test_data', 'Hargrett_Hub')
+        run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
 
         # Tests the contents of the accession report.
-        acc_path = join(directory, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        acc_path = join(input_directory, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(acc_path)
         expected = [['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
                      'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
@@ -69,7 +69,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for Hargrett data, accession report")
 
         # Tests the contents of the collection report.
-        coll_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        coll_path = join(input_directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(coll_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
                      'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
@@ -80,11 +80,11 @@ class MyTestCase(unittest.TestCase):
     def test_russell(self):
         """Test running the script with Russell test data"""
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        directory = join('test_data', 'Russell_Hub')
-        run(f'python "{script}" "{directory}"', shell=True, stdout=PIPE)
+        input_directory = join('test_data', 'Russell_Hub')
+        run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
 
         # Tests the contents of the accession report.
-        acc_path = join(directory, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        acc_path = join(input_directory, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(acc_path)
         expected = [['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
                      'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
@@ -114,7 +114,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for Russell data, accession report")
 
         # Tests the contents of the collection report.
-        coll_path = join(directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        coll_path = join(input_directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
         result = csv_to_list(coll_path)
         expected = [['Collection', 'Date', 'Status', 'GB', 'Files', 'No_Match_Risk', 'High_Risk',
                      'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
