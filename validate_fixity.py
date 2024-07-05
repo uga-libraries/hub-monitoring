@@ -218,7 +218,7 @@ def validate_bag_manifest(bag_dir, report_dir):
                 with open(filepath, 'rb') as f:
                     data = f.read()
                     md5_generated = hashlib.md5(data).hexdigest()
-                files_list.append([filepath, md5_generated.upper()])
+                files_list.append([filepath, md5_generated])
             except FileNotFoundError:
                 files_list.append([filepath, 'FileNotFoundError-cannot-calculate-md5'])
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
