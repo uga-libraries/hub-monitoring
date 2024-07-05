@@ -19,11 +19,11 @@ class MyTestCase(unittest.TestCase):
         # Makes the variable used for function input and runs the function being tested.
         sys_argv = ['risk_updates.py', join('test_data', 'Russell_Hub'),
                     join('test_data', 'NARA_PreservationActionPlan.csv')]
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
+        # Tests that the value of input_directory is correct.
         expected = 'test_data\\Russell_Hub'
-        self.assertEqual(directory, expected, 'Problem with both correct, directory')
+        self.assertEqual(input_directory, expected, 'Problem with both correct, input_directory')
 
         # Tests that the value of nara_csv is correct.
         expected = 'test_data\\NARA_PreservationActionPlan.csv'
@@ -38,16 +38,16 @@ class MyTestCase(unittest.TestCase):
         """
         # Makes the variable used for function input and runs the function being tested.
         sys_argv = ['risk_updates.py']
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
-        self.assertEqual(directory, None, 'Problem with both missing, directory')
+        # Tests that the value of input_directory is correct.
+        self.assertEqual(input_directory, None, 'Problem with both missing, input_directory')
 
         # Tests that the value of nara_csv is correct.
         self.assertEqual(nara_csv, None, 'Problem with both missing, nara_csv')
 
         # Tests that the value of errors_list is correct.
-        expected = ['Required argument directory is missing', 'Required argument nara_csv is missing']
+        expected = ['Required argument input_directory is missing', 'Required argument nara_csv is missing']
         self.assertEqual(errors_list, expected, 'Problem with both missing, errors_list')
 
     def test_both_path_error(self):
@@ -55,76 +55,76 @@ class MyTestCase(unittest.TestCase):
         Test for when both required arguments are present but are not valid paths.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', 'error/directory', 'error/NARA_PreservationActionPlan.csv']
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        sys_argv = ['risk_updates.py', 'error/input_directory', 'error/NARA_PreservationActionPlan.csv']
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
-        expected = 'error/directory'
-        self.assertEqual(directory, expected, 'Problem with both path error, directory')
+        # Tests that the value of input_directory is correct.
+        expected = 'error/input_directory'
+        self.assertEqual(input_directory, expected, 'Problem with both path error, input_directory')
 
         # Tests that the value of nara_csv is correct.
         expected = 'error/NARA_PreservationActionPlan.csv'
         self.assertEqual(nara_csv, expected, 'Problem with both path error, nara_csv')
 
         # Tests that the value of errors_list is correct.
-        expected = ["Directory 'error/directory' does not exist",
+        expected = ["Input directory 'error/input_directory' does not exist",
                     "NARA CSV 'error/NARA_PreservationActionPlan.csv' does not exist"]
         self.assertEqual(errors_list, expected, 'Problem with both path error, errors_list')
 
-    def test_directory_missing(self):
+    def test_input_directory_missing(self):
         """
-        Test for when the first required argument directory is not present.
+        Test for when the first required argument input_directory is not present.
         The second required argument, nara_csv, is present and valid,
-        so the function treats it as directory.
+        so the function treats it as input_directory.
         """
         # Makes the variable used for function input and runs the function being tested.
         sys_argv = ['risk_updates.py', join('test_data', 'NARA_PreservationActionPlan.csv')]
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
+        # Tests that the value of input_directory is correct.
         expected = 'test_data\\NARA_PreservationActionPlan.csv'
-        self.assertEqual(directory, expected, 'Problem with directory missing, directory')
+        self.assertEqual(input_directory, expected, 'Problem with input_directory missing, input_directory')
 
         # Tests that the value of nara_csv is correct.
-        self.assertEqual(nara_csv, None, 'Problem with directory missing, nara_csv')
+        self.assertEqual(nara_csv, None, 'Problem with input_directory missing, nara_csv')
 
         # Tests that the value of errors_list is correct.
         expected = ['Required argument nara_csv is missing']
-        self.assertEqual(errors_list, expected, 'Problem with directory missing, errors_list')
+        self.assertEqual(errors_list, expected, 'Problem with input_directory missing, errors_list')
 
-    def test_directory_path_error(self):
+    def test_input_directory_path_error(self):
         """
-        Test for when the first required argument directory is present but not a valid path.
+        Test for when the first required argument input_directory is present but not a valid path.
         The second required argument, nara_csv, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
         sys_argv = ['risk_updates.py', 'path/error/dir', join('test_data', 'NARA_PreservationActionPlan.csv')]
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
+        # Tests that the value of input_directory is correct.
         expected = 'path/error/dir'
-        self.assertEqual(directory, expected, 'Problem with directory path error, directory')
+        self.assertEqual(input_directory, expected, 'Problem with input_directory path error, input_directory')
 
         # Tests that the value of nara_csv is correct.
         expected = 'test_data\\NARA_PreservationActionPlan.csv'
-        self.assertEqual(nara_csv, expected, 'Problem with directory path error, nara_csv')
+        self.assertEqual(nara_csv, expected, 'Problem with input_directory path error, nara_csv')
 
         # Tests that the value of errors_list is correct.
-        expected = ["Directory 'path/error/dir' does not exist"]
-        self.assertEqual(errors_list, expected, 'Problem with directory path error, errors_list')
+        expected = ["Input directory 'path/error/dir' does not exist"]
+        self.assertEqual(errors_list, expected, 'Problem with input_directory path error, errors_list')
 
     def test_nara_missing(self):
         """
         Test for when the second required argument nara_csv is not present.
-        The first required argument, directory, is present and valid.
+        The first required argument, input_directory, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
         sys_argv = ['risk_updates.py', join('test_data', 'Russell_Hub')]
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
+        # Tests that the value of input_directory is correct.
         expected = 'test_data\\Russell_Hub'
-        self.assertEqual(directory, expected, 'Problem with NARA missing, directory')
+        self.assertEqual(input_directory, expected, 'Problem with NARA missing, input_directory')
 
         # Tests that the value of nara_csv is correct.
         self.assertEqual(nara_csv, None, 'Problem with NARA missing, nara_csv')
@@ -136,15 +136,15 @@ class MyTestCase(unittest.TestCase):
     def test_nara_path_error(self):
         """
         Test for when the second required argument nara_csv is present but not a valid path.
-        The first required argument, directory, is present and valid.
+        The first required argument, input_directory, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
         sys_argv = ['risk_updates.py', join('test_data\\Russell_Hub'), 'nara_error.csv']
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
+        # Tests that the value of input_directory is correct.
         expected = 'test_data\\Russell_Hub'
-        self.assertEqual(directory, expected, 'Problem with NARA path error, directory')
+        self.assertEqual(input_directory, expected, 'Problem with NARA path error, input_directory')
 
         # Tests that the value of nara_csv is correct.
         expected = 'nara_error.csv'
@@ -162,18 +162,18 @@ class MyTestCase(unittest.TestCase):
         # Makes the variable used for function input and runs the function being tested.
         sys_argv = ['risk_updates.py', join('test_data', 'Russell_Hub'),
                     join('test_data', 'NARA_PreservationActionPlan.csv'), 'error_extra_argument']
-        directory, nara_csv, errors_list = check_arguments(sys_argv)
+        input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
-        # Tests that the value of directory is correct.
+        # Tests that the value of input_directory is correct.
         expected = 'test_data\\Russell_Hub'
-        self.assertEqual(directory, expected, 'Problem with too many arguments, directory')
+        self.assertEqual(input_directory, expected, 'Problem with too many arguments, input_directory')
 
         # Tests that the value of nara_csv is correct.
         expected = 'test_data\\NARA_PreservationActionPlan.csv'
         self.assertEqual(nara_csv, expected, 'Problem with too many arguments, nara_csv')
 
         # Tests that the value of errors_list is correct.
-        expected = ['Too many arguments. Should just have two, directory and nara_csv']
+        expected = ['Too many arguments. Should just have two, input_directory and nara_csv']
         self.assertEqual(errors_list, expected, 'Problem with too many arguments, errors_list')
 
 

@@ -18,14 +18,14 @@ class MyTestCase(unittest.TestCase):
     def test_existing_log(self):
         """Test for when there is already a log."""
         # Runs the function once to make a new log.
-        parent_folder = join(getcwd(), 'dept', 'coll-001', 'acc-001')
-        log_dir = getcwd()
-        update_log(parent_folder, log_dir)
+        root = join(getcwd(), 'dept', 'coll-001', 'acc-001')
+        input_directory = getcwd()
+        update_log(root, input_directory)
 
         # Runs the function again to add to an existing log.
-        parent_folder = join(getcwd(), 'dept', 'coll-001', 'acc-002')
-        log_dir = getcwd()
-        update_log(parent_folder, log_dir)
+        root = join(getcwd(), 'dept', 'coll-001', 'acc-002')
+        input_directory = getcwd()
+        update_log(root, input_directory)
 
         # Tests that the log was made.
         log_path = join(getcwd(), 'update_risk_log.csv')
@@ -40,9 +40,9 @@ class MyTestCase(unittest.TestCase):
     def test_new_log(self):
         """Test for when there is not already a log."""
         # Creates variables for function arguments and runs the function.
-        parent_folder = join(getcwd(), 'coll-001', 'acc-001')
-        log_dir = getcwd()
-        update_log(parent_folder, log_dir)
+        root = join(getcwd(), 'coll-001', 'acc-001')
+        input_directory = getcwd()
+        update_log(root, input_directory)
 
         # Tests that the log was made.
         log_path = join(getcwd(), 'update_risk_log.csv')
