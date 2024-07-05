@@ -41,7 +41,8 @@ accession_completeness_report.py
 
 collection_summary.py
 
-- directory (required): the directory with the folders to be summarized
+- input_directory (required): the directory with the folders to be summarized,
+  which must be the directory containing the status folders
 
 format_list.py
 
@@ -63,6 +64,10 @@ There are unit tests for each function and for each script overall for collectio
 The tests mostly use files stored in the repo (test_data) as input. 
 Preservation metadata files may be missing if they are not needed for a test 
 or have fake data to give the needed variations for the test.
+
+A few tests are for errors caused by path length, which could not be replicated in our current computing environment.
+Instead, there are tests to use with real data in Hub.
+They are commented out by default and indicate what information to provide for them to work.
  
 For quicker development the tests for format_list.py all use the same input test data.
 It is the common data variations, but is not explicitly testing for all possible variations.
