@@ -261,10 +261,14 @@ def validate_bag_manifest(bag_dir, report_dir):
     for root, dirs, files in os.walk(os.path.join(bag_dir, 'data')):
         for file in files:
             filepath = os.path.join(root, file)
-            with open(filepath, 'rb') as f:
-                data = f.read()
-                md5_generated = hashlib.md5(data).hexdigest()
-            files_list.append([filepath, md5_generated])
+            # If the file path is too long, it causes a FileNotFoundError and cannot calculate the MD5.
+            try:
+                with open(filepath, 'rb') as f:
+                    data = f.read()
+                    md5_generated = hashlib.md5(data).hexdigest()
+                files_list.append([filepath, md5_generated])
+            except FileNotFoundError:
+                files_list.append([filepath, 'FileNotFoundError-cannot-calculate-md5'])
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the bag manifest into a dataframe.
@@ -335,10 +339,14 @@ def validate_manifest(acc_dir, manifest, report_dir):
     for root, dirs, files in os.walk(acc_files):
         for file in files:
             filepath = os.path.join(root, file)
-            with open(filepath, 'rb') as f:
-                data = f.read()
-                md5_generated = hashlib.md5(data).hexdigest()
-            files_list.append([filepath, md5_generated.upper()])
+            # If the file path is too long, it causes a FileNotFoundError and cannot calculate the MD5.
+            try:
+                with open(filepath, 'rb') as f:
+                    data = f.read()
+                    md5_generated = hashlib.md5(data).hexdigest()
+                files_list.append([filepath, md5_generated.upper()])
+            except FileNotFoundError:
+                files_list.append([filepath, 'FileNotFoundError-cannot-calculate-md5'])
     df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
 
     # Reads the manifest into a dataframe.

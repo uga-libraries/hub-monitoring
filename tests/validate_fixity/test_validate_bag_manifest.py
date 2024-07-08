@@ -37,6 +37,18 @@ class MyTestCase(unittest.TestCase):
         if exists(join('test_data', '2023_test002_001_er_manifest_validation_errors.csv')):
             remove(join('test_data', '2023_test002_001_er_manifest_validation_errors.csv'))
 
+    # def test_file_not_found(self):
+    #     """Use this as a template to test against an accession known to have the error,
+    #     which is from file path length and cannot be replicated in the repo test data.
+    #     The test will alter the preservation log, so either make a copy first to revert to after the test
+    #     or edit the preservation log to remove the test outputs. Also delete the script report and manifest log.
+    #     """
+    #     bag_dir = 'INSERT-PATH-TO-BAG'
+    #     validate_bag_manifest(bag_dir, 'INSERT-PATH-TO-SAVE-OUTPUT')
+    #     # Test will always pass. Look at the results to determine if it worked correctly,
+    #     # or use the other tests below to set up tests of the logs with expected values.
+    #     self.assertEqual(True, True)
+
     def test_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
