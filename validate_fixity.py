@@ -77,14 +77,14 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, input_directory"
 
 
-def manifest_validation_log(acc_dir, acc, errors):
+def manifest_validation_log(report_dir, acc, errors):
     """Make a CSV file with all validation errors from a single accession
 
     This is too much information to include in the preservation log.
     The file is saved in the input_directory with the accessions.
 
     :parameter
-    acc_dir (string): directory where the report is saved (script argument input_directory)
+    report_dir (string): directory where the report is saved (script argument input_directory)
     acc (string): the accession number, used for naming the report
     errors (list): a list of validation errors to include in the report
 
@@ -92,7 +92,7 @@ def manifest_validation_log(acc_dir, acc, errors):
     None
     """
 
-    with open(os.path.join(acc_dir, f'{acc}_manifest_validation_errors.csv'), 'w', newline='', encoding='utf-8') as f:
+    with open(os.path.join(report_dir, f'{acc}_manifest_validation_errors.csv'), 'w', newline='', encoding='utf-8') as f:
         f_write = csv.writer(f)
         f_write.writerow(['File', 'MD5', 'MD5_Source'])
         f_write.writerows(errors)

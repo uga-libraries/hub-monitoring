@@ -177,7 +177,7 @@ class MyTestCase(unittest.TestCase):
         # Runs the script a second time and tests that it prints the correct error.
         output = subprocess.run(f'python "{script}" "{directory}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
-        expected = "Provided directory 'test_data\\Error' does not exist\r\n"
+        expected = "Provided input_directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, 'Problem with test for script argument error, printed error')
 
 
