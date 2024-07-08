@@ -92,10 +92,11 @@ def manifest_validation_log(report_dir, acc_id, errors):
     None
     """
 
-    with open(os.path.join(report_dir, f'{acc_id}_manifest_validation_errors.csv'), 'w', newline='', encoding='utf-8') as f:
-        f_write = csv.writer(f)
-        f_write.writerow(['File', 'MD5', 'MD5_Source'])
-        f_write.writerows(errors)
+    with open(os.path.join(report_dir, f'{acc_id}_manifest_validation_errors.csv'), 'w', newline='',
+              encoding='utf-8') as open_log:
+        log_writer = csv.writer(open_log)
+        log_writer.writerow(['File', 'MD5', 'MD5_Source'])
+        log_writer.writerows(errors)
 
 
 def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
@@ -263,8 +264,8 @@ def validate_bag_manifest(bag_dir, report_dir):
             filepath = os.path.join(root, file)
             # If the file path is too long, it causes a FileNotFoundError and cannot calculate the MD5.
             try:
-                with open(filepath, 'rb') as f:
-                    data = f.read()
+                with open(filepath, 'rb') as open_file:
+                    data = open_file.read()
                     md5_generated = hashlib.md5(data).hexdigest()
                 files_list.append([filepath, md5_generated])
             except FileNotFoundError:
@@ -341,8 +342,8 @@ def validate_manifest(acc_dir, manifest, report_dir):
             filepath = os.path.join(root, file)
             # If the file path is too long, it causes a FileNotFoundError and cannot calculate the MD5.
             try:
-                with open(filepath, 'rb') as f:
-                    data = f.read()
+                with open(filepath, 'rb') as open_file:
+                    data = open_file.read()
                     md5_generated = hashlib.md5(data).hexdigest()
                 files_list.append([filepath, md5_generated.upper()])
             except FileNotFoundError:
