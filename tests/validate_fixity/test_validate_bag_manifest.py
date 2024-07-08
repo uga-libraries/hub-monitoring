@@ -44,7 +44,8 @@ class MyTestCase(unittest.TestCase):
     #     or edit the preservation log to remove the test outputs. Also delete the script report and manifest log.
     #     """
     #     bag_dir = 'INSERT-PATH-TO-BAG'
-    #     validate_bag_manifest(bag_dir, 'INSERT-PATH-TO-SAVE-OUTPUT')
+    #     report_dir = 'INSERT-PATH-TO-SAVE-OUTPUT'
+    #     validate_bag_manifest(bag_dir, report_dir)
     #     # Test will always pass. Look at the results to determine if it worked correctly,
     #     # or use the other tests below to set up tests of the logs with expected values.
     #     self.assertEqual(True, True)
@@ -53,7 +54,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
         bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', '2023_test002_001_er_bag')
-        validate_bag_manifest(bag_dir, 'test_data')
+        report_dir = 'test_data'
+        validate_bag_manifest(bag_dir, report_dir)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'),
@@ -84,7 +86,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is valid"""
         # Makes the variable needed for function input and runs the function.
         bag_dir = join('test_data', 'test_001_bags_valid', '2023_test001_002_er', '2023_test001_002_er_bag')
-        validate_bag_manifest(bag_dir, 'test_data')
+        report_dir = 'test_data'
+        validate_bag_manifest(bag_dir, report_dir)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_002_er', 'preservation_log.txt'),

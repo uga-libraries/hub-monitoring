@@ -41,32 +41,34 @@ class MyTestCase(unittest.TestCase):
     #     delete any fixity_validation.csv and manifest_validation_errors.csv produced.
     #     """
     #     # Makes variable for function input and runs the function.
-    #     bag_dir = r'INSERT PATH TO BAG FOLDER'
-    #     validate_bag(bag_dir, r'INSERT PATH FOR WHERE TO SAVE REPORT')
+    #     root = r'INSERT PATH TO FOLDER CONTAINING THE BAG'
+    #     folder = 'INSERT BAG FOLDER NAME'
+    #     input_directory = r'INSERT PATH TO FOLDER WHERE OUTPUT SHOULD BE SAVED'
+    #     validate_bag(join(root, folder), input_directory)
     #
     #     # Verifies the preservation_log.txt has been updated correctly.
-    #     result = csv_to_list('INSERT PATH TO preservation_log.txt'), delimiter='\t')
+    #     result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
     #     expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
     #                 ['INSERT DATA ROWS']]
     #     self.assertEqual(result, expected, 'Problem with test for bag error, preservation_log.txt')
     #
     #     # Verifies the fixity validation CSV has the correct values.
     #     # Only use for bags that are not valid.
-    #     result = csv_to_list(join(r'INSERT PATH FOR WHERE TO SAVE REPORT',
-    #                               f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+    #     result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
     #     expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
     #                 ['INSERT DATA ROW(s)']]
     #     self.assertEqual(result, expected, 'Problem with test for bag error, fixity_validation.csv')
 
     def test_file_added(self):
         """Test for when the bag is not valid because a file was added"""
-        # Makes variable for function input and runs the function.
-        bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', '2023_test002_001_er_bag')
-        validate_bag(bag_dir, 'test_data')
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er')
+        folder = '2023_test002_001_er_bag'
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -86,13 +88,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_file_deleted(self):
         """Test for when the bag is not valid because a file was deleted"""
-        # Makes variable for function input and runs the function.
-        bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er', '2023_test002_002_er_bag')
-        validate_bag(bag_dir, 'test_data')
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er')
+        folder = '2023_test002_002_er_bag'
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_002_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -112,13 +115,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_file_edited(self):
         """Test for when the bag is not valid because a file was edited"""
-        # Makes variable for function input and runs the function.
-        bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er', '2023_test002_003_er_bag')
-        validate_bag(bag_dir, 'test_data')
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er')
+        folder = '2023_test002_003_er_bag'
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_003_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -138,13 +142,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_fixity_changed(self):
         """Test for when the bag is not valid because a file's fixity was changed in the manifest"""
-        # Makes variable for function input and runs the function.
-        bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er', '2023_test002_004_er_bag')
-        validate_bag(bag_dir, 'test_data')
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er')
+        folder = '2023_test002_004_er_bag'
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_004_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -166,13 +171,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_missing_bag_info(self):
         """Test for when the bag is not valid because bag-info.txt is missing"""
-        # Makes variable for function input and runs the function.
-        bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er', '2023_test002_005_er_bag')
-        validate_bag(bag_dir, 'test_data')
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')
+        folder = '2023_test002_005_er_bag'
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_005_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -191,13 +197,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_valid(self):
         """Test for when the bag is valid"""
-        # Makes variable for function input and runs the function.
-        bag_dir = join('test_data', 'test_001_bags_valid', '2023_test001_001_er', '2023_test001_001_er_bag')
-        validate_bag(bag_dir, 'test_data')
+        # Makes variables for function input and runs the function.
+        root = join('test_data', 'test_001_bags_valid', '2023_test001_001_er')
+        folder = '2023_test001_001_er_bag'
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_001_er', 'preservation_log.txt'),
-                             delimiter='\t')
+        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
