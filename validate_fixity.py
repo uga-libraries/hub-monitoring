@@ -118,7 +118,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     # If not, prints an error and does not do the rest of this function.
     log_path = os.path.join(acc_dir, 'preservation_log.txt')
     if not os.path.exists(log_path):
-        print(f'\nERROR: accession {os.path.basename(acc_dir)} has no preservation log.')
+        print(f'ERROR: accession {os.path.basename(acc_dir)} has no preservation log.\n')
         return
 
     # Gets the collection and accession numbers from the preservation log.
@@ -154,8 +154,8 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     # Checks if the log starts with the expected column row.
     # If not, prints an error and does not update the log.
     if not log_text.startswith('Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff'):
-        print(f'\nERROR: accession {os.path.basename(acc_dir)} has nonstandard columns in the preservation log; '
-              f'could not update with validation result.')
+        print(f'ERROR: accession {os.path.basename(acc_dir)} has nonstandard columns in the preservation log; '
+              f'could not update with validation result.\n')
         return
 
     # Adds a row to the end of the preservation log for the bag validation.

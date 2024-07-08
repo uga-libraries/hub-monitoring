@@ -62,7 +62,7 @@ class MyTestCase(unittest.TestCase):
                     f'Starting on accession {directory}\\2023_test002_004_er (bag)\r\n'
                     f'Starting on accession {directory}\\2023_test005_001_er (manifest)\r\n'
                     f'Starting on accession {directory}\\2023_test123_001_er (manifest)\r\n'
-                    '\r\nERROR: accession 2023_test123_001_er has no preservation log.\r\n'
+                    'ERROR: accession 2023_test123_001_er has no preservation log.\r\n\r\n'
                     '\r\nValidation errors found, see fixity_validation.csv in the directory '
                     'provided as the script argument.\r\n')
         self.assertEqual(result, expected, 'Problem with test for mix, printed message')
