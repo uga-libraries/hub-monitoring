@@ -1,13 +1,19 @@
 """Validates the fixity for every accession in a directory
 
 Accessions are most commonly in bags, but legacy accessions may have a manifest instead.
+If bagit cannot work with the bag, the bag manifest is used instead.
+
+The preservation_log.txt (in the accession folder) will be updated with the validation result for every accession.
+If there are validation errors, they are added to fixity_validation.csv in the input_directory.
+If there are validation errors from a manifest, they are also saved to manifest_validation_errors.csv in the input_directory.
 
 Parameter:
     input_directory (required): the directory that contains the accession folders
 
 Returns:
-    Updates the preservation_log.txt of each accession with the result
-    Creates a summary report of the validations
+    Updates the preservation_log.txt of each accession with the validation result
+    Creates a summary report of the validation errors
+    For manifest validation, creates a file report of the validation errors
 """
 import bagit
 import csv
