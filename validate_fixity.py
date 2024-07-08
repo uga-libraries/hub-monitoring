@@ -3,7 +3,7 @@
 Accessions are most commonly in bags, but legacy accessions may have a manifest instead.
 
 Parameter:
-    directory (required): the directory that contains the accession folders
+    input_directory (required): the directory that contains the accession folders
 
 Returns:
     Updates the preservation_log.txt of each accession with the result
@@ -62,7 +62,7 @@ def check_argument(arg_list):
     error (string, None): string with the error message, or None if no error
     """
 
-    # Verifies the required argument (directory) is present and a valid path.
+    # Verifies the required argument (input_directory) is present and a valid path.
     # If the number of arguments is incorrect, dir_path is set to None.
     # If there is no error, error is set to None.
     if len(arg_list) == 1:
@@ -81,10 +81,10 @@ def manifest_validation_log(acc_dir, acc, errors):
     """Make a CSV file with all validation errors from a single accession
 
     This is too much information to include in the preservation log.
-    The file is saved in the directory with the accessions.
+    The file is saved in the input_directory with the accessions.
 
     :parameter
-    acc_dir (string): the path to the directory where the report is saved (script argument)
+    acc_dir (string): directory where the report is saved (script argument input_directory)
     acc (string): the accession number, used for naming the report
     errors (list): a list of validation errors to include in the report
 
@@ -176,7 +176,7 @@ def update_report(acc_dir, error_msg, report_dir):
     :parameter
     acc_dir (string): the path to an accession folder, which may be a bag
     error_msg (string): validation error
-    report_dir (string): directory where the report is saved (script argument)
+    report_dir (string): directory where the report is saved (script argument input_directory)
 
     :returns
     None
@@ -213,7 +213,7 @@ def validate_bag(bag_dir, report_dir):
 
     :parameter
     bag_dir (string): the path to an accession bag
-    report_dir (string): directory where the report is saved (script argument)
+    report_dir (string): directory where the report is saved (script argument input_directory)
 
     :returns
     None
@@ -249,7 +249,7 @@ def validate_bag_manifest(bag_dir, report_dir):
 
     :parameter
     bag_dir (string): the path to an accession bag
-    report_dir (string): directory where the report is saved (script argument)
+    report_dir (string): directory where the report is saved (script argument input_directory)
 
     :returns
     None
@@ -320,7 +320,7 @@ def validate_manifest(acc_dir, manifest, report_dir):
     :parameter
     acc_dir (string): the path to an accession folder
     manifest (string): the path to the accession manifest file
-    report_dir (string): directory where the report is saved (script argument)
+    report_dir (string): directory where the report is saved (script argument input_directory)
 
     :returns
     None
@@ -397,28 +397,28 @@ if __name__ == '__main__':
 
     # Gets the path to the directory with the accessions to be validated from the script argument.
     # Exits the script if there is an error.
-    directory, error = check_argument(sys.argv)
+    input_directory, error = check_argument(sys.argv)
     if error:
         print(error)
         sys.exit(1)
 
     # Navigates to each accession, validates it, and updates the preservation log.
-    for root, dirs, files in os.walk(directory):
+    for root, dirs, files in os.walk(input_directory):
         # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
         for folder in dirs:
             if folder.endswith('_bag') and accession_test(folder):
                 print(f'Starting on accession {root} (bag)')
-                validate_bag(os.path.join(root, folder), directory)
+                validate_bag(os.path.join(root, folder), input_directory)
         # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
         # but only validates if it is not also an accession with a bag.
         # If there are both, the bag folder and initial manifest will be in the same parent folder.
         for file in files:
             if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
                 print(f'Starting on accession {root} (manifest)')
-                validate_manifest(root, file, directory)
+                validate_manifest(root, file, input_directory)
 
     # Prints if there were any validation errors, based on if the validation log was made or not.
-    log = os.path.join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+    log = os.path.join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
     if os.path.exists(log):
         print('\nValidation errors found, see fixity_validation.csv in the directory provided as the script argument.')
     else:
