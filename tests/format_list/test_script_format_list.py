@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
         # Runs the script a second time and tests that it prints the correct error.
         output = run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
-        expected = "Provided directory 'test_data\\Error' does not exist\r\n"
+        expected = "Provided input_directory 'test_data\\Error' does not exist\r\n"
         self.assertEqual(result, expected, 'Problem with test for printed error')
 
 

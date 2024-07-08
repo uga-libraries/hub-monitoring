@@ -8,7 +8,7 @@ from validate_fixity import update_report
 from test_script_validate_fixity import csv_to_list
 from datetime import date
 from os import getcwd, remove
-from os.path import basename, exists, join
+from os.path import exists, join
 
 
 class MyTestCase(unittest.TestCase):
@@ -23,15 +23,15 @@ class MyTestCase(unittest.TestCase):
         """Test for adding validation information for bags that are not valid to an existing report"""
         # First call of the function to add a bag that is not valid.
         bag_dir = join(getcwd(), 'backlogged', 'test_003', '2023_test003_001_er', '2023_test003_001_er_bag')
-        error_msg = 'Payload-Oxum validation failed.'
+        errors = 'Payload-Oxum validation failed.'
         report_dir = getcwd()
-        update_report(bag_dir, error_msg, report_dir)
+        update_report(bag_dir, str(errors), report_dir)
 
         # Second call of the function to add another bag that is not valid.
         bag_dir = join(getcwd(), 'backlogged', 'test_003', '2023_test003_002_er', '2023_test003_002_er_bag')
-        error_msg = 'Bag validation failed.'
+        errors = 'Bag validation failed.'
         report_dir = getcwd()
-        update_report(bag_dir, error_msg, report_dir)
+        update_report(bag_dir, str(errors), report_dir)
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(getcwd(), f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
@@ -44,9 +44,9 @@ class MyTestCase(unittest.TestCase):
         """Test for when the report is made for the first time"""
         # Call of the function to add a bag that is not valid.
         bag_dir = join(getcwd(), 'backlogged', 'test_003', '2023_test003_001_er', '2023_test003_001_er_bag')
-        error_msg = 'Bag validation failed.'
+        errors = 'Bag validation failed.'
         report_dir = getcwd()
-        update_report(bag_dir, error_msg, report_dir)
+        update_report(bag_dir, str(errors), report_dir)
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(getcwd(), f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
@@ -58,21 +58,21 @@ class MyTestCase(unittest.TestCase):
         """Test for adding validation information for manifests that are not valid to an existing report"""
         # First call of the function to add a manifest that is not valid.
         acc_dir = join(getcwd(), 'closed', 'test_004', '2023_test004_003_er')
-        error_msgs_list = [['error_msg']]
+        error_list = [['error_msg']]
         report_dir = getcwd()
-        update_report(acc_dir, f'{len(error_msgs_list)} manifest error_msgs', report_dir)
+        update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
 
         # Second call of the function to add a manifest that is not valid.
         acc_dir = join(getcwd(), 'closed', 'test_004', '2023_test004_004_er')
-        error_msgs_list = [['error_msg'], ['error_msg']]
+        error_list = [['error_msg'], ['error_msg']]
         report_dir = getcwd()
-        update_report(acc_dir, f'{len(error_msgs_list)} manifest error_msgs', report_dir)
+        update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(getcwd(), f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['closed', 'test_004', '2023_test004_003_er', '1 manifest error_msgs'],
-                    ['closed', 'test_004', '2023_test004_004_er', '2 manifest error_msgs']]
+                    ['closed', 'test_004', '2023_test004_003_er', '1 manifest errors'],
+                    ['closed', 'test_004', '2023_test004_004_er', '2 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for manifest not valid')
 
 

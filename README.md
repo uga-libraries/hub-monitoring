@@ -47,16 +47,18 @@ collection_summary.py
 format_list.py
 
 - input_directory (required): the directory with the folders to be summarized, 
-  which may be any folder file directory structure
+  which may be any folder in the expected file directory structure
 
 risk_update.py
 
-- input_directory (required): the directory that contains the risk spreadsheets
+- input_directory (required): the directory that contains the risk spreadsheets, 
+  which may be any folder in the expected file directory structure
 - nara_csv (required): the path to the most recent NARA Preservation Action Plan spreadsheet
 
 validate_fixity.py
 
-- directory (required): the directory with the folders to be summarized
+- input_directory (required): the directory that contains the content to be validated (in bags or with a manifest),
+  which may be any folder in the expected file directory structure
 
 ### Testing
 
