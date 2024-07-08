@@ -65,7 +65,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function twice,
         # first for bagit not being able to validate and then for validating with the bag manifest.
         bag_dir = join('test_data', 'test_003_log_update', '2023_test003_003_er', '2023_test003_003_er_bag')
-        update_preservation_log(dirname(bag_dir), False, 'bag', 'BagError: path is unsafe')
+        update_preservation_log(dirname(bag_dir), False, 'bag', 'BagError: path unsafe')
         all_match = False
         update_preservation_log(dirname(bag_dir), all_match, 'bag manifest')
 
@@ -75,7 +75,8 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.3.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.3.ER. The bag could not be validated.', 'validate_fixity.py'],
+                     'Validated bag for accession 2023.3.3.ER. The bag could not be validated. BagError: path unsafe',
+                     'validate_fixity.py'],
                     ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag manifest for accession 2023.3.3.ER. The bag manifest is not valid.',
                      'validate_fixity.py']]
@@ -86,7 +87,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function twice,
         # first for bagit not being able to validate and then for validating with the bag manifest.
         bag_dir = join('test_data', 'test_003_log_update', '2023_test003_004_er', '2023_test003_004_er_bag')
-        update_preservation_log(dirname(bag_dir), False, 'bag', 'BagError: path is unsafe')
+        update_preservation_log(dirname(bag_dir), False, 'bag', 'BagError: path unsafe')
         all_match = True
         update_preservation_log(dirname(bag_dir), all_match, 'bag manifest')
 
@@ -96,7 +97,8 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.4.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.4.ER. The bag could not be validated.', 'validate_fixity.py'],
+                     'Validated bag for accession 2023.3.4.ER. The bag could not be validated. BagError: path unsafe',
+                     'validate_fixity.py'],
                     ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag manifest for accession 2023.3.4.ER. The bag manifest is valid.',
                      'validate_fixity.py']]

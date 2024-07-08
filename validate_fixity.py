@@ -147,7 +147,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     else:
         if validation_type == 'bag':
             if error_msg.startswith('BagError'):
-                action = f'Validated bag for accession {accession}. The bag could not be validated.'
+                action = f'Validated bag for accession {accession}. The bag could not be validated. {error_msg}'
             else:
                 action = f'Validated bag for accession {accession}. The bag is not valid. {error_msg}'
         elif validation_type == 'bag manifest':
