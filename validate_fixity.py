@@ -281,14 +281,14 @@ def validate_bag_manifest(bag_dir, report_dir):
     df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='Bag_MD5', right_on='Acc_MD5', indicator='Match')
 
     # Determines if everything matched (values in Match will all be both).
-    valid = df_compare['Match'].eq('both').all(axis=0)
+    all_match = df_compare['Match'].eq('both').all(axis=0)
 
     # Updates the preservation log.
-    update_preservation_log(os.path.dirname(bag_dir), valid, 'bag manifest')
+    update_preservation_log(os.path.dirname(bag_dir), all_match, 'bag manifest')
 
     # If there were no errors, updates the script report to show the earlier bag error is resolved.
     # If there were errors, updates the script report with the error count and makes a manifest log.
-    if valid:
+    if all_match:
         update_report(bag_dir, 'Validated with bag manifest instead of bagit. The bag manifest is valid.', report_dir)
     else:
 
