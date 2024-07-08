@@ -22,13 +22,13 @@ import pandas as pd
 def accession_test(bag_name):
     """Determine if a bagged folder within an accession folder is accession content based on the folder name
 
-    Some accession folders also contain bagged AIPs for risk remediation work.
+    Some accession folders also contain bags for other purposes like risk remediation work.
 
     This is similar to the function accession_test in collection_summary.py,
-    but expects the accession id to end in _bag and does not need to evaluate if it is a file or folder.
+    but expects the folder name to end in _bag and does not need to evaluate if it is a file.
 
     @:parameter
-    bag_name (string): the name of the bag, which will be accession-number_bag if it is an accession
+    bag_name (string): the name of the bag folder, which will be accession-number_bag if it is an accession
 
     @:return
     Boolean: True if it is an accession folder and False if not
@@ -54,10 +54,10 @@ def accession_test(bag_name):
 def check_argument(arg_list):
     """Check if the required argument input_directory is present and a valid directory
 
-    :parameter
-    arg_list (list): the contents of sys.argv after the script is run
+    @:parameter
+    arg_list (list): the contents of sys.argv after starting the script
 
-    :returns
+    @:returns
     dir_path (string, None): string with the path to the folder with accessions to validate, or None if error
     error (string, None): string with the error message, or None if no error
     """
@@ -78,17 +78,17 @@ def check_argument(arg_list):
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
-    """Make a CSV file with all validation errors from a single accession
+    """Make a log with all file validation errors from a single accession
 
     This is too much information to include in the preservation log.
-    The file is saved in the input_directory with the accessions.
+    The file is saved in the input_directory.
 
-    :parameter
+    @:parameter
     report_dir (string): directory where the report is saved (script argument input_directory)
     acc_id (string): the accession number, used for naming the report
     errors (list): a list of validation errors to include in the report
 
-    :returns
+    @:returns
     None
     """
 
@@ -100,18 +100,19 @@ def manifest_validation_log(report_dir, acc_id, errors):
 
 
 def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
-    """Update an accession's preservation log with the bag validation results
+    """Update an accession's preservation log with the validation results
 
-    If there is no preservation log, it will print an error and not do the rest of the function.
-    The validation result will only be in the fixity_validation.csv, not in the accession folder.
+    If there is no preservation log, or it does not have the expected columns,
+    it will print an error and not do the rest of the function.
+    The validation result will still be in fixity_validation.csv.
 
-    :parameter
+    @:parameter
     acc_dir (string): the path to an accession folder, which contains the preservation log
     validation_result (Boolean): if an accession's file fixity is valid
     validation_type (string): bag, bag manifest, or manifest
     error_msg (None or string; optional): included for bag validation so error details can be in the log
 
-    :returns
+    @:returns
     None
     """
 
@@ -170,16 +171,17 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
 
 
 def update_report(acc_dir, error_msg, report_dir):
-    """Add a line of text to the summary report
+    """Add a line of text to the report fixity_validation.csv
 
+    The report lists every accession that did not validate with the validation error information.
     If it doesn't already exist, it makes the report with the header before adding the text.
 
-    :parameter
+    @:parameter
     acc_dir (string): the path to an accession folder, which may be a bag
     error_msg (string): validation error
     report_dir (string): directory where the report is saved (script argument input_directory)
 
-    :returns
+    @:returns
     None
     """
 
@@ -210,15 +212,14 @@ def update_report(acc_dir, error_msg, report_dir):
 
 
 def validate_bag(bag_dir, report_dir):
-    """Validate an accession's bag
+    """Validate an accession's bag with bagit and log the results
 
-    :parameter
-    bag_dir (string): the path to an accession bag
+    @:parameter
+    bag_dir (string): the path to an accession's bag
     report_dir (string): directory where the report is saved (script argument input_directory)
 
-    :returns
+    @:returns
     None
-    Updates the preservation_log.txt, and if it is not valid also updates the script report
     """
 
     # Tries to make a bag object, so that bagit library can validate it.
@@ -244,17 +245,16 @@ def validate_bag(bag_dir, report_dir):
 
 
 def validate_bag_manifest(bag_dir, report_dir):
-    """Validate an accession using the bag manifest if the bagit functionality fails
+    """Validate an accession with the bag manifest and log the results
 
-    Bagit cannot validate a bag if the path is too long.
+    Used if the accession cannot be validated using bagit, which happens if the path is too long.
 
-    :parameter
-    bag_dir (string): the path to an accession bag
+    @:parameter
+    bag_dir (string): the path to an accession's bag
     report_dir (string): directory where the report is saved (script argument input_directory)
 
-    :returns
+    @:returns
     None
-    Updates the preservation log, and if there are errors updates the report and makes a log
     """
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
@@ -312,20 +312,19 @@ def validate_bag_manifest(bag_dir, report_dir):
 
 
 def validate_manifest(acc_dir, manifest, report_dir):
-    """Validate an accession that has a manifest instead of being bagged
+    """Validate an accession with an initial manifest and log the results
 
     Accession's with long file paths cannot be bagged.
     They contain a file "initialmanifest_YYYYMMDD.csv" instead.
     Inspired by https://github.com/uga-libraries/verify-md5-KDPmanifests/blob/main/hashverify.py
 
-    :parameter
+    @:parameter
     acc_dir (string): the path to an accession folder
-    manifest (string): the path to the accession manifest file
+    manifest (string): the path to the accession's manifest file
     report_dir (string): directory where the report is saved (script argument input_directory)
 
-    :returns
+    @:returns
     None
-    Updates the preservation log, and if there are errors updates the report and makes a log
     """
 
     # Gets the path to the folder with the accession's files.
