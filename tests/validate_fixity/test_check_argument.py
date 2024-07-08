@@ -19,21 +19,21 @@ class MyTestCase(unittest.TestCase):
         """Test for when the directory argument is not present."""
         sys_argv = ['validate_fixity.py']
         result = check_argument(sys_argv)
-        expected = (None, 'Missing required argument: directory')
+        expected = (None, 'Missing required argument: input_directory')
         self.assertEqual(result, expected, 'Problem with test for directory argument missing')
 
     def test_directory_invalid(self):
         """Test for when the directory argument is not a valid path."""
         sys_argv = ['validate_fixity.py', 'path/error']
         result = check_argument(sys_argv)
-        expected = (None, "Provided directory 'path/error' does not exist")
+        expected = (None, "Provided input_directory 'path/error' does not exist")
         self.assertEqual(result, expected, 'Problem with test for correct directory argument')
 
     def test_extra_argument(self):
         """Test for when there are too many arguments provided."""
         sys_argv = ['validate_fixity.py', 'test_data', 'extra']
         result = check_argument(sys_argv)
-        expected = (None, 'Too many arguments. Should just have one argument, directory')
+        expected = (None, 'Too many arguments. Should just have one argument, input_directory')
         self.assertEqual(result, expected, 'Problem with test for extra argument')
 
 

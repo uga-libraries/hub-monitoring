@@ -52,7 +52,7 @@ def accession_test(bag_name):
 
 
 def check_argument(arg_list):
-    """Check if the required argument is present and a valid directory
+    """Check if the required argument input_directory is present and a valid directory
 
     :parameter
     arg_list (list): the contents of sys.argv after the script is run
@@ -66,15 +66,15 @@ def check_argument(arg_list):
     # If the number of arguments is incorrect, dir_path is set to None.
     # If there is no error, error is set to None.
     if len(arg_list) == 1:
-        return None, "Missing required argument: directory"
+        return None, "Missing required argument: input_directory"
     elif len(arg_list) == 2:
         dir_path = arg_list[1]
         if os.path.exists(dir_path):
             return dir_path, None
         else:
-            return None, f"Provided directory '{dir_path}' does not exist"
+            return None, f"Provided input_directory '{dir_path}' does not exist"
     else:
-        return None, "Too many arguments. Should just have one argument, directory"
+        return None, "Too many arguments. Should just have one argument, input_directory"
 
 
 def manifest_validation_log(acc_dir, acc, errors):
