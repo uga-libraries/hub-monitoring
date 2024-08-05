@@ -5,7 +5,7 @@
 Scripts for summarizing and validating content on the Digital Production Hub, 
 the UGA Libraries' centralized storage for digital objects that are not suitable for our digital preservation system.
 
-The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
+For example reports, see: [documentation](documentation). 
 
 ## Getting Started
 
