@@ -28,13 +28,13 @@ import pandas as pd
 def accession_test(bag_name):
     """Determine if a bagged folder within an accession folder is accession content based on the folder name
 
-    Some accession folders also contain bagged AIPs for risk remediation work.
+    Some accession folders also contain bags for other purposes like risk remediation work.
 
     This is similar to the function accession_test in collection_summary.py,
-    but expects the accession id to end in _bag and does not need to evaluate if it is a file or folder.
+    but expects the folder name to end in _bag and does not need to evaluate if it is a file.
 
     @:parameter
-    bag_name (string): the name of the bag, which will be accession-number_bag if it is an accession
+    bag_name (string): the name of the bag folder, which will be accession-number_bag if it is an accession
 
     @:return
     Boolean: True if it is an accession folder and False if not
@@ -58,29 +58,51 @@ def accession_test(bag_name):
 
 
 def check_argument(arg_list):
-    """Check if the required argument is present and a valid directory
+    """Check if the required argument input_directory is present and a valid directory
 
     @:parameter
-    arg_list (list): the contents of sys.argv after the script is run
+    arg_list (list): the contents of sys.argv after starting the script
 
     @:returns
     dir_path (string, None): string with the path to the folder with accessions to validate, or None if error
     error (string, None): string with the error message, or None if no error
     """
 
-    # Verifies the required argument (directory) is present and a valid path.
+    # Verifies the required argument (input_directory) is present and a valid path.
     # If the number of arguments is incorrect, dir_path is set to None.
     # If there is no error, error is set to None.
     if len(arg_list) == 1:
-        return None, "Missing required argument: directory"
+        return None, "Missing required argument: input_directory"
     elif len(arg_list) == 2:
         dir_path = arg_list[1]
         if os.path.exists(dir_path):
             return dir_path, None
         else:
-            return None, f"Provided directory '{dir_path}' does not exist"
+            return None, f"Provided input_directory '{dir_path}' does not exist"
     else:
-        return None, "Too many arguments. Should just have one argument, directory"
+        return None, "Too many arguments. Should just have one argument, input_directory"
+
+
+def manifest_validation_log(report_dir, acc_id, errors):
+    """Make a log with all file validation errors from a single accession
+
+    This is too much information to include in the preservation log.
+    The file is saved in the input_directory.
+
+    @:parameter
+    report_dir (string): directory where the report is saved (script argument input_directory)
+    acc_id (string): the accession number, used for naming the report
+    errors (list): a list of validation errors to include in the report
+
+    @:returns
+    None
+    """
+
+    with open(os.path.join(report_dir, f'{acc_id}_manifest_validation_errors.csv'), 'w', newline='',
+              encoding='utf-8') as open_log:
+        log_writer = csv.writer(open_log)
+        log_writer.writerow(['File', 'MD5', 'MD5_Source'])
+        log_writer.writerows(errors)
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
@@ -106,7 +128,7 @@ def manifest_validation_log(report_dir, acc_id, errors):
 
 
 def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
-    """Update an accession's preservation log with the bag validation results
+    """Update an accession's preservation log with the validation results
 
     If there is no preservation log, or it does not have the expected columns,
     it will print an error and not do the rest of the function.
@@ -126,7 +148,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     # If not, prints an error and does not do the rest of this function.
     log_path = os.path.join(acc_dir, 'preservation_log.txt')
     if not os.path.exists(log_path):
-        print(f'\nERROR: accession {os.path.basename(acc_dir)} has no preservation log.')
+        print(f'ERROR: accession {os.path.basename(acc_dir)} has no preservation log.\n')
         return
 
     # Gets the collection and accession numbers from the preservation log.
@@ -147,7 +169,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     else:
         if validation_type == 'bag':
             if error_msg.startswith('BagError'):
-                action = f'Validated bag for accession {accession}. The bag could not be validated.'
+                action = f'Validated bag for accession {accession}. The bag could not be validated. {error_msg}'
             else:
                 action = f'Validated bag for accession {accession}. The bag is not valid. {error_msg}'
         elif validation_type == 'bag manifest':
@@ -162,8 +184,8 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     # Checks if the log starts with the expected column row.
     # If not, prints an error and does not update the log.
     if not log_text.startswith('Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff'):
-        print(f'\nERROR: accession {os.path.basename(acc_dir)} has nonstandard columns in the preservation log; '
-              f'could not update with validation result.')
+        print(f'ERROR: accession {os.path.basename(acc_dir)} has nonstandard columns in the preservation log; '
+              f'could not update with validation result.\n')
         return
 
     # Adds a row to the end of the preservation log for the bag validation.
@@ -214,7 +236,7 @@ def update_report(acc_dir, error_msg, report_dir):
     # Adds the error text to the report.
     with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
         report_writer = csv.writer(open_report)
-        report_writer.writerow([acc_dir, error_msg])
+        report_writer.writerow([status, collection, accession, error_msg])
 
 
 def validate_bag(bag_dir, report_dir):
@@ -394,8 +416,8 @@ def validate_manifest(acc_dir, manifest, report_dir):
     # If there are any validation errors, adds a summary of the errors to the script report (fixity_validation.csv)
     # and makes a log with every file that does not match (acc_manifest_validation_errors.csv)
     if not valid:
+        update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
         accession_number = os.path.basename(acc_dir)
-        update_report(accession_number, f'{len(error_list)} manifest errors', report_dir)
         manifest_validation_log(report_dir, accession_number, error_list)
 
 

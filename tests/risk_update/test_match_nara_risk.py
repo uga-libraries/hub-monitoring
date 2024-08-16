@@ -1,9 +1,9 @@
 """
 Tests for the function match_nara_risk(), which adds NARA risk information to a dataframe of format identifications.
 
-To simplify the tests, the input dataframe (update_df) only has format columns needed for matching and
+To simplify the tests, the input dataframe (new_risk_df) only has format columns needed for matching and
 tests use an abbreviated NARA Preservation Action Plan CSV (only the columns needed and far fewer formats).
-This test input must be updated to keep in sync with changes to update_df or the NARA CSV.
+This test input must be updated to keep in sync with changes to new_risk_df or the NARA CSV.
 """
 import unittest
 from risk_update import match_nara_risk, read_nara_csv
@@ -32,13 +32,13 @@ class MyTestCase(unittest.TestCase):
         rows = [['PDF', 1.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/14'],
                 ['Rich Text Format', 1.5, 'https://www.nationalarchives.gov.uk/pronom/fmt/50'],
                 ['Rich Text Format', 1.6, 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['PDF', 1.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/14',
@@ -59,13 +59,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['Portable Document Format/Archiving (PDF/A-1a) accessible', '1A', 'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
                 ['Rich Text Format 1.5', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Portable Document Format/Archiving (PDF/A-1a) accessible', '1A',
@@ -83,13 +83,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['portable document format/archiving (PDF/A-1a) accessible', '1A', 'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
                 ['RICH TEXT FORMAT 1.5', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['portable document format/archiving (PDF/A-1a) accessible', '1A',
@@ -106,13 +106,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['HTML', 'v5.1', 'https://www.nationalarchives.gov.uk/pronom/fmt/96'],
                 ['PDF 1.0', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/14']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['HTML', 'v5.1', 'https://www.nationalarchives.gov.uk/pronom/fmt/96',
@@ -132,13 +132,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['Portable Document Format (PDF) Portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
                 ['WordPerfect Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Portable Document Format (PDF) Portfolio', 2.0,
@@ -156,13 +156,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['portable document format (pdf) portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
                 ['WORDPERFECT TEMPLATE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['portable document format (pdf) portfolio', 2.0,
@@ -180,13 +180,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['Rich Text Format', 1.5, 'NO VALUE'],
                 ['WordPerfect Template', 'NO VALUE', 'NO VALUE']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Rich Text Format', 1.5, 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
@@ -202,13 +202,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['RICH TEXT FORMAT', 1.5, 'NO VALUE'],
                 ['wordperfect template', 'NO VALUE', 'NO VALUE']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['RICH TEXT FORMAT', 1.5, 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
@@ -223,13 +223,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56'],
                 ['OneNote', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/637']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56', 'No Match', nan, nan,
@@ -243,13 +243,13 @@ class MyTestCase(unittest.TestCase):
         # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
         rows = [['Excel', 3.0, 'NO VALUE'],
                 ['OneNote', 'NO VALUE', 'NO VALUE']]
-        update_df = make_df(rows)
+        new_risk_df = make_df(rows)
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
-        update_df = match_nara_risk(update_df, self.nara_risk_df)
-        result = [update_df.columns.tolist()] + update_df.values.tolist()
+        new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
+        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
 
-        # Tests the contents of update_df is correct.
+        # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Excel', 3.0, 'NO VALUE', 'No Match', nan, nan,

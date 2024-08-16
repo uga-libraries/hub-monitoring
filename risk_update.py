@@ -69,7 +69,7 @@ def match_nara_risk(risk_df, nara_df):
     Adopted from https://github.com/uga-libraries/accessioning-scripts/blob/main/format_analysis_functions.py
 
     @:parameter
-    risk_df (Pandas dataframe): a dataframe with FITS columns from a risk spreadsheet
+    risk_df (Pandas dataframe): a dataframe with FITS format information columns from a risk spreadsheet
     nara_df (Pandas dataframe): a dataframe with all columns from the NARA Preservation Action Plan spreadsheet
 
     @:returns
@@ -220,7 +220,7 @@ def most_recent_risk_csv(file_list):
         except AttributeError:
             file_date = date(1900, 1, 1)
 
-        # If this is the first file evaluated, or this file's date is more recent than the current recent_date,
+        # If this is the first file evaluated, or this file's date is more recent than the current most_recent_date,
         # updates most_recent_file and most_recent_date with the current file and its date.
         if most_recent_date is None or most_recent_date < file_date:
             most_recent_file = file_name
@@ -313,7 +313,7 @@ def update_log(accession_path, log_dir):
 
     @:parameter
     accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s)
-    log_dir (string): the path to the directory for saving the log (script argument directory)
+    log_dir (string): the path to the directory for saving the log (script argument input_directory)
 
     @:returns
     None. Makes or updates the log.
@@ -338,7 +338,7 @@ def update_log(accession_path, log_dir):
 
 if __name__ == '__main__':
 
-    # Gets the paths to the directory and NARA Preservation Action Plan spreadsheet from the script arguments.
+    # Gets the paths to the input directory and NARA Preservation Action Plan spreadsheet from the script arguments.
     # Exits the script if there are errors.
     input_directory, nara_csv, errors_list = check_arguments(sys.argv)
     if len(errors_list) > 0:

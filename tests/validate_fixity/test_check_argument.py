@@ -10,31 +10,54 @@ class MyTestCase(unittest.TestCase):
 
     def test_correct(self):
         """Test for when the directory argument is present and a valid path."""
+        # Makes variable for function input and runs the function.
         sys_argv = ['validate_fixity.py', 'test_data']
-        result = check_argument(sys_argv)
-        expected = ('test_data', None)
-        self.assertEqual(result, expected, 'Problem with test for correct directory argument')
+        input_directory, error = check_argument(sys_argv)
+
+        # Checks input_directory has the correct value.
+        self.assertEqual(input_directory, 'test_data', 'Problem with test for correct, input_directory')
+
+        # Checks error has the correct value.
+        self.assertEqual(error, None, 'Problem with test for correct, error')
 
     def test_directory_missing(self):
         """Test for when the directory argument is not present."""
+        # Makes variable for function input and runs the function.
         sys_argv = ['validate_fixity.py']
-        result = check_argument(sys_argv)
-        expected = (None, 'Missing required argument: directory')
-        self.assertEqual(result, expected, 'Problem with test for directory argument missing')
+        input_directory, error = check_argument(sys_argv)
+
+        # Checks input_directory has the correct value.
+        self.assertEqual(input_directory, None, 'Problem with test for directory missing, input_directory')
+
+        # Checks error has the correct value.
+        expected = 'Missing required argument: input_directory'
+        self.assertEqual(error, expected, 'Problem with test for directory missing, error')
 
     def test_directory_invalid(self):
         """Test for when the directory argument is not a valid path."""
+        # Makes variable for function input and runs the function.
         sys_argv = ['validate_fixity.py', 'path/error']
-        result = check_argument(sys_argv)
-        expected = (None, "Provided directory 'path/error' does not exist")
-        self.assertEqual(result, expected, 'Problem with test for correct directory argument')
+        input_directory, error = check_argument(sys_argv)
+
+        # Checks input_directory has the correct value.
+        self.assertEqual(input_directory, None, 'Problem with test for directory invalid, input_directory')
+
+        # Checks error has the correct value.
+        expected = "Provided input_directory 'path/error' does not exist"
+        self.assertEqual(error, expected, 'Problem with test for invalid directory invalid, error')
 
     def test_extra_argument(self):
         """Test for when there are too many arguments provided."""
+        # Makes variable for function input and runs the function.
         sys_argv = ['validate_fixity.py', 'test_data', 'extra']
-        result = check_argument(sys_argv)
-        expected = (None, 'Too many arguments. Should just have one argument, directory')
-        self.assertEqual(result, expected, 'Problem with test for extra argument')
+        input_directory, error = check_argument(sys_argv)
+
+        # Checks input_directory has the correct value.
+        self.assertEqual(input_directory, None, 'Problem with test for extra argument, input_directory')
+
+        # Checks error has the correct value.
+        expected = 'Too many arguments. Should just have one argument, input_directory'
+        self.assertEqual(error, expected, 'Problem with test for extra argument, error')
 
 
 if __name__ == '__main__':

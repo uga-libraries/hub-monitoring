@@ -76,8 +76,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_001_er', '2 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_001_er', '2 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -111,8 +111,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_003_er', '3 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_003_er', '3 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del all, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -148,8 +148,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_005_er', '1 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_005_er', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del some, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -181,8 +181,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_002_er', '4 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_002_er', '4 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
@@ -219,8 +219,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test005_004_er', '1 manifest errors']]
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_005_manifest_not_valid', '2023_test005_004_er', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit dup, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.

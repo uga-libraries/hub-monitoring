@@ -250,7 +250,7 @@ def get_size(acc_path):
 
     For bagged accessions, this is for the contents of the bag data folder.
     Otherwise, this is for the contents of the folder within the accession folder that is not for FITS files.
-    If the folder cannot be found or size cannot be calculated for any files, size is set to 0.
+    If the folder cannot be found or size cannot be calculated for any file, size is set to 0.
 
     @:parameter
     acc_path (string): the path to the accession folder
@@ -295,7 +295,7 @@ def get_size(acc_path):
 
 
 def round_non_zero(number):
-    """Round a number to the fewest decimal places that don't make the number 0
+    """Round a number to the fewest decimal places that don't make the number 0, but at least 2 decimal places
 
     This is used in calculating percentage of files at each risk level in combine_collection_data()
     and size (converted to GB) in get_size()
@@ -325,7 +325,7 @@ def round_non_zero(number):
 
 
 def save_accession_report(input_dir, row):
-    """Save a row of data to a CSV in the directory provided as the script argument
+    """Save a row of data to a CSV in the input_directory provided as the script argument
 
     @:parameter
     input_dir (string): the path to the folder with data to be summarized (script argument)
@@ -349,7 +349,7 @@ def save_accession_report(input_dir, row):
 
 if __name__ == '__main__':
 
-    # Gets the path to the directory with the information to be summarized from the script argument.
+    # Gets the path to the input_directory with the information to be summarized from the script argument.
     # Exits the script if there is an error.
     input_directory, error = check_argument(sys.argv)
     if error:
@@ -375,7 +375,7 @@ if __name__ == '__main__':
                         accession_data = get_accession_data(input_directory, status, collection, accession)
                         save_accession_report(input_directory, accession_data)
 
-    # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
+    # Combines accession information for each collection and saves to a CSV in "input_directory" (the script argument).
     today = datetime.today().strftime('%Y-%m-%d')
     accession_df = pd.read_csv(os.path.join(input_directory, f'hub-accession-summary_{today}.csv')).fillna('')
     collection_df = combine_collection_data(accession_df)

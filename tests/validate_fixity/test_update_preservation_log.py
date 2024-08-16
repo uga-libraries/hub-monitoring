@@ -5,7 +5,7 @@ import unittest
 from validate_fixity import update_preservation_log
 from test_script_validate_fixity import csv_to_list
 from datetime import date
-from os.path import join
+from os.path import dirname, join
 from shutil import copyfile
 
 
@@ -30,12 +30,12 @@ class MyTestCase(unittest.TestCase):
     def test_bag_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
-        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_001_er')
-        error = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'
-        update_preservation_log(bag_dir, False, 'bag', error)
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_001_er', '2023_test003_001_er_bag')
+        errors = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'
+        update_preservation_log(dirname(bag_dir), False, 'bag', str(errors))
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(dirname(bag_dir), 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -48,11 +48,11 @@ class MyTestCase(unittest.TestCase):
     def test_bag_valid(self):
         """Test for when the bag is valid"""
         # Makes the variables needed for function input and runs the function.
-        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_002_er')
-        update_preservation_log(bag_dir, True, 'bag')
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_002_er', '2023_test003_002_er_bag')
+        update_preservation_log(dirname(bag_dir), True, 'bag')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(dirname(bag_dir), 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -64,18 +64,18 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag cannot be validated with bagit and bag manifest is not valid"""
         # Makes the variables needed for function input and runs the function twice,
         # first for bagit not being able to validate and then for validating with the bag manifest.
-        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_003_er')
-        update_preservation_log(bag_dir, False, 'bag', 'BagError: path is unsafe')
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_003_er', '2023_test003_003_er_bag')
+        update_preservation_log(dirname(bag_dir), False, 'bag', 'BagError: path unsafe')
         all_match = False
-        update_preservation_log(bag_dir, all_match, 'bag manifest')
+        update_preservation_log(dirname(bag_dir), all_match, 'bag manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(dirname(bag_dir), 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.3.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.3.ER. The bag could not be validated.',
+                     'Validated bag for accession 2023.3.3.ER. The bag could not be validated. BagError: path unsafe',
                      'validate_fixity.py'],
                     ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag manifest for accession 2023.3.3.ER. The bag manifest is not valid.',
@@ -86,18 +86,18 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag cannot be validated with bagit and the bag manifest is valid"""
         # Makes the variables needed for function input and runs the function twice,
         # first for bagit not being able to validate and then for validating with the bag manifest.
-        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_004_er')
-        update_preservation_log(bag_dir, False, 'bag', 'BagError: path is unsafe')
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_004_er', '2023_test003_004_er_bag')
+        update_preservation_log(dirname(bag_dir), False, 'bag', 'BagError: path unsafe')
         all_match = True
-        update_preservation_log(bag_dir, all_match, 'bag manifest')
+        update_preservation_log(dirname(bag_dir), all_match, 'bag manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(dirname(bag_dir), 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.4.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.4.ER. The bag could not be validated.',
+                     'Validated bag for accession 2023.3.4.ER. The bag could not be validated. BagError: path unsafe',
                      'validate_fixity.py'],
                     ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag manifest for accession 2023.3.4.ER. The bag manifest is valid.',
@@ -125,7 +125,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         acc_dir = join('test_data', 'test_003_log_update', '2023_test003_006_er')
         valid = True
-        update_preservation_log(acc_dir, True, 'manifest')
+        update_preservation_log(acc_dir, valid, 'manifest')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')

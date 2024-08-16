@@ -37,12 +37,12 @@ For validating fixity, accessions should be bags or have a manifest. (UPDATE WIT
 accession_completeness_report.py
 
 - input_directory (required): the directory with the folders to be checked for completeness, 
-  which must be the directory containing the status folders
+  which must be the directory containing the status folders 
 
 collection_summary.py
 
-- input_directory (required): the directory with the folders to be checked for completeness, 
-  which must be the directory containing the status folders 
+- input_directory (required): the directory with the folders to be summarized,
+  which must be the directory containing the status folders
 
 format_list.py
 

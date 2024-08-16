@@ -1,7 +1,7 @@
 """
 Tests for the function manifest_validation_log(), which saves validation errors to a text file.
 
-To simplify the test data needed, the errors_list does not match the directory.
+To simplify the test data needed, the error_list does not match the directory.
 """
 import unittest
 from validate_fixity import manifest_validation_log
@@ -23,11 +23,11 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         report_dir = join('test_data', 'test_005_manifest_not_valid')
         accession_number = '2023_test005_001_er'
-        errors_list = [['Z:\\2023_test005_002_er\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
-                       [join(report_dir, accession_number, 'CD_2', 'File02.txt'), '8078CD550FCF6755750A59378AFC7D30',
-                        'Current'],
-                       ['Number of files does not match. 2 files in the accession folder and 3 in the manifest.']]
-        manifest_validation_log(report_dir, accession_number, errors_list)
+        error_list = [['Z:\\2023_test005_002_er\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
+                      [join(report_dir, accession_number, 'CD_2', 'File02.txt'), '8078CD550FCF6755750A59378AFC7D30',
+                       'Current'],
+                      ['Number of files does not match. 2 files in the accession folder and 3 in the manifest.']]
+        manifest_validation_log(report_dir, accession_number, error_list)
 
         # Verifies the report has the correct values.
         result = csv_to_list(join(report_dir, '2023_test005_001_er_manifest_validation_errors.csv'))
@@ -44,8 +44,8 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         report_dir = join('test_data', 'test_005_manifest_not_valid')
         accession_number = '2023_test005_001_er'
-        errors_list = [['Number of files does not match. 3 files in the accession folder and 4 in the manifest.']]
-        manifest_validation_log(report_dir, accession_number, errors_list)
+        error_list = [['Number of files does not match. 3 files in the accession folder and 4 in the manifest.']]
+        manifest_validation_log(report_dir, accession_number, error_list)
 
         # Verifies the report has the correct values.
         result = csv_to_list(join(report_dir, '2023_test005_001_er_manifest_validation_errors.csv'))
@@ -59,13 +59,13 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         report_dir = join('test_data', 'test_005_manifest_not_valid')
         accession_number = '2023_test005_001_er'
-        errors_list = [['Z:\\2023_test005_002_er\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
+        error_list = [['Z:\\2023_test005_002_er\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
                        ['Z:\\2023_test005_002_er\\CD_1\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
                        [join(report_dir, accession_number, 'CD_1', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E',
                         'Current'],
                        [join(report_dir, accession_number, 'CD_2', 'File02.txt'), '8078CD550FCF6755750A59378AFC7D30',
                         'Current']]
-        manifest_validation_log(report_dir, basename(accession_number), errors_list)
+        manifest_validation_log(report_dir, basename(accession_number), error_list)
 
         # Verifies the report has the correct values.
         result = csv_to_list(join(report_dir, '2023_test005_001_er_manifest_validation_errors.csv'))

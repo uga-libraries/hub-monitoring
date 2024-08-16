@@ -1,5 +1,5 @@
 """
-Tests for the script risk_update.py, Get updated NARA risk information for every accession in a directory.
+Tests for the script risk_update.py, Get updated NARA risk information for every accession in a input_directory.
 """
 import subprocess
 import unittest
@@ -174,16 +174,16 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input.
         # The script will be run twice in this test.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        directory = join('test_data', 'Error', 'closed', 'rbrl004')
+        input_directory = join('test_data', 'Error', 'closed', 'rbrl004')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(subprocess.CalledProcessError):
-            subprocess.run(f'python "{script}" "{directory}"', shell=True, check=True, stdout=subprocess.PIPE)
+            subprocess.run(f'python "{script}" "{input_directory}"', shell=True, check=True, stdout=subprocess.PIPE)
 
         # Runs the script a second time and tests that it prints the correct errors.
-        output = subprocess.run(f'python "{script}" "{directory}"', shell=True, stdout=subprocess.PIPE)
+        output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
-        expected = "Directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
+        expected = "Input directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"
         self.assertEqual(result, expected, 'Problem with test for argument error, printing')
 

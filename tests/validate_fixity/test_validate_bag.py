@@ -40,10 +40,11 @@ class MyTestCase(unittest.TestCase):
     #     After the test runs, remove the data from preservation_log.txt and
     #     delete any fixity_validation.csv and manifest_validation_errors.csv produced.
     #     """
-    #     # Makes variables for function input and runs the function.
-    #     root = r'INSERT PATH TO ACCESSION FOLDER'
-    #     folder = 'INSERT NAME OF BAG FOLDER'
-    #     validate_bag(join(root, folder), r'INSERT PATH FOR WHERE TO SAVE REPORT')
+    #     # Makes variable for function input and runs the function.
+    #     root = r'INSERT PATH TO FOLDER CONTAINING THE BAG'
+    #     folder = 'INSERT BAG FOLDER NAME'
+    #     input_directory = r'INSERT PATH TO FOLDER WHERE OUTPUT SHOULD BE SAVED'
+    #     validate_bag(join(root, folder), input_directory)
     #
     #     # Verifies the preservation_log.txt has been updated correctly.
     #     result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -53,9 +54,8 @@ class MyTestCase(unittest.TestCase):
     #
     #     # Verifies the fixity validation CSV has the correct values.
     #     # Only use for bags that are not valid.
-    #     result = csv_to_list(join(r'INSERT PATH FOR WHERE TO SAVE REPORT',
-    #                               f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-    #     expected = [['Accession', 'Validation_Error'],
+    #     result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+    #     expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
     #                 ['INSERT DATA ROW(s)']]
     #     self.assertEqual(result, expected, 'Problem with test for bag error, fixity_validation.csv')
 
@@ -81,8 +81,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test002_001_er',
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_002_bags_invalid', '2023_test002_001_er',
                      'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes']]
         self.assertEqual(result, expected, 'Problem with test for file added, fixity_validation.csv')
 
@@ -108,8 +108,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test002_002_er',
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_002_bags_invalid', '2023_test002_002_er',
                      'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes']]
         self.assertEqual(result, expected, 'Problem with test for file deleted, fixity_validation.csv')
 
@@ -135,8 +135,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test002_003_er',
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_002_bags_invalid', '2023_test002_003_er',
                      'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 3 files and 79 bytes']]
         self.assertEqual(result, expected, 'Problem with test for file edited, fixity_validation.csv')
 
@@ -163,8 +163,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test002_004_er',
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_002_bags_invalid', '2023_test002_004_er',
                      'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
                      'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"']]
         self.assertEqual(result, expected, 'Problem with test for fixity changed, fixity_validation.csv')
@@ -190,8 +190,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation CSV has the correct values.
         result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Accession', 'Validation_Error'],
-                    ['2023_test002_005_er',
+        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
+                    ['test_data', 'test_002_bags_invalid', '2023_test002_005_er',
                      'Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem']]
         self.assertEqual(result, expected, 'Problem with test for missing bag-info.txt, fixity_validation.csv')
 
