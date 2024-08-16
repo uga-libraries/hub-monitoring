@@ -41,9 +41,9 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script runs correctly on all three accessions in rbrl004"""
         # makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        directory = join('test_data', 'Russell_Hub', 'rbrl004')
+        input_directory = join('test_data', 'Russell_Hub', 'rbrl004')
         nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
-        subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
+        subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the log was made.
         log_path = join('test_data', 'Russell_Hub', 'rbrl004', 'update_risk_log.csv')
@@ -192,16 +192,16 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input.
         # The script will be run twice in this test.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        directory = join('test_data', 'Russell_Hub', 'rbrl004')
+        input_directory = join('test_data', 'Russell_Hub', 'rbrl004')
         nara_csv = join('test_data', 'NARA_PreservationActionPlan_Outdated.csv')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(subprocess.CalledProcessError):
-            subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True, check=True,
+            subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, check=True,
                            stdout=subprocess.PIPE)
 
         # Runs the script a second time and tests that it prints the correct errors.
-        output = subprocess.run(f'python "{script}" "{directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
+        output = subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
         expected = '\r\nThe NARA Preservation Action Plan spreadsheet does not have at least one of the expected ' \
                    'columns: Format Name, File Extension(s), PRONOM URL, NARA Risk Level, and NARA Proposed ' \
