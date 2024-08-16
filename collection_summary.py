@@ -1,4 +1,4 @@
-"""Makes spreadsheets with summary data about each accession and collection in a given department folder
+"""Makes two spreadsheets with summary data about each accession and collection in a given department folder
 
 Data included:
 - Accession (accession report only)
@@ -8,12 +8,13 @@ Data included:
 - Size (GB and number of files)
 - Risk (number of files at each NARA risk level)
 - Notes (if there was no risk csv and for additional archivist notes)
+- Size_Error (if size could not be calculated and needs to be calculated manually using file properties)
 
 If there is more than one accession for the collection,
 the information is combined in the collection report.
 
 Parameter:
-    directory (required): the directory with the folders to be summarized
+    input_directory (required): the directory with the folders to be summarized
 
 Returns:
     hub-accession-summary_DATE.csv
@@ -30,7 +31,10 @@ from validate_fixity import check_argument
 
 
 def accession_test(acc_id, acc_path):
-    """Determine if a folder within a collection folder is an accession based on the folder name
+    """Determine if a folder is an accession based on the folder name
+
+    There may be other folders used for other purposes, like risk remediation or appraisal, as well.
+    These other folders are not part of the collection summary report.
 
     @:parameter
     acc_id (string): the accession id, which is the name of a folder within acc_coll
@@ -60,6 +64,8 @@ def accession_test(acc_id, acc_path):
 
 def combine_collection_data(acc_df):
     """Combine data for collections with multiple accessions
+
+    If a collection has one accession, the accession data is assigned to the collection as is.
 
     @:parameter
     acc_df (Pandas dataframe): the data for every accession
@@ -131,11 +137,11 @@ def combine_collection_dates(acc_df):
     return date_df
 
 
-def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
+def get_accession_data(input_dir, acc_status, acc_coll, acc_id):
     """Calculate the data about a single accession folder, mostly using other functions
 
     @:parameter
-    acc_dir (string): the path to the folder with data to be summarized (script argument)
+    input_dir (string): the path to the folder with data to be summarized (script argument)
     acc_status (string): if the accession is backlogged or closed, which is a folder within acc_dir
     acc_coll (string): the collection the accession is part of, which is a folder within acc_status
     acc_id (string): the accession id, which is a folder within acc_coll
@@ -147,7 +153,7 @@ def get_accession_data(acc_dir, acc_status, acc_coll, acc_id):
     """
 
     # Calculates the path to the accession folder, which combines the four function parameters.
-    acc_path = os.path.join(acc_dir, acc_status, acc_coll, acc_id)
+    acc_path = os.path.join(input_dir, acc_status, acc_coll, acc_id)
 
     # Gets the data which requires additional calculation.
     # Size, Files, and Date are single data points, while risk is a list of four items.
@@ -192,7 +198,8 @@ def get_risk(acc_path):
     """Calculate the number of files at each of the four NARA risk levels in an accession
 
     The accession's risk spreadsheet is used to calculate the data.
-    If there is more than one, the most recent spreadsheet is used.
+    If there is more than one spreadsheet, the most recent spreadsheet is used.
+    If there is no risk spreadsheet, all risk level counts are set to 0.
 
     @:parameter
     acc_path (string): the path to the accession folder
@@ -243,6 +250,7 @@ def get_size(acc_path):
 
     For bagged accessions, this is for the contents of the bag data folder.
     Otherwise, this is for the contents of the folder within the accession folder that is not for FITS files.
+    If the folder cannot be found or size cannot be calculated for any files, size is set to 0.
 
     @:parameter
     acc_path (string): the path to the accession folder
@@ -316,17 +324,16 @@ def round_non_zero(number):
     return round_number
 
 
-def save_accession_report(dir_path, row):
+def save_accession_report(input_dir, row):
     """Save a row of data to a CSV in the directory provided as the script argument
 
     @:parameter
-    dir_path (string): the path to the folder with data to be summarized (script argument)
+    input_dir (string): the path to the folder with data to be summarized (script argument)
     row (list or string): list with data for a row in the CSV or "header"
     """
 
     # Path to the accession report.
-    today = datetime.today().strftime('%Y-%m-%d')
-    report_path = os.path.join(dir_path, f'hub-accession-summary_{today}.csv')
+    report_path = os.path.join(input_dir, f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
 
     # Makes the report with a header row if row is "header". Otherwise, adds the row to the report.
     if row == 'header':
@@ -344,31 +351,32 @@ if __name__ == '__main__':
 
     # Gets the path to the directory with the information to be summarized from the script argument.
     # Exits the script if there is an error.
-    directory, error = check_argument(sys.argv)
+    input_directory, error = check_argument(sys.argv)
     if error:
         print(error)
         sys.exit(1)
 
     # Starts a CSV for information about each accession. It will also be summarized later by collection.
-    save_accession_report(directory, 'header')
+    save_accession_report(input_directory, 'header')
 
-    # Navigates to each accession folder, gets the information, and saves it to the accession dataframe.
-    # Folders used for other purposes at the status and accession level are skipped.
-    for status in os.listdir(directory):
+    # Navigates to each accession folder, gets the information, and saves it to the accession CSV.
+    # Folders used for other purposes at each level are skipped.
+    for status in os.listdir(input_directory):
         if status in ('backlogged', 'closed'):
-            for collection in os.listdir(os.path.join(directory, status)):
+            for collection in os.listdir(os.path.join(input_directory, status)):
                 # Do not include ua22-008 in the report, since it is not our collection.
                 if collection == 'ua22-008 Linguistic Atlas Project':
                     continue
-                for accession in os.listdir(os.path.join(directory, status, collection)):
-                    is_accession = accession_test(accession, os.path.join(directory, status, collection, accession))
+                for accession in os.listdir(os.path.join(input_directory, status, collection)):
+                    accession_dir = os.path.join(input_directory, status, collection, accession)
+                    is_accession = accession_test(accession, accession_dir)
                     if is_accession:
-                        print('Starting on accession', os.path.join(directory, status, collection, accession))
-                        accession_data = get_accession_data(directory, status, collection, accession)
-                        save_accession_report(directory, accession_data)
+                        print('Starting on accession', accession_dir)
+                        accession_data = get_accession_data(input_directory, status, collection, accession)
+                        save_accession_report(input_directory, accession_data)
 
     # Combines accession information for each collection and saves to a CSV in "directory" (the script argument).
     today = datetime.today().strftime('%Y-%m-%d')
-    accession_df = pd.read_csv(os.path.join(directory, f'hub-accession-summary_{today}.csv')).fillna('')
+    accession_df = pd.read_csv(os.path.join(input_directory, f'hub-accession-summary_{today}.csv')).fillna('')
     collection_df = combine_collection_data(accession_df)
-    collection_df.to_csv(os.path.join(directory, f'hub-collection-summary_{today}.csv'), index=False)
+    collection_df.to_csv(os.path.join(input_directory, f'hub-collection-summary_{today}.csv'), index=False)
