@@ -5,7 +5,7 @@
 Scripts for summarizing and validating content on the Digital Production Hub, 
 the UGA Libraries' centralized storage for digital objects that are not suitable for our digital preservation system.
 
-For example reports, see: [documentation](documentation). 
+The reports generated with these files are stored in [documentation](documentation) to serve as examples. 
 
 ## Getting Started
 
@@ -37,25 +37,28 @@ For validating fixity, accessions should be bags or have a manifest. (UPDATE WIT
 accession_completeness_report.py
 
 - input_directory (required): the directory with the folders to be checked for completeness, 
-  which must be the directory containing the status folders 
+  which must be the directory containing the status folders
 
 collection_summary.py
 
-- directory (required): the directory with the folders to be summarized
+- input_directory (required): the directory with the folders to be checked for completeness, 
+  which must be the directory containing the status folders 
 
 format_list.py
 
 - input_directory (required): the directory with the folders to be summarized, 
-  which may be any folder file directory structure
+  which may be any folder in the expected file directory structure
 
 risk_update.py
 
-- directory (required): the directory that contains the risk spreadsheets
+- input_directory (required): the directory that contains the risk spreadsheets,
+  which may be any folder in the expected file directory structure
 - nara_csv (required): the path to the most recent NARA Preservation Action Plan spreadsheet
 
 validate_fixity.py
 
-- directory (required): the directory with the folders to be summarized
+- input_directory (required): the directory that contains the content to be validated (in bags or with a manifest),
+  which may be any folder in the expected file directory structure
 
 ### Testing
 
@@ -63,6 +66,10 @@ There are unit tests for each function and for each script overall for collectio
 The tests mostly use files stored in the repo (test_data) as input. 
 Preservation metadata files may be missing if they are not needed for a test 
 or have fake data to give the needed variations for the test.
+
+A few tests are for errors caused by path length, which could not be replicated in our current computing environment.
+Instead, there are tests to use with real data in Hub.
+They are commented out by default and indicate what information to provide for them to work.
  
 For quicker development the tests for format_list.py all use the same input test data.
 It is the common data variations, but is not explicitly testing for all possible variations.
