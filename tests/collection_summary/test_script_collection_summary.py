@@ -1,5 +1,5 @@
 """
-Tests for the script collection_summary.py, which makes a CSV summarizing the collections in a directory.
+Tests for the script collection_summary.py, which makes a CSV summarizing the collections in a input_directory.
 """
 import unittest
 from datetime import datetime

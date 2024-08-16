@@ -221,7 +221,7 @@ def most_recent_risk_csv(file_list):
             file_date = date(1900, 1, 1)
 
         # If this is the first file evaluated, or this file's date is more recent than the current most_recent_date,
-        # updates recent_file and most_recent_date with the current file and its date.
+        # updates most_recent_file and most_recent_date with the current file and its date.
         if most_recent_date is None or most_recent_date < file_date:
             most_recent_file = file_name
             most_recent_date = file_date

@@ -205,7 +205,7 @@ def get_risk(acc_path):
     acc_path (string): the path to the accession folder
 
     @:returns
-    risk_list (list): a list of 4 integers that are the number of files each risk level ordered highest-lowest risk
+    risk_list (list): a list of 4 integers, with the number of files each risk level, ordered highest-lowest risk
                       and a note, either None or that the accession has no risk csv
     """
 
