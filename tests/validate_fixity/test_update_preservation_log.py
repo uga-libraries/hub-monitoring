@@ -30,12 +30,12 @@ class MyTestCase(unittest.TestCase):
     def test_bag_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_001_er')
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_001_er')
         error = 'Payload-Oxum validation failed. Expected 1 files and 4 bytes but found 1 files and 26 bytes'
-        update_preservation_log(accession_directory, False, 'bag', error)
+        update_preservation_log(bag_dir, False, 'bag', error)
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.1.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -48,11 +48,11 @@ class MyTestCase(unittest.TestCase):
     def test_bag_valid(self):
         """Test for when the bag is valid"""
         # Makes the variables needed for function input and runs the function.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_002_er')
-        update_preservation_log(accession_directory, True, 'bag')
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_002_er')
+        update_preservation_log(bag_dir, True, 'bag')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.2.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -64,17 +64,19 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag cannot be validated with bagit and bag manifest is not valid"""
         # Makes the variables needed for function input and runs the function twice,
         # first for bagit not being able to validate and then for validating with the bag manifest.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_003_er')
-        update_preservation_log(accession_directory, False, 'bag', 'BagError: path is unsafe')
-        update_preservation_log(accession_directory, False, 'bag manifest')
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_003_er')
+        update_preservation_log(bag_dir, False, 'bag', 'BagError: path is unsafe')
+        all_match = False
+        update_preservation_log(bag_dir, all_match, 'bag manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.3.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.3.ER. The bag could not be validated.', 'validate_fixity.py'],
+                     'Validated bag for accession 2023.3.3.ER. The bag could not be validated.',
+                     'validate_fixity.py'],
                     ['TEST.3', '2023.3.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag manifest for accession 2023.3.3.ER. The bag manifest is not valid.',
                      'validate_fixity.py']]
@@ -84,17 +86,19 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag cannot be validated with bagit and the bag manifest is valid"""
         # Makes the variables needed for function input and runs the function twice,
         # first for bagit not being able to validate and then for validating with the bag manifest.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_004_er')
-        update_preservation_log(accession_directory, False, 'bag', 'BagError: path is unsafe')
-        update_preservation_log(accession_directory, True, 'bag manifest')
+        bag_dir = join('test_data', 'test_003_log_update', '2023_test003_004_er')
+        update_preservation_log(bag_dir, False, 'bag', 'BagError: path is unsafe')
+        all_match = True
+        update_preservation_log(bag_dir, all_match, 'bag manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(bag_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.4.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', '2023-02-28', 'nan', 'Bagged accession, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.3.4.ER. The bag could not be validated.', 'validate_fixity.py'],
+                     'Validated bag for accession 2023.3.4.ER. The bag could not be validated.',
+                     'validate_fixity.py'],
                     ['TEST.3', '2023.3.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag manifest for accession 2023.3.4.ER. The bag manifest is valid.',
                      'validate_fixity.py']]
@@ -103,11 +107,12 @@ class MyTestCase(unittest.TestCase):
     def test_manifest_not_valid(self):
         """Test for when the manifest is not valid"""
         # Makes the variables needed for function input and runs the function.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_005_er')
-        update_preservation_log(accession_directory, False, 'manifest')
+        acc_dir = join('test_data', 'test_003_log_update', '2023_test003_005_er')
+        valid = False
+        update_preservation_log(acc_dir, valid, 'manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.5.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.5.ER', '2023-02-28', 'nan', 'Made manifest, no errors.', 'Jane Doe'],
@@ -118,11 +123,12 @@ class MyTestCase(unittest.TestCase):
     def test_manifest_valid(self):
         """Test for when the manifest is valid"""
         # Makes the variables needed for function input and runs the function.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_006_er')
-        update_preservation_log(accession_directory, True, 'manifest')
+        acc_dir = join('test_data', 'test_003_log_update', '2023_test003_006_er')
+        valid = True
+        update_preservation_log(acc_dir, True, 'manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.6.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.6.ER', '2023-02-28', 'nan', 'Made manifest, no errors.', 'Jane Doe'],
@@ -133,11 +139,12 @@ class MyTestCase(unittest.TestCase):
     def test_no_end_return(self):
         """Test for when the preservation_log.txt has no return at the end of the last line"""
         # Makes the variables needed for function input and runs the function.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_007_er')
-        update_preservation_log(accession_directory, True, 'manifest')
+        acc_dir = join('test_data', 'test_003_log_update', '2023_test003_007_er')
+        valid = True
+        update_preservation_log(acc_dir, valid, 'manifest')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.7.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.7.ER', '2023-02-28', 'nan', 'Made manifest, no errors.', 'Jane Doe'],
@@ -150,11 +157,12 @@ class MyTestCase(unittest.TestCase):
         Also check that the function prints a message
         """
         # Makes the variables needed for function input and runs the function.
-        accession_directory = join('test_data', 'test_003_log_update', '2023_test003_008_er')
-        update_preservation_log(accession_directory, True, 'manifest')
+        acc_dir = join('test_data', 'test_003_log_update', '2023_test003_008_er')
+        valid = True
+        update_preservation_log(acc_dir, valid, 'manifest')
 
         # Verifies the contents of the log have NOT been updated.
-        result = csv_to_list(join(accession_directory, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Date', 'Electronic Media Identifier', 'Action', 'Staff'],
                     ['2023-02-28', 'Test003.008.CD1', 'Copied, no errors.', 'Jane Doe']]
         self.assertEqual(result, expected, 'Problem with test for nonstandard')
@@ -165,8 +173,11 @@ class MyTestCase(unittest.TestCase):
     #     so this will cause the function to print to the terminal when the test runs.
     #     """
     #     # Makes the variables needed for function input and runs the function.
-    #     accession_directory = join('test_data', 'test_003_log_update', '2023_test003_009_er')
-    #     update_preservation_log(accession_directory, True, 'manifest')
+    #     acc_dir = join('test_data', 'test_003_log_update', '2023_test003_009_er')
+    #     valid = True
+    #     update_preservation_log(acc_dir, valid, 'manifest')
+    #
+    #     # This test will always say it passes. Look at what it prints to determine if it is correct.
     #     self.assertEqual(True, True)
 
 

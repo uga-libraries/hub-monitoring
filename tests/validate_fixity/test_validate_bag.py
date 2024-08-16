@@ -1,6 +1,8 @@
 """
 Tests for the function validate_bag(), which validates an accession's bag, updates the preservation log,
 and updates the script report if it is not valid.
+
+The test data is not organized into the usual status folders, so status will be "test_data".
 """
 import unittest
 from validate_fixity import validate_bag
@@ -62,7 +64,8 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er')
         folder = '2023_test002_001_er_bag'
-        validate_bag(join(root, folder), 'test_data')
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -88,7 +91,8 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er')
         folder = '2023_test002_002_er_bag'
-        validate_bag(join(root, folder), 'test_data')
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -114,7 +118,8 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er')
         folder = '2023_test002_003_er_bag'
-        validate_bag(join(root, folder), 'test_data')
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -140,7 +145,8 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er')
         folder = '2023_test002_004_er_bag'
-        validate_bag(join(root, folder), 'test_data')
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -168,7 +174,8 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')
         folder = '2023_test002_005_er_bag'
-        validate_bag(join(root, folder), 'test_data')
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -193,7 +200,8 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         root = join('test_data', 'test_001_bags_valid', '2023_test001_001_er')
         folder = '2023_test001_001_er_bag'
-        validate_bag(join(root, folder), 'test_data')
+        input_directory = 'test_data'
+        validate_bag(join(root, folder), input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')

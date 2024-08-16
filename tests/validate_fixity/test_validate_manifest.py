@@ -1,6 +1,8 @@
 """
 Tests for the function validate_manifest(), which validates an accession using a manifest, updates the preservation log,
 and if there are errors updates the script report and makes a manifest log.
+
+The test data is not organized into the usual status folders, so status will be "test_data".
 """
 import unittest
 from validate_fixity import validate_manifest
@@ -38,13 +40,27 @@ class MyTestCase(unittest.TestCase):
             if exists(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv')):
                 remove(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv'))
 
+    # def test_file_not_found(self):
+    #     """Use this as a template to test against an accession known to have the error,
+    #     which is from file path length and cannot be replicated in the repo test data.
+    #     The test will alter the preservation log, so either make a copy first to revert to after the test
+    #     or edit the preservation log to remove the test outputs. Also delete the script report and manifest log.
+    #     """
+    #     root = 'INSERT-PATH-TO-ACCESSION'
+    #     file = 'initialmanifest_INSERT-DATE.csv'
+    #     input_directory = 'INSERT-PATH-TO-SAVE-SCRIPT-OUTPUT'
+    #     validate_manifest(root, file, input_directory)
+    #     # Test will always pass. Look at the results to determine if it worked correctly,
+    #     # or use the other tests below to set up tests of the logs with expected values.
+    #     self.assertEqual(True, True)
+
     def test_not_valid_deletion(self):
         """Test for when the accession does not match the manifest due to file deletions."""
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_001_er')
         file = 'initialmanifest_20230501.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -59,13 +75,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for not valid/del, preservation_log.txt')
 
         # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Accession', 'Validation_Error'],
                     ['2023_test005_001_er', '2 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
-        result = csv_to_list(join(directory, '2023_test005_001_er_manifest_validation_errors.csv'))
+        result = csv_to_list(join(input_directory, '2023_test005_001_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Z:\\2023_test005_001_er\\CD_1\\File1.txt', 'CA1EA02C10B7C37F425B9B7DD86D5E11', 'Manifest'],
                     ['Number of files does not match. 1 files in the accession folder and 2 in the manifest.',
@@ -78,8 +94,8 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_003_er')
         file = 'initialmanifest_20230511.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -94,13 +110,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for not valid/del all, preservation_log.txt')
 
         # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Accession', 'Validation_Error'],
                     ['2023_test005_003_er', '3 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del all, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
-        result = csv_to_list(join(directory, '2023_test005_003_er_manifest_validation_errors.csv'))
+        result = csv_to_list(join(input_directory, '2023_test005_003_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Z:\\2023_test005_003_er\\CD_1\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
                     ['Z:\\2023_test005_003_er\\CD_2\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
@@ -115,8 +131,8 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_005_er')
         file = 'initialmanifest_20231031.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -131,13 +147,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for not valid/del some, preservation_log.txt')
 
         # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Accession', 'Validation_Error'],
                     ['2023_test005_005_er', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/del some, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
-        result = csv_to_list(join(directory, '2023_test005_005_er_manifest_validation_errors.csv'))
+        result = csv_to_list(join(input_directory, '2023_test005_005_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Number of files does not match. 2 files in the accession folder and 4 in the manifest.',
                      'nan', 'nan']]
@@ -148,8 +164,8 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_002_er')
         file = 'initialmanifest_20230601.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -164,18 +180,20 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for not valid/edit, preservation_log.txt')
 
         # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Accession', 'Validation_Error'],
                     ['2023_test005_002_er', '4 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
-        result = csv_to_list(join(directory, '2023_test005_002_er_manifest_validation_errors.csv'))
+        result = csv_to_list(join(input_directory, '2023_test005_002_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Z:\\2023_test005_002_er\\CD_2\\File02.txt', '0CBC6611F5540BD0809A388DC95A615B', 'Manifest'],
                     ['Z:\\2023_test005_002_er\\CD_1\\File1.txt', '4324B4C675E56A5E04BD9A8C74796EE5', 'Manifest'],
-                    [join(root, '2023_test005_002_er', 'CD_1', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E', 'Current'],
-                    [join(root, '2023_test005_002_er', 'CD_2', 'File02.txt'), '8078CD550FCF6755750A59378AFC7D30', 'Current']]
+                    [join(root, '2023_test005_002_er', 'CD_1', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E',
+                     'Current'],
+                    [join(root, '2023_test005_002_er', 'CD_2', 'File02.txt'), '8078CD550FCF6755750A59378AFC7D30',
+                     'Current']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit, manifest_validation_errors.csv')
 
     def test_not_valid_edit_duplicates(self):
@@ -184,8 +202,8 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_005_manifest_not_valid', '2023_test005_004_er')
         file = 'initialmanifest_20230521.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -200,15 +218,16 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for not valid/edit dup, preservation_log.txt')
 
         # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Accession', 'Validation_Error'],
                     ['2023_test005_004_er', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit dup, fixity_validation.csv')
 
         # Verifies the manifest log has the correct values.
-        result = csv_to_list(join(directory, '2023_test005_004_er_manifest_validation_errors.csv'))
+        result = csv_to_list(join(input_directory, '2023_test005_004_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
-                    [join(root, '2023_test005_004_er', 'CD_2', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E', 'Current']]
+                    [join(root, '2023_test005_004_er', 'CD_2', 'File1.txt'), '717216B472AA04EB2E615809C7F30C4E',
+                     'Current']]
         self.assertEqual(result, expected, 'Problem with test for not valid/edit dup, manifest_validation_errors.csv')
 
     def test_valid(self):
@@ -216,8 +235,8 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_004_manifest_valid', '2023_test004_001_er')
         file = 'initialmanifest_20231003.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -232,11 +251,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for valid, preservation_log.txt')
 
         # Verifies the fixity validation CSV was not made.
-        result = exists(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = exists(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         self.assertEqual(result, False, 'Problem with test for valid, fixity_validation.csv')
 
         # Verifies the manifest log was not made.
-        result = exists(join(directory, '2023_test004_001_er_manifest_validation_errors.csv'))
+        result = exists(join(input_directory, '2023_test004_001_er_manifest_validation_errors.csv'))
         self.assertEqual(result, False, 'Problem with test for valid, manifest_validation_errors.csv')
 
     def test_valid_duplicate(self):
@@ -244,8 +263,8 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_004_manifest_valid', '2023_test004_002_er')
         file = 'initialmanifest_20231124.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -260,11 +279,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for valid + dups, preservation_log.txt')
 
         # Verifies the fixity validation CSV was not made.
-        result = exists(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = exists(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         self.assertEqual(result, False, 'Problem with test for valid + dups, fixity_validation.csv')
 
         # Verifies the manifest log was not made.
-        result = exists(join(directory, '2023_test004_002_er_manifest_validation_errors.csv'))
+        result = exists(join(input_directory, '2023_test004_002_er_manifest_validation_errors.csv'))
         self.assertEqual(result, False, 'Problem with test for valid + dups, manifest_validation_errors.csv')
 
     def test_valid_FITS(self):
@@ -272,8 +291,8 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables for function input and runs the function.
         root = join('test_data', 'test_004_manifest_valid', '2023_test004_003_er')
         file = 'initialmanifest_20240426.csv'
-        directory = 'test_data'
-        validate_manifest(root, file, directory)
+        input_directory = 'test_data'
+        validate_manifest(root, file, input_directory)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
@@ -288,11 +307,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for valid + FITS, preservation_log.txt')
 
         # Verifies the fixity validation CSV was not made.
-        result = exists(join(directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = exists(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
         self.assertEqual(result, False, 'Problem with test for valid + FITS, fixity_validation.csv')
 
         # Verifies the manifest log was not made.
-        result = exists(join(directory, '2023_test004_003_er_manifest_validation_errors.csv'))
+        result = exists(join(input_directory, '2023_test004_003_er_manifest_validation_errors.csv'))
         self.assertEqual(result, False, 'Problem with test for valid + FITS, manifest_validation_errors.csv')
 
 

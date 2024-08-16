@@ -5,6 +5,8 @@ and if there are errors updates the script report and makes a manifest log.
 
 These tests use bags that would not cause a bagit error, since that is not reliably replicable.
 This function does not depend on the error, so it can use a normal bag.
+
+The test data is not organized into the usual status folders, so status will be "test_data".
 """
 import unittest
 from validate_fixity import validate_bag_manifest
@@ -35,11 +37,25 @@ class MyTestCase(unittest.TestCase):
         if exists(join('test_data', '2023_test002_001_er_manifest_validation_errors.csv')):
             remove(join('test_data', '2023_test002_001_er_manifest_validation_errors.csv'))
 
+    # def test_file_not_found(self):
+    #     """Use this as a template to test against an accession known to have the error,
+    #     which is from file path length and cannot be replicated in the repo test data.
+    #     The test will alter the preservation log, so either make a copy first to revert to after the test
+    #     or edit the preservation log to remove the test outputs. Also delete the script report and manifest log.
+    #     """
+    #     bag_dir = 'INSERT-PATH-TO-BAG'
+    #     report_dir = 'INSERT-PATH-TO-SAVE-OUTPUT'
+    #     validate_bag_manifest(bag_dir, report_dir)
+    #     # Test will always pass. Look at the results to determine if it worked correctly,
+    #     # or use the other tests below to set up tests of the logs with expected values.
+    #     self.assertEqual(True, True)
+
     def test_not_valid(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
         bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', '2023_test002_001_er_bag')
-        validate_bag_manifest(bag_dir, 'test_data')
+        report_dir = 'test_data'
+        validate_bag_manifest(bag_dir, report_dir)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'),
@@ -70,7 +86,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is valid"""
         # Makes the variable needed for function input and runs the function.
         bag_dir = join('test_data', 'test_001_bags_valid', '2023_test001_002_er', '2023_test001_002_er_bag')
-        validate_bag_manifest(bag_dir, 'test_data')
+        report_dir = 'test_data'
+        validate_bag_manifest(bag_dir, report_dir)
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_002_er', 'preservation_log.txt'),
