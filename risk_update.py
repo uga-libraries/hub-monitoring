@@ -326,7 +326,8 @@ def update_log(accession_path, log_dir):
     accession = accession_path_list[-1]
 
     # If the log doesn't exist yet (this is the first CSV to be updated), makes the log with a header row.
-    log_path = os.path.join(log_dir, 'update_risk_log.csv')
+    today = datetime.today().strftime('%Y-%m-%d')
+    log_path = os.path.join(log_dir, f"update_risk_log_{today}.csv")
     if not os.path.exists(log_path):
         with open(log_path, 'w') as f:
             f.write('Collection,Accession\n')

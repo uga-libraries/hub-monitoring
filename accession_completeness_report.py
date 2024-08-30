@@ -12,9 +12,10 @@ Parameter:
                                 which should be the parent folder of the status (backlogged and/or closed) folders
 
 Returns:
-    accession_completeness_report.csv, saved in input_directory
+    accession_completeness_report_YYYY-MM-DD.csv, saved in input_directory
 """
 import csv
+from datetime import date
 import os
 import sys
 
@@ -103,7 +104,7 @@ def update_report(acc_status, coll, acc_path, result):
     """
 
     # If the report does not already exist, makes a report with a header row.
-    report_path = os.path.join(input_directory, 'accession_completeness_report.csv')
+    report_path = os.path.join(input_directory, f"accession_completeness_report_{date.today().strftime('%Y-%m-%d')}.csv")
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
@@ -145,8 +146,9 @@ if __name__ == '__main__':
                         update_report(status, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made or not).
-    completeness_report = os.path.join(input_directory, 'accession_completeness_report.csv')
+    date_today = date.today().strftime('%Y-%m-%d')
+    completeness_report = os.path.join(input_directory, f"accession_completeness_report_{date_today}.csv")
     if os.path.exists(completeness_report):
-        print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {input_directory}.')
+        print(f'\nIncomplete accessions found. See {completeness_report}.')
     else:
         print(f'\nAll accessions are complete.')

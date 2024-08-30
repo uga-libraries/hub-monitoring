@@ -2,6 +2,7 @@
 Tests for the script format_list.py
 """
 import unittest
+from datetime import date
 from os import getcwd, remove
 from os.path import exists, join
 from pandas import read_csv
@@ -22,15 +23,17 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Delete the test output if it was created"""
-        if exists(join('test_data', 'combined_format_data.csv')):
-            remove(join('test_data', 'combined_format_data.csv'))
+        today = date.today().strftime('%Y-%m-%d')
+        if exists(join('test_data', f'combined_format_data_{today}.csv')):
+            remove(join('test_data', f'combined_format_data_{today}.csv'))
 
     def test_correct(self):
         script = join(getcwd(), '..', '..', 'format_list.py')
         input_directory = 'test_data'
         run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
 
-        result = csv_to_list(join('test_data', 'combined_format_data.csv'))
+        today = date.today().strftime('%Y-%m-%d')
+        result = csv_to_list(join('test_data', f'combined_format_data_{today}.csv'))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'File_Count', 'Size_GB'],
                     ['JPEG File Interchange Format', '1.01', 'Low Risk', 2, 82.858],
                     ['JPEG File Interchange Format', '1.02', 'Low Risk', 3, 0.183],

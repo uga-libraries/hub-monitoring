@@ -13,8 +13,9 @@ Parameter:
     input_directory (required): the path to the directory with spreadsheets to be combined, which can be any folder
 
 Returns:
-    combined_format_data.csv, saved in the input_directory folder (script argument)
+    combined_format_data_YYYY-MM-DD.csv, saved in the input_directory folder (script argument)
 """
+from datetime import date
 import os
 import pandas as pd
 import sys
@@ -154,4 +155,5 @@ if __name__ == '__main__':
     df_format_list = pd.merge(df_files, df_size, how='outer')
 
     # Saves the result to a CSV in the input directory (script argument).
-    df_format_list.to_csv(os.path.join(input_directory, 'combined_format_data.csv'), index=False)
+    today = date.today().strftime('%Y-%m-%d')
+    df_format_list.to_csv(os.path.join(input_directory, f'combined_format_data_{today}.csv'), index=False)
