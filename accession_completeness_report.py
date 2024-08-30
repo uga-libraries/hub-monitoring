@@ -12,7 +12,7 @@ Parameter:
                                 which should be the parent folder of the status (backlogged and/or closed) folders
 
 Returns:
-    accession_completeness_report.csv, saved in input_directory
+    accession_completeness_report_YYYY-MM-DD.csv, saved in input_directory
 """
 import csv
 from datetime import date
