@@ -4,6 +4,7 @@ Tests for the function update_log(), which make a log of all accessions updated 
 import unittest
 from risk_update import update_log
 from test_script_risk_update import csv_to_list
+from datetime import datetime
 from os import getcwd, remove
 from os.path import exists, join
 
@@ -12,8 +13,9 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Delete the test output if it was created"""
-        if exists('update_risk_log.csv'):
-            remove('update_risk_log.csv')
+        today = datetime.today().strftime('%Y-%m-%d')
+        if exists(f"update_risk_log_{today}.csv"):
+            remove(f"update_risk_log_{today}.csv")
 
     def test_existing_log(self):
         """Test for when there is already a log."""
@@ -28,7 +30,8 @@ class MyTestCase(unittest.TestCase):
         update_log(root, input_directory)
 
         # Tests that the log was made.
-        log_path = join(getcwd(), 'update_risk_log.csv')
+        today = datetime.today().strftime('%Y-%m-%d')
+        log_path = join(getcwd(), f"update_risk_log_{today}.csv")
         log_made = exists(log_path)
         self.assertEqual(log_made, True, "Problem with test for new log, log made")
 
@@ -45,7 +48,8 @@ class MyTestCase(unittest.TestCase):
         update_log(root, input_directory)
 
         # Tests that the log was made.
-        log_path = join(getcwd(), 'update_risk_log.csv')
+        today = datetime.today().strftime('%Y-%m-%d')
+        log_path = join(getcwd(), f"update_risk_log_{today}.csv")
         log_made = exists(log_path)
         self.assertEqual(log_made, True, "Problem with test for new log, log made")
 
