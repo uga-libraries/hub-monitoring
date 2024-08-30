@@ -30,7 +30,7 @@ class MyTestCase(unittest.TestCase):
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
-                   join(coll_folder, 'update_risk_log.csv'))
+                   join(coll_folder, f'update_risk_log_{today}.csv'))
 
         # Deletes any test output that is present.
         for output in outputs:
@@ -46,7 +46,8 @@ class MyTestCase(unittest.TestCase):
         subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the log was made.
-        log_path = join('test_data', 'Russell_Hub', 'rbrl004', 'update_risk_log.csv')
+        today = datetime.today().strftime('%Y-%m-%d')
+        log_path = join('test_data', 'Russell_Hub', 'rbrl004', f'update_risk_log_{today}.csv')
         log_made = exists(log_path)
         self.assertEqual(log_made, True, 'Problem with test for log was made')
 
@@ -60,7 +61,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for log contents')
 
         # Paths to the four risk CSVs that should have been made.
-        today = datetime.today().strftime('%Y-%m-%d')
         coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
         csv_paths = [join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
