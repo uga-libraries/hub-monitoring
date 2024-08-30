@@ -13,7 +13,7 @@ Parameter:
     input_directory (required): the path to the directory with spreadsheets to be combined, which can be any folder
 
 Returns:
-    combined_format_data.csv, saved in the input_directory folder (script argument)
+    combined_format_data_YYYY-MM-DD.csv, saved in the input_directory folder (script argument)
 """
 from datetime import date
 import os
