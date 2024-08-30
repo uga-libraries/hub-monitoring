@@ -149,6 +149,6 @@ if __name__ == '__main__':
     date_today = date.today().strftime('%Y-%m-%d')
     completeness_report = os.path.join(input_directory, f"accession_completeness_report_{date_today}.csv")
     if os.path.exists(completeness_report):
-        print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {input_directory}.')
+        print(f'\nIncomplete accessions found. See {completeness_report}.')
     else:
         print(f'\nAll accessions are complete.')
