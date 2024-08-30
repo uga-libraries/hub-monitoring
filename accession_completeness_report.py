@@ -15,6 +15,7 @@ Returns:
     accession_completeness_report.csv, saved in input_directory
 """
 import csv
+from datetime import date
 import os
 import sys
 
@@ -103,7 +104,7 @@ def update_report(acc_status, coll, acc_path, result):
     """
 
     # If the report does not already exist, makes a report with a header row.
-    report_path = os.path.join(input_directory, 'accession_completeness_report.csv')
+    report_path = os.path.join(input_directory, f"accession_completeness_report_{date.today().strftime('%Y-%m-%d')}.csv")
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
