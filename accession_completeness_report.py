@@ -146,7 +146,8 @@ if __name__ == '__main__':
                         update_report(status, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made or not).
-    completeness_report = os.path.join(input_directory, 'accession_completeness_report.csv')
+    date_today = date.today().strftime('%Y-%m-%d')
+    completeness_report = os.path.join(input_directory, f"accession_completeness_report_{date_today}.csv")
     if os.path.exists(completeness_report):
         print(f'\nIncomplete accessions found. See accession_completeness_report.csv in {input_directory}.')
     else:
