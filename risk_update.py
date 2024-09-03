@@ -306,14 +306,16 @@ def save_risk_csv(accession_path, risk_df):
     risk_df.to_csv(update_csv_path, index=False)
 
 
-def update_log(accession_path, log_dir):
-    """Log accessions that had their risk csvs updated
+def update_log(accession_path, log_dir, update_result):
+    """Log every accession and if the risk csv was updated
 
-    The log includes the collection and accession number, which are both part of the accession path.
+    The log includes the collection and accession number, which are both part of the accession path,
+    and if the risk csv was updated or not.
 
     @:parameter
     accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s)
     log_dir (string): the path to the directory for saving the log (script argument input_directory)
+    update_result (string): Yes (updated risk csv made) or No (no previous risk csv to update)
 
     @:returns
     None. Makes or updates the log.
@@ -330,11 +332,11 @@ def update_log(accession_path, log_dir):
     log_path = os.path.join(log_dir, f"update_risk_log_{today}.csv")
     if not os.path.exists(log_path):
         with open(log_path, 'w') as f:
-            f.write('Collection,Accession\n')
+            f.write('Collection,Accession,Risk_Updated\n')
 
     # Adds the collection and accession to the log.
     with open(log_path, 'a') as f:
-        f.write(f'{collection},{accession}\n')
+        f.write(f'{collection},{accession},{update_result}\n')
 
 
 if __name__ == '__main__':
