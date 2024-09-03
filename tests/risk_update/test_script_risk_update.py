@@ -53,11 +53,12 @@ class MyTestCase(unittest.TestCase):
 
         # Tests the contents of the log are correct.
         result = csv_to_list(log_path)
-        expected = [['Collection', 'Accession'],
-                    ['rbrl004', '2005-10-er'],
-                    ['rbrl004', '2005-20-er'],
-                    ['rbrl004', '2006-30-er'],
-                    ['rbrl004', '2021-40-er']]
+        expected = [['Collection', 'Accession', 'Risk_Updated'],
+                    ['rbrl004', '2005-10-er', 'Yes'],
+                    ['rbrl004', '2005-20-er', 'Yes'],
+                    ['rbrl004', '2006-30-er', 'Yes'],
+                    ['rbrl004', '2021-40-er', 'Yes'],
+                    ['rbrl004', '2021-50-er', 'No']]
         self.assertEqual(result, expected, 'Problem with test for log contents')
 
         # Paths to the four risk CSVs that should have been made.
