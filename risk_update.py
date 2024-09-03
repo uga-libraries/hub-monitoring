@@ -225,7 +225,9 @@ def most_recent_risk_csv(file_list):
 
     From legacy practices, any spreadsheet with a date in the name is more recent than one without.
     The list will also include other types of files, such as preservation logs, which are ignored.
-    This function is also used in collection_summary.py
+
+    Keep in sync with the copy of this function in collection_summary.py and format_list.py
+    The unit tests are in risk_update.
 
     @:parameter
     file_list (list): list of all file names in a folder with at least one risk spreadsheet
