@@ -2,7 +2,8 @@
 and make a report of any that are not complete.
 
 An accession is complete if it contains a preservation log (preservation_log.txt),
- a full risk report (acc_full_risk_data.csv), and the files are bagged (folder ends with '_bag').
+ a full risk report (acc_full_risk_data.csv), an initial manifest (initialmanifest_date.csv)
+ and the files are bagged (folder ends with '_bag').
 
 Accessions may be incomplete because they were created prior to current procedures
 or because file path lengths or other errors prevent current procedures from being done.
@@ -56,18 +57,19 @@ def accession_paths(acc_status, coll):
 
 
 def check_completeness(acc_path):
-    """Test if the accession has a preservation log, full risk report, and if the content is bagged
+    """Test if the accession has a preservation log, full risk report, initial manifest, and if the content is bagged
 
     @:parameter
     acc_path (string): the full path to the accession folder
 
     @:returns
-    result (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
+    result (dictionary): keys are 'pres_log', 'full_risk', 'initial_manifest', 'bag'
+                         and values are True/False for if each are present
     """
 
     # Starts a dictionary with the default value of False for all three completeness criteria.
     # These are updated to True if they are found in the accession.
-    result = {'pres_log': False, 'full_risk': False, 'bag': False}
+    result = {'pres_log': False, 'full_risk': False, 'initial_manifest': False, 'bag': False}
 
     # Looks for the completeness criteria, which are in the first level within the accession folder.
     for item in os.listdir(acc_path):
@@ -79,6 +81,10 @@ def check_completeness(acc_path):
         # Full risk data spreadsheet may have a date between full_risk_data and the file extension.
         elif 'full_risk_data' in item and item.endswith('.csv'):
             result['full_risk'] = True
+
+        # Initial Manifest includes the date between initialmanifest_ and the file extension.
+        elif item.startswith('initialmanifest_') and item.endswith('.csv'):
+            result['initial_manifest'] = True
 
         # Bags follow the naming convention of ending with _bag.
         elif item.endswith('_bag'):
@@ -96,7 +102,8 @@ def update_report(acc_status, coll, acc_path, result):
     acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
     acc_path (string): the full path to the accession folder
-    result (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
+    result (dictionary): keys are 'pres_log', 'full_risk', 'initial_manifest', 'bag'
+                         and values are True/False for if each are present
 
     @:returns
     None
@@ -108,7 +115,8 @@ def update_report(acc_status, coll, acc_path, result):
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
-            writer.writerow(['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Bag'])
+            writer.writerow(['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk',
+                             'Initial_Manifest', 'Bag'])
 
     # Gets the accession number from the path.
     acc = os.path.basename(acc_path)
@@ -116,7 +124,8 @@ def update_report(acc_status, coll, acc_path, result):
     # Saves the information to the report.
     with open(report_path, 'a', newline='') as report:
         writer = csv.writer(report)
-        writer.writerow([acc_status, coll, acc, result['pres_log'], result['full_risk'], result['bag']])
+        writer.writerow([acc_status, coll, acc, result['pres_log'], result['full_risk'],
+                         result['initial_manifest'], result['bag']])
 
 
 if __name__ == '__main__':
