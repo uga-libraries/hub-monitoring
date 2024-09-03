@@ -56,18 +56,19 @@ def accession_paths(acc_status, coll):
 
 
 def check_completeness(acc_path):
-    """Test if the accession has a preservation log, full risk report, and if the content is bagged
+    """Test if the accession has a preservation log, full risk report, initial manifest, and if the content is bagged
 
     @:parameter
     acc_path (string): the full path to the accession folder
 
     @:returns
-    result (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
+    result (dictionary): keys are 'pres_log', 'full_risk', 'initial_manifest', 'bag'
+    and values are True/False for if each are present
     """
 
     # Starts a dictionary with the default value of False for all three completeness criteria.
     # These are updated to True if they are found in the accession.
-    result = {'pres_log': False, 'full_risk': False, 'bag': False}
+    result = {'pres_log': False, 'full_risk': False, 'initial_manifest': False, 'bag': False}
 
     # Looks for the completeness criteria, which are in the first level within the accession folder.
     for item in os.listdir(acc_path):
