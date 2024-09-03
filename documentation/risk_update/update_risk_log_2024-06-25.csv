@@ -1,4 +1,6 @@
-Collection,Accession
-rbrl004,2005-10-er
-rbrl004,2005-20-er
-rbrl004,2006-30-er
+Collection,Accession,Risk_Updated
+rbrl004,2005-10-er,Yes
+rbrl004,2005-20-er,Yes
+rbrl004,2006-30-er,Yes
+rbrl004,2021-40-er,Yes
+rbrl004,2021-50-er,No
