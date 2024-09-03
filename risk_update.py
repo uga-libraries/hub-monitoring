@@ -14,6 +14,7 @@ import os
 import pandas as pd
 import re
 import sys
+from collection_summary import accession_test
 
 
 def check_arguments(argument_list):
@@ -359,14 +360,15 @@ if __name__ == '__main__':
               'The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.')
         sys.exit(1)
 
-    # Navigates to each folder with a risk spreadsheet and makes a new version of the risk spreadsheet
+    # Navigates to each accession folder and makes a new version of the risk spreadsheet
     # using the most recent risk spreadsheet in each folder and the current NARA risk CSV.
-    # Also adds the accession to a log.
+    # Also logs if it found a risk spreadsheet or not.
     for root, directories, files in os.walk(input_directory):
-        if any('full_risk_data' in x for x in files):
-            print('Starting on accession', root)
-            file = most_recent_risk_csv(files)
-            new_risk_df = read_risk_csv(os.path.join(root, file))
-            new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
-            save_risk_csv(root, new_risk_df)
-            update_log(root, input_directory)
+        if accession_test(os.path.basename(root), root):
+            if any('full_risk_data' in x for x in files):
+                print('Starting on accession', root)
+                file = most_recent_risk_csv(files)
+                new_risk_df = read_risk_csv(os.path.join(root, file))
+                new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
+                save_risk_csv(root, new_risk_df)
+                update_log(root, input_directory)
