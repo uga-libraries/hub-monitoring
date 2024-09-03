@@ -63,7 +63,7 @@ def check_completeness(acc_path):
 
     @:returns
     result (dictionary): keys are 'pres_log', 'full_risk', 'initial_manifest', 'bag'
-    and values are True/False for if each are present
+                         and values are True/False for if each are present
     """
 
     # Starts a dictionary with the default value of False for all three completeness criteria.
@@ -101,7 +101,8 @@ def update_report(acc_status, coll, acc_path, result):
     acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
     acc_path (string): the full path to the accession folder
-    result (dictionary): keys are 'pres_log', 'full_risk', 'bag' and values are True/False for if each are present
+    result (dictionary): keys are 'pres_log', 'full_risk', 'initial_manifest', 'bag'
+                         and values are True/False for if each are present
 
     @:returns
     None
@@ -113,7 +114,8 @@ def update_report(acc_status, coll, acc_path, result):
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
-            writer.writerow(['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Bag'])
+            writer.writerow(['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk',
+                             'Initial_Manifest', 'Bag'])
 
     # Gets the accession number from the path.
     acc = os.path.basename(acc_path)
@@ -121,7 +123,8 @@ def update_report(acc_status, coll, acc_path, result):
     # Saves the information to the report.
     with open(report_path, 'a', newline='') as report:
         writer = csv.writer(report)
-        writer.writerow([acc_status, coll, acc, result['pres_log'], result['full_risk'], result['bag']])
+        writer.writerow([acc_status, coll, acc, result['pres_log'], result['full_risk'],
+                         result['initial_manifest'], result['bag']])
 
 
 if __name__ == '__main__':
