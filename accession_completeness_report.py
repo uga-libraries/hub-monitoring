@@ -2,7 +2,8 @@
 and make a report of any that are not complete.
 
 An accession is complete if it contains a preservation log (preservation_log.txt),
- a full risk report (acc_full_risk_data.csv), and the files are bagged (folder ends with '_bag').
+ a full risk report (acc_full_risk_data.csv), an initial manifest (initialmanifest_date.csv)
+ and the files are bagged (folder ends with '_bag').
 
 Accessions may be incomplete because they were created prior to current procedures
 or because file path lengths or other errors prevent current procedures from being done.
