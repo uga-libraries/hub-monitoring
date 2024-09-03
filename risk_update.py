@@ -371,4 +371,4 @@ if __name__ == '__main__':
                 new_risk_df = read_risk_csv(os.path.join(root, file))
                 new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
                 save_risk_csv(root, new_risk_df)
-                update_log(root, input_directory)
+                update_log(root, input_directory, 'Yes')
