@@ -22,12 +22,12 @@ class MyTestCase(unittest.TestCase):
         # Runs the function once to make a new log.
         root = join(getcwd(), 'dept', 'coll-001', 'acc-001')
         input_directory = getcwd()
-        update_log(root, input_directory)
+        update_log(root, input_directory, 'Yes')
 
         # Runs the function again to add to an existing log.
         root = join(getcwd(), 'dept', 'coll-001', 'acc-002')
         input_directory = getcwd()
-        update_log(root, input_directory)
+        update_log(root, input_directory, 'Yes')
 
         # Tests that the log was made.
         today = datetime.today().strftime('%Y-%m-%d')
@@ -37,7 +37,9 @@ class MyTestCase(unittest.TestCase):
 
         # Tests that the log has the expected contents.
         result = csv_to_list(log_path)
-        expected = [['Collection', 'Accession'], ['coll-001', 'acc-001'], ['coll-001', 'acc-002']]
+        expected = [['Collection', 'Accession', 'Risk_Updated'],
+                    ['coll-001', 'acc-001', 'Yes'],
+                    ['coll-001', 'acc-002', 'Yes']]
         self.assertEqual(result, expected, "Problem with test for existing log, log contents")
 
     def test_new_log(self):
@@ -45,7 +47,7 @@ class MyTestCase(unittest.TestCase):
         # Creates variables for function arguments and runs the function.
         root = join(getcwd(), 'coll-001', 'acc-001')
         input_directory = getcwd()
-        update_log(root, input_directory)
+        update_log(root, input_directory, 'No')
 
         # Tests that the log was made.
         today = datetime.today().strftime('%Y-%m-%d')
@@ -55,7 +57,7 @@ class MyTestCase(unittest.TestCase):
 
         # Tests that the log has the expected contents.
         result = csv_to_list(log_path)
-        expected = [['Collection', 'Accession'], ['coll-001', 'acc-001']]
+        expected = [['Collection', 'Accession', 'Risk_Updated'], ['coll-001', 'acc-001', 'No']]
         self.assertEqual(result, expected, "Problem with test for new log, log contents")
 
 

@@ -7,13 +7,47 @@ Parameters:
 
 Returns:
     New risk spreadsheet is added to each accession folder
-    Log of all accessions (with collection and accession number) that were updated is made in the input_directory
+    Log of all accessions (with collection and accession number) and if a new risk csv was made in the input_directory
 """
 from datetime import date, datetime
 import os
 import pandas as pd
 import re
 import sys
+
+
+def accession_test(acc_id, acc_path):
+    """Determine if a folder is an accession based on the folder name
+
+    There may be other folders used for other purposes, like risk remediation or appraisal, as well.
+    These other folders are not part of the collection summary report.
+
+    Keep in sync with the copy of this function in collection_summary.py. Unit tests are with that script.
+
+    @:parameter
+    acc_id (string): the accession id, which is the name of a folder within acc_coll
+    acc_path (string): the path to the accession folder
+
+    @:return
+    Boolean: True if it is an accession and False if not
+    """
+
+    # If the path is to a file, do not test the folder name.
+    if os.path.isfile(acc_path):
+        return False
+
+    # Pattern one: ends with -er or -ER.
+    if acc_id.lower().endswith('-er'):
+        return True
+    # Pattern two: ends with _er or _ER.
+    elif acc_id.lower().endswith('_er'):
+        return True
+    # Temporary designation for legacy content while determining an accession number.
+    elif acc_id == 'no-acc-num':
+        return True
+    # Folder that matches none of the patterns for an accession.
+    else:
+        return False
 
 
 def check_arguments(argument_list):
@@ -191,7 +225,9 @@ def most_recent_risk_csv(file_list):
 
     From legacy practices, any spreadsheet with a date in the name is more recent than one without.
     The list will also include other types of files, such as preservation logs, which are ignored.
-    This function is also used in collection_summary.py
+
+    Keep in sync with the copy of this function in collection_summary.py and format_list.py
+    The unit tests are in risk_update.
 
     @:parameter
     file_list (list): list of all file names in a folder with at least one risk spreadsheet
@@ -306,14 +342,16 @@ def save_risk_csv(accession_path, risk_df):
     risk_df.to_csv(update_csv_path, index=False)
 
 
-def update_log(accession_path, log_dir):
-    """Log accessions that had their risk csvs updated
+def update_log(accession_path, log_dir, update_result):
+    """Log every accession and if the risk csv was updated
 
-    The log includes the collection and accession number, which are both part of the accession path.
+    The log includes the collection and accession number, which are both part of the accession path,
+    and if the risk csv was updated or not.
 
     @:parameter
     accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s)
     log_dir (string): the path to the directory for saving the log (script argument input_directory)
+    update_result (string): Yes (updated risk csv made) or No (no previous risk csv to update)
 
     @:returns
     None. Makes or updates the log.
@@ -330,11 +368,11 @@ def update_log(accession_path, log_dir):
     log_path = os.path.join(log_dir, f"update_risk_log_{today}.csv")
     if not os.path.exists(log_path):
         with open(log_path, 'w') as f:
-            f.write('Collection,Accession\n')
+            f.write('Collection,Accession,Risk_Updated\n')
 
     # Adds the collection and accession to the log.
     with open(log_path, 'a') as f:
-        f.write(f'{collection},{accession}\n')
+        f.write(f'{collection},{accession},{update_result}\n')
 
 
 if __name__ == '__main__':
@@ -357,14 +395,17 @@ if __name__ == '__main__':
               'The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.')
         sys.exit(1)
 
-    # Navigates to each folder with a risk spreadsheet and makes a new version of the risk spreadsheet
+    # Navigates to each accession folder and makes a new version of the risk spreadsheet
     # using the most recent risk spreadsheet in each folder and the current NARA risk CSV.
-    # Also adds the accession to a log.
+    # Also logs if it found a risk spreadsheet or not.
     for root, directories, files in os.walk(input_directory):
-        if any('full_risk_data' in x for x in files):
-            print('Starting on accession', root)
-            file = most_recent_risk_csv(files)
-            new_risk_df = read_risk_csv(os.path.join(root, file))
-            new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
-            save_risk_csv(root, new_risk_df)
-            update_log(root, input_directory)
+        if accession_test(os.path.basename(root), root):
+            if any('full_risk_data' in x for x in files):
+                print('Starting on accession', root)
+                file = most_recent_risk_csv(files)
+                new_risk_df = read_risk_csv(os.path.join(root, file))
+                new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
+                save_risk_csv(root, new_risk_df)
+                update_log(root, input_directory, 'Yes')
+            else:
+                update_log(root, input_directory, 'No')

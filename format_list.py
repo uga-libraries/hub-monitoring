@@ -18,8 +18,8 @@ Returns:
 from datetime import date
 import os
 import pandas as pd
+import re
 import sys
-from risk_update import most_recent_risk_csv
 from validate_fixity import check_argument
 
 
@@ -105,6 +105,51 @@ def files_per_format(df):
     files = files.rename({0: 'File_Count'}, axis=1)
 
     return files
+
+
+def most_recent_risk_csv(file_list):
+    """Determine the most recent risk spreadsheet in the file list based on the file name
+
+    From legacy practices, any spreadsheet with a date in the name is more recent than one without.
+    The list will also include other types of files, such as preservation logs, which are ignored.
+
+    Keep in sync with the copy of this function in collection_summary.py and risk_update.py
+    The unit tests are in risk_update.
+
+    @:parameter
+    file_list (list): list of all file names in a folder with at least one risk spreadsheet
+
+    @:returns
+    most_recent_file (string): the name of the preservation spreadsheet that is the most recent
+    """
+
+    # Variables for tracking which file is the most recent.
+    most_recent_file = None
+    most_recent_date = None
+
+    # Tests each file in the file list looking for the most recent one, based on the date in the file name.
+    for file_name in file_list:
+
+        # Skips files that are not risk spreadsheets, like the preservation log.
+        if not ('full_risk_data' in file_name):
+            continue
+
+        # Extracts the date from the risk spreadsheet file name, if it has one. If it doesn't, assigns 1900-01-01
+        # for comparison since any spreadsheet with a date is more recent than one without.
+        # Converts the date from a string to type date so that it can be compared to other dates.
+        try:
+            regex = re.search("_full_risk_data_([0-9]{4})-([0-9]{2})-([0-9]{2}).csv", file_name)
+            file_date = date(int(regex.group(1)), int(regex.group(2)), int(regex.group(3)))
+        except AttributeError:
+            file_date = date(1900, 1, 1)
+
+        # If this is the first file evaluated, or this file's date is more recent than the current most_recent_date,
+        # updates most_recent_file and most_recent_date with the current file and its date.
+        if most_recent_date is None or most_recent_date < file_date:
+            most_recent_file = file_name
+            most_recent_date = file_date
+
+    return most_recent_file
 
 
 def size_per_format(df):
