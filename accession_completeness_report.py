@@ -81,6 +81,10 @@ def check_completeness(acc_path):
         elif 'full_risk_data' in item and item.endswith('.csv'):
             result['full_risk'] = True
 
+        # Initial Manifest includes the date between initialmanifest_ and the file extension.
+        elif item.startswith('initialmanifest_') and item.endswith('.csv'):
+            result['initial_manifest'] = True
+
         # Bags follow the naming convention of ending with _bag.
         elif item.endswith('_bag'):
             result['bag'] = True
