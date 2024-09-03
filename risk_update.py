@@ -7,7 +7,7 @@ Parameters:
 
 Returns:
     New risk spreadsheet is added to each accession folder
-    Log of all accessions (with collection and accession number) that were updated is made in the input_directory
+    Log of all accessions (with collection and accession number) and if a new risk csv was made in the input_directory
 """
 from datetime import date, datetime
 import os
