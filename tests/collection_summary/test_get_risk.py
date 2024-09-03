@@ -71,6 +71,13 @@ class MyTestCase(unittest.TestCase):
         expected = [0, 2, 3, 0, None]
         self.assertEqual(risk, expected, "Problem with test for two risks repeated")
 
+    def updated_column_name(self):
+        """Test for when the NARA column has the updated name, NARA_Risk_Level instead of NARA_Risk Level"""
+        acc_path = join('test_data', 'Russell_Hub', 'backlogged', 'rbrl002', '2022-06-er')
+        risk = get_risk(acc_path)
+        expected = [0, 2, 3, 0, None]
+        self.assertEqual(risk, expected, "Problem with test for updated column name")
+
 
 if __name__ == '__main__':
     unittest.main()
