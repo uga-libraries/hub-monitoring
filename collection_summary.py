@@ -36,6 +36,8 @@ def accession_test(acc_id, acc_path):
     There may be other folders used for other purposes, like risk remediation or appraisal, as well.
     These other folders are not part of the collection summary report.
 
+    Keep in sync with the copy of this function in risk_update.py.
+
     @:parameter
     acc_id (string): the accession id, which is the name of a folder within acc_coll
     acc_path (string): the path to the accession folder

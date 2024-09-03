@@ -14,7 +14,40 @@ import os
 import pandas as pd
 import re
 import sys
-from collection_summary import accession_test
+
+
+def accession_test(acc_id, acc_path):
+    """Determine if a folder is an accession based on the folder name
+
+    There may be other folders used for other purposes, like risk remediation or appraisal, as well.
+    These other folders are not part of the collection summary report.
+
+    Keep in sync with the copy of this function in collection_summary.py. Unit tests are with that script.
+
+    @:parameter
+    acc_id (string): the accession id, which is the name of a folder within acc_coll
+    acc_path (string): the path to the accession folder
+
+    @:return
+    Boolean: True if it is an accession and False if not
+    """
+
+    # If the path is to a file, do not test the folder name.
+    if os.path.isfile(acc_path):
+        return False
+
+    # Pattern one: ends with -er or -ER.
+    if acc_id.lower().endswith('-er'):
+        return True
+    # Pattern two: ends with _er or _ER.
+    elif acc_id.lower().endswith('_er'):
+        return True
+    # Temporary designation for legacy content while determining an accession number.
+    elif acc_id == 'no-acc-num':
+        return True
+    # Folder that matches none of the patterns for an accession.
+    else:
+        return False
 
 
 def check_arguments(argument_list):
