@@ -45,7 +45,7 @@ def accession_paths(coll_path):
 
         # Skips non-accession folders that may be sibling folders of accessions.
         # Multiple folders are about appraisal, which all match the pattern starts with 'App'.
-        skip = ['Access Copies', 'AIPs V2', 'Arranged by series', 'to ingest', 'Risk_remediation', 'Risk remediation']
+        skip = ['Access Copies', 'AIPs V2', 'Arranged by series', 'to ingest']
         if acc in skip or acc.startswith('App') or acc.startswith('Risk') or acc.endswith('FITS'):
             continue
 
