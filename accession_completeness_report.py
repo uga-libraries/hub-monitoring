@@ -92,12 +92,13 @@ def check_completeness(acc_path):
     return result
 
 
-def update_report(acc_status, coll, acc_path, result):
+def update_report(report_dir, acc_status, coll, acc_path, result):
     """Make the completeness report, if it doesn't already exist, and add an accession to the report
 
     The report is saved in the input_directory.
 
     @:parameter
+    report_dir (string): path to where to save the report (input_directory)
     acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
     acc_path (string): the full path to the accession folder
@@ -110,7 +111,7 @@ def update_report(acc_status, coll, acc_path, result):
     """
 
     # If the report does not already exist, makes a report with a header row.
-    report_path = os.path.join(input_directory, f"accession_completeness_report_{date.today().strftime('%Y-%m-%d')}.csv")
+    report_path = os.path.join(report_dir, f"accession_completeness_report_{date.today().strftime('%Y-%m-%d')}.csv")
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
@@ -151,7 +152,7 @@ if __name__ == '__main__':
                     completeness_dict = check_completeness(accession_path)
                     # If any of the criteria are missing, saves the information to the report.
                     if False in completeness_dict.values():
-                        update_report(status, collection, accession_path, completeness_dict)
+                        update_report(input_directory, status, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made or not).
     date_today = date.today().strftime('%Y-%m-%d')
