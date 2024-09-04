@@ -21,21 +21,19 @@ import os
 import sys
 
 
-def accession_paths(acc_status, coll):
+def accession_paths(coll_path):
     """Find the paths for the accession folder(s) in a collection folder
 
     The collection folder also contains other folders and files.
 
     @:parameter
-    acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
-    coll (string): the name of the collection folder
+    coll_path (string): absolute path to the collection folder
 
     @:returns
     acc_paths (list): a list of paths to the folders with the accession content
     """
 
     acc_paths = []
-    coll_path = os.path.join(input_directory, acc_status, coll)
 
     # Navigates the collection folder looking for the folder with the accession content.
     for acc in os.listdir(coll_path):
@@ -146,7 +144,7 @@ if __name__ == '__main__':
                     continue
 
                 # Gets a list of the path to every folder with accession content and tests their completeness.
-                accession_list = accession_paths(status, collection)
+                accession_list = accession_paths(os.path.join(input_directory, status, collection))
                 for accession_path in accession_list:
                     print('Starting on accession', accession_path)
                     completeness_dict = check_completeness(accession_path)
