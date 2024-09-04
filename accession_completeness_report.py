@@ -27,12 +27,13 @@ def accession_paths(coll_path):
     The collection folder also contains other folders and files.
 
     @:parameter
-    coll_path (string): absolute path to the collection folder
+    coll_path (string): path to the collection folder
 
     @:returns
     acc_paths (list): a list of paths to the folders with the accession content
     """
 
+    # Variable for the function output.
     acc_paths = []
 
     # Navigates the collection folder looking for the folder with the accession content.
