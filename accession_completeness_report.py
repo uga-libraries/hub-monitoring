@@ -21,21 +21,20 @@ import os
 import sys
 
 
-def accession_paths(acc_status, coll):
+def accession_paths(coll_path):
     """Find the paths for the accession folder(s) in a collection folder
 
     The collection folder also contains other folders and files.
 
     @:parameter
-    acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
-    coll (string): the name of the collection folder
+    coll_path (string): path to the collection folder
 
     @:returns
     acc_paths (list): a list of paths to the folders with the accession content
     """
 
+    # Variable for the function output.
     acc_paths = []
-    coll_path = os.path.join(input_directory, acc_status, coll)
 
     # Navigates the collection folder looking for the folder with the accession content.
     for acc in os.listdir(coll_path):
@@ -46,7 +45,7 @@ def accession_paths(acc_status, coll):
 
         # Skips non-accession folders that may be sibling folders of accessions.
         # Multiple folders are about appraisal, which all match the pattern starts with 'App'.
-        skip = ['Access Copies', 'AIPs V2', 'Arranged by series', 'to ingest', 'Risk_remediation', 'Risk remediation']
+        skip = ['Access Copies', 'AIPs V2', 'Arranged by series', 'to ingest']
         if acc in skip or acc.startswith('App') or acc.startswith('Risk') or acc.endswith('FITS'):
             continue
 
@@ -93,12 +92,13 @@ def check_completeness(acc_path):
     return result
 
 
-def update_report(acc_status, coll, acc_path, result):
+def update_report(report_dir, acc_status, coll, acc_path, result):
     """Make the completeness report, if it doesn't already exist, and add an accession to the report
 
     The report is saved in the input_directory.
 
     @:parameter
+    report_dir (string): path to where to save the report (input_directory)
     acc_status (string): parent folder of collection folder, either "backlogged" or "closed"
     coll (string): the name of the collection folder
     acc_path (string): the full path to the accession folder
@@ -111,7 +111,7 @@ def update_report(acc_status, coll, acc_path, result):
     """
 
     # If the report does not already exist, makes a report with a header row.
-    report_path = os.path.join(input_directory, f"accession_completeness_report_{date.today().strftime('%Y-%m-%d')}.csv")
+    report_path = os.path.join(report_dir, f"accession_completeness_report_{date.today().strftime('%Y-%m-%d')}.csv")
     if not os.path.exists(report_path):
         with open(report_path, 'w', newline='') as report:
             writer = csv.writer(report)
@@ -146,13 +146,13 @@ if __name__ == '__main__':
                     continue
 
                 # Gets a list of the path to every folder with accession content and tests their completeness.
-                accession_list = accession_paths(status, collection)
+                accession_list = accession_paths(os.path.join(input_directory, status, collection))
                 for accession_path in accession_list:
                     print('Starting on accession', accession_path)
                     completeness_dict = check_completeness(accession_path)
                     # If any of the criteria are missing, saves the information to the report.
                     if False in completeness_dict.values():
-                        update_report(status, collection, accession_path, completeness_dict)
+                        update_report(input_directory, status, collection, accession_path, completeness_dict)
 
     # Prints if there were any incomplete accessions (the report was made or not).
     date_today = date.today().strftime('%Y-%m-%d')
