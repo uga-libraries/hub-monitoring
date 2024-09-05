@@ -29,7 +29,8 @@ class MyTestCase(unittest.TestCase):
             remove(join('script_test_data', 'incomplete', f'accession_completeness_report_{today}.csv'))
 
     def test_complete(self):
-        """Test for an input directory that contains only complete accessions, so no report is generated"""
+        """Test for an input directory that contains only complete accessions, so no report is generated,
+        as well as a folder at the status level that is not backlogged or closed and is skipped"""
         # Makes the variable used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'accession_completeness_report.py')
         input_directory = join('script_test_data', 'complete')
@@ -50,7 +51,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_incomplete(self):
         """Test for an input directory that contains some incomplete accessions, so the report is generated
-        but does not include the complete accessions or an accession from the unconventional collection list"""
+        but also includes complete accessions and a collection from the unconventional collection list
+        that will not be in the report"""
         # Makes the variable used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'accession_completeness_report.py')
         input_directory = join('script_test_data', 'incomplete')
