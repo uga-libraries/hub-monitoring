@@ -20,7 +20,7 @@ class MyTestCase(unittest.TestCase):
     def test_new_report(self):
         """Test for when there is not yet an accession completeness report"""
         # Creates input variables and runs the function.
-        accession_path = join('update_report_test_data', 'backlogged', 'coll_1', 'acc_1')
+        accession_path = join('update_report_test_data', 'backlogged', 'coll_1', 'acc_1_1')
         completeness_dict = {'pres_log': True, 'full_risk': True, 'initial_manifest': True, 'bag': True}
         update_report('update_report_test_data', 'backlogged', 'coll_1', accession_path, completeness_dict)
 
@@ -28,18 +28,18 @@ class MyTestCase(unittest.TestCase):
         today = date.today().strftime('%Y-%m-%d')
         result = csv_to_list(join('update_report_test_data', f'accession_completeness_report_{today}.csv'))
         expected = [['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Initial_Manifest', 'Bag'],
-                    ['backlogged', 'coll_1', 'acc_1', True, True, True, True]]
+                    ['backlogged', 'coll_1', 'acc_1_1', True, True, True, True]]
         self.assertEqual(result, expected, "Problem with test for new report")
 
     def test_existing_report(self):
         """Test for adding to an existing accession completeness report"""
         # Creates input variables for the first accession and runs the function, which makes the report.
-        accession_path = join('update_report_test_data', 'backlogged', 'coll_1', 'acc_1')
+        accession_path = join('update_report_test_data', 'backlogged', 'coll_1', 'acc_1_1')
         completeness_dict = {'pres_log': True, 'full_risk': True, 'initial_manifest': True, 'bag': True}
         update_report('update_report_test_data', 'backlogged', 'coll_1', accession_path, completeness_dict)
 
         # Creates input variables for the second accession and runs the function again, which adds to the report.
-        accession_path = join('update_report_test_data', 'backlogged', 'coll_1', 'acc_2')
+        accession_path = join('update_report_test_data', 'backlogged', 'coll_1', 'acc_1_2')
         completeness_dict = {'pres_log': False, 'full_risk': False, 'initial_manifest': True, 'bag': True}
         update_report('update_report_test_data', 'backlogged', 'coll_1', accession_path, completeness_dict)
 
@@ -47,8 +47,8 @@ class MyTestCase(unittest.TestCase):
         today = date.today().strftime('%Y-%m-%d')
         result = csv_to_list(join('update_report_test_data', f'accession_completeness_report_{today}.csv'))
         expected = [['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Initial_Manifest', 'Bag'],
-                    ['backlogged', 'coll_1', 'acc_1', True, True, True, True],
-                    ['backlogged', 'coll_1', 'acc_2', False, False, True, True]]
+                    ['backlogged', 'coll_1', 'acc_1_1', True, True, True, True],
+                    ['backlogged', 'coll_1', 'acc_1_2', False, False, True, True]]
         self.assertEqual(result, expected, "Problem with test for existing report")
 
 
