@@ -3,7 +3,7 @@ Test for the function size_per_format(), which gets the GB per format name/versi
 """
 import unittest
 from format_list import combine_risk_csvs, df_cleanup, size_per_format
-from test_cleanup import df_to_list
+from test_df_cleanup import df_to_list
 from os import getcwd
 from os.path import join
 

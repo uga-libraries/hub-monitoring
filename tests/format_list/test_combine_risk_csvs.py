@@ -3,7 +3,7 @@ Test for the function combine_risk_csvs(), which finds all risk csvs in a direct
 """
 import unittest
 from format_list import combine_risk_csvs
-from test_cleanup import df_to_list
+from test_df_cleanup import df_to_list
 from os import getcwd
 from os.path import join
 
