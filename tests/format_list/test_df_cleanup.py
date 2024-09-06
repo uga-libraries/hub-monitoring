@@ -78,6 +78,19 @@ class MyTestCase(unittest.TestCase):
                     ['format2', 'v2', 222, 'No Match']]
         self.assertEqual(result, expected, "Problem with test for NARA blank risk level")
 
+    def test_nara_rename(self):
+        """Test renaming NARA_Risk Level to NARA_Risk_Level"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 'v1', 111, nan]],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', 'v1', 111, 'No Match']]
+        self.assertEqual(result, expected, "Problem with test for NARA rename risk level")
+
 
 if __name__ == '__main__':
     unittest.main()
