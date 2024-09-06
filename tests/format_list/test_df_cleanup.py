@@ -91,6 +91,36 @@ class MyTestCase(unittest.TestCase):
                     ['format1', 'v1', 111, 'No Match']]
         self.assertEqual(result, expected, "Problem with test for NARA rename risk level")
 
+    def test_version_blank(self):
+        """Test filling blank version with no-version"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', nan, 111, 'Low Risk'],
+                            ['path2', 'format2', nan, 222, 'High Risk']],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', 'no-version', 111, 'Low Risk'],
+                    ['format2', 'no-version', 222, 'High Risk']]
+        self.assertEqual(result, expected, "Problem with test for version blank")
+
+    def test_version_string(self):
+        """Test changing numerical version numbers to strings"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 1, 111, 'Low Risk'],
+                            ['path2', 'format2', 2, 222, 'High Risk']],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', '1', 111, 'Low Risk'],
+                    ['format2', '2', 222, 'High Risk']]
+        self.assertEqual(result, expected, "Problem with test for version blank")
+
 
 if __name__ == '__main__':
     unittest.main()
