@@ -13,7 +13,7 @@ class MyTestCase(unittest.TestCase):
     def test_one_risk(self):
         """
         Test for an input_directory with one risk csv,
-        as if the script is running on a single collection folder
+        with an input_directory as if the script is running on a single collection folder
         """
         input_directory = join(getcwd(), 'combine_test_data', 'one-risk', 'acc-1-er')
         df_all = combine_risk_csvs(input_directory)
@@ -50,6 +50,53 @@ class MyTestCase(unittest.TestCase):
                      'Low Risk', 'Retain', 'PRONOM', 'Not for TA', 'Not for Other']]
 
         self.assertEqual(result, expected, "Problem with test for one risk csv")
+
+    def test_one_risk_each(self):
+        """
+        Test for an input_directory with one risk csv per collection,
+        with an input directory as if the script is running on a single status folder
+        """
+        input_directory = join(getcwd(), 'combine_test_data', 'one-risk-each', 'closed')
+        df_all = combine_risk_csvs(input_directory)
+
+        result = df_to_list(df_all)
+        expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
+                     'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
+                     'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
+                     'NARA_Format Name', 'NARA_File Extension(s)', 'NARA_PRONOM URL', 'NARA_Risk Level',
+                     'NARA_Proposed Preservation Plan', 'NARA_Match_Type', 'Technical_Appraisal', 'Other_Risk'],
+                    ['Z:\\one-risk-each\\closed\\coll_1\\acc-1a-er\\River.doc', 'Microsoft Word Binary File Format',
+                     'nan', 'nan', 'Exiftool version 11.54', False, '2010-12-30', 290.304,
+                     '09198237adf2b5f63349df20160dc765', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Interleaf Document', 'ildoc|doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/329',
+                     'Moderate Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other'],
+                    ['Z:\\one-risk-each\\closed\\coll_1\\acc-1a-er\\River.doc', 'Microsoft Word Binary File Format',
+                     'nan', 'nan', 'Exiftool version 11.54', False, '2010-12-30', 290.304,
+                     '09198237adf2b5f63349df20160dc765', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Microsoft Word for Macintosh 5.0', 'doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/65',
+                     'Moderate Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other'],
+                    ['Z:\\one-risk-each\\closed\\coll_1\\acc-1b-er\\River.doc', 'Microsoft Word Binary File Format',
+                     'nan', 'nan', 'Exiftool version 11.54', False, '2010-12-30', 290.304,
+                     '09198237adf2b5f63349df20160dc765', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Interleaf Document', 'ildoc|doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/329',
+                     'Moderate Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other'],
+                    ['Z:\\one-risk-each\\closed\\coll_1\\acc-1b-er\\River.doc', 'Microsoft Word Binary File Format',
+                     'nan', 'nan', 'Exiftool version 11.54', False, '2010-12-30', 290.304,
+                     '09198237adf2b5f63349df20160dc765', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Microsoft Word for Macintosh 5.0', 'doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/65',
+                     'Moderate Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other'],
+                    ['Z:\\one-risk-each\\closed\\coll_2\\acc-2a-er\\River.doc', 'Microsoft Word Binary File Format',
+                     'nan', 'nan', 'Exiftool version 11.54', False, '2010-12-30', 290.304,
+                     '09198237adf2b5f63349df20160dc765', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Interleaf Document', 'ildoc|doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/329',
+                     'Moderate Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other'],
+                    ['Z:\\one-risk-each\\closed\\coll_2\\acc-2a-er\\River.doc', 'Microsoft Word Binary File Format',
+                     'nan', 'nan', 'Exiftool version 11.54', False, '2010-12-30', 290.304,
+                     '09198237adf2b5f63349df20160dc765', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Microsoft Word for Macintosh 5.0', 'doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/65',
+                     'Moderate Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other']]
+
+        self.assertEqual(result, expected, "Problem with test for one risk csv each accession")
 
 
 if __name__ == '__main__':
