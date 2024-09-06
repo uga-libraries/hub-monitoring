@@ -5,9 +5,8 @@ select columns, no duplicates, and does some reformatting.
 To simplify the test input, tests have the columns needed for that test.
 """
 import unittest
-from format_list import combine_risk_csvs, df_cleanup
-from os import getcwd
-from os.path import join
+from format_list import df_cleanup
+from numpy import nan
 from pandas import DataFrame
 
 
@@ -63,6 +62,21 @@ class MyTestCase(unittest.TestCase):
                     ['format1', 'v1', 111, 'Moderate Risk'],
                     ['format1', 'v1', 222, 'Low Risk']]
         self.assertEqual(result, expected, "Problem with test for duplicates")
+
+    def test_nara_blank(self):
+        """Test filling blank NARA risk level with No Match"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 'v1', 111, nan],
+                            ['path2', 'format2', 'v2', 222, nan]],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', 'v1', 111, 'No Match'],
+                    ['format2', 'v2', 222, 'No Match']]
+        self.assertEqual(result, expected, "Problem with test for NARA blank risk level")
 
 
 if __name__ == '__main__':
