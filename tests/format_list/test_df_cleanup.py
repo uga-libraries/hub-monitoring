@@ -46,6 +46,24 @@ class MyTestCase(unittest.TestCase):
                     ['format2', 'v2', 222, 'High Risk']]
         self.assertEqual(result, expected, "Problem with test for all columns")
 
+    def test_duplicates(self):
+        """Test duplicates of files with the same NARA risk level"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 'v1', 111, 'Low Risk'],
+                            ['path1', 'format1', 'v1', 111, 'Moderate Risk'],
+                            ['path1', 'format1', 'v1', 111, 'Low Risk'],
+                            ['path2', 'format1', 'v1', 222, 'Low Risk']],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', 'v1', 111, 'Low Risk'],
+                    ['format1', 'v1', 111, 'Moderate Risk'],
+                    ['format1', 'v1', 222, 'Low Risk']]
+        self.assertEqual(result, expected, "Problem with test for duplicates")
+
 
 if __name__ == '__main__':
     unittest.main()
