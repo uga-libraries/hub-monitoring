@@ -10,6 +10,43 @@ from os.path import join
 
 class MyTestCase(unittest.TestCase):
 
+    def test_multiple_risks(self):
+        """
+        Test for an input_directory with multiple risk csvs per accession,
+        with an input_directory as if the script is running on a born digital folder
+        """
+        input_directory = join(getcwd(), 'combine_test_data', 'multiple-risks')
+        df_all = combine_risk_csvs(input_directory)
+
+        result = df_to_list(df_all)
+        expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
+                     'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
+                     'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
+                     'NARA_Format Name', 'NARA_File Extension(s)', 'NARA_PRONOM URL', 'NARA_Risk Level',
+                     'NARA_Proposed Preservation Plan', 'NARA_Match_Type', 'Technical_Appraisal', 'Other_Risk'],
+                    ['Z:\\multiple-risks\\backlogged\\coll_1\\acc_1a_er\\001_na.jpg', 'JPEG EXIF', 1.01, 'nan',
+                     'Jhove version 1.20', False, '2020-02-06', 294.094, 'bad8d3d26720ecd5dd45cd3b8f71fd45', 'nan',
+                     True, True, 'nan', 'JPEG File Interchange Format 1.01', 'jpg|jpeg',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/43', 'Low Risk', 'Retain',
+                     'File Extension and Version', 'Not for TA', 'Not for Other'],
+                    ['Z:\\multiple-risks\\backlogged\\coll_1\\acc_1a_er\\Awards.doc',
+                     'Microsoft Word Binary File Format', 'nan', 'nan', 'Exiftool version 11.54', False, '2011-06-27',
+                     76.8, '5760bc9c5f0a3ff3ec0dd9a71188ad9a', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Interleaf Document', 'ildoc|doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/329',
+                     'High Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other'],
+                    ['Z:\\multiple-risks\\closed\\coll_a\\acc_a1_er\\001_na.jpg', 'JPEG EXIF', 1.01, 'nan',
+                     'Jhove version 1.20', False, '2020-02-06', 294.094, 'bad8d3d26720ecd5dd45cd3b8f71fd45',
+                     'nan', True, True, 'nan', 'JPEG File Interchange Format 1.01', 'jpg|jpeg',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/43', 'Low Risk', 'Retain',
+                     'File Extension and Version', 'Not for TA', 'Not for Other'],
+                    ['Z:\\multiple-risks\\closed\\coll_a\\acc_a1_er\\Awards.doc', 'Microsoft Word Binary File Format',
+                     'nan', 'nan', 'Exiftool version 11.54', False, '2011-06-27', 76.8,
+                     '5760bc9c5f0a3ff3ec0dd9a71188ad9a', 'Microsoft Office Word', 'nan', 'nan', 'nan',
+                     'Interleaf Document', 'ildoc|doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/329',
+                     'High Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other']]
+
+        self.assertEqual(result, expected, "Problem with test for multiple risk csvs per accession")
+
     def test_one_risk(self):
         """
         Test for an input_directory with one risk csv,
@@ -53,7 +90,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_one_risk_each(self):
         """
-        Test for an input_directory with one risk csv per collection,
+        Test for an input_directory with one risk csv per accession,
         with an input directory as if the script is running on a single status folder
         """
         input_directory = join(getcwd(), 'combine_test_data', 'one-risk-each', 'closed')
