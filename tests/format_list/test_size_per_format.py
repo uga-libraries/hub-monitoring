@@ -10,6 +10,60 @@ from pandas import DataFrame
 
 class MyTestCase(unittest.TestCase):
 
+    def test_combined_kb(self):
+        """Test for combining name, version, and risk combinations with total sizes in KB (round to 0.0 GB)"""
+        df_formats = DataFrame([['path1', 'format1', 'v1', 1, 'Low Risk'],
+                                ['path2', 'format1', 'v1', 1, 'Low Risk'],
+                                ['path3', 'format2', 'v1', 2, 'Moderate Risk'],
+                                ['path4', 'format2', 'v1', 2, 'Moderate Risk'],
+                                ['path5', 'format2', 'v1', 2, 'Moderate Risk']],
+                               columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                        'NARA_Risk_Level'])
+        df_size = size_per_format(df_formats)
+
+        result = df_to_list(df_size)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'Size_GB'],
+                    ['format1', 'v1', 'Low Risk', 0.0],
+                    ['format2', 'v1', 'Moderate Risk', 0.0]]
+
+        self.assertEqual(result, expected, "Problem with test for combined KB")
+
+    def test_combined_mb(self):
+        """Test for combining name, version, and risk combinations with total sizes in MB (round to decimal GB)"""
+        df_formats = DataFrame([['path1', 'format1', 'v1', 100, 'Low Risk'],
+                                ['path2', 'format1', 'v1', 1000, 'Low Risk'],
+                                ['path3', 'format2', 'v1', 50, 'Moderate Risk'],
+                                ['path4', 'format2', 'v1', 600, 'Moderate Risk'],
+                                ['path5', 'format2', 'v1', 20000, 'Moderate Risk']],
+                               columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                        'NARA_Risk_Level'])
+        df_size = size_per_format(df_formats)
+
+        result = df_to_list(df_size)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'Size_GB'],
+                    ['format1', 'v1', 'Low Risk', 0.001],
+                    ['format2', 'v1', 'Moderate Risk', 0.021]]
+
+        self.assertEqual(result, expected, "Problem with test for combined MB")
+
+    def test_combined_gb(self):
+        """Test for combining name, version, and risk combinations with total sizes in GB"""
+        df_formats = DataFrame([['path1', 'format1', 'v1', 1000010, 'Low Risk'],
+                                ['path2', 'format1', 'v1', 1000020, 'Low Risk'],
+                                ['path3', 'format2', 'v1', 20001001, 'Moderate Risk'],
+                                ['path4', 'format2', 'v1', 20002002, 'Moderate Risk'],
+                                ['path5', 'format2', 'v1', 20003003, 'Moderate Risk']],
+                               columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                        'NARA_Risk_Level'])
+        df_size = size_per_format(df_formats)
+
+        result = df_to_list(df_size)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'Size_GB'],
+                    ['format1', 'v1', 'Low Risk', 2.0],
+                    ['format2', 'v1', 'Moderate Risk', 60.006]]
+
+        self.assertEqual(result, expected, "Problem with test for combined GB")
+
     def test_repeats_not_combined(self):
         """Test for not combining repeating name, version, and/or risk combinations (all three don't match)"""
         df_formats = DataFrame([['path/format-only/1', 'format1', 'v1', 1000000, 'Moderate Risk'],
@@ -26,9 +80,9 @@ class MyTestCase(unittest.TestCase):
                                 ['path/version-risk/2', 'format9', 'v9', 12000000, 'Moderate Risk']],
                                columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
                                         'NARA_Risk_Level'])
-        df_files = size_per_format(df_formats)
+        df_size = size_per_format(df_formats)
 
-        result = df_to_list(df_files)
+        result = df_to_list(df_size)
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'Size_GB'],
                     ['format1', 'v1', 'Moderate Risk', 1.0],
                     ['format1', 'v2', 'High Risk', 2.0],
@@ -41,8 +95,7 @@ class MyTestCase(unittest.TestCase):
                     ['format7', 'v7', 'No Match', 9.0],
                     ['format7', 'v8', 'No Match', 10.0],
                     ['format8', 'v9', 'Moderate Risk', 11.0],
-                    ['format9', 'v9', 'Moderate Risk', 12.0]
-                    ]
+                    ['format9', 'v9', 'Moderate Risk', 12.0]]
         self.assertEqual(result, expected, "Problem with test for repeats not combined")
 
     def test_unique(self):
@@ -53,9 +106,9 @@ class MyTestCase(unittest.TestCase):
                                 ['path4', 'format4', 'v4', 4000000, 'No Match']],
                                columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
                                         'NARA_Risk_Level'])
-        df_files = size_per_format(df_formats)
+        df_size = size_per_format(df_formats)
 
-        result = df_to_list(df_files)
+        result = df_to_list(df_size)
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'Size_GB'],
                     ['format1', 'v1', 'High Risk', 1.0],
                     ['format2', 'v2', 'Moderate Risk', 2.0],
