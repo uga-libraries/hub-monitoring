@@ -22,7 +22,9 @@ def df_to_list(df):
 class MyTestCase(unittest.TestCase):
 
     def test_all_columns(self):
-        """Test expected columns are dropped"""
+        """Test expected columns are dropped
+        None of this data requires cleanup, so it also tests the cleanup will not break if it is not needed
+        """
         # Makes the dataframe of combined risk data. This is the only test with all columns.
         df_all = DataFrame([['path1', 'format1', 'v1', 'puid1', 'tool1', False, '2024-09-06', 111, 'md51', 'app1',
                              True, True, 'note1', 'nara1', 'ext1', 'puid1', 'Low Risk', 'Retain', 'PUID',
