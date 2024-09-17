@@ -62,17 +62,15 @@ validate_fixity.py
 
 ### Testing
 
-There are unit tests for each function and for each script overall for all scripts except format_list.py.
-The tests mostly use files stored in the repo (test_data) as input. 
+There are unit tests for each function and for each script overall for all scripts.
+The tests mostly use files stored in the repo as input. 
 Preservation metadata files may be missing if they are not needed for a test 
 or have fake data to give the needed variations for the test.
+The directory structure may be simplified if the full standard structure is not needed for a test.
 
 A few tests are for errors caused by path length, which could not be replicated in our current computing environment.
 Instead, there are tests to use with real data in Hub.
 They are commented out by default and indicate what information to provide for them to work.
- 
-For quicker development the tests for format_list.py all use the same input test data.
-It is the common data variations, but is not explicitly testing for all possible variations.
 
 ## Workflow
 
