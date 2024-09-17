@@ -65,6 +65,24 @@ class MyTestCase(unittest.TestCase):
                     ]
         self.assertEqual(result, expected, "Problem with test for repeats not combined")
 
+    def test_unique(self):
+        """Test for not combining unique name, version, risk combinations (none of the three match)"""
+        df_formats = DataFrame([['path1', 'format1', 'v1', 1, 'High Risk'],
+                                ['path2', 'format2', 'v2', 2, 'Moderate Risk'],
+                                ['path3', 'format3', 'v3', 3, 'Low Risk'],
+                                ['path4', 'format4', 'v4', 4, 'No Match']],
+                               columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                        'NARA_Risk_Level'])
+        df_files = files_per_format(df_formats)
+
+        result = df_to_list(df_files)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level', 'File_Count'],
+                    ['format1', 'v1', 'High Risk', 1],
+                    ['format2', 'v2', 'Moderate Risk', 1],
+                    ['format3', 'v3', 'Low Risk', 1],
+                    ['format4', 'v4', 'No Match', 1]]
+        self.assertEqual(result, expected, "Problem with test for unique")
+
 
 if __name__ == '__main__':
     unittest.main()
