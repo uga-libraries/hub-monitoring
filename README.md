@@ -74,6 +74,9 @@ They are commented out by default and indicate what information to provide for t
 
 ## Workflow
 
+Primary monitoring workflow that uses these scripts: 
+[Monitoring Born-Digital Collections on Hub](documentation/Workflow_%20Monitoring_Born-Digital_Collections_Hub.md)
+
 Manual edits for the format_list.py output:
 1. Add a "Source" column as the first column with the Hub DEPARTMENT for combining it with other format data.
 2. Normalize format names that are different for each file, e.g., Cannot open PATH or Cabinet # Files.
