@@ -1,4 +1,0 @@
-FITS_File_Path,FITS_Format_Name,FITS_Format_Version,FITS_PUID,FITS_Identifying_Tool(s),FITS_Multiple_IDs,FITS_Date_Last_Modified,FITS_Size_KB,FITS_MD5,FITS_Creating_Application,FITS_Valid,FITS_Well-Formed,FITS_Status_Message,NARA_Format Name,NARA_File Extension(s),NARA_PRONOM URL,NARA_Risk Level,NARA_Proposed Preservation Plan,NARA_Match_Type,Technical_Appraisal,Other_Risk
-C:\coll1\acc1b\Scan 3.jpeg,JPEG File Interchange Format,1.02,pronom/fmt/44,Droid version 6.4; Jhove version 1.20.1,FALSE,6/5/2023,110.597,511fc94a8a86ebfc367b7e028567eb78,,TRUE,TRUE,,,,,,,,Not for TA,Not for Other
-C:\coll1\acc1b\Scan 4.jpeg,JPEG File Interchange Format,1.02,pronom/fmt/44,Droid version 6.4; Jhove version 1.20.1,FALSE,6/5/2023,95.086,0c4ba891fbfeee2141fa5ccbf54dd644,,TRUE,TRUE,,,,,,,,Not for TA,Not for Other
-C:\coll1\acc1b\Unknown.ext,Unknown Binary,,,Droid version 6.4,FALSE,6/5/2022,195.06,0x4ba891fbxxxx2001fa0ccbf54xx644,,,,,,,,,,,Not for TA,Unknown
