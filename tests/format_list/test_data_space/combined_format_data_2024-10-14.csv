@@ -1,9 +1,0 @@
-FITS_Format_Name,FITS_Format_Version,NARA_Risk_Level,File_Count,Size_GB
-JPEG File Interchange Format,1.01,Low Risk,2,82.858
-JPEG File Interchange Format,1.02,Low Risk,3,0.183
-PDF/A,1b,Low Risk,1,45.837
-Plain text,no-version,Moderate Risk,1,5.113
-Portable Document Format,1.4,Moderate Risk,2,0.504
-Portable Network Graphics,1,High Risk,1,205.688
-Portable Network Graphics,1,Moderate Risk,1,257.638
-Unknown Binary,no-version,No Match,1,0.0
