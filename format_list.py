@@ -60,13 +60,13 @@ def df_cleanup(df):
     df (pandas DataFrame): dataframe with a subset of cleaned data from the most recent risk csv for every accession
     """
 
-    # Renames the only column with spaces to use underscores instead.
-    # In more recent risk csvs, it is already NARA_Risk_Level, so this has no impact.
+    # Renames the NARA_Risk Level column, which is in older risk csvs, to the current NARA_Risk_Level.
+    # If it is already NARA_Risk_Level, this will have no effect.
     df = df.rename({'NARA_Risk Level': 'NARA_Risk_Level'}, axis=1)
 
     # Keeps only the needed columns.
     # The other FITs data, NARA data, technical appraisal, and other risk columns are not used.
-    df = df[['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level']]
+    df = df[['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level']
 
     # Removes duplicates from multiple NARA matches with the same NARA risk level to the same file.
     # The file will still be repeated once per NARA risk level.

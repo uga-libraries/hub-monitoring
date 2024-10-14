@@ -228,17 +228,21 @@ def get_risk(acc_path):
     else:
         return [0, 0, 0, 0, f'Accession {os.path.basename(acc_path)} has no risk csv. ']
 
+    # Renames the NARA_Risk Level column, which is in older risk csvs, to the current NARA_Risk_Level.
+    # If it is already NARA_Risk_Level, this will have no effect.
+    risk_df = risk_df.rename(columns={'NARA_Risk Level': 'NARA_Risk_Level'})
+
     # Makes a new dataframe with the FITS_File_Path and NARA_Risk Level to remove duplicates.
     # Duplicates may be from multiple FITS format identifications or multiple NARA matches.
     # Each file is in the new dataframe once per NARA risk level, if it has more than one possible risk level.
-    risk_dedup_df = risk_df[['FITS_File_Path', 'NARA_Risk Level']]
+    risk_dedup_df = risk_df[['FITS_File_Path', 'NARA_Risk_Level']]
     risk_dedup_df = risk_dedup_df.drop_duplicates()
 
     # Counts the number of files (dataframe rows) with each possible NARA risk level and saves to a list.
     # Uses sum() to aggregate because the equality has a Boolean result, and True=1, False=0.
     risk_list = []
     for risk in ('No Match', 'High Risk', 'Moderate Risk', 'Low Risk'):
-        risk_list.append((risk_dedup_df['NARA_Risk Level'] == risk).sum())
+        risk_list.append((risk_dedup_df['NARA_Risk_Level'] == risk).sum())
 
     # Adds None to the end of the list, which is for the Notes column.
     # There is no information for Notes if there is a risk csv.
