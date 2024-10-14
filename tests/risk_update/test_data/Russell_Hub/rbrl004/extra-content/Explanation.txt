@@ -1,0 +1,1 @@
+This is used for testing that a folder which is not an accession will not be included in the log.
