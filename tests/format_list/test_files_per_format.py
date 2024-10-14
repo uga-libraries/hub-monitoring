@@ -11,7 +11,7 @@ from os.path import join
 class MyTestCase(unittest.TestCase):
 
     def test_function(self):
-        input_directory = join(getcwd(), 'test_data')
+        input_directory = join(getcwd(), 'test_data_space')
         df_all = combine_risk_csvs(input_directory)
         df_formats = df_cleanup(df_all)
         df_files = files_per_format(df_formats)
