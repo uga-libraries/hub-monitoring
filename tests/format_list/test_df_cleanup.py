@@ -1,10 +1,13 @@
 """
-Test for the function cleanup(), which transforms the full dataframe into a dataframe with select format information.
+Tests for the function df_cleanup(), which transforms the full dataframe into a dataframe with
+select columns, no duplicates, and does some reformatting.
+
+To simplify the test input, tests have the columns needed for that test.
 """
 import unittest
-from format_list import combine_risk_csvs, df_cleanup
-from os import getcwd
-from os.path import join
+from format_list import df_cleanup
+from numpy import nan
+from pandas import DataFrame
 
 
 def df_to_list(df):
@@ -18,49 +21,107 @@ def df_to_list(df):
 
 class MyTestCase(unittest.TestCase):
 
-    def test_space(self):
-        """Test for when the NARA risk column is named NARA_Risk Level"""
-        input_directory = join(getcwd(), 'test_data_space')
-        df_all = combine_risk_csvs(input_directory)
+    def test_all_columns(self):
+        """Test expected columns are dropped
+        None of this data requires cleanup, so it also tests the cleanup will not break if it is not needed
+        """
+        # Makes the dataframe of combined risk data. This is the only test with all columns.
+        df_all = DataFrame([['path1', 'format1', 'v1', 'puid1', 'tool1', False, '2024-09-06', 111, 'md51', 'app1',
+                             True, True, 'note1', 'nara1', 'ext1', 'puid1', 'Low Risk', 'Retain', 'PUID',
+                             'Not for TA', 'Not for Other'],
+                            ['path2', 'format2', 'v2', 'puid2', 'tool2', False, '2024-09-06', 222, 'md52', 'app2',
+                             True, True, 'note2', 'nara2', 'ext2', 'puid2', 'High Risk', 'Retain', 'PUID',
+                             'Not for TA', 'Not for Other']],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
+                                    'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified',
+                                    'FITS_Size_KB', 'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid',
+                                    'FITS_Well-Formed', 'FITS_Status_Message', 'NARA_Format Name',
+                                    'NARA_File Extension(s)', 'NARA_PRONOM URL', 'NARA_Risk_Level',
+                                    'NARA_Proposed Preservation Plan', 'NARA_Match_Type', 'Technical_Appraisal',
+                                    'Other_Risk'])
         df_formats = df_cleanup(df_all)
 
         result = df_to_list(df_formats)
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
-                    ['Portable Document Format', '1.4', 410000.486, 'Moderate Risk'],
-                    ['JPEG File Interchange Format', '1.01', 220000.139, 'Low Risk'],
-                    ['JPEG File Interchange Format', '1.02', 183000.783, 'Low Risk'],
-                    ['Portable Document Format', '1.4', 94000.626, 'Moderate Risk'],
-                    ['JPEG File Interchange Format', '1.02', 110.597, 'Low Risk'],
-                    ['JPEG File Interchange Format', '1.02', 95.086, 'Low Risk'],
-                    ['Unknown Binary', 'no-version', 195.06, 'No Match'],
-                    ['JPEG File Interchange Format', '1.01', 82638000.0, 'Low Risk'],
-                    ['Portable Network Graphics', '1', 257638000.0, 'Moderate Risk'],
-                    ['Portable Network Graphics', '1', 205688000.0, 'High Risk'],
-                    ['Plain text', 'no-version', 5113000.0, 'Moderate Risk'],
-                    ['PDF/A', '1b', 45837000.0, 'Low Risk']]
-        self.assertEqual(result, expected, "Problem with test for space")
+                    ['format1', 'v1', 111, 'Low Risk'],
+                    ['format2', 'v2', 222, 'High Risk']]
+        self.assertEqual(result, expected, "Problem with test for all columns")
 
-    def test_underscore(self):
-        """Test for when the NARA risk column is named NARA_Risk_Level"""
-        input_directory = join(getcwd(), 'test_data_underscore')
-        df_all = combine_risk_csvs(input_directory)
+    def test_duplicates(self):
+        """Test duplicates of files with the same NARA risk level"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 'v1', 111, 'Low Risk'],
+                            ['path1', 'format1', 'v1', 111, 'Moderate Risk'],
+                            ['path1', 'format1', 'v1', 111, 'Low Risk'],
+                            ['path2', 'format1', 'v1', 222, 'Low Risk']],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
         df_formats = df_cleanup(df_all)
 
         result = df_to_list(df_formats)
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
-                    ['Portable Document Format', '1.4', 410000.486, 'Moderate Risk'],
-                    ['JPEG File Interchange Format', '1.01', 220000.139, 'Low Risk'],
-                    ['JPEG File Interchange Format', '1.02', 183000.783, 'Low Risk'],
-                    ['Portable Document Format', '1.4', 94000.626, 'Moderate Risk'],
-                    ['JPEG File Interchange Format', '1.02', 110.597, 'Low Risk'],
-                    ['JPEG File Interchange Format', '1.02', 95.086, 'Low Risk'],
-                    ['Unknown Binary', 'no-version', 195.06, 'No Match'],
-                    ['JPEG File Interchange Format', '1.01', 82638000.0, 'Low Risk'],
-                    ['Portable Network Graphics', '1', 257638000.0, 'Moderate Risk'],
-                    ['Portable Network Graphics', '1', 205688000.0, 'High Risk'],
-                    ['Plain text', 'no-version', 5113000.0, 'Moderate Risk'],
-                    ['PDF/A', '1b', 45837000.0, 'Low Risk']]
-        self.assertEqual(result, expected, "Problem with test for underscore")
+                    ['format1', 'v1', 111, 'Low Risk'],
+                    ['format1', 'v1', 111, 'Moderate Risk'],
+                    ['format1', 'v1', 222, 'Low Risk']]
+        self.assertEqual(result, expected, "Problem with test for duplicates")
+
+    def test_nara_blank(self):
+        """Test filling blank NARA risk level with No Match"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 'v1', 111, nan],
+                            ['path2', 'format2', 'v2', 222, nan]],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', 'v1', 111, 'No Match'],
+                    ['format2', 'v2', 222, 'No Match']]
+        self.assertEqual(result, expected, "Problem with test for NARA blank risk level")
+
+    def test_nara_rename(self):
+        """Test renaming NARA_Risk Level to NARA_Risk_Level"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 'v1', 111, nan]],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', 'v1', 111, 'No Match']]
+        self.assertEqual(result, expected, "Problem with test for NARA rename risk level")
+
+    def test_version_blank(self):
+        """Test filling blank version with no-version"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', nan, 111, 'Low Risk'],
+                            ['path2', 'format2', nan, 222, 'High Risk']],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', 'no-version', 111, 'Low Risk'],
+                    ['format2', 'no-version', 222, 'High Risk']]
+        self.assertEqual(result, expected, "Problem with test for version blank")
+
+    def test_version_string(self):
+        """Test changing numerical version numbers to strings"""
+        # Makes the dataframe of combined risk data with just the columns needed for this test.
+        df_all = DataFrame([['path1', 'format1', 1, 111, 'Low Risk'],
+                            ['path2', 'format2', 2, 222, 'High Risk']],
+                           columns=['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB',
+                                    'NARA_Risk_Level'])
+        df_formats = df_cleanup(df_all)
+
+        result = df_to_list(df_formats)
+        expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
+                    ['format1', '1', 111, 'Low Risk'],
+                    ['format2', '2', 222, 'High Risk']]
+        self.assertEqual(result, expected, "Problem with test for version blank")
 
 
 if __name__ == '__main__':

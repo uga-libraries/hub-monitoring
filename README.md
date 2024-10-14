@@ -62,29 +62,20 @@ validate_fixity.py
 
 ### Testing
 
-There are unit tests for each function and for each script overall for collection_summary.py, risk_update.py, and validate_fixity.py.
-The tests mostly use files stored in the repo (test_data) as input. 
+There are unit tests for each function and for each script overall for all scripts.
+The tests mostly use files stored in the repo as input. 
 Preservation metadata files may be missing if they are not needed for a test 
 or have fake data to give the needed variations for the test.
+The directory structure may be simplified if the full standard structure is not needed for a test.
 
 A few tests are for errors caused by path length, which could not be replicated in our current computing environment.
 Instead, there are tests to use with real data in Hub.
 They are commented out by default and indicate what information to provide for them to work.
- 
-For quicker development the tests for format_list.py all use the same input test data.
-It is the common data variations, but is not explicitly testing for all possible variations.
-
-There are no automated tests for accession_completeness_report.py.
-Check a sample of the accessions to see the report has the correct information.
-- Print statements
-  - No accessions for collections in the "unconventional" list are printed.
-  - Accessions are all accession numbers (end in "-er"), any other folder is skipped.
-- Report
-  - No rows have all True.
-  - Verify anything with False is missing.
-  - Sample includes at least one False for all three categories (add more if not).
 
 ## Workflow
+
+Primary monitoring workflow that uses these scripts: 
+[Monitoring Born-Digital Collections on Hub](documentation/Workflow_%20Monitoring_Born-Digital_Collections_Hub.md)
 
 Manual edits for the format_list.py output:
 1. Add a "Source" column as the first column with the Hub DEPARTMENT for combining it with other format data.
