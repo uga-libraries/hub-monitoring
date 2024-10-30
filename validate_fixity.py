@@ -83,6 +83,25 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, input_directory"
 
 
+def check_restart(acc_dir):
+    """Determine if the script has restarted based on if the fixity validation log is present
+
+    The log name includes the date, so the path cannot be predicted.
+
+    @:parameter
+    acc_dir (string): directory where the log would be saved (script argument input_directory)
+
+    @:returns
+    log_path (string, None): path to the log, if it is present, or None if it is not present
+    """
+
+    log_path = None
+    for item in os.listdir(acc_dir):
+        if os.path.isfile(os.path.join(acc_dir, item)) and item.startswith('fixity_validation_log'):
+            log_path = os.path.join(acc_dir, item)
+    return log_path
+
+
 def fixity_validation_log(acc_dir):
     """Make a log for fixity validation with every accession in the input_directory
 
@@ -447,7 +466,9 @@ if __name__ == '__main__':
 
     # Makes the fixity_validation_log.csv with all accessions in the input_directory, if it does not exist.
     # If it does exist, it means the script is being restarted and will use the log to restart where it left off.
-    fixity_validation_log(input_directory)
+    fixity_validation_log_path = check_restart(input_directory)
+    if not fixity_validation_log_path:
+        fixity_validation_log(input_directory)
 
     # # Navigates to each accession, validates it, and updates the preservation log.
     # for root, dirs, files in os.walk(input_directory):
