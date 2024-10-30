@@ -107,7 +107,10 @@ def fixity_validation_log(acc_dir):
 
     Status is backlogged or closed.
     Collection and Accession are identifiers.
+    Accession_Path is the path to the folder which contains either the bag or initial manifest.
     Fixity_Type is Bag or InitialManifest and will be used to determine how to validate the accession.
+    Bag_Name is the name of the bag folder, for bags. If it is an initial manifest, this is None.
+    Manifest_Name is the name of the initialmanifest file. If it is a bag, this is None.
     Validation_Result is None and will be updated when the accession is later validated.
 
     @:parameter
@@ -121,7 +124,8 @@ def fixity_validation_log(acc_dir):
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
     with open(log_path, 'w', newline='') as open_log:
         log_writer = csv.writer(open_log)
-        log_writer.writerow(['Status', 'Collection', 'Accession', 'Fixity_Type', 'Validation_Result'])
+        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
+                             'Bag_Name', 'Manifest_Name', 'Validation_Result'])
 
         # Finds every accession and adds it to the fixity validation log.
         for root, dirs, files in os.walk(acc_dir):
@@ -129,14 +133,15 @@ def fixity_validation_log(acc_dir):
             for folder in dirs:
                 if folder.endswith('_bag') and accession_test(folder):
                     path_list = root.split('\\')
-                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], 'Bag', None])
+                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'Bag', folder, None, None])
             # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
             # but only includes it is not also an accession with a bag.
             # If there are both, the bag folder and initial manifest will be in the same parent folder.
             for file in files:
                 if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
                     path_list = root.split('\\')
-                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], 'InitialManifest', None])
+                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'InitialManifest',
+                                         None, file, None])
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
@@ -469,6 +474,24 @@ if __name__ == '__main__':
     fixity_validation_log_path = check_restart(input_directory)
     if not fixity_validation_log_path:
         fixity_validation_log(input_directory)
+        fixity_validation_log_path = os.path.join(input_directory,
+                                                  f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+
+    # Validates every accession in the log that has not yet been validated (Validation_Result is blank).
+    log_df = pd.read_csv(fixity_validation_log_path)
+    for accession in log_df[log_df['Validation_Result'].isnull()].itertuples():
+
+        # Prints the script progress.
+        print(f'Starting on collection {accession.Collection}, accession {accession.Accession}')
+
+        # Validates the accession, including updating the preservation log and fixity validation log.
+        # Different validation functions are used depending on if it is in a bag or has an initial manifest.
+        if accession.Fixity_Type == 'Bag':
+            print("Call validate_bag")
+        elif accession.Fixity_Type == 'InitialManifest':
+            print("Call validate_manifest")
+        else:
+            print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
 
     # # Navigates to each accession, validates it, and updates the preservation log.
     # for root, dirs, files in os.walk(input_directory):

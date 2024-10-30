@@ -25,12 +25,23 @@ class MyTestCase(unittest.TestCase):
         # Verifies the log has the correct values.
         result = csv_to_list(os.path.join('test_data', 'fixity_validation_log',
                                           f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Fixity_Type', 'Validation_Result'],
-                    ['backlogged', 'coll_1', 'acc_1_1_er', 'Bag', 'nan'],
-                    ['backlogged', 'coll_1', 'acc_1_2_ER', 'Bag', 'nan'],
-                    ['backlogged', 'coll_2', 'acc_2-1-er', 'InitialManifest', 'nan'],
-                    ['backlogged', 'coll_2', 'acc_2-2-ER', 'InitialManifest', 'nan'],
-                    ['closed', 'coll_3', 'no-acc-num', 'Bag', 'nan']]
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name', 'Manifest_Name',
+                     'Validation_Result'],
+                    ['backlogged', 'coll_1', 'acc_1_1_er',
+                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'coll_1', 'acc_1_1_er'),
+                     'Bag', 'acc_1_1_er_bag', 'nan', 'nan'],
+                    ['backlogged', 'coll_1', 'acc_1_2_ER',
+                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'coll_1', 'acc_1_2_ER'),
+                     'Bag', 'acc_1_2_ER_bag', 'nan', 'nan'],
+                    ['backlogged', 'coll_2', 'acc_2-1-er',
+                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'coll_2', 'acc_2-1-er'),
+                     'InitialManifest', 'nan', 'initialmanifest_20241031.csv', 'nan'],
+                    ['backlogged', 'coll_2', 'acc_2-2-ER',
+                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'coll_2', 'acc_2-2-ER'),
+                     'InitialManifest', 'nan', 'initialmanifest_20241031.csv', 'nan'],
+                    ['closed', 'coll_3', 'no-acc-num',
+                     os.path.join('test_data', 'fixity_validation_log', 'closed', 'coll_3', 'no-acc-num'),
+                     'Bag', 'no-acc-num_bag', 'nan', 'nan']]
         self.assertEqual(result, expected, "Problem with test for fixity_validation_log function")
 
 
