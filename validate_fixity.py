@@ -83,6 +83,43 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, input_directory"
 
 
+def fixity_validation_log(acc_dir):
+    """Make a log for fixity validation with every accession in the input_directory
+
+    Status is backlogged or closed.
+    Collection and Accession are identifiers.
+    Fixity_Type is Bag or InitialManifest and will be used to determine how to validate the accession.
+    Validation_Result is None and will be updated when the accession is later validated.
+
+    @:parameter
+    acc_dir (string): directory with the accessions and where the log is saved (script argument input_directory)
+
+    @:returns
+    None
+    """
+
+    # Makes the fixity validation log csv with a header in the input_directory.
+    log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
+    with open(log_path, 'w', newline='') as open_log:
+        log_writer = csv.writer(open_log)
+        log_writer.writerow(['Status', 'Collection', 'Accession', 'Fixity_Type', 'Validation_Result'])
+
+        # Finds every accession and adds it to the fixity validation log.
+        for root, dirs, files in os.walk(acc_dir):
+            # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
+            for folder in dirs:
+                if folder.endswith('_bag') and accession_test(folder):
+                    path_list = root.split('\\')
+                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], 'Bag', None])
+            # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
+            # but only includes it is not also an accession with a bag.
+            # If there are both, the bag folder and initial manifest will be in the same parent folder.
+            for file in files:
+                if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
+                    path_list = root.split('\\')
+                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], 'InitialManifest', None])
+
+
 def manifest_validation_log(report_dir, acc_id, errors):
     """Make a log with all file validation errors from a single accession
 
@@ -408,20 +445,24 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Navigates to each accession, validates it, and updates the preservation log.
-    for root, dirs, files in os.walk(input_directory):
-        # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
-        for folder in dirs:
-            if folder.endswith('_bag') and accession_test(folder):
-                print(f'Starting on accession {root} (bag)')
-                validate_bag(os.path.join(root, folder), input_directory)
-        # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
-        # but only validates if it is not also an accession with a bag.
-        # If there are both, the bag folder and initial manifest will be in the same parent folder.
-        for file in files:
-            if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
-                print(f'Starting on accession {root} (manifest)')
-                validate_manifest(root, file, input_directory)
+    # Makes the fixity_validation_log.csv with all accessions in the input_directory, if it does not exist.
+    # If it does exist, it means the script is being restarted and will use the log to restart where it left off.
+    fixity_validation_log(input_directory)
+
+    # # Navigates to each accession, validates it, and updates the preservation log.
+    # for root, dirs, files in os.walk(input_directory):
+    #     # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
+    #     for folder in dirs:
+    #         if folder.endswith('_bag') and accession_test(folder):
+    #             print(f'Starting on accession {root} (bag)')
+    #             validate_bag(os.path.join(root, folder), input_directory)
+    #     # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
+    #     # but only validates if it is not also an accession with a bag.
+    #     # If there are both, the bag folder and initial manifest will be in the same parent folder.
+    #     for file in files:
+    #         if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
+    #             print(f'Starting on accession {root} (manifest)')
+    #             validate_manifest(root, file, input_directory)
 
     # Prints if there were any validation errors, based on if the validation log was made or not.
     log = os.path.join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
