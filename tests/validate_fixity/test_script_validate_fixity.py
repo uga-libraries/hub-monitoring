@@ -69,16 +69,18 @@ class MyTestCase(unittest.TestCase):
                      'Validation_Result'],
                     ['backlogged', 'test_001', '2023_test001_002_er',
                      join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'), 'Bag',
-                     '2023_test001_002_er_bag', 'nan', 'nan'],
+                     '2023_test001_002_er_bag', 'nan', 'Valid'],
                     ['backlogged', 'test_001', '2023_test001_004_er',
                      join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'), 'Bag',
-                     '2023_test001_004_er_bag', 'nan', 'nan'],
+                     '2023_test001_004_er_bag', 'nan',
+                     'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
+                     'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
                     ['backlogged', 'test_005', '2023_test005_001_er',
                      join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'), 'InitialManifest',
-                     'nan', 'initialmanifest_20230501.csv', 'nan'],
+                     'nan', 'initialmanifest_20230501.csv', '2 manifest errors'],
                     ['closed', 'test_123', '2023_test123_001_er',
                      join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'InitialManifest',
-                     'nan', 'initialmanifest_20230501.csv', 'nan']]
+                     'nan', 'initialmanifest_20230501.csv', 'Valid']]
         self.assertEqual(result, expected, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
@@ -149,10 +151,10 @@ class MyTestCase(unittest.TestCase):
                      'Validation_Result'],
                     ['closed', 'test_001', '2023_test001_001_er',
                      join(getcwd(), 'test_data', 'test_script_valid', 'closed', 'test_001', '2023_test001_001_er'),
-                     'Bag', '2023_test001_001_er_bag', 'nan', 'nan'],
+                     'Bag', '2023_test001_001_er_bag', 'nan', 'Valid'],
                     ['closed', 'test_004', '2023_test004_003_er',
                      join(getcwd(), 'test_data', 'test_script_valid', 'closed', 'test_004', '2023_test004_003_er'),
-                     'InitialManifest', 'nan', 'initialmanifest_20240426.csv', 'nan']]
+                     'InitialManifest', 'nan', 'initialmanifest_20240426.csv', 'Valid']]
         self.assertEqual(result, expected, 'Problem with test for valid, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test001_001_er have been updated.

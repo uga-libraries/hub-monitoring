@@ -459,12 +459,17 @@ if __name__ == '__main__':
         # Prints the script progress.
         print(f'Starting on accession {accession.Accession_Path} ({accession.Fixity_Type})')
 
+        # Calculates the row index in the dataframe for the accession, to use for adding the validation result.
+        df_row_index = log_df.index[log_df['Accession'] == accession.Accession].tolist()[0]
+
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or has an initial manifest.
         if accession.Fixity_Type == 'Bag':
             result = validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, result)
         elif accession.Fixity_Type == 'InitialManifest':
             result = validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, result)
         else:
             print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
 
