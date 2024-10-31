@@ -40,7 +40,6 @@ class MyTestCase(unittest.TestCase):
             if exists(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv')):
                 remove(join('test_data', f'2023_test005_00{str(acc_num)}_er_manifest_validation_errors.csv'))
 
-    # TODO: update to match the rest of the tests
     # def test_file_not_found(self):
     #     """Use this as a template to test against an accession known to have the error,
     #     which is from file path length and cannot be replicated in the repo test data.
