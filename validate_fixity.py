@@ -298,7 +298,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    validation_result (string): the validation error or "Valid"
+    validation_result (string): the validation error or "Valid (bag manifest)"
     """
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
