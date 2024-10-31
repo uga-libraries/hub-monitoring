@@ -263,7 +263,7 @@ def validate_bag(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    None
+    validation_result (string): the validation error, "Valid", or "Valid (bag manifest)"
     """
 
     # Tries to make a bag object, so that bagit library can validate it.
@@ -274,18 +274,18 @@ def validate_bag(bag_dir, report_dir):
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
-        # update_report(bag_dir, f'Could not make bag for validation: {str(errors)}', report_dir)
-        validate_bag_manifest(bag_dir, report_dir)
-        return
+        validation_result = validate_bag_manifest(bag_dir, report_dir)
+        return validation_result
 
     # Validates the bag and updates the preservation log.
     # If there is a validation error, also adds it to the script report.
     try:
         new_bag.validate()
         update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
+        return "Valid"
     except bagit.BagValidationError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
-        # update_report(bag_dir, str(errors), report_dir)
+        return str(errors)
 
 
 def validate_bag_manifest(bag_dir, report_dir):
