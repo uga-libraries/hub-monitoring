@@ -297,7 +297,7 @@ def validate_bag(bag_dir, report_dir):
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
-        update_report(bag_dir, f'Could not make bag for validation: {str(errors)}', report_dir)
+        # update_report(bag_dir, f'Could not make bag for validation: {str(errors)}', report_dir)
         validate_bag_manifest(bag_dir, report_dir)
         return
 
@@ -308,7 +308,7 @@ def validate_bag(bag_dir, report_dir):
         update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
     except bagit.BagValidationError as errors:
         update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
-        update_report(bag_dir, str(errors), report_dir)
+        # update_report(bag_dir, str(errors), report_dir)
 
 
 def validate_bag_manifest(bag_dir, report_dir):
@@ -356,7 +356,8 @@ def validate_bag_manifest(bag_dir, report_dir):
     # If there were no errors, updates the script report to show the earlier bag error is resolved.
     # If there were errors, updates the script report with the error count and makes a manifest log.
     if all_match:
-        update_report(bag_dir, 'Validated with bag manifest instead of bagit. The bag manifest is valid.', report_dir)
+        # update_report(bag_dir, 'Validated with bag manifest instead of bagit. The bag manifest is valid.', report_dir)
+        pass
     else:
 
         # Makes a list of each path, MD5, and source of the MD5 (manifest or file) that did not match.
@@ -371,7 +372,7 @@ def validate_bag_manifest(bag_dir, report_dir):
         error_list.extend(df_right.values.tolist())
 
         # Adds a summary of the errors to the script report (fixity_validation.csv).
-        update_report(bag_dir, f'{len(error_list)} bag manifest errors', report_dir)
+        # update_report(bag_dir, f'{len(error_list)} bag manifest errors', report_dir)
 
         # Makes a log with every file that does not match (acc_manifest_validation_errors.csv).
         accession_number = os.path.basename(os.path.dirname(bag_dir))
@@ -455,7 +456,7 @@ def validate_manifest(acc_dir, manifest, report_dir):
     # If there are any validation errors, adds a summary of the errors to the script report (fixity_validation.csv)
     # and makes a log with every file that does not match (acc_manifest_validation_errors.csv)
     if not valid:
-        update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
+        # update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
         accession_number = os.path.basename(acc_dir)
         manifest_validation_log(report_dir, accession_number, error_list)
 
@@ -475,42 +476,27 @@ if __name__ == '__main__':
     if not fixity_validation_log_path:
         fixity_validation_log(input_directory)
         fixity_validation_log_path = os.path.join(input_directory,
-                                                  f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+                                                  f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
 
     # Validates every accession in the log that has not yet been validated (Validation_Result is blank).
     log_df = pd.read_csv(fixity_validation_log_path)
     for accession in log_df[log_df['Validation_Result'].isnull()].itertuples():
 
         # Prints the script progress.
-        print(f'Starting on collection {accession.Collection}, accession {accession.Accession}')
+        print(f'Starting on accession {accession.Accession_Path} ({accession.Fixity_Type})')
 
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or has an initial manifest.
         if accession.Fixity_Type == 'Bag':
-            print("Call validate_bag")
+            validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
         elif accession.Fixity_Type == 'InitialManifest':
-            print("Call validate_manifest")
+            validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
         else:
             print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
 
-    # # Navigates to each accession, validates it, and updates the preservation log.
-    # for root, dirs, files in os.walk(input_directory):
-    #     # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
-    #     for folder in dirs:
-    #         if folder.endswith('_bag') and accession_test(folder):
-    #             print(f'Starting on accession {root} (bag)')
-    #             validate_bag(os.path.join(root, folder), input_directory)
-    #     # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
-    #     # but only validates if it is not also an accession with a bag.
-    #     # If there are both, the bag folder and initial manifest will be in the same parent folder.
-    #     for file in files:
-    #         if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
-    #             print(f'Starting on accession {root} (manifest)')
-    #             validate_manifest(root, file, input_directory)
-
-    # Prints if there were any validation errors, based on if the validation log was made or not.
-    log = os.path.join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-    if os.path.exists(log):
-        print('\nValidation errors found, see fixity_validation.csv in the directory provided as the script argument.')
-    else:
-        print('\nNo validation errors.')
+    # # Prints if there were any validation errors, based on if the validation log was made or not.
+    # log = os.path.join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
+    # if os.path.exists(log):
+    #     print('\nValidation errors found, see fixity_validation.csv in the directory provided as the script argument.')
+    # else:
+    #     print('\nNo validation errors.')
