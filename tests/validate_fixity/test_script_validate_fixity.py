@@ -60,7 +60,8 @@ class MyTestCase(unittest.TestCase):
                     f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_004_er (Bag)\r\n'
                     f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (InitialManifest)\r\n'
                     f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (InitialManifest)\r\n'
-                    'ERROR: accession 2023_test123_001_er has no preservation log.\r\n\r\n')
+                    'ERROR: accession 2023_test123_001_er has no preservation log.\r\n\r\n'
+                    '\r\nValidation errors found, see fixity_validation_log.csv in the input_directory.\r\n')
         self.assertEqual(result, expected, 'Problem with test for mix, printed message')
 
         # Verifies the contents of the validation report are correct.
@@ -142,7 +143,8 @@ class MyTestCase(unittest.TestCase):
         result = output.stdout.decode('utf-8')
         status_path = join(getcwd(), 'test_data', 'test_script_valid', 'closed')
         expected = (f'Starting on accession {status_path}\\test_001\\2023_test001_001_er (Bag)\r\n'
-                    f'Starting on accession {status_path}\\test_004\\2023_test004_003_er (InitialManifest)\r\n')
+                    f'Starting on accession {status_path}\\test_004\\2023_test004_003_er (InitialManifest)\r\n'
+                    '\r\nNo validation errors.\r\n')
         self.assertEqual(result, expected, 'Problem with test for valid, printed message')
 
         # Verifies the contents of the fixity validation log.

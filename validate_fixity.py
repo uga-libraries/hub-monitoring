@@ -473,9 +473,10 @@ if __name__ == '__main__':
         else:
             print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
 
-    # # Prints if there were any validation errors, based on if the validation log was made or not.
-    # log = os.path.join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-    # if os.path.exists(log):
-    #     print('\nValidation errors found, see fixity_validation.csv in the directory provided as the script argument.')
-    # else:
-    #     print('\nNo validation errors.')
+    # Prints if there were any validation errors, based on the Validation_Result column.
+    # The only values expected if it is valid are "Valid" and "Valid (bag manifest)".
+    error_df = log_df.loc[~log_df['Validation_Result'].isin(['Valid', 'Valid (bag manifest)'])]
+    if error_df.empty:
+        print('\nNo validation errors.')
+    else:
+        print('\nValidation errors found, see fixity_validation_log.csv in the input_directory.')
