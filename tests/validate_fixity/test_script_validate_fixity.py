@@ -27,23 +27,21 @@ class MyTestCase(unittest.TestCase):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder,
         and delete all other test outputs if they were created."""
-        # List of paths for accession with logs to replace.
-        accessions = [join('test_data', 'test_script_mix', '2023_test001_002_er'),
-                      join('test_data', 'test_script_mix', '2023_test002_004_er'),
-                      join('test_data', 'test_script_mix', '2023_test005_001_er'),
-                      join('test_data', 'test_script_valid', '2023_test001_001_er'),
-                      join('test_data', 'test_script_valid', '2023_test004_003_er')]
 
         # For each accession, replaces the updated log with a copy of the original log from the accession folder.
+        accessions = [join('test_data', 'test_script_mix', 'backlogged', 'test_001', '2023_test001_002_er'),
+                      join('test_data', 'test_script_mix', 'backlogged', 'test_001', '2023_test001_004_er'),
+                      join('test_data', 'test_script_mix', 'backlogged', 'test_005', '2023_test005_001_er'),
+                      join('test_data', 'test_script_valid', 'closed', 'test_001', '2023_test001_001_er'),
+                      join('test_data', 'test_script_valid', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
             copyfile(join(accession, 'preservation_log_copy.txt'), join(accession, 'preservation_log.txt'))
 
-        # List of paths for possible test outputs that should be deleted.
-        today = date.today().strftime('%Y-%m-%d')
-        outputs = [join('test_data', 'test_script_mix', f'fixity_validation_{today}.csv'),
-                   join('test_data', 'test_script_mix', '2023_test005_001_er_manifest_validation_errors.csv')]
-
         # Deletes any test output that is present.
+        today = date.today().strftime('%Y-%m-%d')
+        outputs = [join('test_data', 'test_script_mix', f'fixity_validation_log_{today}.csv'),
+                   join('test_data', 'test_script_mix', '2023_test005_001_er_manifest_validation_errors.csv'),
+                   join('test_data', 'test_script_valid', f'fixity_validation_log_{today}.csv')]
         for output in outputs:
             if exists(output):
                 remove(output)
@@ -58,26 +56,34 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the script printed the correct message about the missing preservation log and validation errors.
         result = output.stdout.decode('utf-8')
-        expected = (f'Starting on accession {input_directory}\\2023_test001_002_er (bag)\r\n'
-                    f'Starting on accession {input_directory}\\2023_test002_004_er (bag)\r\n'
-                    f'Starting on accession {input_directory}\\2023_test005_001_er (manifest)\r\n'
-                    f'Starting on accession {input_directory}\\2023_test123_001_er (manifest)\r\n'
-                    'ERROR: accession 2023_test123_001_er has no preservation log.\r\n\r\n'
-                    '\r\nValidation errors found, see fixity_validation.csv in the directory '
-                    'provided as the script argument.\r\n')
+        expected = (f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_002_er (Bag)\r\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_004_er (Bag)\r\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (InitialManifest)\r\n'
+                    f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (InitialManifest)\r\n'
+                    'ERROR: accession 2023_test123_001_er has no preservation log.\r\n\r\n')
         self.assertEqual(result, expected, 'Problem with test for mix, printed message')
 
         # Verifies the contents of the validation report are correct.
-        result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_script_mix', '2023_test002_004_er',
-                     'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
-                     'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
-                    ['test_data', 'test_script_mix', '2023_test005_001_er', '2 manifest errors']]
+        result = csv_to_list(join(input_directory, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name', 'Manifest_Name',
+                     'Validation_Result'],
+                    ['backlogged', 'test_001', '2023_test001_002_er',
+                     join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'), 'Bag',
+                     '2023_test001_002_er_bag', 'nan', 'nan'],
+                    ['backlogged', 'test_001', '2023_test001_004_er',
+                     join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'), 'Bag',
+                     '2023_test001_004_er_bag', 'nan', 'nan'],
+                    ['backlogged', 'test_005', '2023_test005_001_er',
+                     join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'), 'InitialManifest',
+                     'nan', 'initialmanifest_20230501.csv', 'nan'],
+                    ['closed', 'test_123', '2023_test123_001_er',
+                     join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'InitialManifest',
+                     'nan', 'initialmanifest_20230501.csv', 'nan']]
         self.assertEqual(result, expected, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
-        result = csv_to_list(join(input_directory, '2023_test001_002_er', 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er',
+                                  'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -86,20 +92,22 @@ class MyTestCase(unittest.TestCase):
                      'Validated bag for accession 2023.1.2.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_002_er preservation log')
 
-        # Verifies the contents of the preservation log for 2023_test002_004_er have been updated.
-        result = csv_to_list(join(input_directory, '2023_test002_004_er', 'preservation_log.txt'), delimiter='\t')
+        # Verifies the contents of the preservation log for 2023_test001_004_er have been updated.
+        result = csv_to_list(join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er',
+                                  'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.4.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
-                     'Validated bag for accession 2023.2.4.ER. The bag is not valid. Bag validation failed: '
+                    ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.4.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated bag for accession 2023.1.4.ER. The bag is not valid. Bag validation failed: '
                      'data\\CD_2\\File2.txt md5 validation failed: expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" '
                      'found="85c8fbcb2ff1d73cb94ed9c355eb20d5"', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test002_004_er preservation log')
+        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_004_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test005_001_er have been updated.
-        result = csv_to_list(join(input_directory, '2023_test005_001_er', 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er',
+                                  'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.001', 'Copied.', 'Jane Doe'],
                     ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.002', 'Copied.', 'Jane Doe'],
@@ -130,19 +138,26 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the script printed the correct message about validation errors.
         result = output.stdout.decode('utf-8')
-        coll_path = join(getcwd(), 'test_data', 'test_script_valid')
-        expected = (f'Starting on accession {coll_path}\\2023_test001_001_er (bag)\r\n'
-                    f'Starting on accession {coll_path}\\2023_test004_003_er (manifest)\r\n'
-                    '\r\nNo validation errors.\r\n')
+        status_path = join(getcwd(), 'test_data', 'test_script_valid', 'closed')
+        expected = (f'Starting on accession {status_path}\\test_001\\2023_test001_001_er (Bag)\r\n'
+                    f'Starting on accession {status_path}\\test_004\\2023_test004_003_er (InitialManifest)\r\n')
         self.assertEqual(result, expected, 'Problem with test for valid, printed message')
 
-        # Verifies the validation report was not made. It is only made for errors.
-        report_path = join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-        report_made = exists(report_path)
-        self.assertEqual(report_made, False, 'Problem with test for valid, validation report')
+        # Verifies the contents of the fixity validation log.
+        result = csv_to_list(join(input_directory, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name', 'Manifest_Name',
+                     'Validation_Result'],
+                    ['closed', 'test_001', '2023_test001_001_er',
+                     join(getcwd(), 'test_data', 'test_script_valid', 'closed', 'test_001', '2023_test001_001_er'),
+                     'Bag', '2023_test001_001_er_bag', 'nan', 'nan'],
+                    ['closed', 'test_004', '2023_test004_003_er',
+                     join(getcwd(), 'test_data', 'test_script_valid', 'closed', 'test_004', '2023_test004_003_er'),
+                     'InitialManifest', 'nan', 'initialmanifest_20240426.csv', 'nan']]
+        self.assertEqual(result, expected, 'Problem with test for valid, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test001_001_er have been updated.
-        result = csv_to_list(join(input_directory, '2023_test001_001_er', 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(input_directory, 'closed', 'test_001', '2023_test001_001_er',
+                                  'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -152,7 +167,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for valid, 2023_test001_001_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test004_003_er have been updated.
-        result = csv_to_list(join(input_directory, '2023_test004_003_er', 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(input_directory, 'closed', 'test_004', '2023_test004_003_er',
+                                  'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.001', 'Copied.', 'Jane Doe'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.002', 'Copied.', 'Jane Doe'],
