@@ -237,45 +237,22 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         log_writer.writerow(log_row)
 
 
-def update_report(acc_dir, error_msg, report_dir):
-    """Add a line of text to the report fixity_validation.csv
-
-    The report lists every accession that did not validate with the validation error information.
-    If it doesn't already exist, it makes the report with the header before adding the text.
+def update_fixity_validation_log(log_path, df, row, result):
+    """Add the validation result for an accession to the fixity validation log dataframe and csv
 
     @:parameter
-    acc_dir (string): the path to an accession folder, which may be a bag
-    error_msg (string): validation error
+    log_path (string): the path to the fixity_validation_log.csv
+    df (dataframe): the dataframe with the current fixity validation log information
+    row (dataframe index): the dataframe index number of the accession
+    result (string): the validation error or "Valid"
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
     None
     """
 
-    # Parse status (backlogged or closed), collection, and accession from acc_dir.
-    # If it is a bag, the acc_dir is root/status/collection/accession/accession_bag
-    # and if it is a manifest, the acc_dir is root/status/collection/accession
-    acc_dir_list = acc_dir.split('\\')
-    if acc_dir.endswith('_bag'):
-        status = acc_dir_list[-4]
-        collection = acc_dir_list[-3]
-        accession = acc_dir_list[-2]
-    else:
-        status = acc_dir_list[-3]
-        collection = acc_dir_list[-2]
-        accession = acc_dir_list[-1]
-
-    # If the report doesn't already exist, starts a report with a header.
-    report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-    if not os.path.exists(report_path):
-        with open(report_path, 'w', newline='') as open_report:
-            report_writer = csv.writer(open_report)
-            report_writer.writerow(['Status', 'Collection', 'Accession', 'Validation_Error'])
-
-    # Adds the error text to the report.
-    with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
-        report_writer = csv.writer(open_report)
-        report_writer.writerow([status, collection, accession, error_msg])
+    df.loc[row, 'Validation_Result'] = result
+    df.to_csv(log_path, index=False)
 
 
 def validate_bag(bag_dir, report_dir):
