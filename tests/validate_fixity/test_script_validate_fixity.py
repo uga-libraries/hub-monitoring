@@ -1,6 +1,7 @@
 """
 Tests for the script validate_fixity.py, which validates accession fixity, updates the logs, and makes a report.
 """
+import csv
 import subprocess
 import unittest
 from datetime import date
@@ -41,6 +42,7 @@ class MyTestCase(unittest.TestCase):
         today = date.today().strftime('%Y-%m-%d')
         outputs = [join('test_data', 'test_script_mix', f'fixity_validation_log_{today}.csv'),
                    join('test_data', 'test_script_mix', '2023_test005_001_er_manifest_validation_errors.csv'),
+                   join('test_data', 'test_script_restart', f"fixity_validation_log_{today}.csv"),
                    join('test_data', 'test_script_valid', f'fixity_validation_log_{today}.csv')]
         for output in outputs:
             if exists(output):
@@ -64,7 +66,7 @@ class MyTestCase(unittest.TestCase):
                     '\r\nValidation errors found, see fixity_validation_log.csv in the input_directory.\r\n')
         self.assertEqual(result, expected, 'Problem with test for mix, printed message')
 
-        # Verifies the contents of the validation report are correct.
+        # Verifies the contents of the fixity validation log are correct.
         result = csv_to_list(join(input_directory, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name', 'Manifest_Name',
                      'Validation_Result'],
@@ -128,6 +130,62 @@ class MyTestCase(unittest.TestCase):
                     ['Number of files does not match. 1 files in the accession folder and 2 in the manifest.',
                      'nan', 'nan']]
         self.assertEqual(result, expected, 'Problem with for mix, 2023_test005_001_er manifest log')
+
+    def test_restart(self):
+        """Test for when the script is being restarted after a break
+        and uses a pre-existing fixity validation log where some accessions already have a validation result"""
+        input_directory = join(getcwd(), 'test_data', 'test_script_restart')
+
+        # Makes the fixity validation log.
+        coll_path = join(input_directory, 'backlogged', 'coll_2023')
+        rows = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name', 'Manifest_Name',
+                 'Validation_Result'],
+                ['backlogged', 'coll_2023', '2023_test001_001_er', join(coll_path, '2023_test001_001_er'),
+                 'Bag', '2023_test001_001_er_bag', None, 'Valid'],
+                ['backlogged', 'coll_2023', '2023_test001_005_er', join(coll_path, '2023_test001_005_er'),
+                 'Bag', '2023_test001_005_er_bag', None, 'Bag validation failed'],
+                ['backlogged', 'coll_2023', '2023_test004_002_er', join(coll_path, '2023_test004_002_er'),
+                 'InitialManifest', None, 'initialmanifest_20231124.csv', None],
+                ['backlogged', 'coll_2023', '2023_test005_004_er', join(coll_path, '2023_test005_004_er'),
+                 'InitialManifest', None, 'initialmanifest_20230521.csv', None]]
+        log_path = join(input_directory, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
+        with open(log_path, 'w', newline='') as open_log:
+            log_writer = csv.writer(open_log)
+            log_writer.writerows(rows)
+
+        # Makes the variables used for script input and runs the script.
+        script = join(getcwd(), '..', '..', 'validate_fixity.py')
+        output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, stdout=subprocess.PIPE)
+
+        # Verifies the script printed the correct message about validation errors.
+        result = output.stdout.decode('utf-8')
+        expected = (f'Starting on accession {coll_path}\\2023_test004_002_er (InitialManifest)\r\n'
+                    f'Starting on accession {coll_path}\\2023_test005_004_er (InitialManifest)\r\n'
+                    '\r\nValidation errors found, see fixity_validation_log.csv in the input_directory.\r\n')
+        self.assertEqual(result, expected, 'Problem with test for restart, printed message')
+
+        # Verifies the contents of the fixity validation log are correct.
+        result = csv_to_list(join(input_directory, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name',
+                     'Manifest_Name', 'Validation_Result'],
+                    ['backlogged', 'coll_2023', '2023_test001_001_er', join(coll_path, '2023_test001_001_er'),
+                     'Bag', '2023_test001_001_er_bag', 'nan', 'Valid'],
+                    ['backlogged', 'coll_2023', '2023_test001_005_er', join(coll_path, '2023_test001_005_er'),
+                     'Bag', '2023_test001_005_er_bag', 'nan', 'Bag validation failed'],
+                    ['backlogged', 'coll_2023', '2023_test004_002_er', join(coll_path, '2023_test004_002_er'),
+                     'InitialManifest', 'nan', 'initialmanifest_20231124.csv', 'Valid'],
+                    ['backlogged', 'coll_2023', '2023_test005_004_er', join(coll_path, '2023_test005_004_er'),
+                     'InitialManifest', 'nan', 'initialmanifest_20230521.csv', '1 manifest errors']]
+        self.assertEqual(result, expected, 'Problem with test for restart, fixity validation log')
+
+        # TODO: add tests for preservation logs
+
+        # Verifies the contents of the  manifest log for 2023_test005_004_er are correct.
+        result = csv_to_list(join(input_directory, '2023_test005_004_er_manifest_validation_errors.csv'))
+        expected = [['File', 'MD5', 'MD5_Source'],
+                    [join(coll_path, '2023_test005_004_er', '2023_test005_004_er', 'CD_2', 'File1.txt'),
+                     '717216B472AA04EB2E615809C7F30C4E', 'Current']]
+        self.assertEqual(result, expected, 'Problem with for restart, 2023_test005_004_er manifest log')
 
     def test_valid(self):
         """Test for when the script runs correctly and both accessions are valid
