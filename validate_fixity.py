@@ -298,7 +298,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    None
+    validation_result (string): the validation error or "Valid"
     """
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
@@ -330,14 +330,12 @@ def validate_bag_manifest(bag_dir, report_dir):
     # Updates the preservation log.
     update_preservation_log(os.path.dirname(bag_dir), all_match, 'bag manifest')
 
-    # If there were no errors, updates the script report to show the earlier bag error is resolved.
-    # If there were errors, updates the script report with the error count and makes a manifest log.
+    # Returns the validation result, either the number of errors or "Valid".
+    # If there were errors, also saves the path, MD5, and source of the MD5 (manifest or file) that did not match
+    # to a log in the input_directory.
     if all_match:
-        # update_report(bag_dir, 'Validated with bag manifest instead of bagit. The bag manifest is valid.', report_dir)
-        pass
+        return 'Valid (bag manifest)'
     else:
-
-        # Makes a list of each path, MD5, and source of the MD5 (manifest or file) that did not match.
         error_list = []
         df_left = df_compare[df_compare['Match'] == 'left_only']
         df_left = df_left[['Bag_Path', 'Bag_MD5']]
@@ -347,13 +345,10 @@ def validate_bag_manifest(bag_dir, report_dir):
         df_right = df_right[['Acc_Path', 'Acc_MD5']]
         df_right['MD5_Source'] = 'Current'
         error_list.extend(df_right.values.tolist())
-
-        # Adds a summary of the errors to the script report (fixity_validation.csv).
-        # update_report(bag_dir, f'{len(error_list)} bag manifest errors', report_dir)
-
-        # Makes a log with every file that does not match (acc_manifest_validation_errors.csv).
         accession_number = os.path.basename(os.path.dirname(bag_dir))
         manifest_validation_log(report_dir, accession_number, error_list)
+
+        return f'{len(error_list)} bag manifest errors'
 
 
 def validate_manifest(acc_dir, manifest, report_dir):
@@ -433,7 +428,7 @@ def validate_manifest(acc_dir, manifest, report_dir):
     # Returns the validation result, either the number of errors or "Valid".
     # If there were errors, also saves the full results to a log in the input_directory.
     if valid:
-        return "Valid"
+        return 'Valid'
     else:
         accession_number = os.path.basename(acc_dir)
         manifest_validation_log(report_dir, accession_number, error_list)
@@ -467,7 +462,7 @@ if __name__ == '__main__':
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or has an initial manifest.
         if accession.Fixity_Type == 'Bag':
-            validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
+            result = validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
         elif accession.Fixity_Type == 'InitialManifest':
             result = validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
         else:
