@@ -369,7 +369,7 @@ def validate_manifest(acc_dir, manifest, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    None
+    validation_result (string): the validation error or "Valid"
     """
 
     # Gets the path to the folder with the accession's files.
@@ -430,12 +430,14 @@ def validate_manifest(acc_dir, manifest, report_dir):
     # Updates the preservation log.
     update_preservation_log(acc_dir, valid, 'manifest')
 
-    # If there are any validation errors, adds a summary of the errors to the script report (fixity_validation.csv)
-    # and makes a log with every file that does not match (acc_manifest_validation_errors.csv)
-    if not valid:
-        # update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
+    # Returns the validation result, either the number of errors or "Valid".
+    # If there were errors, also saves the full results to a log in the input_directory.
+    if valid:
+        return "Valid"
+    else:
         accession_number = os.path.basename(acc_dir)
         manifest_validation_log(report_dir, accession_number, error_list)
+        return f'{len(error_list)} manifest errors'
 
 
 if __name__ == '__main__':
@@ -467,7 +469,7 @@ if __name__ == '__main__':
         if accession.Fixity_Type == 'Bag':
             validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
         elif accession.Fixity_Type == 'InitialManifest':
-            validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
+            result = validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
         else:
             print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
 
