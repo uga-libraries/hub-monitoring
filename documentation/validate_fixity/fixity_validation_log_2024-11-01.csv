@@ -1,0 +1,5 @@
+Status,Collection,Accession,Accession_Path,Fixity_Type,Bag_Name,Manifest_Name,Validation_Result
+backlogged,test_001,2023_test001_002_er,C:\Users\..\test_data\test_script_mix\backlogged\test_001\2023_test001_002_er,Bag,2023_test001_002_er_bag,,Valid
+backlogged,test_001,2023_test001_004_er,C:\Users\..\test_data\test_script_mix\backlogged\test_001\2023_test001_004_er,Bag,2023_test001_004_er_bag,,"Bag validation failed: data\CD_2\File2.txt md5 validation failed: expected=""00a0aaaa0aa0a00ab00ad0a000aa00a0"" found=""85c8fbcb2ff1d73cb94ed9c355eb20d5"""
+backlogged,test_005,2023_test005_001_er,C:\Users\..\test_data\test_script_mix\backlogged\test_005\2023_test005_001_er,InitialManifest,,initialmanifest_20230501.csv,2 manifest errors
+closed,test_123,2023_test123_001_er,C:\Users\..\test_data\test_script_mix\closed\test_123\2023_test123_001_er,InitialManifest,,initialmanifest_20230501.csv,Valid
