@@ -54,6 +54,19 @@ class MyTestCase(unittest.TestCase):
     #     # or use the other tests below to set up tests of the logs with expected values.
     #     self.assertEqual(True, True)
 
+    def test_not_accession(self):
+        """Test for when an initialmanifest.csv is in a folder that does not contain any folders,
+        so the script cannot validate it. This happens when something is not organized as expected."""
+        # Makes the variables for the function input and runs the function.
+        accession_path = join('test_data', 'test_005_manifest_not_valid', '2023_test005_006_er')
+        manifest_name = 'initialmanifest_20231031.csv'
+        input_directory = 'test_data'
+        result = validate_manifest(accession_path, manifest_name, input_directory)
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Unable to identify folder to validate with the manifest'
+        self.assertEqual(result, expected, 'Problem with test for not accession')
+
     def test_not_valid_deletion(self):
         """Test for when the accession does not match the manifest due to file deletions."""
         # Makes the variables for function input and runs the function.

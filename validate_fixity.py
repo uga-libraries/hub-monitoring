@@ -374,6 +374,11 @@ def validate_manifest(acc_dir, manifest, report_dir):
         if os.path.isdir(os.path.join(acc_dir, item)) and not item.endswith('FITS'):
             acc_files = os.path.join(acc_dir, item)
 
+    # If acc_files is still None,
+    # the folder has likely been incorrectly identified as an accession to validate with a manifest.
+    if acc_files is None:
+        return 'Unable to identify folder to validate with the manifest'
+
     # Makes a dataframe with the path and MD5 of every file in acc_files.
     files_list = []
     for root, dirs, files in os.walk(acc_files):
