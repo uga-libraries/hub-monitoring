@@ -138,7 +138,7 @@ def fixity_validation_log(acc_dir):
             # but only includes it is not also an accession with a bag.
             # If there are both, the bag folder and initial manifest will be in the same parent folder.
             for file in files:
-                if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
+                if file.startswith('initialmanifest') and file.endswith('.csv') and len([x for x in dirs if x.endswith("_bag")]) == 0:
                     path_list = root.split('\\')
                     log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'InitialManifest',
                                          None, file, None])
