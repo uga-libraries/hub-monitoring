@@ -33,6 +33,8 @@ class MyTestCase(unittest.TestCase):
         accessions = [join('test_data', 'test_script_mix', 'backlogged', 'test_001', '2023_test001_002_er'),
                       join('test_data', 'test_script_mix', 'backlogged', 'test_001', '2023_test001_004_er'),
                       join('test_data', 'test_script_mix', 'backlogged', 'test_005', '2023_test005_001_er'),
+                      join('test_data', 'test_script_restart', 'backlogged', 'coll_2023', '2023_test004_002_er'),
+                      join('test_data', 'test_script_restart', 'backlogged', 'coll_2023', '2023_test005_004_er'),
                       join('test_data', 'test_script_valid', 'closed', 'test_001', '2023_test001_001_er'),
                       join('test_data', 'test_script_valid', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
@@ -42,6 +44,7 @@ class MyTestCase(unittest.TestCase):
         today = date.today().strftime('%Y-%m-%d')
         outputs = [join('test_data', 'test_script_mix', f'fixity_validation_log_{today}.csv'),
                    join('test_data', 'test_script_mix', '2023_test005_001_er_manifest_validation_errors.csv'),
+                   join('test_data', 'test_script_restart', '2023_test005_004_er_manifest_validation_errors.csv'),
                    join('test_data', 'test_script_restart', f"fixity_validation_log_{today}.csv"),
                    join('test_data', 'test_script_valid', f'fixity_validation_log_{today}.csv')]
         for output in outputs:
@@ -178,7 +181,29 @@ class MyTestCase(unittest.TestCase):
                      'InitialManifest', 'nan', 'initialmanifest_20230521.csv', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for restart, fixity validation log')
 
-        # TODO: add tests for preservation logs
+        # Verifies the contents of the preservation log for 2023_test004_002_er have been updated.
+        result = csv_to_list(join(input_directory, 'backlogged', 'coll_2023', '2023_test004_002_er',
+                                  'preservation_log.txt'), delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied, no errors.', 'JD'],
+                    ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied, no errors.', 'JD'],
+                    ['T4', '2023.T4.02.ER', '2023-10-03', 'nan', "Can't bag; made manifest.", 'JD'],
+                    ['T4', '2023.T4.02.ER', '2023-10-03', 'nan', 'Validated manifest. Valid.', 'JD'],
+                    ['T4', '2023.T4.02.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated manifest for accession 2023.T4.02.ER. The manifest is valid.', 'validate_fixity.py']]
+        self.assertEqual(result, expected, 'Problem with test for restart, 2023_test004_002_er preservation log')
+
+        # Verifies the contents of the preservation log for 2023_test005_004_er have been updated.
+        result = csv_to_list(join(input_directory, 'backlogged', 'coll_2023', '2023_test005_004_er',
+                                  'preservation_log.txt'), delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
+                    ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
+                    ['T5', '2023.T5.04.ER', '2023-10-03', 'nan', "Can't bag; made manifest.", 'JD'],
+                    ['T5', '2023.T5.04.ER', '2023-10-03', 'nan', 'Validated manifest. Valid.', 'JD'],
+                    ['T5', '2023.T5.04.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                     'Validated manifest for accession 2023.T5.04.ER. The manifest is not valid.', 'validate_fixity.py']]
+        self.assertEqual(result, expected, 'Problem with test for restart, 2023_test005_004_er preservation log')
 
         # Verifies the contents of the  manifest log for 2023_test005_004_er are correct.
         result = csv_to_list(join(input_directory, '2023_test005_004_er_manifest_validation_errors.csv'))
