@@ -9,6 +9,7 @@ Returns:
     New risk spreadsheet is added to each accession folder
     Log of all accessions (with collection and accession number) and if a new risk csv was made in the input_directory
 """
+import csv
 from datetime import date, datetime
 import os
 import pandas as pd
@@ -315,6 +316,33 @@ def read_risk_csv(risk_csv_path):
     risk_df.fillna('NO VALUE', inplace=True)
 
     return risk_df
+
+
+def risk_update_log(input_dir):
+    """Make a log for updating risk information with every accession in the input_directory
+
+    The Risk_Updated column is left empty and will be updated once the script
+    finds and updates a risk csv or is unable to.
+
+    @:parameter
+    input_dir (string): script argument input_directory, where the log will be saved
+
+    @:returns
+    None
+    """
+
+    # Makes the risk update log with a header row in the input_directory.
+    today = datetime.today().strftime('%Y-%m-%d')
+    log_path = os.path.join(input_dir, f"risk_update_log_{today}.csv")
+    with open(log_path, 'w') as open_log:
+        log_writer = csv.writer(open_log)
+        log_writer.writerow(['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'])
+
+        # Finds every accession and adds it to the log.
+        for root, directories, files in os.walk(input_dir):
+            if accession_test(os.path.basename(root), root):
+                path_list = root.split('\\')
+                log_writer.writerow([path_list[-2], path_list[-1], root, None])
 
 
 def save_risk_csv(accession_path, risk_df):
