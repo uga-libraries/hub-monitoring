@@ -25,12 +25,12 @@ class MyTestCase(unittest.TestCase):
         """Delete the test outputs if they were created"""
         # List of paths for possible test outputs.
         today = datetime.today().strftime('%Y-%m-%d')
-        coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
+        coll_folder = join('test_data', 'script', 'rbrl004')
         outputs = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
-                   join(coll_folder, f'update_risk_log_{today}.csv'))
+                   join(coll_folder, f'risk_update_log_{today}.csv'))
 
         # Deletes any test output that is present.
         for output in outputs:
@@ -41,28 +41,28 @@ class MyTestCase(unittest.TestCase):
         """Test for when the script runs correctly on all three accessions in rbrl004"""
         # makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        input_directory = join('test_data', 'Russell_Hub', 'rbrl004')
+        input_directory = join('test_data', 'script', 'rbrl004')
         nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
         subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the log was made.
         today = datetime.today().strftime('%Y-%m-%d')
-        log_path = join('test_data', 'Russell_Hub', 'rbrl004', f'update_risk_log_{today}.csv')
+        log_path = join('test_data', 'script', 'rbrl004', f'risk_update_log_{today}.csv')
         log_made = exists(log_path)
         self.assertEqual(log_made, True, 'Problem with test for log was made')
 
         # Tests the contents of the log are correct.
         result = csv_to_list(log_path)
-        expected = [['Collection', 'Accession', 'Risk_Updated'],
-                    ['rbrl004', '2005-10-er', 'Yes'],
-                    ['rbrl004', '2005-20-er', 'Yes'],
-                    ['rbrl004', '2006-30-er', 'Yes'],
-                    ['rbrl004', '2021-40-er', 'Yes'],
-                    ['rbrl004', '2021-50-er', 'No']]
+        expected = [['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'],
+                    ['rbrl004', '2005-10-er', join('test_data', 'script', 'rbrl004', '2005-10-er'), 'Yes'],
+                    ['rbrl004', '2005-20-er', join('test_data', 'script', 'rbrl004', '2005-20-er'), 'Yes'],
+                    ['rbrl004', '2006-30-er', join('test_data', 'script', 'rbrl004', '2006-30-er'), 'Yes'],
+                    ['rbrl004', '2021-40-er', join('test_data', 'script', 'rbrl004', '2021-40-er'), 'Yes'],
+                    ['rbrl004', '2021-50-er', join('test_data', 'script', 'rbrl004', '2021-50-er'), 'No']]
         self.assertEqual(result, expected, 'Problem with test for log contents')
 
         # Paths to the four risk CSVs that should have been made.
-        coll_folder = join('test_data', 'Russell_Hub', 'rbrl004')
+        coll_folder = join('test_data', 'script', 'rbrl004')
         csv_paths = [join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                      join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
@@ -193,7 +193,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input.
         # The script will be run twice in this test.
         script = join(getcwd(), '..', '..', 'risk_update.py')
-        input_directory = join('test_data', 'Russell_Hub', 'rbrl004')
+        input_directory = join('test_data', 'script', 'rbrl004')
         nara_csv = join('test_data', 'NARA_PreservationActionPlan_Outdated.csv')
 
         # Runs the script and tests that it exits.
