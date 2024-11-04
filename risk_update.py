@@ -240,31 +240,33 @@ def match_nara_risk(risk_df, nara_df):
     return df_result
 
 
-def most_recent_risk_csv(file_list):
-    """Determine the most recent risk spreadsheet in the file list based on the file name
+def most_recent_risk_csv(acc_dir):
+    """Determine the most recent risk spreadsheet of an accession based on the file name
 
     From legacy practices, any spreadsheet with a date in the name is more recent than one without.
-    The list will also include other types of files, such as preservation logs, which are ignored.
+    The accession folder will also include other types of files, such as preservation logs, which are ignored.
 
     Keep in sync with the copy of this function in collection_summary.py and format_list.py
     The unit tests are in risk_update.
 
     @:parameter
-    file_list (list): list of all file names in a folder with at least one risk spreadsheet
+    acc_dir (string): path to the folder with all files related to an accession
 
     @:returns
-    most_recent_file (string): the name of the preservation spreadsheet that is the most recent
+    most_recent_file (string, None): the name of the risk spreadsheet that is the most recent
+                                     or None if the accession does not contain a risk spreadsheet
     """
 
     # Variables for tracking which file is the most recent.
     most_recent_file = None
     most_recent_date = None
 
-    # Tests each file in the file list looking for the most recent one, based on the date in the file name.
-    for file_name in file_list:
+    # Searches each file in the first level of the accession directory for the most recent one,
+    # based on the date in the file name.
+    for file_name in os.listdir(acc_dir):
 
         # Skips files that are not risk spreadsheets, like the preservation log.
-        if not('full_risk_data' in file_name):
+        if 'full_risk_data' not in file_name:
             continue
 
         # Extracts the date from the risk spreadsheet file name, if it has one. If it doesn't, assigns 1900-01-01
