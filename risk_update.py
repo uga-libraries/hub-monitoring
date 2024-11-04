@@ -450,17 +450,23 @@ if __name__ == '__main__':
         today = date.today().strftime('%Y-%m-%d')
         risk_update_log_path = os.path.join(input_directory, f'risk_update_log_{today}.csv')
 
-    # Navigates to each accession folder and makes a new version of the risk spreadsheet
-    # using the most recent risk spreadsheet in each folder and the current NARA risk CSV.
-    # Also logs if it found a risk spreadsheet or not.
-    for root, directories, files in os.walk(input_directory):
-        if accession_test(os.path.basename(root), root):
-            if any('full_risk_data' in x for x in files):
-                print('Starting on accession', root)
-                file = most_recent_risk_csv(files)
-                new_risk_df = read_risk_csv(os.path.join(root, file))
-                new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
-                save_risk_csv(root, new_risk_df)
-                update_log(root, input_directory, 'Yes')
-            else:
-                update_log(root, input_directory, 'No')
+    # Updates the risk spreadsheet for every accession in the log that has not yet been updated (Risk_Updated is blank).
+    log_df = pd.read_csv(risk_update_log_path)
+    for accession in log_df[log_df['Risk_Updated'].isnull()].itertuples():
+
+        # Prints the script progress.
+        print(f'Starting on accession {accession.Accession_Path}')
+
+        # Calculates the row index in the dataframe for the access, to use for updating the log.
+        df_row_index = log_df.index[log_df['Accession'] == accession.Accession].tolist()[0]
+
+        # Gets the path to the most recent risk spreadsheet, makes a new version with updated risk, and updates the log.
+        # If no risk spreadsheet is found in the accession, just updates the log.
+        file = most_recent_risk_csv(accession.Accession_Path)
+        if file:
+            new_risk_df = read_risk_csv(os.path.join(accession.Accession_Path, file))
+            new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
+            save_risk_csv(accession.Accession_Path, new_risk_df)
+            update_log(accession.Accession_Path, input_directory, 'Yes')
+        else:
+            update_log(accession.Accession_Path, input_directory, 'No')
