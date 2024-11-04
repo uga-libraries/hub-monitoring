@@ -95,6 +95,25 @@ def check_arguments(argument_list):
     return dir_path, nara_path, errors
 
 
+def check_restart(input_dir):
+    """Determine if the script has restarted based on if the risk update log is present
+
+    The log name includes the date, so the path cannot be fully predicted.
+
+    @:parameter
+    input_dir (string): script argument input_directory, where the log would be saved
+
+    @:returns
+    log_path (string, None): path to the log, if it is present, or None if it is not present.
+    """
+
+    log_path = None
+    for item in os.listdir(input_dir):
+        if os.path.isfile(os.path.join(input_dir, item)) and item.startswith('risk_update_log'):
+            log_path = os.path.join(input_dir, item)
+    return log_path
+
+
 def match_nara_risk(risk_df, nara_df):
     """Match format identifications to NARA's Preservation Action Plan spreadsheet
 
