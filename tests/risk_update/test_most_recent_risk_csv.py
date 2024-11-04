@@ -1,55 +1,54 @@
 """
 Tests for the function most_recent_risk_csv(), which determines the most recent risk spreadsheet in a folder.
 """
+import os
 import unittest
 from risk_update import most_recent_risk_csv
 
 
 class MyTestCase(unittest.TestCase):
 
-    def test_1(self):
-        """Test for when there is one preservation spreadsheet without a date"""
-        files = ['2000-01-er_full_risk_data.csv', 'log.txt']
-        file = most_recent_risk_csv(files)
-        expected = '2000-01-er_full_risk_data.csv'
-        self.assertEqual(file, expected, 'Problem with test for one spreadsheet, no date')
+    def test_none(self):
+        """Test for when there is no risk spreadsheet"""
+        file = most_recent_risk_csv(os.path.join('test_data', 'most_recent_risk_csv', 'no_spreadsheet'))
+        expected = None
+        self.assertEqual(file, expected, 'Problem with test for no spreadsheet')
 
-    def test_1_date(self):
-        """Test for when there is one preservation spreadsheet with a date"""
-        files = ['2000-01-er_full_risk_data_2003-02-15.csv', 'log.txt']
-        file = most_recent_risk_csv(files)
-        expected = '2000-01-er_full_risk_data_2003-02-15.csv'
+    def test_one_dated(self):
+        """Test for when there is one risk spreadsheet with a date"""
+        file = most_recent_risk_csv(os.path.join('test_data', 'most_recent_risk_csv', 'one_dated'))
+        expected = '2001-01-er_full_risk_data_2001-01-15.csv'
         self.assertEqual(file, expected, 'Problem with test for one spreadsheet, with a date')
 
-    def test_2(self):
-        """Test for when there are two preservation spreadsheets, and only one has a date"""
-        files = ['2000-01-er_full_risk_data.csv', '2000-01-er_full_risk_data_2003-02-15.csv', 'log.txt']
-        file = most_recent_risk_csv(files)
-        expected = '2000-01-er_full_risk_data_2003-02-15.csv'
+    def test_one_undated(self):
+        """Test for when there is one risk spreadsheet without a date"""
+        file = most_recent_risk_csv(os.path.join('test_data', 'most_recent_risk_csv', 'one_undated'))
+        expected = '2001-02-er_full_risk_data.csv'
+        self.assertEqual(file, expected, 'Problem with test for one spreadsheet, undated')
+
+    def test_two_both_dated(self):
+        """Test for when there are two risk spreadsheets, both with dates"""
+        file = most_recent_risk_csv(os.path.join('test_data', 'most_recent_risk_csv', 'two_both_dated'))
+        expected = '2002-01-er_full_risk_data_2017-10-31.csv'
+        self.assertEqual(file, expected, 'Problem with test for two files, both with dates')
+
+    def test_two_one_dated(self):
+        """Test for when there are two risk spreadsheets, and only one has a date"""
+        file = most_recent_risk_csv(os.path.join('test_data', 'most_recent_risk_csv', 'two_one_undated'))
+        expected = '2002-02-er_full_risk_data_2024-05-15.csv'
         self.assertEqual(file, expected, 'Problem with test for two files, one with a date')
 
-    def test_2_dates(self):
-        """Test for when there are two preservation spreadsheets, both with dates."""
-        files = ['2000-01-er_full_risk_data_2000-01-31.csv', '2000-01-er_full_risk_data_2003-02-15.csv', 'log.txt']
-        file = most_recent_risk_csv(files)
-        expected = '2000-01-er_full_risk_data_2003-02-15.csv'
+    def test_three_all_dated(self):
+        """Test for when there are three risk spreadsheets, all with dates, and a log (skipped)"""
+        file = most_recent_risk_csv(os.path.join('test_data', 'most_recent_risk_csv', 'three_all_dated'))
+        expected = '2003-01-er_full_risk_data_2023-03-03.csv'
         self.assertEqual(file, expected, 'Problem with test for two files, both with dates')
 
-    def test_3(self):
-        """Test for when there are three preservation spreadsheets, two with dates."""
-        files = ['2000-01-er_full_risk_data_2003-02-16.csv', '2000-01-er_full_risk_data_2003-02-15.csv',
-                 '2000-01-er_full_risk_data.csv', 'log.txt']
-        file = most_recent_risk_csv(files)
-        expected = '2000-01-er_full_risk_data_2003-02-16.csv'
+    def test_three_one_undated(self):
+        """Test for when there are three risk spreadsheets, two with dates"""
+        file = most_recent_risk_csv(os.path.join('test_data', 'most_recent_risk_csv', 'three_one_undated'))
+        expected = '2003-02-er_full_risk_data_2013-02-28.csv'
         self.assertEqual(file, expected, 'Problem with test for three files, two with dates')
-
-    def test_3_dates(self):
-        """Test for when there are three preservation spreadsheets, all with dates."""
-        files = ['2000-01-er_full_risk_data_2000-01-31.csv', '2000-01-er_full_risk_data_2004-02-15.csv',
-                 '2000-01-er_full_risk_data_2003-02-15.csv', 'log.txt']
-        file = most_recent_risk_csv(files)
-        expected = '2000-01-er_full_risk_data_2004-02-15.csv'
-        self.assertEqual(file, expected, 'Problem with test for two files, both with dates')
 
 
 if __name__ == '__main__':
