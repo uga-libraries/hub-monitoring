@@ -453,6 +453,6 @@ if __name__ == '__main__':
             new_risk_df = read_risk_csv(os.path.join(accession.Accession_Path, file))
             new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
             save_risk_csv(accession.Accession_Path, new_risk_df)
-            update_log(accession.Accession_Path, input_directory, 'Yes')
+            update_log(risk_update_log_path, log_df, df_row_index, 'Yes')
         else:
-            update_log(accession.Accession_Path, input_directory, 'No')
+            update_log(risk_update_log_path, log_df, df_row_index, 'No')
