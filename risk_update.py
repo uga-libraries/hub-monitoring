@@ -442,6 +442,14 @@ if __name__ == '__main__':
               'The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.')
         sys.exit(1)
 
+    # Makes the risk_update_log_DATE.csv with all accessions in the input_directory, if it doesn't exist,
+    # If it does exist, that means the script is being restarted and will use the log to restart where it left off.
+    risk_update_log_path = check_restart(input_directory)
+    if not risk_update_log_path:
+        risk_update_log(input_directory)
+        today = date.today().strftime('%Y-%m-%d')
+        risk_update_log_path = os.path.join(input_directory, f'risk_update_log_{today}.csv')
+
     # Navigates to each accession folder and makes a new version of the risk spreadsheet
     # using the most recent risk spreadsheet in each folder and the current NARA risk CSV.
     # Also logs if it found a risk spreadsheet or not.
