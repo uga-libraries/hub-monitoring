@@ -1,64 +1,54 @@
 """
-Tests for the function update_log(), which make a log of all accessions updated by the script.
+Tests for the function update_log(), which adds the result of updating an accession to the log.
+To simplify the tests, information in the logs is abbreviated.
 """
+import os
+import pandas as pd
 import unittest
 from risk_update import update_log
 from test_script_risk_update import csv_to_list
-from datetime import datetime
-from os import getcwd, remove
-from os.path import exists, join
 
 
 class MyTestCase(unittest.TestCase):
 
+    def setUp(self):
+        """Make the dataframe and csv of the log that the tests will update"""
+        row_list = [['c1', 'a1', 'path\\c1\\a1', None],
+                    ['c1', 'a2', 'path\\c1\\a2', None],
+                    ['c2', 'a3', 'path\\c2\\a3', None]]
+        columns_list = ['Collection', 'Accession', 'Accession_Path', 'Risk_Updated']
+        self.log_df = pd.DataFrame(row_list, columns=columns_list)
+        self.log_df.to_csv('risk_update_log_2024-1101.csv')
+
     def tearDown(self):
-        """Delete the test output if it was created"""
-        today = datetime.today().strftime('%Y-%m-%d')
-        if exists(f"update_risk_log_{today}.csv"):
-            remove(f"update_risk_log_{today}.csv")
+        """Delete the log, which is edited by the test, so it can be remade"""
+        if os.path.exists('risk_update_log_2024-1101.csv'):
+            os.remove('risk_update_log_2024-1101.csv')
 
-    def test_existing_log(self):
-        """Test for when there is already a log."""
-        # Runs the function once to make a new log.
-        root = join(getcwd(), 'dept', 'coll-001', 'acc-001')
-        input_directory = getcwd()
-        update_log(root, input_directory, 'Yes')
+    def test_one_change(self):
+        """Test for adding the risk update result to one row."""
+        update_log('risk_update_log_2024-1101.csv', self.log_df, 0, 'Yes')
 
-        # Runs the function again to add to an existing log.
-        root = join(getcwd(), 'dept', 'coll-001', 'acc-002')
-        input_directory = getcwd()
-        update_log(root, input_directory, 'Yes')
+        # Verifies the risk update log has the correct values.
+        result = csv_to_list('risk_update_log_2024-1101.csv')
+        expected = [['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'],
+                    ['c1', 'a1', 'path\\c1\\a1', 'Yes'],
+                    ['c1', 'a2', 'path\\c1\\a2', 'nan'],
+                    ['c2', 'a3', 'path\\c2\\a3', 'nan']]
+        self.assertEqual(result, expected, "Problem with test for one change to the log")
 
-        # Tests that the log was made.
-        today = datetime.today().strftime('%Y-%m-%d')
-        log_path = join(getcwd(), f"update_risk_log_{today}.csv")
-        log_made = exists(log_path)
-        self.assertEqual(log_made, True, "Problem with test for new log, log made")
+    def test_two_changes(self):
+        """Test for adding the risk update result to two rows."""
+        update_log('risk_update_log_2024-1101.csv', self.log_df, 0, 'No')
+        update_log('risk_update_log_2024-1101.csv', self.log_df, 1, 'Yes')
 
-        # Tests that the log has the expected contents.
-        result = csv_to_list(log_path)
-        expected = [['Collection', 'Accession', 'Risk_Updated'],
-                    ['coll-001', 'acc-001', 'Yes'],
-                    ['coll-001', 'acc-002', 'Yes']]
-        self.assertEqual(result, expected, "Problem with test for existing log, log contents")
-
-    def test_new_log(self):
-        """Test for when there is not already a log."""
-        # Creates variables for function arguments and runs the function.
-        root = join(getcwd(), 'coll-001', 'acc-001')
-        input_directory = getcwd()
-        update_log(root, input_directory, 'No')
-
-        # Tests that the log was made.
-        today = datetime.today().strftime('%Y-%m-%d')
-        log_path = join(getcwd(), f"update_risk_log_{today}.csv")
-        log_made = exists(log_path)
-        self.assertEqual(log_made, True, "Problem with test for new log, log made")
-
-        # Tests that the log has the expected contents.
-        result = csv_to_list(log_path)
-        expected = [['Collection', 'Accession', 'Risk_Updated'], ['coll-001', 'acc-001', 'No']]
-        self.assertEqual(result, expected, "Problem with test for new log, log contents")
+        # Verifies the risk update log has the correct values.
+        result = csv_to_list('risk_update_log_2024-1101.csv')
+        expected = [['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'],
+                    ['c1', 'a1', 'path\\c1\\a1', 'No'],
+                    ['c1', 'a2', 'path\\c1\\a2', 'Yes'],
+                    ['c2', 'a3', 'path\\c2\\a3', 'nan']]
+        self.assertEqual(result, expected, "Problem with test for two changes to the log")
 
 
 if __name__ == '__main__':

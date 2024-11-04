@@ -391,37 +391,21 @@ def save_risk_csv(accession_path, risk_df):
     risk_df.to_csv(update_csv_path, index=False)
 
 
-def update_log(accession_path, log_dir, update_result):
-    """Log every accession and if the risk csv was updated
-
-    The log includes the collection and accession number, which are both part of the accession path,
-    and if the risk csv was updated or not.
+def update_log(log_path, df, row, result):
+    """Add if the risk csv was updated for an accession to the risk update log dataframe and csv
 
     @:parameter
-    accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s)
-    log_dir (string): the path to the directory for saving the log (script argument input_directory)
-    update_result (string): Yes (updated risk csv made) or No (no previous risk csv to update)
+    log_path (string): the path to the risk_update_log_DATE.csv
+    df (dataframe): the dataframe with the current risk update log information
+    row (dataframe index): the dataframe index number of the accession
+    result (string): Yes or No
 
     @:returns
-    None. Makes or updates the log.
+    None
     """
 
-    # Parses the collection and accession number from the accession path.
-    # The accession number is the last folder and the collection number is the second to last folder.
-    accession_path_list = accession_path.split('\\')
-    collection = accession_path_list[-2]
-    accession = accession_path_list[-1]
-
-    # If the log doesn't exist yet (this is the first CSV to be updated), makes the log with a header row.
-    today = datetime.today().strftime('%Y-%m-%d')
-    log_path = os.path.join(log_dir, f"update_risk_log_{today}.csv")
-    if not os.path.exists(log_path):
-        with open(log_path, 'w') as f:
-            f.write('Collection,Accession,Risk_Updated\n')
-
-    # Adds the collection and accession to the log.
-    with open(log_path, 'a') as f:
-        f.write(f'{collection},{accession},{update_result}\n')
+    df.loc[row, 'Risk_Updated'] = result
+    df.to_csv(log_path, index=False)
 
 
 if __name__ == '__main__':
