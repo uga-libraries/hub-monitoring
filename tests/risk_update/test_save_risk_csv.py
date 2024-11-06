@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase):
     def test_duplicates(self):
         """Test for when the risk information includes duplicate rows"""
         # Creates input variables and runs the function.
-        root = os.path.join('test_data', 'script_new', 'rbrl004', '2005-10-er')
+        accession_path = os.path.join('test_data', 'script_new', 'rbrl004', '2005-10-er')
         new_risk_df = pd.DataFrame([['Word', 'NO VALUE', 'No Match'],
                                     ['Word', 'NO VALUE', 'No Match'],
                                     ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
@@ -31,10 +31,10 @@ class MyTestCase(unittest.TestCase):
                                     ['Rich Text Format', '1.6', 'Low Risk'],
                                     ['HYPERTEXT MARKUP LANGUAGE', 'NO VALUE', 'Low Risk']],
                                    columns=['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'])
-        save_risk_csv(root, new_risk_df)
+        save_risk_csv(accession_path, new_risk_df)
 
         # Tests the contents of the csv are correct.
-        result = csv_to_list(os.path.join(root, f"2005-10-er_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(os.path.join(accession_path, f"2005-10-er_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'],
                     ['Word', 'NO VALUE', 'No Match'],
                     ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
@@ -45,16 +45,16 @@ class MyTestCase(unittest.TestCase):
     def test_no_duplicates(self):
         """Test for when the risk information includes no duplicate rows"""
         # Creates input variables and runs the function.
-        root = os.path.join('test_data', 'script_new', 'rbrl004', '2005-10-er')
+        accession_path = os.path.join('test_data', 'script_new', 'rbrl004', '2005-10-er')
         new_risk_df = pd.DataFrame([['Word', 'NO VALUE', 'No Match'],
                                     ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
                                     ['Rich Text Format', '1.6', 'Low Risk'],
                                     ['HYPERTEXT MARKUP LANGUAGE', 'NO VALUE', 'Low Risk']],
                                    columns=['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'])
-        save_risk_csv(root, new_risk_df)
+        save_risk_csv(accession_path, new_risk_df)
 
         # Tests the contents of the csv are correct.
-        result = csv_to_list(os.path.join(root, f"2005-10-er_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(os.path.join(accession_path, f"2005-10-er_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'],
                     ['Word', 'NO VALUE', 'No Match'],
                     ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
