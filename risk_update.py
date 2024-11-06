@@ -433,8 +433,8 @@ if __name__ == '__main__':
     risk_update_log_path = check_restart(input_directory)
     if not risk_update_log_path:
         risk_update_log(input_directory)
-        today = date.today().strftime('%Y-%m-%d')
-        risk_update_log_path = os.path.join(input_directory, f'risk_update_log_{today}.csv')
+        date_today = date.today().strftime('%Y-%m-%d')
+        risk_update_log_path = os.path.join(input_directory, f'risk_update_log_{date_today}.csv')
 
     # Updates the risk spreadsheet for every accession in the log that has not yet been updated (Risk_Updated is blank).
     log_df = pd.read_csv(risk_update_log_path)
