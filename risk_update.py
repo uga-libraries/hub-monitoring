@@ -77,7 +77,7 @@ def check_arguments(argument_list):
         if not os.path.exists(dir_path):
             errors.append(f"Input directory '{dir_path}' does not exist")
     else:
-        errors.append('Required argument input_directory is missing')
+        errors.append("Required argument input_directory is missing")
 
     # Verifies that the second required argument (nara_csv) is present,
     # and if it is present that it is a valid path.
@@ -86,11 +86,11 @@ def check_arguments(argument_list):
         if not os.path.exists(nara_path):
             errors.append(f"NARA CSV '{nara_path}' does not exist")
     else:
-        errors.append('Required argument nara_csv is missing')
+        errors.append("Required argument nara_csv is missing")
 
     # Checks if there are too many arguments, which could mean the arguments were not in the correct order.
     if len(argument_list) > 3:
-        errors.append('Too many arguments. Should just have two, input_directory and nara_csv')
+        errors.append("Too many arguments. Should just have two, input_directory and nara_csv")
 
     return dir_path, nara_path, errors
 
@@ -273,7 +273,7 @@ def most_recent_risk_csv(acc_dir):
         # for comparison since any spreadsheet with a date is more recent than one without.
         # Converts the date from a string to a date so that it can be compared to other dates.
         try:
-            regex = re.search("_full_risk_data_([0-9]{4})-([0-9]{2})-([0-9]{2}).csv", file_name)
+            regex = re.search('_full_risk_data_([0-9]{4})-([0-9]{2})-([0-9]{2}).csv', file_name)
             file_date = date(int(regex.group(1)), int(regex.group(2)), int(regex.group(3)))
         except AttributeError:
             file_date = date(1900, 1, 1)
@@ -354,7 +354,7 @@ def risk_update_log(input_dir):
 
     # Makes the risk update log with a header row in the input_directory.
     today = datetime.today().strftime('%Y-%m-%d')
-    log_path = os.path.join(input_dir, f"risk_update_log_{today}.csv")
+    log_path = os.path.join(input_dir, f'risk_update_log_{today}.csv')
     with open(log_path, 'w') as open_log:
         log_writer = csv.writer(open_log)
         log_writer.writerow(['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'])
@@ -423,9 +423,9 @@ if __name__ == '__main__':
     try:
         nara_risk_df = read_nara_csv(nara_csv)
     except KeyError:
-        print('\nThe NARA Preservation Action Plan spreadsheet does not have at least one of the expected columns: '
-              'Format Name, File Extension(s), PRONOM URL, NARA Risk Level, and NARA Proposed Preservation Plan. '
-              'The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.')
+        print("\nThe NARA Preservation Action Plan spreadsheet does not have at least one of the expected columns: "
+              "Format Name, File Extension(s), PRONOM URL, NARA Risk Level, and NARA Proposed Preservation Plan. "
+              "The spreadsheet used may be out of date, or NARA may have changed their spreadsheet organization.")
         sys.exit(1)
 
     # Makes the risk_update_log_DATE.csv with all accessions in the input_directory, if it doesn't exist,
@@ -441,7 +441,7 @@ if __name__ == '__main__':
     for accession in log_df[log_df['Risk_Updated'].isnull()].itertuples():
 
         # Prints the script progress.
-        print(f'Starting on accession {accession.Accession_Path}')
+        print(f"Starting on accession {accession.Accession_Path}")
 
         # Calculates the row index in the dataframe for the accession, to use for updating the log.
         df_row_index = log_df.index[log_df['Accession'] == accession.Accession].tolist()[0]
