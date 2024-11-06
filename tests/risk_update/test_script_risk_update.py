@@ -1,6 +1,7 @@
 """
 Tests for the script risk_update.py, Get updated NARA risk information for every accession in a input_directory.
 """
+import csv
 import subprocess
 import unittest
 from datetime import datetime
@@ -26,11 +27,15 @@ class MyTestCase(unittest.TestCase):
         # List of paths for possible test outputs.
         today = datetime.today().strftime('%Y-%m-%d')
         coll_folder = join('test_data', 'script', 'rbrl004')
+        restart_path = join('test_data', 'script_restart', 'rbrl004')
         outputs = (join(coll_folder, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
                    join(coll_folder, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
-                   join(coll_folder, f'risk_update_log_{today}.csv'))
+                   join(coll_folder, f'risk_update_log_{today}.csv'),
+                   join(restart_path, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
+                   join(restart_path, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
+                   join(restart_path, f'risk_update_log_{today}.csv'))
 
         # Deletes any test output that is present.
         for output in outputs:
@@ -169,6 +174,85 @@ class MyTestCase(unittest.TestCase):
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
                      'No NARA Match']]
         self.assertEqual(result, expected, 'Problem with test for risk CSV contents, 2005-20-er')
+
+    def test_restart(self):
+        """Test for when the script is restarted (risk update log exists)"""
+        input_directory = join(getcwd(), 'test_data', 'script_restart')
+        today = datetime.today().strftime('%Y-%m-%d')
+
+        # Makes the risk update log, with 2 of the 4 accessions already marked as updated.
+        # They are not actually updated, so there will not be a new full risk data csv with today's date.
+        coll_path = join(input_directory, 'rbrl004')
+        rows = [['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'],
+                ['rbrl004', '2005-10-er', join(coll_path, '2005-10-er'), 'No'],
+                ['rbrl004', '2005-20-er', join(coll_path, '2005-20-er'), 'Yes'],
+                ['rbrl004', '2006-30-er', join(coll_path, '2006-30-er'), None],
+                ['rbrl004', '2021-40-er', join(coll_path, '2021-40-er'), None]]
+        log_path = join(input_directory, f'risk_update_log_{today}.csv')
+        with open(log_path, 'w', newline='') as open_log:
+            log_writer = csv.writer(open_log)
+            log_writer.writerows(rows)
+
+        # Makes the variables used for script input and runs the script.
+        script = join(getcwd(), '..', '..', 'risk_update.py')
+        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
+        subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
+
+        # Tests the contents of the log are correct.
+        result = csv_to_list(join('test_data', 'script_restart', f'risk_update_log_{today}.csv'))
+        expected = [['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'],
+                    ['rbrl004', '2005-10-er', join(coll_path, '2005-10-er'), 'No'],
+                    ['rbrl004', '2005-20-er', join(coll_path, '2005-20-er'), 'Yes'],
+                    ['rbrl004', '2006-30-er', join(coll_path, '2006-30-er'), 'Yes'],
+                    ['rbrl004', '2021-40-er', join(coll_path, '2021-40-er'), 'Yes']]
+        self.assertEqual(result, expected, 'Problem with test for restart, risk update log')
+
+        # Tests there is not a new full risk data CSV for the accessions already marked as updated.
+        result = [exists(join(coll_path, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv')),
+                  exists(join(coll_path, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'))]
+        expected = [False, False]
+        self.assertEqual(result, expected, 'Problem with test for restart, 2005 full risk data csvs')
+
+        # Tests the contents of 2006-30-er full risk data CSV are correct.
+        result = csv_to_list(join(coll_path, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'))
+        expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
+                     'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
+                     'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
+                     'NARA_Format_Name', 'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level',
+                     'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Text Document.rtf',
+                     'Rich Text Format', '1.6', 'https://www.nationalarchives.gov.uk/pronom/fmt/50',
+                     'Droid version 6.4', False, '3/4/2024', 41, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/50',
+                     'Moderate Risk', 'Transform to PDF', 'PRONOM and Version'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Plain Text Document.txt',
+                     'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
+                     'Droid version 6.4', False, '3/4/2024', 2, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Plain Text Document2.txt',
+                     'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
+                     'Droid version 6.4', False, '3/4/2024', 4, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
+        self.assertEqual(result, expected, 'Problem with test for restart, 2006-30-er full risk data csv')
+
+        # Tests the contents of 2021-40-er full risk data CSV are correct.
+        result = csv_to_list(join(coll_path, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'))
+        expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
+                     'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
+                     'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
+                     'NARA_Format_Name', 'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level',
+                     'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.pdf',
+                     'Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'NO VALUE',
+                     'Droid version 6.4', False, '3/4/2024', 26, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Portable Document Format/Archiving (PDF/A-1a) accessible', 'pdf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/95', 'Low Risk', 'Retain', 'Format Name'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.docx', 'Word',
+                     'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
+                     'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
+                     'No NARA Match']]
+        self.assertEqual(result, expected, 'Problem with test for restart, 2021-40-er full risk data csv')
 
     def test_argument_error(self):
         """Test for when the script arguments are not correct and the script exits"""
