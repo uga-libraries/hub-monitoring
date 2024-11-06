@@ -1,9 +1,9 @@
 """
 Tests for the function read_nara_csv(), which reads the NARA CSV and renames columns used in the script output.
 """
+import os
 import unittest
 from risk_update import read_nara_csv
-from os.path import join
 
 
 class MyTestCase(unittest.TestCase):
@@ -11,7 +11,7 @@ class MyTestCase(unittest.TestCase):
     def test_current_nara(self):
         """Test for when the column names in the NARA CSV for the 5 columns used are correct, as of June 2024"""
         # Creates input variable (in production, this is a script argument) and runs the function.
-        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
+        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan.csv')
         nara_risk_df = read_nara_csv(nara_csv)
 
         # Tests the contents of nara_risk_df is correct.
@@ -39,7 +39,7 @@ class MyTestCase(unittest.TestCase):
     def test_incorrect_nara(self):
         """Test for when the column names in the NARA CSV for the 5 columns used are not correct"""
         # Creates input variable (in production, this is a script argument).
-        nara_csv = join('test_data', 'NARA_PreservationActionPlan_Outdated.csv')
+        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan_Outdated.csv')
 
         # Runs the function and verifies it raises the expected error.
         with self.assertRaises(KeyError):

@@ -1,9 +1,9 @@
 """
 Test for the function read_risk_csv(), which reads the FITs format information columns for a risk CSV into a dataframe.
 """
+import os
 import unittest
 from risk_update import read_risk_csv
-from os.path import join
 
 
 class MyTestCase(unittest.TestCase):
@@ -11,9 +11,9 @@ class MyTestCase(unittest.TestCase):
     def test_function(self):
         """Test for the function, which has no variations"""
         # Creates input variables and runs the function.
-        root = join('test_data', 'script_new', 'rbrl004', '2005-20-er')
+        root = os.path.join('test_data', 'script_new', 'rbrl004', '2005-20-er')
         risk_csv_filename = '2005-20-er_full_risk_data_2012-07-01.csv'
-        new_risk_df = read_risk_csv(join(root, risk_csv_filename))
+        new_risk_df = read_risk_csv(os.path.join(root, risk_csv_filename))
 
         # Tests the contents of new_risk_df are correct.
         result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()

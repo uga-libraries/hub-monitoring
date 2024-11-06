@@ -5,8 +5,8 @@ and returns the paths and a list of errors (if any).
 
 For input, tests use a list with argument values. In production, this would be the contents of sys.argv.
 """
+import os
 import unittest
-from os.path import join
 from risk_update import check_arguments
 
 
@@ -17,8 +17,8 @@ class MyTestCase(unittest.TestCase):
         Test for when both required arguments are present and valid paths.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'script_new'),
-                    join('test_data', 'NARA_PreservationActionPlan.csv')]
+        sys_argv = ['risk_updates.py', os.path.join('test_data', 'script_new'),
+                    os.path.join('test_data', 'NARA_PreservationActionPlan.csv')]
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
@@ -78,7 +78,7 @@ class MyTestCase(unittest.TestCase):
         so the function treats it as input_directory.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'NARA_PreservationActionPlan.csv')]
+        sys_argv = ['risk_updates.py', os.path.join('test_data', 'NARA_PreservationActionPlan.csv')]
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
@@ -98,7 +98,7 @@ class MyTestCase(unittest.TestCase):
         The second required argument, nara_csv, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', 'path/error/dir', join('test_data', 'NARA_PreservationActionPlan.csv')]
+        sys_argv = ['risk_updates.py', 'path/error/dir', os.path.join('test_data', 'NARA_PreservationActionPlan.csv')]
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
@@ -119,7 +119,7 @@ class MyTestCase(unittest.TestCase):
         The first required argument, input_directory, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'script_new')]
+        sys_argv = ['risk_updates.py', os.path.join('test_data', 'script_new')]
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
@@ -139,7 +139,7 @@ class MyTestCase(unittest.TestCase):
         The first required argument, input_directory, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data\\script_new'), 'nara_error.csv']
+        sys_argv = ['risk_updates.py', os.path.join('test_data\\script_new'), 'nara_error.csv']
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
@@ -160,8 +160,8 @@ class MyTestCase(unittest.TestCase):
         The two required arguments are present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'script_new'),
-                    join('test_data', 'NARA_PreservationActionPlan.csv'), 'error_extra_argument']
+        sys_argv = ['risk_updates.py', os.path.join('test_data', 'script_new'),
+                    os.path.join('test_data', 'NARA_PreservationActionPlan.csv'), 'error_extra_argument']
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.

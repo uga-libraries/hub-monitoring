@@ -5,17 +5,17 @@ To simplify the tests, the input dataframe (new_risk_df) only has format columns
 tests use an abbreviated NARA Preservation Action Plan CSV (only the columns needed and far fewer formats).
 This test input must be updated to keep in sync with changes to new_risk_df or the NARA CSV.
 """
+import numpy as np
+import os
+import pandas as pd
 import unittest
 from risk_update import match_nara_risk, read_nara_csv
-from numpy import nan
-from os.path import join
-from pandas import DataFrame
 
 
 def make_df(df_rows):
     """Make and return a dataframe with consistent column names."""
     column_names = ['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID']
-    df = DataFrame(df_rows, columns=column_names)
+    df = pd.DataFrame(df_rows, columns=column_names)
     return df
 
 
@@ -23,7 +23,7 @@ class MyTestCase(unittest.TestCase):
 
     def setUp(self):
         """Reads NARA CSV into a dataframe and renames the columns. Used by every test."""
-        nara_csv = join('test_data', 'NARA_PreservationActionPlan.csv')
+        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan.csv')
         self.nara_risk_df = read_nara_csv(nara_csv)
 
     def test_technique_1(self):
@@ -143,10 +143,10 @@ class MyTestCase(unittest.TestCase):
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['Portable Document Format (PDF) Portfolio', 2.0,
                      'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', nan, 'Moderate Risk',
+                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', np.nan, 'Moderate Risk',
                      'Retain but possibly extract files from the container', 'Format Name'],
                     ['WordPerfect Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'WordPerfect Template', 'wpt', nan, 'Moderate Risk', 'Transform to PDF if possible',
+                     'WordPerfect Template', 'wpt', np.nan, 'Moderate Risk', 'Transform to PDF if possible',
                      'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, format PUID, case same")
 
@@ -167,10 +167,10 @@ class MyTestCase(unittest.TestCase):
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
                     ['portable document format (pdf) portfolio', 2.0,
                      'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', nan, 'Moderate Risk',
+                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', np.nan, 'Moderate Risk',
                      'Retain but possibly extract files from the container', 'Format Name'],
                     ['WORDPERFECT TEMPLATE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'WordPerfect Template', 'wpt', nan, 'Moderate Risk', 'Transform to PDF if possible',
+                     'WordPerfect Template', 'wpt', np.nan, 'Moderate Risk', 'Transform to PDF if possible',
                      'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, format PUID, case different")
 
@@ -192,7 +192,7 @@ class MyTestCase(unittest.TestCase):
                     ['Rich Text Format', 1.5, 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
                      'Format Name'],
-                    ['WordPerfect Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', nan,
+                    ['WordPerfect Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', np.nan,
                      'Moderate Risk', 'Transform to PDF if possible', 'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, no format PUID, case same")
 
@@ -214,7 +214,7 @@ class MyTestCase(unittest.TestCase):
                     ['RICH TEXT FORMAT', 1.5, 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
                      'Format Name'],
-                    ['wordperfect template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', nan,
+                    ['wordperfect template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', np.nan,
                      'Moderate Risk', 'Transform to PDF if possible', 'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, no format PUID, case different")
 
@@ -232,10 +232,10 @@ class MyTestCase(unittest.TestCase):
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
-                    ['Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56', 'No Match', nan, nan,
-                     'No Match', nan, 'No NARA Match'],
-                    ['OneNote', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/637', 'No Match', nan, nan,
-                     'No Match', nan, 'No NARA Match']]
+                    ['Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56', 'No Match', np.nan, np.nan,
+                     'No Match', np.nan, 'No NARA Match'],
+                    ['OneNote', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/637', 'No Match',
+                     np.nan, np.nan, 'No Match', np.nan, 'No NARA Match']]
         self.assertEqual(result, expected, "Problem with test for no match, format PUID")
 
     def test_no_match(self):
@@ -252,10 +252,10 @@ class MyTestCase(unittest.TestCase):
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name', 'NARA_File_Extensions',
                      'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan', 'NARA_Match_Type'],
-                    ['Excel', 3.0, 'NO VALUE', 'No Match', nan, nan,
-                     'No Match', nan, 'No NARA Match'],
-                    ['OneNote', 'NO VALUE', 'NO VALUE', 'No Match', nan, nan,
-                     'No Match', nan, 'No NARA Match']]
+                    ['Excel', 3.0, 'NO VALUE', 'No Match', np.nan, np.nan,
+                     'No Match', np.nan, 'No NARA Match'],
+                    ['OneNote', 'NO VALUE', 'NO VALUE', 'No Match', np.nan, np.nan,
+                     'No Match', np.nan, 'No NARA Match']]
         self.assertEqual(result, expected, "Problem with test for no match, format no PUID")
 
 
