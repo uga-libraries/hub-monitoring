@@ -240,7 +240,7 @@ def match_nara_risk(risk_df, nara_df):
     return df_result
 
 
-def most_recent_risk_csv(acc_dir):
+def most_recent_risk_csv(acc_path):
     """Determine the most recent risk spreadsheet of an accession based on the file name
 
     From legacy practices, any spreadsheet with a date in the name is more recent than one without.
@@ -250,7 +250,7 @@ def most_recent_risk_csv(acc_dir):
     The unit tests are in risk_update.
 
     @:parameter
-    acc_dir (string): path to the folder with all files related to an accession
+    acc_path (string): the path to the accession folder
 
     @:returns
     most_recent_file (string, None): the name of the risk spreadsheet that is the most recent
@@ -263,7 +263,7 @@ def most_recent_risk_csv(acc_dir):
 
     # Searches each file in the first level of the accession directory for the most recent one,
     # based on the date in the file name.
-    for file_name in os.listdir(acc_dir):
+    for file_name in os.listdir(acc_path):
 
         # Skips files that are not risk spreadsheets, like the preservation log.
         if 'full_risk_data' not in file_name:
@@ -366,14 +366,14 @@ def risk_update_log(input_dir):
                 log_writer.writerow([path_list[-2], path_list[-1], root, None])
 
 
-def save_risk_csv(accession_path, risk_df):
+def save_risk_csv(acc_path, risk_df):
     """Make a new risk spreadsheet from the combined most current risk spreadsheet and NARA risk data
 
     The new spreadsheet is named ACCESSION_full_risk_data_DATA.csv,
     and is saved in the accession folder as the original risk spreadsheet.
 
     @:parameters
-    accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
+    acc_path (string): the path to the accession folder
     risk_df (Pandas DataFrame): dataframe with the FITS data and NARA risk data
 
     @:returns
@@ -385,9 +385,9 @@ def save_risk_csv(accession_path, risk_df):
     risk_df.drop_duplicates(inplace=True)
 
     # Saves the dataframe to a csv in the same folder as the original full risk data csv.
-    accession_number = os.path.basename(accession_path)
+    accession_number = os.path.basename(acc_path)
     today = datetime.today().strftime('%Y-%m-%d')
-    update_csv_path = os.path.join(accession_path, f'{accession_number}_full_risk_data_{today}.csv')
+    update_csv_path = os.path.join(acc_path, f'{accession_number}_full_risk_data_{today}.csv')
     risk_df.to_csv(update_csv_path, index=False)
 
 
