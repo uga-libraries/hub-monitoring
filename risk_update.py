@@ -10,7 +10,7 @@ Returns:
     Log of all accessions and if risk was updated, saved in the input_directory
 """
 import csv
-from datetime import date, datetime
+from datetime import date
 import os
 import pandas as pd
 import re
@@ -353,7 +353,7 @@ def make_log(input_dir):
     """
 
     # Makes the risk update log with a header row in the input_directory.
-    today = datetime.today().strftime('%Y-%m-%d')
+    today = date.today().strftime('%Y-%m-%d')
     log_path = os.path.join(input_dir, f'risk_update_log_{today}.csv')
     with open(log_path, 'w') as open_log:
         log_writer = csv.writer(open_log)
@@ -386,7 +386,7 @@ def save_risk_csv(acc_path, risk_df):
 
     # Saves the dataframe to a csv in the same folder as the original full risk data csv.
     accession_number = os.path.basename(acc_path)
-    today = datetime.today().strftime('%Y-%m-%d')
+    today = date.today().strftime('%Y-%m-%d')
     update_csv_path = os.path.join(acc_path, f'{accession_number}_full_risk_data_{today}.csv')
     risk_df.to_csv(update_csv_path, index=False)
 

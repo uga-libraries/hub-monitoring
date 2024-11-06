@@ -2,7 +2,7 @@
 Tests for the script risk_update.py, Get updated NARA risk information for every accession in a input_directory.
 """
 import csv
-from datetime import datetime
+from datetime import date
 import os
 import pandas as pd
 import subprocess
@@ -24,7 +24,7 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Delete the test outputs if they were created"""
         # List of paths for possible test outputs.
-        today = datetime.today().strftime('%Y-%m-%d')
+        today = date.today().strftime('%Y-%m-%d')
         new_path = os.path.join('test_data', 'script_new', 'rbrl004')
         restart_path = os.path.join('test_data', 'script_restart')
         outputs = (os.path.join(new_path, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
@@ -43,7 +43,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_new(self):
         """Test for when the script runs for the first time (risk update log does not exist)"""
-        today = datetime.today().strftime('%Y-%m-%d')
+        today = date.today().strftime('%Y-%m-%d')
 
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'risk_update.py')
@@ -160,7 +160,7 @@ class MyTestCase(unittest.TestCase):
     def test_restart(self):
         """Test for when the script is restarted (risk update log exists)"""
         input_directory = os.path.join(os.getcwd(), 'test_data', 'script_restart')
-        today = datetime.today().strftime('%Y-%m-%d')
+        today = date.today().strftime('%Y-%m-%d')
 
         # Makes the risk update log, with 2 of the 4 accessions already marked as updated.
         # They are not actually updated, so there will not be a new full risk data csv with today's date.

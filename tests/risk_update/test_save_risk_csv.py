@@ -3,7 +3,7 @@ Tests for the function save_risk_csv(), which save the updated risk information 
 
 To simplify the test, the new_risk_df is made within the test and only has a few of the columns.
 """
-from datetime import datetime
+from datetime import date
 import os
 import pandas as pd
 import unittest
@@ -15,7 +15,7 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Deletes the test output if it was created"""
-        today = datetime.today().strftime('%Y-%m-%d')
+        today = date.today().strftime('%Y-%m-%d')
         if os.path.exists(os.path.join('test_data', 'script_new', 'rbrl004', '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv')):
             os.remove(os.path.join('test_data', 'script_new', 'rbrl004', '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'))
 
@@ -34,7 +34,7 @@ class MyTestCase(unittest.TestCase):
         save_risk_csv(root, new_risk_df)
 
         # Tests the contents of the csv are correct.
-        result = csv_to_list(os.path.join(root, f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(os.path.join(root, f"2005-10-er_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'],
                     ['Word', 'NO VALUE', 'No Match'],
                     ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
@@ -54,7 +54,7 @@ class MyTestCase(unittest.TestCase):
         save_risk_csv(root, new_risk_df)
 
         # Tests the contents of the csv are correct.
-        result = csv_to_list(os.path.join(root, f"2005-10-er_full_risk_data_{datetime.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(os.path.join(root, f"2005-10-er_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'],
                     ['Word', 'NO VALUE', 'No Match'],
                     ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
