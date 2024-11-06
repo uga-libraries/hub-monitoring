@@ -7,7 +7,7 @@ Parameters:
 
 Returns:
     New risk spreadsheet is added to each accession folder
-    Log of all accessions (with collection and accession number) and if a new risk csv was made in the input_directory
+    Log of all accessions and if risk was updated, saved in the input_directory
 """
 import csv
 from datetime import date, datetime
@@ -20,12 +20,12 @@ import sys
 def accession_test(acc_id, acc_path):
     """Determine if a folder is an accession based on the folder name
 
+    The accession folder contains the risk spreadsheet to be updated.
     There may be other folders used for other purposes, like risk remediation or appraisal, as well.
-    These other folders are not part of the collection summary report.
 
     Keep in sync with the copy of this function in collection_summary.py. Unit tests are with that script.
 
-    @:parameter
+    @:parameters
     acc_id (string): the accession id, which is the name of a folder within acc_coll
     acc_path (string): the path to the accession folder
 
@@ -37,10 +37,10 @@ def accession_test(acc_id, acc_path):
     if os.path.isfile(acc_path):
         return False
 
-    # Pattern one: ends with -er or -ER.
+    # Accession pattern one: ends with -er or -ER.
     if acc_id.lower().endswith('-er'):
         return True
-    # Pattern two: ends with _er or _ER.
+    # Accession pattern two: ends with _er or _ER.
     elif acc_id.lower().endswith('_er'):
         return True
     # Temporary designation for legacy content while determining an accession number.
@@ -60,8 +60,8 @@ def check_arguments(argument_list):
     argument_list (list): the contents of sys.argv after the script is run
 
     @:returns
-    dir_path (string, None): string with the path to the directory to check for risk spreadsheets, or None if missing
-    nara_path (string, None): string with the path to NARA's Preservation Action Plan spreadsheet, or None if missing
+    dir_path (string, None): the path to the directory to check for risk spreadsheets, or None if missing
+    nara_path (string, None): the path to NARA's Preservation Action Plan spreadsheet, or None if missing
     errors (list): the list of errors encountered, if any, or an empty list
     """
 
@@ -88,7 +88,7 @@ def check_arguments(argument_list):
     else:
         errors.append('Required argument nara_csv is missing')
 
-    # Verifies that there are not too many arguments, which could mean the input was not in the correct order.
+    # Checks if there are too many arguments, which could mean the arguments were not in the correct order.
     if len(argument_list) > 3:
         errors.append('Too many arguments. Should just have two, input_directory and nara_csv')
 
@@ -101,7 +101,7 @@ def check_restart(input_dir):
     The log name includes the date, so the path cannot be fully predicted.
 
     @:parameter
-    input_dir (string): script argument input_directory, where the log would be saved
+    input_dir (string): script argument input_directory, where the log would be located
 
     @:returns
     log_path (string, None): path to the log, if it is present, or None if it is not present.
@@ -122,7 +122,7 @@ def match_nara_risk(risk_df, nara_df):
 
     Adopted from https://github.com/uga-libraries/accessioning-scripts/blob/main/format_analysis_functions.py
 
-    @:parameter
+    @:parameters
     risk_df (Pandas dataframe): a dataframe with FITS format information columns from a risk spreadsheet
     nara_df (Pandas dataframe): a dataframe with all columns from the NARA Preservation Action Plan spreadsheet
 
@@ -271,7 +271,7 @@ def most_recent_risk_csv(acc_dir):
 
         # Extracts the date from the risk spreadsheet file name, if it has one. If it doesn't, assigns 1900-01-01
         # for comparison since any spreadsheet with a date is more recent than one without.
-        # Converts the date from a string to type date so that it can be compared to other dates.
+        # Converts the date from a string to a date so that it can be compared to other dates.
         try:
             regex = re.search("_full_risk_data_([0-9]{4})-([0-9]{2})-([0-9]{2}).csv", file_name)
             file_date = date(int(regex.group(1)), int(regex.group(2)), int(regex.group(3)))
@@ -290,15 +290,14 @@ def most_recent_risk_csv(acc_dir):
 def read_nara_csv(nara_csv_path):
     """Read select columns from the NARA Preservation Action Plan spreadsheet into a dataframe and rename
 
-    If the columns do not have the expected names, a KeyError is raised and the script will exit.
-
     @:parameter
     nara_csv_path (string): path to the NARA spreadsheet, which is a script argument
 
     @:returns
     nara_df (pandas DataFrame): dataframe with all data from the NARA spreadsheet and select columns renamed
-    or raises a KeyError if the select columns are not present
+                                or raises a KeyError if the expected columns are not present
     """
+
     # Reads the NARA CSV into a dataframe, and makes another dataframe with just the 5 columns used in the report.
     # This will raise a KeyError if the columns do not have the expected names,
     # which happens if an old copy of the NARA CSV is used or if NARA changes how they name their columns.
@@ -307,7 +306,7 @@ def read_nara_csv(nara_csv_path):
                     'NARA Proposed Preservation Plan']
     nara_df = df[used_columns].copy()
 
-    # Rename the columns to start with NARA and use underscores instead of spaces.
+    # Renames the columns to start with "NARA" and use underscores instead of spaces.
     nara_df = nara_df.rename(columns={'Format Name': 'NARA_Format_Name',
                                       'File Extension(s)': 'NARA_File_Extensions',
                                       'PRONOM URL': 'NARA_PRONOM_URL',
@@ -317,22 +316,23 @@ def read_nara_csv(nara_csv_path):
 
 
 def read_risk_csv(risk_csv_path):
-    """Read the FITS format identification columns from the risk CSV into a dataframe
+    """Read the FITS format identification columns from the risk csv into a dataframe
 
     @:parameter
     risk_csv_path (string): path to the most recent risk csv in the accession folder
 
     @:returns
-    risk_df (pandas Dataframe): dataframe with all FITS formation information columns from the risk CSV
+    risk_df (pandas Dataframe): dataframe with all FITS formation information columns from the risk csv
     """
+
     # Reads the risk csv into a dataframe.
     # Specifies dtype=object so blank columns are not interpreted as floats, which causes type errors during merges.
     df = pd.read_csv(risk_csv_path, dtype=object)
 
-    # Makes a second dataframe without the older NARA information.
+    # Makes a second dataframe without the NARA columns, which is the risk information being updated.
     risk_df = df.loc[:, 'FITS_File_Path':'FITS_Status_Message'].copy()
 
-    # Blanks are fill with NO VALUE to match the formatting expected by match_nara_risk,
+    # Blanks are filled with "NO VALUE" to match the formatting expected by match_nara_risk,
     # a function used by other scripts as well.
     risk_df.fillna('NO VALUE', inplace=True)
 
@@ -342,8 +342,8 @@ def read_risk_csv(risk_csv_path):
 def risk_update_log(input_dir):
     """Make a log for updating risk information with every accession in the input_directory
 
-    The Risk_Updated column is left empty and will be updated once the script
-    finds and updates a risk csv or is unable to.
+    The Risk_Updated column is left blank and will be updated once the script
+    finds and updates a risk csv or is unable to find a risk csv.
 
     @:parameter
     input_dir (string): script argument input_directory, where the log will be saved
@@ -369,10 +369,10 @@ def risk_update_log(input_dir):
 def save_risk_csv(accession_path, risk_df):
     """Make a new risk spreadsheet from the combined most current risk spreadsheet and NARA risk data
 
-    The new spreadsheet is named accession_full_risk_data_date.csv,
-    and is saved in the same folder as the original risk spreadsheet.
+    The new spreadsheet is named ACCESSION_full_risk_data_DATA.csv,
+    and is saved in the accession folder as the original risk spreadsheet.
 
-    @:parameter
+    @:parameters
     accession_path (string): path to the accession folder, which is the folder that contains the risk csv(s).
     risk_df (Pandas DataFrame): dataframe with the FITS data and NARA risk data
 
@@ -384,7 +384,7 @@ def save_risk_csv(accession_path, risk_df):
     # These are cases where the original data accidentally has a file, with the same identification, multiple times.
     risk_df.drop_duplicates(inplace=True)
 
-    # Saves the dataframe to a csv in the same folder as the original risk_csv.
+    # Saves the dataframe to a csv in the same folder as the original full risk data csv.
     accession_number = os.path.basename(accession_path)
     today = datetime.today().strftime('%Y-%m-%d')
     update_csv_path = os.path.join(accession_path, f'{accession_number}_full_risk_data_{today}.csv')
@@ -394,11 +394,11 @@ def save_risk_csv(accession_path, risk_df):
 def update_log(log_path, df, row, result):
     """Add if the risk csv was updated for an accession to the risk update log dataframe and csv
 
-    @:parameter
+    @:parameters
     log_path (string): the path to the risk_update_log_DATE.csv
     df (dataframe): the dataframe with the current risk update log information
     row (dataframe index): the dataframe index number of the accession
-    result (string): Yes or No
+    result (string): "Yes" or "No"
 
     @:returns
     None
@@ -418,8 +418,8 @@ if __name__ == '__main__':
             print(error)
         sys.exit(1)
 
-    # Reads the NARA CSV into a dataframe and updates column names.
-    # Exits the script if the NARA CSV does not have the expected column names.
+    # Reads the NARA spreadsheet into a dataframe and updates column names.
+    # Exits the script if the NARA spreadsheet does not have the expected column names.
     try:
         nara_risk_df = read_nara_csv(nara_csv)
     except KeyError:
@@ -443,7 +443,7 @@ if __name__ == '__main__':
         # Prints the script progress.
         print(f'Starting on accession {accession.Accession_Path}')
 
-        # Calculates the row index in the dataframe for the access, to use for updating the log.
+        # Calculates the row index in the dataframe for the accession, to use for updating the log.
         df_row_index = log_df.index[log_df['Accession'] == accession.Accession].tolist()[0]
 
         # Gets the path to the most recent risk spreadsheet, makes a new version with updated risk, and updates the log.
