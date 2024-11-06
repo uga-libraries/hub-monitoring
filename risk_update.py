@@ -339,7 +339,7 @@ def read_risk_csv(risk_csv_path):
     return risk_df
 
 
-def risk_update_log(input_dir):
+def make_log(input_dir):
     """Make a log for updating risk information with every accession in the input_directory
 
     The Risk_Updated column is left blank and will be updated once the script
@@ -432,7 +432,7 @@ if __name__ == '__main__':
     # If it does exist, that means the script is being restarted and will use the log to restart where it left off.
     risk_update_log_path = check_restart(input_directory)
     if not risk_update_log_path:
-        risk_update_log(input_directory)
+        make_log(input_directory)
         date_today = date.today().strftime('%Y-%m-%d')
         risk_update_log_path = os.path.join(input_directory, f'risk_update_log_{date_today}.csv')
 
