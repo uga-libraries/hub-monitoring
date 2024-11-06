@@ -253,12 +253,12 @@ def most_recent_risk_csv(acc_path):
     acc_path (string): the path to the accession folder
 
     @:returns
-    most_recent_file (string, None): the name of the risk spreadsheet that is the most recent
+    most_recent_filename (string, None): the name of the risk spreadsheet that is the most recent
                                      or None if the accession does not contain a risk spreadsheet
     """
 
     # Variables for tracking which file is the most recent.
-    most_recent_file = None
+    most_recent_filename = None
     most_recent_date = None
 
     # Searches each file in the first level of the accession directory for the most recent one,
@@ -279,12 +279,12 @@ def most_recent_risk_csv(acc_path):
             file_date = date(1900, 1, 1)
 
         # If this is the first file evaluated, or this file's date is more recent than the current most_recent_date,
-        # updates most_recent_file and most_recent_date with the current file and its date.
+        # updates most_recent_filename and most_recent_date with the current file and its date.
         if most_recent_date is None or most_recent_date < file_date:
-            most_recent_file = file_name
+            most_recent_filename = file_name
             most_recent_date = file_date
 
-    return most_recent_file
+    return most_recent_filename
 
 
 def read_nara_csv(nara_csv_path):
@@ -448,9 +448,9 @@ if __name__ == '__main__':
 
         # Gets the path to the most recent risk spreadsheet, makes a new version with updated risk, and updates the log.
         # If no risk spreadsheet is found in the accession, just updates the log.
-        file = most_recent_risk_csv(accession.Accession_Path)
-        if file:
-            new_risk_df = read_risk_csv(os.path.join(accession.Accession_Path, file))
+        risk_csv_filename = most_recent_risk_csv(accession.Accession_Path)
+        if risk_csv_filename:
+            new_risk_df = read_risk_csv(os.path.join(accession.Accession_Path, risk_csv_filename))
             new_risk_df = match_nara_risk(new_risk_df, nara_risk_df)
             save_risk_csv(accession.Accession_Path, new_risk_df)
             update_log(risk_update_log_path, log_df, df_row_index, 'Yes')
