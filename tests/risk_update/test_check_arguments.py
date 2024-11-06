@@ -17,12 +17,12 @@ class MyTestCase(unittest.TestCase):
         Test for when both required arguments are present and valid paths.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'script'),
+        sys_argv = ['risk_updates.py', join('test_data', 'script_new'),
                     join('test_data', 'NARA_PreservationActionPlan.csv')]
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
-        expected = 'test_data\\script'
+        expected = 'test_data\\script_new'
         self.assertEqual(input_directory, expected, 'Problem with both correct, input_directory')
 
         # Tests that the value of nara_csv is correct.
@@ -119,11 +119,11 @@ class MyTestCase(unittest.TestCase):
         The first required argument, input_directory, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'script')]
+        sys_argv = ['risk_updates.py', join('test_data', 'script_new')]
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
-        expected = 'test_data\\script'
+        expected = 'test_data\\script_new'
         self.assertEqual(input_directory, expected, 'Problem with NARA missing, input_directory')
 
         # Tests that the value of nara_csv is correct.
@@ -139,11 +139,11 @@ class MyTestCase(unittest.TestCase):
         The first required argument, input_directory, is present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data\\script'), 'nara_error.csv']
+        sys_argv = ['risk_updates.py', join('test_data\\script_new'), 'nara_error.csv']
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
-        expected = 'test_data\\script'
+        expected = 'test_data\\script_new'
         self.assertEqual(input_directory, expected, 'Problem with NARA path error, input_directory')
 
         # Tests that the value of nara_csv is correct.
@@ -160,12 +160,12 @@ class MyTestCase(unittest.TestCase):
         The two required arguments are present and valid.
         """
         # Makes the variable used for function input and runs the function being tested.
-        sys_argv = ['risk_updates.py', join('test_data', 'script'),
+        sys_argv = ['risk_updates.py', join('test_data', 'script_new'),
                     join('test_data', 'NARA_PreservationActionPlan.csv'), 'error_extra_argument']
         input_directory, nara_csv, errors_list = check_arguments(sys_argv)
 
         # Tests that the value of input_directory is correct.
-        expected = 'test_data\\script'
+        expected = 'test_data\\script_new'
         self.assertEqual(input_directory, expected, 'Problem with too many arguments, input_directory')
 
         # Tests that the value of nara_csv is correct.

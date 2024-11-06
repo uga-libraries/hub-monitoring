@@ -11,7 +11,7 @@ class MyTestCase(unittest.TestCase):
     def test_function(self):
         """Test for the function, which has no variations"""
         # Creates input variables and runs the function.
-        root = join('test_data', 'script', 'rbrl004', '2005-20-er')
+        root = join('test_data', 'script_new', 'rbrl004', '2005-20-er')
         file = '2005-20-er_full_risk_data_2012-07-01.csv'
         new_risk_df = read_risk_csv(join(root, file))
 

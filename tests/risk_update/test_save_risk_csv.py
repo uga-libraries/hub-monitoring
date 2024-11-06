@@ -17,13 +17,13 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Deletes the test output if it was created"""
         today = datetime.today().strftime('%Y-%m-%d')
-        if exists(join('test_data', 'script', 'rbrl004', '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv')):
-            remove(join('test_data', 'script', 'rbrl004', '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'))
+        if exists(join('test_data', 'script_new', 'rbrl004', '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv')):
+            remove(join('test_data', 'script_new', 'rbrl004', '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'))
 
     def test_duplicates(self):
         """Test for when the risk information includes duplicate rows"""
         # Creates input variables and runs the function.
-        root = join('test_data', 'script', 'rbrl004', '2005-10-er')
+        root = join('test_data', 'script_new', 'rbrl004', '2005-10-er')
         new_risk_df = DataFrame([['Word', 'NO VALUE', 'No Match'],
                                  ['Word', 'NO VALUE', 'No Match'],
                                  ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
@@ -46,7 +46,7 @@ class MyTestCase(unittest.TestCase):
     def test_no_duplicates(self):
         """Test for when the risk information includes no duplicate rows"""
         # Creates input variables and runs the function.
-        root = join('test_data', 'script', 'rbrl004', '2005-10-er')
+        root = join('test_data', 'script_new', 'rbrl004', '2005-10-er')
         new_risk_df = DataFrame([['Word', 'NO VALUE', 'No Match'],
                                  ['Portable Document Format/Archiving (PDF/A-1a) accessible', 'NO VALUE', 'Low Risk'],
                                  ['Rich Text Format', '1.6', 'Low Risk'],
