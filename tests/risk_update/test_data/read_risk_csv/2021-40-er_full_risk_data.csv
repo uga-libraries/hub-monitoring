@@ -1,0 +1,2 @@
+FITS_File_Path,FITS_Format_Name,FITS_Format_Version,FITS_PUID,FITS_Identifying_Tool(s),FITS_Multiple_IDs,FITS_Date_Last_Modified,FITS_Size_KB,FITS_MD5,FITS_Creating_Application,FITS_Valid,FITS_Well-Formed,FITS_Status_Message,NARA_Format Name,NARA_File Extension(s),NARA_PRONOM URL,NARA_Risk Level,NARA_Proposed Preservation Plan,NARA_Match_Type,Technical_Appraisal,Other_Risk
+Z:\Doc.pdf,PDF/A,1,fmt/95,Droid,FALSE,3/4/2024,26,md5,Adobe,False,False,note,PDF/A-1,pdf,fmt/95,Low Risk,Retain,PUID,No,No

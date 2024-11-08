@@ -1,0 +1,4 @@
+FITS_File_Path,FITS_Format_Name,FITS_Format_Version,FITS_PUID,FITS_Identifying_Tool(s),FITS_Multiple_IDs,FITS_Date_Last_Modified,FITS_Size_KB,FITS_MD5,FITS_Creating_Application,FITS_Valid,FITS_Well-Formed,FITS_Status_Message,NARA_Format Name,NARA_File Extension(s),NARA_PRONOM URL,NARA_Risk Level,NARA_Proposed Preservation Plan,NARA_Match_Type,Technical_Appraisal,Other_Risk
+Z:\Doc.txt,Plain text,,,,FALSE,3/4/2024,,md51,,,,,No Match,,,No Match,,No NARA Match,No,No
+Z:\Doc2.txt,,,,Droid,FALSE,,4,md52,,,,,No Match,,,No Match,,No NARA Match,No,No
+Z:\Doc.rtf,Rich Text Format,1.6,fmt/50,Droid,,3/4/2024,41,,,,,,Rich Text Format 1.6,rtf,pronom/fmt/50,Low Risk,Retain,PRONOM and Version,No,No
