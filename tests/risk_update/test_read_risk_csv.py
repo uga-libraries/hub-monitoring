@@ -12,9 +12,9 @@ class MyTestCase(unittest.TestCase):
     def test_blanks(self):
         """Test for when the risk csv includes blank cells"""
         # Creates input variables and runs the function.
-        root = os.path.join('test_data', 'read_risk_csv')
+        accession_path = os.path.join('test_data', 'read_risk_csv')
         risk_csv_filename = '2006-30-er_full_risk_data_2009-04-01.csv'
-        new_risk_df = read_risk_csv(os.path.join(root, risk_csv_filename))
+        new_risk_df = read_risk_csv(os.path.join(accession_path, risk_csv_filename))
 
         # Tests the contents of new_risk_df are correct.
         result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
@@ -32,9 +32,9 @@ class MyTestCase(unittest.TestCase):
     def test_no_blanks(self):
         """Test for when the risk csv does not include blank cells"""
         # Creates input variables and runs the function.
-        root = os.path.join('test_data', 'read_risk_csv')
+        accession_path = os.path.join('test_data', 'read_risk_csv')
         risk_csv_filename = '2021-40-er_full_risk_data.csv'
-        new_risk_df = read_risk_csv(os.path.join(root, risk_csv_filename))
+        new_risk_df = read_risk_csv(os.path.join(accession_path, risk_csv_filename))
 
         # Tests the contents of new_risk_df are correct.
         result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
