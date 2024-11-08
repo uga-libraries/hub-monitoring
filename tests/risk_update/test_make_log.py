@@ -31,7 +31,7 @@ class MyTestCase(unittest.TestCase):
                     ['coll1', 'acc-3_ER', os.path.join('test_data', 'make_log', 'coll1', 'acc-3_ER'), 'nan'],
                     ['coll2', 'acc-4_er', os.path.join('test_data', 'make_log', 'coll2', 'acc-4_er'), 'nan'],
                     ['coll2', 'no-acc-num', os.path.join('test_data', 'make_log', 'coll2', 'no-acc-num'), 'nan']]
-        self.assertEqual(result, expected, "Problem wit test for make_log function")
+        self.assertEqual(result, expected, "Problem with test for make_log function")
 
 
 if __name__ == '__main__':
