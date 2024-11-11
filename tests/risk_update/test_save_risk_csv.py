@@ -13,11 +13,14 @@ from test_script_risk_update import csv_to_list
 
 class MyTestCase(unittest.TestCase):
 
+    def setUp(self):
+        """Variable used several times"""
+        self.today = date.today().strftime('%Y-%m-%d')
+        
     def tearDown(self):
         """Deletes the test output if it was created"""
-        today = date.today().strftime('%Y-%m-%d')
-        if os.path.exists(os.path.join('test_data', f'test_data_full_risk_data_{today}.csv')):
-            os.remove(os.path.join('test_data', f'test_data_full_risk_data_{today}.csv'))
+        if os.path.exists(os.path.join('test_data', f'test_data_full_risk_data_{self.today}.csv')):
+            os.remove(os.path.join('test_data', f'test_data_full_risk_data_{self.today}.csv'))
 
     def test_duplicates(self):
         """Test for when the risk information includes duplicate rows"""
@@ -33,13 +36,13 @@ class MyTestCase(unittest.TestCase):
         save_risk_csv('test_data', new_risk_df)
 
         # Tests the contents of the csv are correct.
-        result = csv_to_list(os.path.join('test_data', f"test_data_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(os.path.join('test_data', f'test_data_full_risk_data_{self.today}.csv'))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'],
                     ['Word', 'NO VALUE', 'No Match'],
                     ['PDF/A-1a', 'NO VALUE', 'Low Risk'],
                     ['Rich Text', '1.6', 'Low Risk'],
                     ['HTML', 'NO VALUE', 'Low Risk']]
-        self.assertEqual(result, expected, 'Problem with test for duplicates')
+        self.assertEqual(result, expected, "Problem with test for duplicates")
 
     def test_no_duplicates(self):
         """Test for when the risk information includes no duplicate rows"""
@@ -52,13 +55,13 @@ class MyTestCase(unittest.TestCase):
         save_risk_csv('test_data', new_risk_df)
 
         # Tests the contents of the csv are correct.
-        result = csv_to_list(os.path.join('test_data', f"test_data_full_risk_data_{date.today().strftime('%Y-%m-%d')}.csv"))
+        result = csv_to_list(os.path.join('test_data', f'test_data_full_risk_data_{self.today}.csv'))
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'NARA_Risk_Level'],
                     ['Word', 'NO VALUE', 'No Match'],
                     ['PDF/A-1a', 'NO VALUE', 'Low Risk'],
                     ['Rich Text', '1.6', 'Low Risk'],
                     ['HTML', 'NO VALUE', 'Low Risk']]
-        self.assertEqual(result, expected, 'Problem with test for duplicates')
+        self.assertEqual(result, expected, "Problem with test for duplicates")
 
 
 if __name__ == '__main__':
