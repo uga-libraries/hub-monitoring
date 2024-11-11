@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_technique_1(self):
         """Test for format and NARA have PUID and match on PUID and version extracted from NARA name."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.pdf', 'PDF', 1.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/14'],
                 ['path/file.rtf', 'Rich Text Format', 1.5, 'https://www.nationalarchives.gov.uk/pronom/fmt/50'],
                 ['path/file.rtf', 'Rich Text Format', 1.6, 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
@@ -57,7 +57,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_2_case(self):
         """Test for format and NARA have PUID and match on PUID and name but not version extracted from NARA name.
         The case of format and NARA names is the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.pdf', 'Portable Document Format/Archiving (PDF/A-1a) accessible', '1A', 'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
                 ['path/file.rtf', 'Rich Text Format 1.5', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
         new_risk_df = make_df(rows)
@@ -82,7 +82,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_2(self):
         """Test for format and NARA have PUID and match on PUID and name but not version extracted from NARA name.
         The case of format and NARA names is not the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.pdf', 'portable document format/archiving (PDF/A-1a) accessible', '1A', 'https://www.nationalarchives.gov.uk/pronom/fmt/95'],
                 ['path/file.rtf', 'RICH TEXT FORMAT 1.5', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/50']]
         new_risk_df = make_df(rows)
@@ -106,7 +106,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_technique_3(self):
         """Test for format and NARA have PUID and match on PUID but not version or name."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.html', 'HTML', 'v5.1', 'https://www.nationalarchives.gov.uk/pronom/fmt/96'],
                 ['path/file.pdf', 'PDF 1.0', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/14']]
         new_risk_df = make_df(rows)
@@ -133,7 +133,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_4_puid_case(self):
         """Test for format has PUID and NARA does not have a PUID and match on name.
         The case of format and NARA names is the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.pdf', 'Portable Document Format (PDF) Portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
                 ['path/file.wpt', 'WordPerfect Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
         new_risk_df = make_df(rows)
@@ -158,7 +158,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_4_puid(self):
         """Test for format has PUID and NARA does not have a PUID and match on name.
         The case of format and NARA names is not the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.pdf', 'portable document format (pdf) portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
                 ['path/file.wpt', 'WORDPERFECT TEMPLATE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
         new_risk_df = make_df(rows)
@@ -183,7 +183,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_4_case(self):
         """Test for format has no PUID (NARA may) and match on name.
         The case of format and NARA names is the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.rtf', 'Rich Text Format', 1.5, 'NO VALUE'],
                 ['path/file.wpt', 'WordPerfect Template', 'NO VALUE', 'NO VALUE']]
         new_risk_df = make_df(rows)
@@ -206,7 +206,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_4(self):
         """Test for format has no PUID (NARA may) and match on name.
         The case of format and NARA names is not the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.rtf', 'RICH TEXT FORMAT', 1.5, 'NO VALUE'],
                 ['path/file.wpt', 'wordperfect template', 'NO VALUE', 'NO VALUE']]
         new_risk_df = make_df(rows)
@@ -253,7 +253,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_5_puid(self):
         """Test for format has PUID and NARA does not have a PUID. Match on extension and version.
         The case of format and NARA extensions is not the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.NITF', 'Imagery Format', 1.1, 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
                 ['path/file.pDf', 'PDF Portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
         new_risk_df = make_df(rows)
@@ -301,7 +301,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_5(self):
         """Test for format has no PUID (NARA may) and match on extension and version.
         The case of format and NARA extensions is not the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.HTM', 'HTML', 5.2, 'NO VALUE'],
                 ['path/file.Pdf', 'PDF Portfolio', 2.0, 'NO VALUE']]
         new_risk_df = make_df(rows)
@@ -352,7 +352,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_6_puid(self):
         """Test for format has PUID and NARA does not have a PUID. Match on extension.
         The case of format and NARA extensions is not the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.NITF', 'Imagery Format', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/0'],
                 ['path/file.WPT', 'WP Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00']]
         new_risk_df = make_df(rows)
@@ -405,7 +405,7 @@ class MyTestCase(unittest.TestCase):
     def test_technique_6(self):
         """Test for format has no PUID (NARA may) and match on extension.
         The case of format and NARA extensions is not the same."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.RTF', 'Text', 1.4, 'NO VALUE'],
                 ['path/file.WPT', 'WP Template', 'NO VALUE', 'NO VALUE']]
         new_risk_df = make_df(rows)
@@ -430,7 +430,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_no_match_puid(self):
         """Test for format has PUID and does not match NARA."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.xlsx', 'Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56'],
                 ['path/file.one', 'OneNote', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/637']]
         new_risk_df = make_df(rows)
@@ -451,7 +451,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_no_match(self):
         """Test for format has no PUID and does not match NARA."""
-        # Creates test input: a dataframe with the format identifications and a dataframe with the NARA data.
+        # Creates a dataframe with the format identifications for function input.
         rows = [['path/file.xlsx', 'Excel', 3.0, 'NO VALUE'],
                 ['path/file.one', 'OneNote', 'NO VALUE', 'NO VALUE']]
         new_risk_df = make_df(rows)
