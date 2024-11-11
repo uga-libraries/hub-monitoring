@@ -59,7 +59,7 @@ class MyTestCase(unittest.TestCase):
                     ['rbrl004', '2006-30-er', os.path.join(input_directory, '2006-30-er'), 'Yes'],
                     ['rbrl004', '2021-40-er', os.path.join(input_directory, '2021-40-er'), 'Yes'],
                     ['rbrl004', '2021-50-er', os.path.join(input_directory, '2021-50-er'), 'No']]
-        self.assertEqual(result, expected, 'Problem with test for new, risk update log')
+        self.assertEqual(result, expected, "Problem with test for new, risk update log")
 
         # Tests the contents of 2005-10-er full risk data csv are correct.
         result = csv_to_list(os.path.join(input_directory, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'))
@@ -93,7 +93,7 @@ class MyTestCase(unittest.TestCase):
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
                      'No NARA Match']]
-        self.assertEqual(result, expected, 'Problem with test for new, 2005-10-er full risk data csv')
+        self.assertEqual(result, expected, "Problem with test for new, 2005-10-er full risk data csv")
 
         # Tests the contents of 2005-20-er full risk data csv are correct.
         result = csv_to_list(os.path.join(input_directory, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'))
@@ -114,7 +114,7 @@ class MyTestCase(unittest.TestCase):
                      True, '3/4/2024', 29, 'fixity_placeholder', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE',
                      'Portable Document Format (PDF) version 1.0', 'pdf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/14', 'Moderate Risk', 'Retain', 'PRONOM']]
-        self.assertEqual(result, expected, 'Problem with test for new, 2005-20-er full risk data csv')
+        self.assertEqual(result, expected, "Problem with test for new, 2005-20-er full risk data csv")
 
         # Tests the contents of 2006-30-er full risk data csv are correct.
         result = csv_to_list(os.path.join(input_directory, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'))
@@ -137,7 +137,7 @@ class MyTestCase(unittest.TestCase):
                      'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
                      'Droid version 6.4', False, '3/4/2024', 4, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
                      'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
-        self.assertEqual(result, expected, 'Problem with test for new, 2006-30-er full risk data csv')
+        self.assertEqual(result, expected, "Problem with test for new, 2006-30-er full risk data csv")
 
         # Tests the contents of 2021-40-er full risk data csv are correct.
         result = csv_to_list(os.path.join(input_directory, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'))
@@ -165,7 +165,7 @@ class MyTestCase(unittest.TestCase):
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
                      'No NARA Match']]
-        self.assertEqual(result, expected, 'Problem with test for new, 2021-40-er full risk data csv')
+        self.assertEqual(result, expected, "Problem with test for new, 2021-40-er full risk data csv")
 
     def test_restart(self):
         """Test for when the script is restarted (risk update log exists)"""
@@ -197,13 +197,13 @@ class MyTestCase(unittest.TestCase):
                     ['rbrl004', '2005-20-er', os.path.join(coll_path, '2005-20-er'), 'Yes'],
                     ['rbrl004', '2006-30-er', os.path.join(coll_path, '2006-30-er'), 'Yes'],
                     ['rbrl004', '2021-40-er', os.path.join(coll_path, '2021-40-er'), 'Yes']]
-        self.assertEqual(result, expected, 'Problem with test for restart, risk update log')
+        self.assertEqual(result, expected, "Problem with test for restart, risk update log")
 
         # Tests there is not a new full risk data CSV for the accessions already marked as updated.
         result = [os.path.exists(os.path.join(coll_path, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv')),
                   os.path.exists(os.path.join(coll_path, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'))]
         expected = [False, False]
-        self.assertEqual(result, expected, 'Problem with test for restart, 2005 full risk data csvs')
+        self.assertEqual(result, expected, "Problem with test for restart, 2005 full risk data csvs")
 
         # Tests the contents of 2006-30-er full risk data csv are correct.
         result = csv_to_list(os.path.join(coll_path, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'))
@@ -226,7 +226,7 @@ class MyTestCase(unittest.TestCase):
                      'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
                      'Droid version 6.4', False, '3/4/2024', 4, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
                      'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
-        self.assertEqual(result, expected, 'Problem with test for restart, 2006-30-er full risk data csv')
+        self.assertEqual(result, expected, "Problem with test for restart, 2006-30-er full risk data csv")
 
         # Tests the contents of 2021-40-er full risk data csv are correct.
         result = csv_to_list(os.path.join(coll_path, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'))
@@ -244,7 +244,7 @@ class MyTestCase(unittest.TestCase):
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
                      'No NARA Match']]
-        self.assertEqual(result, expected, 'Problem with test for restart, 2021-40-er full risk data csv')
+        self.assertEqual(result, expected, "Problem with test for restart, 2021-40-er full risk data csv")
 
     def test_argument_error(self):
         """Test for when the script arguments are not correct and the script exits"""
@@ -262,7 +262,7 @@ class MyTestCase(unittest.TestCase):
         result = output.stdout.decode('utf-8')
         expected = "Input directory 'test_data\\Error\\closed\\rbrl004' does not exist\r\n" \
                    "Required argument nara_csv is missing\r\n"
-        self.assertEqual(result, expected, 'Problem with test for argument error, printing')
+        self.assertEqual(result, expected, "Problem with test for argument error, printing")
 
     def test_nara_csv_error(self):
         """Test for when the column names in the NARA CSV for the columns used are not correct and the script exits"""
@@ -284,7 +284,7 @@ class MyTestCase(unittest.TestCase):
                    'columns: Format Name, File Extension(s), PRONOM URL, NARA Risk Level, and NARA Proposed ' \
                    'Preservation Plan. The spreadsheet used may be out of date, or NARA may have changed their ' \
                    'spreadsheet organization.\r\n'
-        self.assertEqual(result, expected, 'Problem with test for nara csv error, printing')
+        self.assertEqual(result, expected, "Problem with test for nara csv error, printing")
 
 
 if __name__ == '__main__':
