@@ -21,20 +21,23 @@ def csv_to_list(csv_path):
 
 class MyTestCase(unittest.TestCase):
 
+    def setUp(self):
+        """Variable calculated several times"""
+        self.today = date.today().strftime('%Y-%m-%d')
+
     def tearDown(self):
         """Delete the test outputs if they were created"""
         # List of paths for possible test outputs.
-        today = date.today().strftime('%Y-%m-%d')
         new_path = os.path.join('test_data', 'script_new', 'rbrl004')
         restart_path = os.path.join('test_data', 'script_restart')
-        outputs = (os.path.join(new_path, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'),
-                   os.path.join(new_path, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'),
-                   os.path.join(new_path, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
-                   os.path.join(new_path, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
-                   os.path.join(new_path, f'risk_update_log_{today}.csv'),
-                   os.path.join(restart_path, 'rbrl004', '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'),
-                   os.path.join(restart_path, 'rbrl004', '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'),
-                   os.path.join(restart_path, f'risk_update_log_{today}.csv'))
+        outputs = (os.path.join(new_path, '2005-10-er', f'2005-10-er_full_risk_data_{self.today}.csv'),
+                   os.path.join(new_path, '2005-20-er', f'2005-20-er_full_risk_data_{self.today}.csv'),
+                   os.path.join(new_path, '2006-30-er', f'2006-30-er_full_risk_data_{self.today}.csv'),
+                   os.path.join(new_path, '2021-40-er', f'2021-40-er_full_risk_data_{self.today}.csv'),
+                   os.path.join(new_path, f'risk_update_log_{self.today}.csv'),
+                   os.path.join(restart_path, 'rbrl004', '2006-30-er', f'2006-30-er_full_risk_data_{self.today}.csv'),
+                   os.path.join(restart_path, 'rbrl004', '2021-40-er', f'2021-40-er_full_risk_data_{self.today}.csv'),
+                   os.path.join(restart_path, f'risk_update_log_{self.today}.csv'))
 
         # Deletes any test output that is present.
         for output in outputs:
@@ -43,8 +46,6 @@ class MyTestCase(unittest.TestCase):
 
     def test_new(self):
         """Test for when the script runs for the first time (risk update log does not exist)"""
-        today = date.today().strftime('%Y-%m-%d')
-
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'risk_update.py')
         input_directory = os.path.join('test_data', 'script_new', 'rbrl004')
@@ -52,7 +53,7 @@ class MyTestCase(unittest.TestCase):
         subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the contents of the risk update log are correct.
-        result = csv_to_list(os.path.join(input_directory, f'risk_update_log_{today}.csv'))
+        result = csv_to_list(os.path.join(input_directory, f'risk_update_log_{self.today}.csv'))
         expected = [['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'],
                     ['rbrl004', '2005-10-er', os.path.join(input_directory, '2005-10-er'), 'Yes'],
                     ['rbrl004', '2005-20-er', os.path.join(input_directory, '2005-20-er'), 'Yes'],
@@ -62,7 +63,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for new, risk update log")
 
         # Tests the contents of 2005-10-er full risk data csv are correct.
-        result = csv_to_list(os.path.join(input_directory, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv'))
+        result = csv_to_list(os.path.join(input_directory, '2005-10-er', f'2005-10-er_full_risk_data_{self.today}.csv'))
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
@@ -96,7 +97,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for new, 2005-10-er full risk data csv")
 
         # Tests the contents of 2005-20-er full risk data csv are correct.
-        result = csv_to_list(os.path.join(input_directory, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'))
+        result = csv_to_list(os.path.join(input_directory, '2005-20-er', f'2005-20-er_full_risk_data_{self.today}.csv'))
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
@@ -117,7 +118,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for new, 2005-20-er full risk data csv")
 
         # Tests the contents of 2006-30-er full risk data csv are correct.
-        result = csv_to_list(os.path.join(input_directory, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'))
+        result = csv_to_list(os.path.join(input_directory, '2006-30-er', f'2006-30-er_full_risk_data_{self.today}.csv'))
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
@@ -140,7 +141,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for new, 2006-30-er full risk data csv")
 
         # Tests the contents of 2021-40-er full risk data csv are correct.
-        result = csv_to_list(os.path.join(input_directory, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'))
+        result = csv_to_list(os.path.join(input_directory, '2021-40-er', f'2021-40-er_full_risk_data_{self.today}.csv'))
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
@@ -170,8 +171,7 @@ class MyTestCase(unittest.TestCase):
     def test_restart(self):
         """Test for when the script is restarted (risk update log exists)"""
         input_directory = os.path.join(os.getcwd(), 'test_data', 'script_restart')
-        today = date.today().strftime('%Y-%m-%d')
-
+        
         # Makes the risk update log, with 2 of the 4 accessions already marked as updated.
         # They are not actually updated, so there will not be a new full risk data csv with today's date.
         coll_path = os.path.join(input_directory, 'rbrl004')
@@ -180,7 +180,7 @@ class MyTestCase(unittest.TestCase):
                 ['rbrl004', '2005-20-er', os.path.join(coll_path, '2005-20-er'), 'Yes'],
                 ['rbrl004', '2006-30-er', os.path.join(coll_path, '2006-30-er'), None],
                 ['rbrl004', '2021-40-er', os.path.join(coll_path, '2021-40-er'), None]]
-        log_path = os.path.join(input_directory, f'risk_update_log_{today}.csv')
+        log_path = os.path.join(input_directory, f'risk_update_log_{self.today}.csv')
         with open(log_path, 'w', newline='') as open_log:
             log_writer = csv.writer(open_log)
             log_writer.writerows(rows)
@@ -191,7 +191,7 @@ class MyTestCase(unittest.TestCase):
         subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the contents of the risk update log are correct.
-        result = csv_to_list(os.path.join(input_directory, f'risk_update_log_{today}.csv'))
+        result = csv_to_list(os.path.join(input_directory, f'risk_update_log_{self.today}.csv'))
         expected = [['Collection', 'Accession', 'Accession_Path', 'Risk_Updated'],
                     ['rbrl004', '2005-10-er', os.path.join(coll_path, '2005-10-er'), 'No'],
                     ['rbrl004', '2005-20-er', os.path.join(coll_path, '2005-20-er'), 'Yes'],
@@ -200,13 +200,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for restart, risk update log")
 
         # Tests there is not a new full risk data CSV for the accessions already marked as updated.
-        result = [os.path.exists(os.path.join(coll_path, '2005-10-er', f'2005-10-er_full_risk_data_{today}.csv')),
-                  os.path.exists(os.path.join(coll_path, '2005-20-er', f'2005-20-er_full_risk_data_{today}.csv'))]
+        result = [os.path.exists(os.path.join(coll_path, '2005-10-er', f'2005-10-er_full_risk_data_{self.today}.csv')),
+                  os.path.exists(os.path.join(coll_path, '2005-20-er', f'2005-20-er_full_risk_data_{self.today}.csv'))]
         expected = [False, False]
         self.assertEqual(result, expected, "Problem with test for restart, 2005 full risk data csvs")
 
         # Tests the contents of 2006-30-er full risk data csv are correct.
-        result = csv_to_list(os.path.join(coll_path, '2006-30-er', f'2006-30-er_full_risk_data_{today}.csv'))
+        result = csv_to_list(os.path.join(coll_path, '2006-30-er', f'2006-30-er_full_risk_data_{self.today}.csv'))
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
@@ -229,7 +229,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, "Problem with test for restart, 2006-30-er full risk data csv")
 
         # Tests the contents of 2021-40-er full risk data csv are correct.
-        result = csv_to_list(os.path.join(coll_path, '2021-40-er', f'2021-40-er_full_risk_data_{today}.csv'))
+        result = csv_to_list(os.path.join(coll_path, '2021-40-er', f'2021-40-er_full_risk_data_{self.today}.csv'))
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message',
