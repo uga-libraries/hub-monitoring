@@ -4,6 +4,7 @@ Tests for the function read_nara_csv(), which reads the NARA CSV and renames col
 import os
 import unittest
 from risk_update import read_nara_csv
+from test_read_risk_csv import df_to_list
 
 
 class MyTestCase(unittest.TestCase):
@@ -15,8 +16,7 @@ class MyTestCase(unittest.TestCase):
         nara_risk_df = read_nara_csv(nara_csv)
 
         # Tests the contents of nara_risk_df is correct.
-        df = nara_risk_df.fillna('nan')
-        result = [df.columns.tolist()] + df.values.tolist()
+        result = df_to_list(nara_risk_df)
         expected = [['NARA_Format_Name', 'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level',
                      'NARA_Proposed_Preservation_Plan'],
                     ['Hypertext Markup Language 5.2', 'htm|html', 'https://www.nationalarchives.gov.uk/pronom/fmt/96',

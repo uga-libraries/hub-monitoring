@@ -5,11 +5,11 @@ To simplify the tests, the input dataframe (new_risk_df) only has format columns
 tests use an abbreviated NARA Preservation Action Plan CSV (only the columns needed and far fewer formats).
 This test input must be updated to keep in sync with changes to new_risk_df or the NARA CSV.
 """
-import numpy as np
 import os
 import pandas as pd
 import unittest
 from risk_update import match_nara_risk, read_nara_csv
+from test_read_risk_csv import df_to_list
 
 
 def make_df(df_rows):
@@ -36,7 +36,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -64,7 +64,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -89,7 +89,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -113,7 +113,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -140,7 +140,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -148,10 +148,10 @@ class MyTestCase(unittest.TestCase):
                      'NARA_Match_Type'],
                     ['path/file.pdf', 'Portable Document Format (PDF) Portfolio', 2.0,
                      'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', np.nan, 'Moderate Risk',
+                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', 'nan', 'Moderate Risk',
                      'Retain but possibly extract files from the container', 'Format Name'],
                     ['path/file.wpt', 'WordPerfect Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'WordPerfect Template', 'wpt', np.nan, 'Moderate Risk', 'Transform to PDF if possible',
+                     'WordPerfect Template', 'wpt', 'nan', 'Moderate Risk', 'Transform to PDF if possible',
                      'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, format PUID, case same")
 
@@ -165,7 +165,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -173,10 +173,10 @@ class MyTestCase(unittest.TestCase):
                      'NARA_Match_Type'],
                     ['path/file.pdf', 'portable document format (pdf) portfolio', 2.0,
                      'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', np.nan, 'Moderate Risk',
+                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', 'nan', 'Moderate Risk',
                      'Retain but possibly extract files from the container', 'Format Name'],
                     ['path/file.wpt', 'WORDPERFECT TEMPLATE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'WordPerfect Template', 'wpt', np.nan, 'Moderate Risk', 'Transform to PDF if possible',
+                     'WordPerfect Template', 'wpt', 'nan', 'Moderate Risk', 'Transform to PDF if possible',
                      'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, format PUID, case different")
 
@@ -190,7 +190,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -199,7 +199,7 @@ class MyTestCase(unittest.TestCase):
                     ['path/file.rtf', 'Rich Text Format', 1.5, 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
                      'Format Name'],
-                    ['path/file.wpt', 'WordPerfect Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', np.nan,
+                    ['path/file.wpt', 'WordPerfect Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', 'nan',
                      'Moderate Risk', 'Transform to PDF if possible', 'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, no format PUID, case same")
 
@@ -213,7 +213,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -222,7 +222,7 @@ class MyTestCase(unittest.TestCase):
                     ['path/file.rtf', 'RICH TEXT FORMAT', 1.5, 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
                      'Format Name'],
-                    ['path/file.wpt', 'wordperfect template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', np.nan,
+                    ['path/file.wpt', 'wordperfect template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', 'nan',
                      'Moderate Risk', 'Transform to PDF if possible', 'Format Name']]
         self.assertEqual(result, expected, "Problem with test for technique 4, no format PUID, case different")
 
@@ -236,17 +236,17 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
                      'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
                      'NARA_Match_Type'],
                     ['path/file.ntf', 'Imagery Format', 1.1, 'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'National Imagery Transmission Format 1.1', 'ntf|nitf', np.nan, 'Low Risk',
+                     'National Imagery Transmission Format 1.1', 'ntf|nitf', 'nan', 'Low Risk',
                      'Transform to a TBD format', 'File Extension and Version'],
                     ['path/file.pdf', 'PDF Portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', np.nan, 'Moderate Risk',
+                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', 'nan', 'Moderate Risk',
                      'Retain but possibly extract files from the container', 'File Extension and Version']]
         self.assertEqual(result, expected, "Problem with test for technique 5, format PUID, case same")
 
@@ -260,17 +260,17 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
                      'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
                      'NARA_Match_Type'],
                     ['path/file.NITF', 'Imagery Format', 1.1, 'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'National Imagery Transmission Format 1.1', 'ntf|nitf', np.nan, 'Low Risk',
+                     'National Imagery Transmission Format 1.1', 'ntf|nitf', 'nan', 'Low Risk',
                      'Transform to a TBD format', 'File Extension and Version'],
                     ['path/file.pDf', 'PDF Portfolio', 2.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', np.nan, 'Moderate Risk',
+                     'Portable Document Format (PDF) Portfolio 2.0', 'pdf', 'nan', 'Moderate Risk',
                      'Retain but possibly extract files from the container', 'File Extension and Version']]
         self.assertEqual(result, expected, "Problem with test for technique 5, format PUID, case different")
 
@@ -284,7 +284,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -294,7 +294,7 @@ class MyTestCase(unittest.TestCase):
                      'https://www.nationalarchives.gov.uk/pronom/fmt/96', 'Low Risk', 'Retain',
                      'File Extension and Version'],
                     ['path/file.pdf', 'PDF Portfolio', 2.0, 'NO VALUE', 'Portable Document Format (PDF) Portfolio 2.0',
-                     'pdf', np.nan, 'Moderate Risk', 'Retain but possibly extract files from the container',
+                     'pdf', 'nan', 'Moderate Risk', 'Retain but possibly extract files from the container',
                      'File Extension and Version']]
         self.assertEqual(result, expected, "Problem with test for technique 5, no format PUID, case same")
 
@@ -308,7 +308,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -318,7 +318,7 @@ class MyTestCase(unittest.TestCase):
                      'https://www.nationalarchives.gov.uk/pronom/fmt/96', 'Low Risk', 'Retain',
                      'File Extension and Version'],
                     ['path/file.Pdf', 'PDF Portfolio', 2.0, 'NO VALUE', 'Portable Document Format (PDF) Portfolio 2.0',
-                     'pdf', np.nan, 'Moderate Risk', 'Retain but possibly extract files from the container',
+                     'pdf', 'nan', 'Moderate Risk', 'Retain but possibly extract files from the container',
                      'File Extension and Version']]
         self.assertEqual(result, expected, "Problem with test for technique 5, no format PUID, case different")
 
@@ -332,20 +332,20 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
                      'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
                      'NARA_Match_Type'],
                     ['path/file.ntf', 'Imagery Format', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'National Imagery Transmission Format 1.1', 'ntf|nitf', np.nan, 'Low Risk',
+                     'National Imagery Transmission Format 1.1', 'ntf|nitf', 'nan', 'Low Risk',
                      'Transform to a TBD format', 'File Extension'],
                     ['path/file.ntf', 'Imagery Format', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'National Imagery Transmission Format unspecified version', 'ntf|nitf', np.nan, 'Low Risk',
+                     'National Imagery Transmission Format unspecified version', 'ntf|nitf', 'nan', 'Low Risk',
                      'Transform to a TBD format', 'File Extension'],
                     ['path/file.wpt', 'WP Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'WordPerfect Template', 'wpt', np.nan, 'Moderate Risk', 'Transform to PDF if possible',
+                     'WordPerfect Template', 'wpt', 'nan', 'Moderate Risk', 'Transform to PDF if possible',
                      'File Extension']]
         self.assertEqual(result, expected, "Problem with test for technique 6, format PUID, case same")
 
@@ -359,20 +359,20 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
                      'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
                      'NARA_Match_Type'],
                     ['path/file.NITF', 'Imagery Format', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'National Imagery Transmission Format 1.1', 'ntf|nitf', np.nan, 'Low Risk',
+                     'National Imagery Transmission Format 1.1', 'ntf|nitf', 'nan', 'Low Risk',
                      'Transform to a TBD format', 'File Extension'],
                     ['path/file.NITF', 'Imagery Format', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/0',
-                     'National Imagery Transmission Format unspecified version', 'ntf|nitf', np.nan, 'Low Risk',
+                     'National Imagery Transmission Format unspecified version', 'ntf|nitf', 'nan', 'Low Risk',
                      'Transform to a TBD format', 'File Extension'],
                     ['path/file.WPT', 'WP Template', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/00',
-                     'WordPerfect Template', 'wpt', np.nan, 'Moderate Risk', 'Transform to PDF if possible',
+                     'WordPerfect Template', 'wpt', 'nan', 'Moderate Risk', 'Transform to PDF if possible',
                      'File Extension']]
         self.assertEqual(result, expected, "Problem with test for technique 6, format PUID, case different")
 
@@ -386,7 +386,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -398,7 +398,7 @@ class MyTestCase(unittest.TestCase):
                     ['path/file.rtf', 'Text', 1.4, 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
                      'File Extension'],
-                    ['path/file.wpt', 'WP Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', np.nan,
+                    ['path/file.wpt', 'WP Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', 'nan',
                      'Moderate Risk', 'Transform to PDF if possible', 'File Extension']]
         self.assertEqual(result, expected, "Problem with test for technique 6, no format PUID, case same")
 
@@ -412,7 +412,7 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
@@ -424,7 +424,7 @@ class MyTestCase(unittest.TestCase):
                     ['path/file.RTF', 'Text', 1.4, 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
                      'File Extension'],
-                    ['path/file.WPT', 'WP Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', np.nan,
+                    ['path/file.WPT', 'WP Template', 'NO VALUE', 'NO VALUE', 'WordPerfect Template', 'wpt', 'nan',
                      'Moderate Risk', 'Transform to PDF if possible', 'File Extension']]
         self.assertEqual(result, expected, "Problem with test for technique 6, no format PUID, case different")
 
@@ -437,16 +437,16 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
                      'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
                      'NARA_Match_Type'],
-                    ['path/file.xlsx', 'Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56', 'No Match', np.nan, np.nan,
-                     'No Match', np.nan, 'No NARA Match'],
+                    ['path/file.xlsx', 'Excel', 3.0, 'https://www.nationalarchives.gov.uk/pronom/fmt/56', 'No Match', 'nan', 'nan',
+                     'No Match', 'nan', 'No NARA Match'],
                     ['path/file.one', 'OneNote', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/637', 'No Match',
-                     np.nan, np.nan, 'No Match', np.nan, 'No NARA Match']]
+                     'nan', 'nan', 'No Match', 'nan', 'No NARA Match']]
         self.assertEqual(result, expected, "Problem with test for no match, format PUID")
 
     def test_no_match(self):
@@ -458,16 +458,16 @@ class MyTestCase(unittest.TestCase):
 
         # Runs the function being tested and converts the resulting dataframe to a list for easier comparison.
         new_risk_df = match_nara_risk(new_risk_df, self.nara_risk_df)
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
 
         # Tests the contents of new_risk_df is correct.
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID', 'NARA_Format_Name',
                      'NARA_File_Extensions', 'NARA_PRONOM_URL', 'NARA_Risk_Level', 'NARA_Proposed_Preservation_Plan',
                      'NARA_Match_Type'],
-                    ['path/file.xlsx', 'Excel', 3.0, 'NO VALUE', 'No Match', np.nan, np.nan,
-                     'No Match', np.nan, 'No NARA Match'],
-                    ['path/file.one', 'OneNote', 'NO VALUE', 'NO VALUE', 'No Match', np.nan, np.nan,
-                     'No Match', np.nan, 'No NARA Match']]
+                    ['path/file.xlsx', 'Excel', 3.0, 'NO VALUE', 'No Match', 'nan', 'nan',
+                     'No Match', 'nan', 'No NARA Match'],
+                    ['path/file.one', 'OneNote', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan',
+                     'No Match', 'nan', 'No NARA Match']]
         self.assertEqual(result, expected, "Problem with test for no match, format no PUID")
 
 

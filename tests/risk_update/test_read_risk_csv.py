@@ -7,6 +7,16 @@ import unittest
 from risk_update import read_risk_csv
 
 
+def df_to_list(df):
+    """Convert a dataframe to a list of lists to compare to expected values
+    The first list is the column headers and the rest are one list per row
+    Blanks are filled with a string "nan" because np.nan comparisons work inconsistently.
+    """
+    df = df.fillna('nan')
+    df_list = [df.columns.tolist()] + df.values.tolist()
+    return df_list
+
+
 class MyTestCase(unittest.TestCase):
 
     def test_blanks(self):
@@ -17,7 +27,7 @@ class MyTestCase(unittest.TestCase):
         new_risk_df = read_risk_csv(os.path.join(accession_path, risk_csv_filename))
 
         # Tests the contents of new_risk_df are correct.
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message'],
@@ -37,7 +47,7 @@ class MyTestCase(unittest.TestCase):
         new_risk_df = read_risk_csv(os.path.join(accession_path, risk_csv_filename))
 
         # Tests the contents of new_risk_df are correct.
-        result = [new_risk_df.columns.tolist()] + new_risk_df.values.tolist()
+        result = df_to_list(new_risk_df)
         expected = [['FITS_File_Path', 'FITS_Format_Name', 'FITS_Format_Version', 'FITS_PUID',
                      'FITS_Identifying_Tool(s)', 'FITS_Multiple_IDs', 'FITS_Date_Last_Modified', 'FITS_Size_KB',
                      'FITS_MD5', 'FITS_Creating_Application', 'FITS_Valid', 'FITS_Well-Formed', 'FITS_Status_Message'],
