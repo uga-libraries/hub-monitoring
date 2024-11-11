@@ -38,7 +38,7 @@ class MyTestCase(unittest.TestCase):
                     ['Rich Text Format 1.6', 'rtf', 'https://www.nationalarchives.gov.uk/pronom/fmt/50',
                      'Moderate Risk', 'Transform to PDF'],
                     ['WordPerfect Template', 'wpt', 'nan', 'Moderate Risk', 'Transform to PDF if possible']]
-        self.assertEqual(result, expected)
+        self.assertEqual(result, expected, "Problem with test for current NARA")
 
     def test_incorrect_nara(self):
         """Test for when the column names in the NARA CSV for the 5 columns used are not correct"""
