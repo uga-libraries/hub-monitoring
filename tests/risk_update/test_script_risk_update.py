@@ -49,7 +49,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'risk_update.py')
         input_directory = os.path.join('test_data', 'script_new', 'rbrl004')
-        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan.csv')
+        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan_FileFormats_20240912.csv')
         subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the contents of the risk update log are correct.
@@ -74,7 +74,12 @@ class MyTestCase(unittest.TestCase):
                      'Droid version 6.4', False, '3/4/2024', 43, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
                      'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50',
-                     'Moderate Risk', 'Transform to PDF', 'PRONOM and Version'],
+                     'Low Risk', 'Transform to PDF and retain original', 'PRONOM and Version'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Web Page.html',
+                     'HYPERTEXT MARKUP LANGUAGE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/96',
+                     'Droid version 6.4', False, '3/4/2024', 30, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
+                     'NO VALUE', 'NO VALUE', 'Hypertext Markup Language 5.1', 'htm|html',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/96', 'Low Risk', 'Retain', 'PRONOM'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2005-10-er\\2005-10-er_bag\\data\\Web Page.html',
                      'HYPERTEXT MARKUP LANGUAGE', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/fmt/96',
                      'Droid version 6.4', False, '3/4/2024', 30, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
@@ -129,7 +134,7 @@ class MyTestCase(unittest.TestCase):
                      'Droid version 6.4', False, '3/4/2024', 41, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
                      'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50',
-                     'Moderate Risk', 'Transform to PDF', 'PRONOM and Version'],
+                     'Low Risk', 'Transform to PDF and retain original', 'PRONOM and Version'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Plain Text Document.txt',
                      'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
                      'Droid version 6.4', False, '3/4/2024', 2, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
@@ -155,13 +160,13 @@ class MyTestCase(unittest.TestCase):
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.rtf', 'Rich Text',
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 3, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
-                     'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
-                     'File Extension'],
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Low Risk',
+                     'Transform to PDF and retain original', 'File Extension'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.rtf', 'Rich Text',
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 3, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
-                     'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
-                     'File Extension'],
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Low Risk',
+                     'Transform to PDF and retain original', 'File Extension'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.docx', 'Word',
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
@@ -187,7 +192,7 @@ class MyTestCase(unittest.TestCase):
 
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'risk_update.py')
-        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan.csv')
+        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan_FileFormats_20240912.csv')
         subprocess.run(f'python "{script}" "{input_directory}" "{nara_csv}"', shell=True, stdout=subprocess.PIPE)
 
         # Tests the contents of the risk update log are correct.
@@ -217,7 +222,7 @@ class MyTestCase(unittest.TestCase):
                      'Droid version 6.4', False, '3/4/2024', 41, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
                      'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/50',
-                     'Moderate Risk', 'Transform to PDF', 'PRONOM and Version'],
+                     'Low Risk', 'Transform to PDF and retain original', 'PRONOM and Version'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2006-30-er\\2006-30-er_bag\\data\\Plain Text Document.txt',
                      'Plain text', 'NO VALUE', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/111',
                      'Droid version 6.4', False, '3/4/2024', 2, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
@@ -270,7 +275,7 @@ class MyTestCase(unittest.TestCase):
         # The script will be run twice in this test.
         script = os.path.join(os.getcwd(), '..', '..', 'risk_update.py')
         input_directory = os.path.join('test_data', 'script_new', 'rbrl004')
-        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan_Outdated.csv')
+        nara_csv = os.path.join('test_data', 'NARA_PreservationActionPlan_FileFormats_19990125.csv')
 
         # Runs the script and tests that it exits.
         with self.assertRaises(subprocess.CalledProcessError):
