@@ -151,11 +151,21 @@ class MyTestCase(unittest.TestCase):
                      'Droid version 6.4', False, '3/4/2024', 26, 'fixity_placeholder', 'NO VALUE', 'NO VALUE',
                      'NO VALUE', 'NO VALUE', 'Portable Document Format/Archiving (PDF/A-1a) accessible', 'pdf',
                      'https://www.nationalarchives.gov.uk/pronom/fmt/95', 'Low Risk', 'Retain', 'Format Name'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.rtf', 'Rich Text',
+                     'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 3, 'fixity_placeholder',
+                     'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'Rich Text Format 1.5', 'rtf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
+                     'File Extension'],
+                    ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.rtf', 'Rich Text',
+                     'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 3, 'fixity_placeholder',
+                     'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'Rich Text Format 1.6', 'rtf',
+                     'https://www.nationalarchives.gov.uk/pronom/fmt/50', 'Moderate Risk', 'Transform to PDF',
+                     'File Extension'],
                     ['Z:\\Russell_Hub\\backlog\\rbrl004\\2021-40-er\\2021-40-er_bag\\data\\Document.docx', 'Word',
                      'NO VALUE', 'NO VALUE', 'Droid version 6.4', False, '3/4/2024', 14, 'fixity_placeholder',
                      'NO VALUE', 'NO VALUE', 'NO VALUE', 'NO VALUE', 'No Match', 'nan', 'nan', 'No Match', 'nan',
                      'No NARA Match']]
-        self.assertEqual(result, expected, 'Problem with test for new, 2005-20-er full risk data csv')
+        self.assertEqual(result, expected, 'Problem with test for new, 2021-40-er full risk data csv')
 
     def test_restart(self):
         """Test for when the script is restarted (risk update log exists)"""
