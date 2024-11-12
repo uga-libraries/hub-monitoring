@@ -1,0 +1,19 @@
+Format Name,File Extension(s),PRONOM URL,NARA Risk Level,NARA Proposed Preservation Plan
+Html 5,htm|html,pronom/fmt/471,Low,Retain
+Html 5.1,htm|html,pronom/fmt/96,Low,Retain
+Html 5.2,htm|html,pronom/fmt/96,Low,Retain
+Html no version,htm|html,pronom/fmt/96,Low,Retain
+NITF 1.0,ntf|nitf,pronom/fmt/364,Moderate,TBD
+NITF 1.1,ntf|nitf,,Moderate,TBD
+NITF 2.0,ntf|nitf,pronom/fmt/365,Moderate,TBD
+PDF Portfolio 1.7,pdf,pronom/fmt/1451,Low,Retain but extract files
+PDF Portfolio 2.0,pdf,,Low,Retain but extract files
+PDF version 1.0,pdf,pronom/fmt/14,Moderate,Retain
+PDF version 1.1,pdf,pronom/fmt/15,Moderate,Retain
+PDF/A-1a,pdf,pronom/fmt/95,Low,Retain
+PDF/A-1b,pdf,pronom/fmt/354,Low,Retain
+Rich Text 1.5,rtf,pronom/fmt/50,Low,Transform to PDF
+Rich Text 1.6,rtf,pronom/fmt/50,Low,Transform to PDF
+WordPerfect Template,wpt,,Moderate,Transform to ODT
+WordPerfect no version,wpd|wp,,Moderate,Transform to ODT
+ZIP archive,zip,pronom/x-fmt/263,Moderate,Retain but extract files
