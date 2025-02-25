@@ -171,11 +171,11 @@ def fixity_validation_log(acc_dir):
                     path_list = root.split('\\')
                     log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'Bag', folder, None, None])
             # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
-            # but only includes it is not also an accession with a bag and the parent folder is a collection number.
+            # but only includes it is not also an accession with a bag and the parent folder is an accession number.
             # If there are both, the bag folder and initial manifest will be in the same parent folder.
             for file in files:
                 if file.startswith('initialmanifest') and file.endswith('.csv'):
-                    if len([x for x in dirs if x.endswith("_bag")]) == 0 and collection_test(parent_dir):
+                    if len([x for x in dirs if x.endswith("_bag")]) == 0 and accession_test(parent_dir):
                         path_list = root.split('\\')
                         log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'InitialManifest',
                                              None, file, None])
