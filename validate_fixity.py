@@ -20,6 +20,7 @@ import csv
 from datetime import date
 import hashlib
 import os
+import re
 import sys
 
 import pandas as pd
@@ -100,6 +101,45 @@ def check_restart(acc_dir):
         if os.path.isfile(os.path.join(acc_dir, item)) and item.startswith('fixity_validation_log'):
             log_path = os.path.join(acc_dir, item)
     return log_path
+
+
+def collection_test(parent_dir):
+    """Determine if the parent of potential accession folder is a collection folder based on the folder name
+
+    This prevents copies of accession folders within appraisal and other processing folders
+    and collection folders with a combined initialmanifest for multiple accessions
+    from being identified as accessions that need to be validated.
+
+    @:parameter
+    parent_dir (string): the name of the folder that contains the potential accession folder
+
+    @:return
+    Boolean: True if it is a collection folder and False if not
+    """
+
+    # Hargrett manuscript collection: starts with "ms#### "
+    if re.match('^ms\d{4} ', parent_dir):
+        return True
+
+    # Hargrett university archives collection: starts with "ua#### "
+    elif re.match('^ua\d{4} ', parent_dir):
+        return True
+
+    # Hargrett university archives collection: starts with "ua##-### "
+    elif re.match('^ua\d{2}-\d{3} ', parent_dir):
+        return True
+
+    # Russell collection: starts with "rbrl###" (may have letters after)
+    elif re.match('^rbrl\d{3}', parent_dir):
+        return True
+
+    # Russell collection: starts with "RBRL_###" (may have _letters after)
+    elif re.match('^RBRL_\d{3}', parent_dir):
+        return True
+
+    # Folder that matches none of the patterns for a collection.
+    else:
+        return False
 
 
 def fixity_validation_log(acc_dir):
