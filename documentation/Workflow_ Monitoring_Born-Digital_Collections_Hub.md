@@ -100,6 +100,10 @@ review.
 By default, the script uses each bag’s built-in validation function to check the fixity of the contents. If the 
 accession does not contain a bag, it will use the initial file manifest CSV instead.  
 
+This is time consuming to run, taking days for each folder, and depends on file naming and directory organizating conventions that can be variable.
+It can be helpful to generate just the fixity_validation_log by commenting out the rest of the script to verify the right folders are identified as accessions
+and once that is correct do the verification.
+
 ### Actions Taken 
 
 If the summary report flags instances of invalid fixity, submit a Libraries IT ticket to restore the file from the 
