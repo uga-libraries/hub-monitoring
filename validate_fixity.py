@@ -26,32 +26,27 @@ import sys
 import pandas as pd
 
 
-def accession_test(bag_name):
-    """Determine if a bagged folder within an accession folder is accession content based on the folder name
-
-    Some accession folders also contain bags for other purposes like risk remediation work.
+def accession_test(folder_name):
+    """Determine if a folder name is an accession number
 
     This is similar to the function accession_test in collection_summary.py,
-    but expects the folder name to end in _bag and does not need to evaluate if it is a file.
+    but does not need to evaluate if it is a file.
 
     @:parameter
-    bag_name (string): the name of the bag folder, which will be accession-number_bag if it is an accession
+    folder_name (string): the name of a folder to be checked for accession number formatting
 
     @:return
-    Boolean: True if it is an accession folder and False if not
+    Boolean: True if it is an accession number and False if not
     """
 
-    # Folder name without "_bag" at the end, which should be an accession number.
-    acc_id = bag_name[:-4]
-
     # Pattern one: ends with -er or -ER.
-    if acc_id.lower().endswith('-er'):
+    if folder_name.lower().endswith('-er'):
         return True
     # Pattern two: ends with _er or _ER.
-    elif acc_id.lower().endswith('_er'):
+    elif folder_name.lower().endswith('_er'):
         return True
     # Temporary designation for legacy content while determining an accession number.
-    elif acc_id == 'no-acc-num':
+    elif folder_name == 'no-acc-num':
         return True
     # Folder that matches none of the patterns for an accession.
     else:
@@ -169,19 +164,21 @@ def fixity_validation_log(acc_dir):
 
         # Finds every accession and adds it to the fixity validation log.
         for root, dirs, files in os.walk(acc_dir):
-            # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
+            parent_dir = os.path.basename(root)
+            # Identifies bags based on the folder name ("acc#_bag") with a parent folder that is an accession number.
             for folder in dirs:
-                if folder.endswith('_bag') and accession_test(folder):
+                if folder.endswith('_bag') and accession_test(folder.replace('_bag', '')) and accession_test(parent_dir):
                     path_list = root.split('\\')
                     log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'Bag', folder, None, None])
             # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
-            # but only includes it is not also an accession with a bag.
+            # but only includes it is not also an accession with a bag and the parent folder is a collection number.
             # If there are both, the bag folder and initial manifest will be in the same parent folder.
             for file in files:
-                if file.startswith('initialmanifest') and file.endswith('.csv') and len([x for x in dirs if x.endswith("_bag")]) == 0:
-                    path_list = root.split('\\')
-                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'InitialManifest',
-                                         None, file, None])
+                if file.startswith('initialmanifest') and file.endswith('.csv'):
+                    if len([x for x in dirs if x.endswith("_bag")]) == 0 and collection_test(parent_dir):
+                        path_list = root.split('\\')
+                        log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'InitialManifest',
+                                             None, file, None])
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
