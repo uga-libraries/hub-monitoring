@@ -39,8 +39,8 @@ class MyTestCase(unittest.TestCase):
                     ['backlogged', 'ua22-333 Department records', '2022-2-ER',
                      os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'ua22-333 Department records', '2022-2-ER'),
                      'InitialManifest', 'nan', 'initialmanifest_20241031.csv', 'nan'],
-                    ['closed', 'coll_3', 'no-acc-num',
-                     os.path.join('test_data', 'fixity_validation_log', 'closed', 'coll_3', 'no-acc-num'),
+                    ['closed', 'rbrl333', 'no-acc-num',
+                     os.path.join('test_data', 'fixity_validation_log', 'closed', 'rbrl333', 'no-acc-num'),
                      'Bag', 'no-acc-num_bag', 'nan', 'nan']]
         self.assertEqual(result, expected, "Problem with test for fixity_validation_log function")
 
