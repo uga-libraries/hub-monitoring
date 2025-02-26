@@ -118,7 +118,7 @@ def fixity_validation_log(acc_dir):
 
     # Makes the fixity validation log csv with a header in the input_directory.
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
-    with open(log_path, 'w', newline='') as open_log:
+    with (open(log_path, 'w', newline='') as open_log):
         log_writer = csv.writer(open_log)
         log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
                              'Bag_Name', 'Manifest_Name', 'Validation_Result'])
@@ -126,20 +126,27 @@ def fixity_validation_log(acc_dir):
         # Finds every accession and adds it to the fixity validation log.
         for root, dirs, files in os.walk(acc_dir):
             parent_dir = os.path.basename(root)
-            # Identifies bags based on the folder name ("acc#_bag") with a parent folder that is an accession number.
+            # Identifies bags based on the folder name ("acc#_bag") with a parent folder that is an accession number
+            # and not being in an appraisal folder.
             for folder in dirs:
-                if folder.endswith('_bag') and accession_test(folder.replace('_bag', '')) and accession_test(parent_dir):
-                    path_list = root.split('\\')
-                    log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'Bag', folder, None, None])
+                if folder.endswith('_bag') and accession_test(folder.replace('_bag', '')):
+                    if 'Appraisal' not in root:
+                        if accession_test(parent_dir):
+                            path_list = root.split('\\')
+                            log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'Bag', folder,
+                                                 None, None])
             # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
-            # but only includes it is not also an accession with a bag and the parent folder is an accession number.
+            # but only includes it is not also an accession with a bag, it isn't in an appraisal folder,
+            # and the parent folder is an accession number.
             # If there are both, the bag folder and initial manifest will be in the same parent folder.
             for file in files:
                 if file.startswith('initialmanifest') and file.endswith('.csv'):
-                    if len([x for x in dirs if x.endswith("_bag")]) == 0 and accession_test(parent_dir):
-                        path_list = root.split('\\')
-                        log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'InitialManifest',
-                                             None, file, None])
+                    if len([x for x in dirs if x.endswith("_bag")]) == 0:
+                        if 'Appraisal' not in root:
+                            if accession_test(parent_dir):
+                                path_list = root.split('\\')
+                                log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root,
+                                                     'InitialManifest', None, file, None])
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
