@@ -278,7 +278,10 @@ def validate_bag(bag_dir, report_dir):
     try:
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
-        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
+        try:
+            update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
         validation_result = validate_bag_manifest(bag_dir, report_dir)
         return validation_result
 
@@ -286,10 +289,16 @@ def validate_bag(bag_dir, report_dir):
     # If there is a validation error, also adds it to the script report.
     try:
         new_bag.validate()
-        update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
+        try:
+            update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
         return "Valid"
     except bagit.BagValidationError as errors:
-        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
+        try:
+            update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
         return str(errors)
 
 
@@ -333,7 +342,10 @@ def validate_bag_manifest(bag_dir, report_dir):
     all_match = df_compare['Match'].eq('both').all(axis=0)
 
     # Updates the preservation log.
-    update_preservation_log(os.path.dirname(bag_dir), all_match, 'bag manifest')
+    try:
+        update_preservation_log(os.path.dirname(bag_dir), all_match, 'bag manifest')
+    except IndexError:
+        print("Cannot update preservation log: nonstandard delimiter")
 
     # Returns the validation result, either the number of errors or "Valid".
     # If there were errors, also saves the path, MD5, and source of the MD5 (manifest or file) that did not match
@@ -433,7 +445,10 @@ def validate_manifest(acc_dir, manifest, report_dir):
     valid = len(error_list) == 0
 
     # Updates the preservation log.
-    update_preservation_log(acc_dir, valid, 'manifest')
+    try:
+        update_preservation_log(acc_dir, valid, 'manifest')
+    except IndexError:
+        print("Cannot update preservation log: nonstandard delimiter")
 
     # Returns the validation result, either the number of errors or "Valid".
     # If there were errors, also saves the full results to a log in the input_directory.
