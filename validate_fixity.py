@@ -20,37 +20,33 @@ import csv
 from datetime import date
 import hashlib
 import os
+import re
 import sys
 
 import pandas as pd
 
 
-def accession_test(bag_name):
-    """Determine if a bagged folder within an accession folder is accession content based on the folder name
-
-    Some accession folders also contain bags for other purposes like risk remediation work.
+def accession_test(folder_name):
+    """Determine if a folder name is an accession number
 
     This is similar to the function accession_test in collection_summary.py,
-    but expects the folder name to end in _bag and does not need to evaluate if it is a file.
+    but does not need to evaluate if it is a file.
 
     @:parameter
-    bag_name (string): the name of the bag folder, which will be accession-number_bag if it is an accession
+    folder_name (string): the name of a folder to be checked for accession number formatting
 
     @:return
-    Boolean: True if it is an accession folder and False if not
+    Boolean: True if it is an accession number and False if not
     """
 
-    # Folder name without "_bag" at the end, which should be an accession number.
-    acc_id = bag_name[:-4]
-
     # Pattern one: ends with -er or -ER.
-    if acc_id.lower().endswith('-er'):
+    if folder_name.lower().endswith('-er'):
         return True
     # Pattern two: ends with _er or _ER.
-    elif acc_id.lower().endswith('_er'):
+    elif folder_name.lower().endswith('_er'):
         return True
     # Temporary designation for legacy content while determining an accession number.
-    elif acc_id == 'no-acc-num':
+    elif folder_name == 'no-acc-num':
         return True
     # Folder that matches none of the patterns for an accession.
     else:
@@ -83,26 +79,74 @@ def check_argument(arg_list):
         return None, "Too many arguments. Should just have one argument, input_directory"
 
 
-def manifest_validation_log(report_dir, acc_id, errors):
-    """Make a log with all file validation errors from a single accession
+def check_restart(acc_dir):
+    """Determine if the script has restarted based on if the fixity validation log is present
 
-    This is too much information to include in the preservation log.
-    The file is saved in the input_directory.
+    The log name includes the date, so the path cannot be predicted.
 
     @:parameter
-    report_dir (string): directory where the report is saved (script argument input_directory)
-    acc_id (string): the accession number, used for naming the report
-    errors (list): a list of validation errors to include in the report
+    acc_dir (string): directory where the log would be saved (script argument input_directory)
+
+    @:returns
+    log_path (string, None): path to the log, if it is present, or None if it is not present
+    """
+
+    log_path = None
+    for item in os.listdir(acc_dir):
+        if os.path.isfile(os.path.join(acc_dir, item)) and item.startswith('fixity_validation_log'):
+            log_path = os.path.join(acc_dir, item)
+    return log_path
+
+
+def fixity_validation_log(acc_dir):
+    """Make a log for fixity validation with every accession in the input_directory
+
+    Status is backlogged or closed.
+    Collection and Accession are identifiers.
+    Accession_Path is the path to the folder which contains either the bag or initial manifest.
+    Fixity_Type is Bag or InitialManifest and will be used to determine how to validate the accession.
+    Bag_Name is the name of the bag folder, for bags. If it is an initial manifest, this is None.
+    Manifest_Name is the name of the initialmanifest file. If it is a bag, this is None.
+    Validation_Result is None and will be updated when the accession is later validated.
+
+    @:parameter
+    acc_dir (string): directory with the accessions and where the log is saved (script argument input_directory)
 
     @:returns
     None
     """
 
-    with open(os.path.join(report_dir, f'{acc_id}_manifest_validation_errors.csv'), 'w', newline='',
-              encoding='utf-8') as open_log:
+    # Makes the fixity validation log csv with a header in the input_directory.
+    log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
+    with (open(log_path, 'w', newline='') as open_log):
         log_writer = csv.writer(open_log)
-        log_writer.writerow(['File', 'MD5', 'MD5_Source'])
-        log_writer.writerows(errors)
+        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
+                             'Bag_Name', 'Manifest_Name', 'Validation_Result'])
+
+        # Finds every accession and adds it to the fixity validation log.
+        for root, dirs, files in os.walk(acc_dir):
+            parent_dir = os.path.basename(root)
+            # Identifies bags based on the folder name ("acc#_bag") with a parent folder that is an accession number
+            # and not being in an appraisal folder.
+            for folder in dirs:
+                if folder.endswith('_bag') and accession_test(folder.replace('_bag', '')):
+                    if 'Appraisal' not in root:
+                        if accession_test(parent_dir):
+                            path_list = root.split('\\')
+                            log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'Bag', folder,
+                                                 None, None])
+            # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
+            # but only includes it is not also an accession with a bag, it isn't in an appraisal folder,
+            # and the parent folder is an accession number.
+            # If there are both, the bag folder and initial manifest will be in the same parent folder.
+            for file in files:
+                if file.startswith('initialmanifest') and file.endswith('.csv'):
+                    if len([x for x in dirs if x.endswith("_bag")]) == 0:
+                        if 'Appraisal' not in root:
+                            if accession_test(parent_dir):
+                                path_list = root.split('\\')
+                                log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root,
+                                                     'InitialManifest', None, file, None])
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
@@ -198,45 +242,22 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         log_writer.writerow(log_row)
 
 
-def update_report(acc_dir, error_msg, report_dir):
-    """Add a line of text to the report fixity_validation.csv
-
-    The report lists every accession that did not validate with the validation error information.
-    If it doesn't already exist, it makes the report with the header before adding the text.
+def update_fixity_validation_log(log_path, df, row, result):
+    """Add the validation result for an accession to the fixity validation log dataframe and csv
 
     @:parameter
-    acc_dir (string): the path to an accession folder, which may be a bag
-    error_msg (string): validation error
+    log_path (string): the path to the fixity_validation_log.csv
+    df (dataframe): the dataframe with the current fixity validation log information
+    row (dataframe index): the dataframe index number of the accession
+    result (string): the validation error or "Valid"
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
     None
     """
 
-    # Parse status (backlogged or closed), collection, and accession from acc_dir.
-    # If it is a bag, the acc_dir is root/status/collection/accession/accession_bag
-    # and if it is a manifest, the acc_dir is root/status/collection/accession
-    acc_dir_list = acc_dir.split('\\')
-    if acc_dir.endswith('_bag'):
-        status = acc_dir_list[-4]
-        collection = acc_dir_list[-3]
-        accession = acc_dir_list[-2]
-    else:
-        status = acc_dir_list[-3]
-        collection = acc_dir_list[-2]
-        accession = acc_dir_list[-1]
-
-    # If the report doesn't already exist, starts a report with a header.
-    report_path = os.path.join(report_dir, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-    if not os.path.exists(report_path):
-        with open(report_path, 'w', newline='') as open_report:
-            report_writer = csv.writer(open_report)
-            report_writer.writerow(['Status', 'Collection', 'Accession', 'Validation_Error'])
-
-    # Adds the error text to the report.
-    with open(report_path, 'a', newline='', encoding='utf-8') as open_report:
-        report_writer = csv.writer(open_report)
-        report_writer.writerow([status, collection, accession, error_msg])
+    df.loc[row, 'Validation_Result'] = result
+    df.to_csv(log_path, index=False)
 
 
 def validate_bag(bag_dir, report_dir):
@@ -247,7 +268,7 @@ def validate_bag(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    None
+    validation_result (string): the validation error, "Valid", or "Valid (bag manifest)"
     """
 
     # Tries to make a bag object, so that bagit library can validate it.
@@ -257,19 +278,28 @@ def validate_bag(bag_dir, report_dir):
     try:
         new_bag = bagit.Bag(bag_dir)
     except bagit.BagError as errors:
-        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
-        update_report(bag_dir, f'Could not make bag for validation: {str(errors)}', report_dir)
-        validate_bag_manifest(bag_dir, report_dir)
-        return
+        try:
+            update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
+        validation_result = validate_bag_manifest(bag_dir, report_dir)
+        return validation_result
 
     # Validates the bag and updates the preservation log.
     # If there is a validation error, also adds it to the script report.
     try:
         new_bag.validate()
-        update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
+        try:
+            update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
+        return "Valid"
     except bagit.BagValidationError as errors:
-        update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
-        update_report(bag_dir, str(errors), report_dir)
+        try:
+            update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
+        return str(errors)
 
 
 def validate_bag_manifest(bag_dir, report_dir):
@@ -282,7 +312,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    None
+    validation_result (string): the validation error or "Valid (bag manifest)"
     """
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
@@ -312,15 +342,17 @@ def validate_bag_manifest(bag_dir, report_dir):
     all_match = df_compare['Match'].eq('both').all(axis=0)
 
     # Updates the preservation log.
-    update_preservation_log(os.path.dirname(bag_dir), all_match, 'bag manifest')
+    try:
+        update_preservation_log(os.path.dirname(bag_dir), all_match, 'bag manifest')
+    except IndexError:
+        print("Cannot update preservation log: nonstandard delimiter")
 
-    # If there were no errors, updates the script report to show the earlier bag error is resolved.
-    # If there were errors, updates the script report with the error count and makes a manifest log.
+    # Returns the validation result, either the number of errors or "Valid".
+    # If there were errors, also saves the path, MD5, and source of the MD5 (manifest or file) that did not match
+    # to a log in the input_directory.
     if all_match:
-        update_report(bag_dir, 'Validated with bag manifest instead of bagit. The bag manifest is valid.', report_dir)
+        return 'Valid (bag manifest)'
     else:
-
-        # Makes a list of each path, MD5, and source of the MD5 (manifest or file) that did not match.
         error_list = []
         df_left = df_compare[df_compare['Match'] == 'left_only']
         df_left = df_left[['Bag_Path', 'Bag_MD5']]
@@ -330,13 +362,10 @@ def validate_bag_manifest(bag_dir, report_dir):
         df_right = df_right[['Acc_Path', 'Acc_MD5']]
         df_right['MD5_Source'] = 'Current'
         error_list.extend(df_right.values.tolist())
-
-        # Adds a summary of the errors to the script report (fixity_validation.csv).
-        update_report(bag_dir, f'{len(error_list)} bag manifest errors', report_dir)
-
-        # Makes a log with every file that does not match (acc_manifest_validation_errors.csv).
         accession_number = os.path.basename(os.path.dirname(bag_dir))
         manifest_validation_log(report_dir, accession_number, error_list)
+
+        return f'{len(error_list)} bag manifest errors'
 
 
 def validate_manifest(acc_dir, manifest, report_dir):
@@ -352,7 +381,7 @@ def validate_manifest(acc_dir, manifest, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    None
+    validation_result (string): the validation error or "Valid"
     """
 
     # Gets the path to the folder with the accession's files.
@@ -361,6 +390,11 @@ def validate_manifest(acc_dir, manifest, report_dir):
     for item in os.listdir(acc_dir):
         if os.path.isdir(os.path.join(acc_dir, item)) and not item.endswith('FITS'):
             acc_files = os.path.join(acc_dir, item)
+
+    # If acc_files is still None,
+    # the folder has likely been incorrectly identified as an accession to validate with a manifest.
+    if acc_files is None:
+        return 'Unable to identify folder to validate with the manifest'
 
     # Makes a dataframe with the path and MD5 of every file in acc_files.
     files_list = []
@@ -411,14 +445,19 @@ def validate_manifest(acc_dir, manifest, report_dir):
     valid = len(error_list) == 0
 
     # Updates the preservation log.
-    update_preservation_log(acc_dir, valid, 'manifest')
+    try:
+        update_preservation_log(acc_dir, valid, 'manifest')
+    except IndexError:
+        print("Cannot update preservation log: nonstandard delimiter")
 
-    # If there are any validation errors, adds a summary of the errors to the script report (fixity_validation.csv)
-    # and makes a log with every file that does not match (acc_manifest_validation_errors.csv)
-    if not valid:
-        update_report(acc_dir, f'{len(error_list)} manifest errors', report_dir)
+    # Returns the validation result, either the number of errors or "Valid".
+    # If there were errors, also saves the full results to a log in the input_directory.
+    if valid:
+        return 'Valid'
+    else:
         accession_number = os.path.basename(acc_dir)
         manifest_validation_log(report_dir, accession_number, error_list)
+        return f'{len(error_list)} manifest errors'
 
 
 if __name__ == '__main__':
@@ -430,24 +469,39 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Navigates to each accession, validates it, and updates the preservation log.
-    for root, dirs, files in os.walk(input_directory):
-        # Identifies bags based on the folder name ending with "_bag" and starting with an accession number.
-        for folder in dirs:
-            if folder.endswith('_bag') and accession_test(folder):
-                print(f'Starting on accession {root} (bag)')
-                validate_bag(os.path.join(root, folder), input_directory)
-        # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
-        # but only validates if it is not also an accession with a bag.
-        # If there are both, the bag folder and initial manifest will be in the same parent folder.
-        for file in files:
-            if file.startswith('initialmanifest') and len([x for x in dirs if x.endswith("_bag")]) == 0:
-                print(f'Starting on accession {root} (manifest)')
-                validate_manifest(root, file, input_directory)
+    # Makes the fixity_validation_log.csv with all accessions in the input_directory, if it does not exist.
+    # If it does exist, it means the script is being restarted and will use the log to restart where it left off.
+    fixity_validation_log_path = check_restart(input_directory)
+    if not fixity_validation_log_path:
+        fixity_validation_log(input_directory)
+        fixity_validation_log_path = os.path.join(input_directory,
+                                                  f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
 
-    # Prints if there were any validation errors, based on if the validation log was made or not.
-    log = os.path.join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv")
-    if os.path.exists(log):
-        print('\nValidation errors found, see fixity_validation.csv in the directory provided as the script argument.')
-    else:
+    # Validates every accession in the log that has not yet been validated (Validation_Result is blank).
+    log_df = pd.read_csv(fixity_validation_log_path)
+    for accession in log_df[log_df['Validation_Result'].isnull()].itertuples():
+
+        # Prints the script progress.
+        print(f'Starting on accession {accession.Accession_Path} ({accession.Fixity_Type})')
+
+        # Calculates the row index in the dataframe for the accession, to use for adding the validation result.
+        df_row_index = log_df.index[log_df['Accession'] == accession.Accession].tolist()[0]
+
+        # Validates the accession, including updating the preservation log and fixity validation log.
+        # Different validation functions are used depending on if it is in a bag or has an initial manifest.
+        if accession.Fixity_Type == 'Bag':
+            result = validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, result)
+        elif accession.Fixity_Type == 'InitialManifest':
+            result = validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, result)
+        else:
+            print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
+
+    # Prints if there were any validation errors, based on the Validation_Result column.
+    # The only values expected if it is valid are "Valid" and "Valid (bag manifest)".
+    error_df = log_df.loc[~log_df['Validation_Result'].isin(['Valid', 'Valid (bag manifest)'])]
+    if error_df.empty:
         print('\nNo validation errors.')
+    else:
+        print('\nValidation errors found, see fixity_validation_log.csv in the input_directory.')

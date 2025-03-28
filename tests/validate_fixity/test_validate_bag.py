@@ -41,34 +41,35 @@ class MyTestCase(unittest.TestCase):
     #     delete any fixity_validation.csv and manifest_validation_errors.csv produced.
     #     """
     #     # Makes variable for function input and runs the function.
-    #     root = r'INSERT PATH TO FOLDER CONTAINING THE BAG'
-    #     folder = 'INSERT BAG FOLDER NAME'
+    #     accession_path = r'INSERT PATH TO FOLDER CONTAINING THE BAG'
+    #     bag_name = 'INSERT BAG FOLDER NAME'
     #     input_directory = r'INSERT PATH TO FOLDER WHERE OUTPUT SHOULD BE SAVED'
-    #     validate_bag(join(root, folder), input_directory)
+    #     result = validate_bag(join(accession_path, bag_name), input_directory)
     #
-    #     # Verifies the preservation_log.txt has been updated correctly.
-    #     result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+    #     Verifies the function returned the correct validation_result.
+    #     expected = 'INSERT EXPECTED'
+    #     self.assertEqual(result, expected, 'Problem with test for bag error, validation_result')
+    #
+    #     Verifies the preservation_log.txt has been updated correctly.
+    #     result = csv_to_list(join(accession_path, 'preservation_log.txt'), delimiter='\t')
     #     expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
     #                 ['INSERT DATA ROWS']]
     #     self.assertEqual(result, expected, 'Problem with test for bag error, preservation_log.txt')
-    #
-    #     # Verifies the fixity validation CSV has the correct values.
-    #     # Only use for bags that are not valid.
-    #     result = csv_to_list(join(input_directory, f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-    #     expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-    #                 ['INSERT DATA ROW(s)']]
-    #     self.assertEqual(result, expected, 'Problem with test for bag error, fixity_validation.csv')
 
     def test_file_added(self):
         """Test for when the bag is not valid because a file was added"""
         # Makes variables for function input and runs the function.
-        root = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er')
-        folder = '2023_test002_001_er_bag'
+        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er')
+        bag_name = '2023_test002_001_er_bag'
         input_directory = 'test_data'
-        validate_bag(join(root, folder), input_directory)
+        result = validate_bag(join(accession_path, bag_name), input_directory)
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes'
+        self.assertEqual(result, expected, 'Problem with test for file added, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_path, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -79,23 +80,20 @@ class MyTestCase(unittest.TestCase):
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for file added, preservation_log.txt')
 
-        # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_002_bags_invalid', '2023_test002_001_er',
-                     'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes']]
-        self.assertEqual(result, expected, 'Problem with test for file added, fixity_validation.csv')
-
     def test_file_deleted(self):
         """Test for when the bag is not valid because a file was deleted"""
         # Makes variables for function input and runs the function.
-        root = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er')
-        folder = '2023_test002_002_er_bag'
+        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er')
+        bag_name = '2023_test002_002_er_bag'
         input_directory = 'test_data'
-        validate_bag(join(root, folder), input_directory)
+        result = validate_bag(join(accession_path, bag_name), input_directory)
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes'
+        self.assertEqual(result, expected, 'Problem with test for file deleted, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_path, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -106,23 +104,20 @@ class MyTestCase(unittest.TestCase):
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for file deleted, preservation_log.txt')
 
-        # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_002_bags_invalid', '2023_test002_002_er',
-                     'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes']]
-        self.assertEqual(result, expected, 'Problem with test for file deleted, fixity_validation.csv')
-
     def test_file_edited(self):
         """Test for when the bag is not valid because a file was edited"""
         # Makes variables for function input and runs the function.
-        root = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er')
-        folder = '2023_test002_003_er_bag'
+        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er')
+        bag_name = '2023_test002_003_er_bag'
         input_directory = 'test_data'
-        validate_bag(join(root, folder), input_directory)
+        result = validate_bag(join(accession_path, bag_name), input_directory)
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 3 files and 79 bytes'
+        self.assertEqual(result, expected, 'Problem with test for file edited, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_path, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -133,23 +128,21 @@ class MyTestCase(unittest.TestCase):
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for file edited, preservation_log.txt')
 
-        # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_002_bags_invalid', '2023_test002_003_er',
-                     'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 3 files and 79 bytes']]
-        self.assertEqual(result, expected, 'Problem with test for file edited, fixity_validation.csv')
-
     def test_fixity_changed(self):
         """Test for when the bag is not valid because a file's fixity was changed in the manifest"""
         # Makes variables for function input and runs the function.
-        root = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er')
-        folder = '2023_test002_004_er_bag'
+        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er')
+        bag_name = '2023_test002_004_er_bag'
         input_directory = 'test_data'
-        validate_bag(join(root, folder), input_directory)
+        result = validate_bag(join(accession_path, bag_name), input_directory)
+
+        # Verifies the function returned the correct validation_result.
+        expected = ('Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
+                    'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"')
+        self.assertEqual(result, expected, 'Problem with test for fixity changed, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_path, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -161,24 +154,20 @@ class MyTestCase(unittest.TestCase):
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for fixity changed, preservation_log.txt')
 
-        # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_002_bags_invalid', '2023_test002_004_er',
-                     'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
-                     'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"']]
-        self.assertEqual(result, expected, 'Problem with test for fixity changed, fixity_validation.csv')
-
     def test_missing_bag_info(self):
         """Test for when the bag is not valid because bag-info.txt is missing"""
         # Makes variables for function input and runs the function.
-        root = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')
-        folder = '2023_test002_005_er_bag'
+        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')
+        bag_name = '2023_test002_005_er_bag'
         input_directory = 'test_data'
-        validate_bag(join(root, folder), input_directory)
+        result = validate_bag(join(accession_path, bag_name), input_directory)
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem'
+        self.assertEqual(result, expected, 'Problem with test for missing bag-info.txt, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_path, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -188,23 +177,20 @@ class MyTestCase(unittest.TestCase):
                      'bag-info.txt exists in manifest but was not found on filesystem', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for missing bag-info.txt, preservation_log.txt')
 
-        # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_002_bags_invalid', '2023_test002_005_er',
-                     'Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem']]
-        self.assertEqual(result, expected, 'Problem with test for missing bag-info.txt, fixity_validation.csv')
-
     def test_valid(self):
         """Test for when the bag is valid"""
         # Makes variables for function input and runs the function.
-        root = join('test_data', 'test_001_bags_valid', '2023_test001_001_er')
-        folder = '2023_test001_001_er_bag'
+        accession_path = join('test_data', 'test_001_bags_valid', '2023_test001_001_er')
+        bag_name = '2023_test001_001_er_bag'
         input_directory = 'test_data'
-        validate_bag(join(root, folder), input_directory)
+        result = validate_bag(join(accession_path, bag_name), input_directory)
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Valid'
+        self.assertEqual(result, expected, 'Problem with test for valid, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
-        result = csv_to_list(join(root, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(join(accession_path, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -212,10 +198,6 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.1', '2023.1.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
                      'Validated bag for accession 2023.1.1.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, preservation_log.txt')
-
-        # Verifies the script report fixity validation CSV was not made.
-        result = exists(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        self.assertEqual(result, False, 'Problem with test for valid, fixity_validation.csv')
 
 
 if __name__ == '__main__':

@@ -55,7 +55,11 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         bag_dir = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', '2023_test002_001_er_bag')
         report_dir = 'test_data'
-        validate_bag_manifest(bag_dir, report_dir)
+        result = validate_bag_manifest(bag_dir, report_dir)
+
+        # Verifies the function returned the correct validation_result.
+        expected = '1 bag manifest errors'
+        self.assertEqual(result, expected, 'Problem with test for not valid, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join('test_data', 'test_002_bags_invalid', '2023_test002_001_er', 'preservation_log.txt'),
@@ -69,12 +73,6 @@ class MyTestCase(unittest.TestCase):
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for not valid, preservation_log.txt')
 
-        # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_002_bags_invalid', '2023_test002_001_er', '1 bag manifest errors']]
-        self.assertEqual(result, expected, 'Problem with test for not valid, fixity_validation.csv')
-
         # Verifies the manifest log has the correct values.
         result = csv_to_list(join('test_data', '2023_test002_001_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
@@ -87,7 +85,11 @@ class MyTestCase(unittest.TestCase):
         # Makes the variable needed for function input and runs the function.
         bag_dir = join('test_data', 'test_001_bags_valid', '2023_test001_002_er', '2023_test001_002_er_bag')
         report_dir = 'test_data'
-        validate_bag_manifest(bag_dir, report_dir)
+        result = validate_bag_manifest(bag_dir, report_dir)
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Valid (bag manifest)'
+        self.assertEqual(result, expected, 'Problem with test for not valid, validation_result')
 
         # Verifies the preservation_log.txt has been updated correctly.
         result = csv_to_list(join('test_data', 'test_001_bags_valid', '2023_test001_002_er', 'preservation_log.txt'),
@@ -100,13 +102,6 @@ class MyTestCase(unittest.TestCase):
                      'Validated bag manifest for accession 2023.1.2.ER. The bag manifest is valid.',
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, preservation_log.txt')
-
-        # Verifies the fixity validation CSV has the correct values.
-        result = csv_to_list(join('test_data', f"fixity_validation_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Validation_Error'],
-                    ['test_data', 'test_001_bags_valid', '2023_test001_002_er',
-                     'Validated with bag manifest instead of bagit. The bag manifest is valid.']]
-        self.assertEqual(result, expected, 'Problem with test for valid, fixity_validation.csv')
 
         # Verifies the manifest log was not made.
         result = exists(join('test_data', '2023_test001_002_er_manifest_validation_errors.csv'))

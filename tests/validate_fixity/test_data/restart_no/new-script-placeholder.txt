@@ -1,0 +1,1 @@
+Placeholder for when the script has not yet run on this directory and there is no fixity validation log.
