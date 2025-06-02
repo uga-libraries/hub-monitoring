@@ -491,7 +491,7 @@ if __name__ == '__main__':
         today = date.today().strftime('%Y-%m-%d')
         fixity_validation_log_path = os.path.join(input_directory, f'fixity_validation_log_{today}.csv')
 
-    # Validates every accession in the log that has not yet been validated (Validation_Result is blank).
+    # Validates every accession in the log that has not yet been validated (Result is blank).
     log_df = pd.read_csv(fixity_validation_log_path)
     for accession in log_df[log_df['Result'].isnull()].itertuples():
 
@@ -504,13 +504,13 @@ if __name__ == '__main__':
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or has an initial manifest.
         if accession.Fixity_Type == 'Bag':
-            valid = validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
+            valid = validate_bag(os.path.join(accession.Accession_Path, accession.Fixity), input_directory)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
         elif accession.Fixity_Type == 'InitialManifest':
-            valid = validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
+            valid = validate_manifest(accession.Accession_Path, accession.Fixity, input_directory)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
         else:
-            print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
+            print(f'Fixity_Type {accession.Fixity_Type} is not an expected value. Cannot validate this accession.')
 
     # Prints if there were any validation errors, based on the Result column.
     error_df = log_df.loc[~log_df['Result'].isin(['Valid', 'Valid (bag manifest)', 'Not an accession'])]
