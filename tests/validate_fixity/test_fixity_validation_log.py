@@ -12,37 +12,36 @@ class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
         """Delete the test output if it was created"""
-        log_path = os.path.join('test_data', 'fixity_validation_log',
-                                f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
-        if os.path.exists(log_path):
-            os.remove(log_path)
+        folders = ['acc_bag', 'acc_zip', 'extra_status', 'no_acc', 'no_fixity']
+        log_name = f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"
+        for folder in folders:
+            log_path = os.path.join(os.getcwd(), 'test_data', 'log', folder, 'born-digital', log_name)
+            if os.path.exists(log_path):
+                os.remove(log_path)
 
-    def test_function(self):
+    def test_acc_bag(self):
+        """Test for when the accessions are in bags for fixity validation"""
         # Makes the variable for function input and runs the function.
-        input_directory = os.path.join('test_data', 'fixity_validation_log')
-        fixity_validation_log(input_directory)
+        acc_dir = os.path.join('test_data', 'log', 'acc_bag', 'born-digital')
+        fixity_validation_log(acc_dir)
 
         # Verifies the log has the correct values.
-        result = csv_to_list(os.path.join('test_data', 'fixity_validation_log',
-                                          f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name', 'Manifest_Name',
-                     'Validation_Result'],
-                    ['backlogged', 'harg_ms1234 Brown papers', '2021_12_er',
-                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'harg_ms1234 Brown papers', '2021_12_er'),
-                     'Bag', '2021_12_er_bag', 'nan', 'nan'],
-                    ['backlogged', 'harg_ms1234 Brown papers', '2021_345_ER',
-                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'harg_ms1234 Brown papers', '2021_345_ER'),
-                     'Bag', '2021_345_ER_bag', 'nan', 'nan'],
-                    ['backlogged', 'ua22-333 Department records', '2022-1-er',
-                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'ua22-333 Department records', '2022-1-er'),
-                     'InitialManifest', 'nan', 'initialmanifest_20241031.csv', 'nan'],
-                    ['backlogged', 'ua22-333 Department records', '2022-2-ER',
-                     os.path.join('test_data', 'fixity_validation_log', 'backlogged', 'ua22-333 Department records', '2022-2-ER'),
-                     'InitialManifest', 'nan', 'initialmanifest_20241031.csv', 'nan'],
-                    ['closed', 'rbrl333', 'no-acc-num',
-                     os.path.join('test_data', 'fixity_validation_log', 'closed', 'rbrl333', 'no-acc-num'),
-                     'Bag', 'no-acc-num_bag', 'nan', 'nan']]
-        self.assertEqual(result, expected, "Problem with test for fixity_validation_log function")
+        today = date.today().strftime('%Y-%m-%d')
+        result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{today}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
+                    ['backlogged', 'harg_ms1234 papers', '2021_12_er',
+                     os.path.join(acc_dir, 'backlogged', 'harg_ms1234 papers', '2021_12_er'),
+                     'Bag', '2021_12_er_bag', 'BLANK'],
+                    ['backlogged', 'harg_ms1234 papers', '2021_345_ER',
+                     os.path.join(acc_dir, 'backlogged', 'harg_ms1234 papers', '2021_345_ER'),
+                     'Bag', '2021_345_ER_bag', 'BLANK'],
+                    ['closed', 'harg_ms1000 papers', '2001_01_er',
+                     os.path.join(acc_dir, 'closed', 'harg_ms1000 papers', '2001_01_er'),
+                     'Bag', '2001_01_er_bag', 'BLANK'],
+                    ['closed', 'harg_ms2000 papers', '2002_02_er',
+                     os.path.join(acc_dir, 'closed', 'harg_ms2000 papers', '2002_02_er'),
+                     'Bag', '2002_02_er_bag', 'BLANK']]
+        self.assertEqual(result, expected, "Problem with test for acc_bag")
 
 
 if __name__ == '__main__':
