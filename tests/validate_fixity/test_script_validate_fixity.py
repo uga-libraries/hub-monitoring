@@ -30,23 +30,23 @@ class MyTestCase(unittest.TestCase):
         and delete all other test outputs if they were created."""
 
         # For each accession, replaces the updated log with a copy of the original log from the accession folder.
-        accessions = [join('test_data', 'test_script_mix', 'backlogged', 'test_001', '2023_test001_002_er'),
-                      join('test_data', 'test_script_mix', 'backlogged', 'test_001', '2023_test001_004_er'),
-                      join('test_data', 'test_script_mix', 'backlogged', 'test_005', '2023_test005_001_er'),
-                      join('test_data', 'test_script_restart', 'backlogged', 'coll_2023', '2023_test004_002_er'),
-                      join('test_data', 'test_script_restart', 'backlogged', 'coll_2023', '2023_test005_004_er'),
-                      join('test_data', 'test_script_valid', 'closed', 'test_001', '2023_test001_001_er'),
-                      join('test_data', 'test_script_valid', 'closed', 'test_004', '2023_test004_003_er')]
+        accessions = [join('test_data', 'script', 'mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_002_er'),
+                      join('test_data', 'script', 'mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_004_er'),
+                      join('test_data', 'script', 'mix', 'born-digital', 'backlogged', 'test_005', '2023_test005_001_er'),
+                      join('test_data', 'script', 'restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test004_002_er'),
+                      join('test_data', 'script', 'restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test005_004_er'),
+                      join('test_data', 'script', 'valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
+                      join('test_data', 'script', 'valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
             copyfile(join(accession, 'preservation_log_copy.txt'), join(accession, 'preservation_log.txt'))
 
-        # Deletes any test output that is present.
+        # Deletes any script output that is present.
         today = date.today().strftime('%Y-%m-%d')
-        outputs = [join('test_data', 'test_script_mix', f'fixity_validation_log_{today}.csv'),
-                   join('test_data', 'test_script_mix', '2023_test005_001_er_manifest_validation_errors.csv'),
-                   join('test_data', 'test_script_restart', '2023_test005_004_er_manifest_validation_errors.csv'),
-                   join('test_data', 'test_script_restart', f"fixity_validation_log_{today}.csv"),
-                   join('test_data', 'test_script_valid', f'fixity_validation_log_{today}.csv')]
+        outputs = [join('test_data', 'script', 'mix', 'born-digital', f'fixity_validation_log_{today}.csv'),
+                   join('test_data', 'script', 'mix', 'born-digital', '2023_test005_001_er_manifest_validation_errors.csv'),
+                   join('test_data', 'script', 'restart', 'born-digital', '2023_test005_004_er_manifest_validation_errors.csv'),
+                   join('test_data', 'script', 'restart', 'born-digital', f"fixity_validation_log_{today}.csv"),
+                   join('test_data', 'script', 'valid', 'Born-digital', f'fixity_validation_log_{today}.csv')]
         for output in outputs:
             if exists(output):
                 remove(output)
@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
         as well as an accession without a preservation log."""
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        input_directory = join(getcwd(), 'test_data', 'test_script_mix')
+        input_directory = join(getcwd(), 'test_data', 'script', 'mix')
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, stdout=subprocess.PIPE)
 
         # Verifies the script printed the correct message about the missing preservation log and validation errors.
@@ -137,7 +137,7 @@ class MyTestCase(unittest.TestCase):
     def test_restart(self):
         """Test for when the script is being restarted after a break
         and uses a pre-existing fixity validation log where some accessions already have a validation result"""
-        input_directory = join(getcwd(), 'test_data', 'test_script_restart')
+        input_directory = join(getcwd(), 'test_data', 'script', 'restart')
 
         # Makes the fixity validation log.
         coll_path = join(input_directory, 'backlogged', 'coll_2023')
@@ -219,7 +219,7 @@ class MyTestCase(unittest.TestCase):
         """
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        input_directory = join(getcwd(), 'test_data', 'test_script_valid')
+        input_directory = join(getcwd(), 'test_data', 'script', 'valid')
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, stdout=subprocess.PIPE)
 
         # Verifies the script printed the correct message about validation errors.
