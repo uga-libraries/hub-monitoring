@@ -140,27 +140,28 @@ def fixity_validation_log(acc_dir):
                     if os.path.isdir(os.path.join(acc_dir, status, collection)):
                         for folder in os.listdir(os.path.join(acc_dir, status, collection)):
                             accession_path = os.path.join(acc_dir, status, collection, folder)
-                            is_accession = accession_test(folder)
-                            if is_accession:
-                                if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
-                                    fixity_type = 'Bag'
-                                    fixity = f'{folder}_bag'
-                                    result = None
-                                elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
-                                    fixity_type = 'Zip'
-                                    fixity = f'{folder}_zip_md5.txt'
-                                    result = None
+                            if os.path.isdir(accession_path):
+                                is_accession = accession_test(folder)
+                                if is_accession:
+                                    if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
+                                        fixity_type = 'Bag'
+                                        fixity = f'{folder}_bag'
+                                        result = None
+                                    elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
+                                        fixity_type = 'Zip'
+                                        fixity = f'{folder}_zip_md5.txt'
+                                        result = None
+                                    else:
+                                        fixity_type = None
+                                        fixity = None
+                                        result = 'No fixity information'
                                 else:
                                     fixity_type = None
                                     fixity = None
-                                    result = 'No fixity information'
-                            else:
-                                fixity_type = None
-                                fixity = None
-                                result = 'Not an accession'
-                            # Adds information for folder to the log.
-                            row = [status, collection, folder, accession_path, fixity_type, fixity, result]
-                            log_writer.writerow(row)
+                                    result = 'Not an accession'
+                                # Adds information for folder to the log.
+                                row = [status, collection, folder, accession_path, fixity_type, fixity, result]
+                                log_writer.writerow(row)
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
@@ -270,7 +271,7 @@ def update_fixity_validation_log(log_path, df, row, result):
     None
     """
 
-    df.loc[row, 'Validation_Result'] = result
+    df.loc[row, 'Result'] = result
     df.to_csv(log_path, index=False)
 
 
