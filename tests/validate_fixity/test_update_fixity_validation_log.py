@@ -33,8 +33,8 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
                      'Bag_Name', 'Manifest_Name', 'Validation_Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'nan', 'Valid'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'InitialManifest', 'nan', 'initialmanifest.csv', 'nan']]
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'BLANK', 'Valid'],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'InitialManifest', 'BLANK', 'initialmanifest.csv', 'BLANK']]
         self.assertEqual(result, expected, "Problem with tst for one change to the log")
 
     def test_two_changes(self):
@@ -46,8 +46,8 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
                      'Bag_Name', 'Manifest_Name', 'Validation_Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'nan', 'Not valid'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'InitialManifest', 'nan', 'initialmanifest.csv', 'Valid']]
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'BLANK', 'Not valid'],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'InitialManifest', 'BLANK', 'initialmanifest.csv', 'Valid']]
         self.assertEqual(result, expected, "Problem with tst for two changes to the log")
 
 
