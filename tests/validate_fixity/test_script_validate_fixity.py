@@ -69,70 +69,64 @@ class MyTestCase(unittest.TestCase):
         #             '\r\nValidation errors found, see fixity_validation_log.csv in the input_directory.\r\n')
         # self.assertEqual(result, expected, 'Problem with test for mix, printed message')
 
+        # TODO: update once able to validate with zip md5 instead of initial manifest.
         # Verifies the contents of the fixity validation log are correct.
-        result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name', 'Manifest_Name',
-                     'Validation_Result'],
+        today = date.today().strftime('%Y-%m-%d')
+        result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
                     ['backlogged', 'test_001', '2023_test001_002_er',
-                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'), 'Bag',
-                     '2023_test001_002_er_bag', 'BLANK', 'Valid'],
+                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'),
+                     'Bag', '2023_test001_002_er_bag', 'Valid'],
                     ['backlogged', 'test_001', '2023_test001_004_er',
-                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'), 'Bag',
-                     '2023_test001_004_er_bag', 'BLANK',
+                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'),
+                     'Bag', '2023_test001_004_er_bag',
                      'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
                      'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
                     ['backlogged', 'test_005', '2023_test005_001_er',
-                     os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'), 'InitialManifest',
-                     'BLANK', 'initialmanifest_20230501.csv', '2 manifest errors'],
+                     os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'),
+                     'Zip', '2023_test005_001_er_zip_md5.txt', 'BLANK'],
                     ['closed', 'test_123', '2023_test123_001_er',
-                     os.path.join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'InitialManifest',
-                     'BLANK', 'initialmanifest_20230501.csv', 'Valid']]
+                     os.path.join(input_directory, 'closed', 'test_123', '2023_test123_001_er'),
+                     'Zip', '2023_test123_001_er_zip_md5.txt', 'BLANK']]
         self.assertEqual(result, expected, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
-        result = csv_to_list(os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er',
-                                  'preservation_log.txt'), delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er', 'preservation_log.txt')
+        result = csv_to_list(log_path, delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.2.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
+                    ['TEST.1', '2023.1.2.ER', today, 'BLANK',
                      'Validated bag for accession 2023.1.2.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_002_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test001_004_er have been updated.
-        result = csv_to_list(os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er',
-                                  'preservation_log.txt'), delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er', 'preservation_log.txt')
+        result = csv_to_list(log_path, delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.4.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.4.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
+                    ['TEST.1', '2023.1.4.ER', today, 'BLANK',
                      'Validated bag for accession 2023.1.4.ER. The bag is not valid. Bag validation failed: '
                      'data\\CD_2\\File2.txt md5 validation failed: expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" '
                      'found="85c8fbcb2ff1d73cb94ed9c355eb20d5"', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_004_er preservation log')
 
+        # TODO: update once able to validate with zip md5 instead of initial manifest.
         # Verifies the contents of the preservation log for 2023_test005_001_er have been updated.
-        result = csv_to_list(os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er',
-                                  'preservation_log.txt'), delimiter='\t')
-        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
-                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.001', 'Copied.', 'Jane Doe'],
-                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.002', 'Copied.', 'Jane Doe'],
-                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Can\'t bag; made manifest.', 'Jane Doe'],
-                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Validated manifest. Valid.', 'Jane Doe'],
-                    ['TEST.005', '2023.test005.001.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
-                     'Validated manifest for accession 2023.test005.001.ER. The manifest is not valid.',
-                     'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test005_001_er preservation log')
-
-        # Verifies the contents of the  manifest log for 2023_test005_001_er are correct.
-        result = csv_to_list(os.path.join(input_directory, '2023_test005_001_er_manifest_validation_errors.csv'))
-        expected = [['File', 'MD5', 'MD5_Source'],
-                    ['Z:\\2023_test005_001_er\\CD_1\\File1.txt', 'CA1EA02C10B7C37F425B9B7DD86D5E11', 'Manifest'],
-                    ['Number of files does not match. 1 files in the accession folder and 2 in the manifest.',
-                     'BLANK', 'BLANK']]
-        self.assertEqual(result, expected, 'Problem with for mix, 2023_test005_001_er manifest log')
+        # log_path = os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er', 'preservation_log.txt')
+        # result = csv_to_list(log_path, delimiter='\t')
+        # expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+        #             ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.001', 'Copied.', 'Jane Doe'],
+        #             ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.002', 'Copied.', 'Jane Doe'],
+        #             ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Can\'t bag; made manifest.', 'Jane Doe'],
+        #             ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Validated manifest. Valid.', 'Jane Doe'],
+        #             ['TEST.005', '2023.test005.001.ER', today, 'BLANK',
+        #              'Validated manifest for accession 2023.test005.001.ER. The manifest is not valid.',
+        #              'validate_fixity.py']]
+        # self.assertEqual(result, expected, 'Problem with test for mix, 2023_test005_001_er preservation log')
 
     def test_restart(self):
         """Test for when the script is being restarted after a break
