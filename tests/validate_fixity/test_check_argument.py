@@ -12,7 +12,7 @@ class MyTestCase(unittest.TestCase):
     def test_correct_born_digital(self):
         """Test for when the directory argument is present and a valid path to "born-digital"."""
         # Makes variables for function input and runs the function.
-        input_dir = os.path.join('test_data', 'test_script_restart', 'born-digital')
+        input_dir = os.path.join('test_data', 'script', 'restart', 'born-digital')
         sys_argv = ['validate_fixity.py', input_dir]
         input_directory, error = check_argument(sys_argv)
 
@@ -25,7 +25,7 @@ class MyTestCase(unittest.TestCase):
     def test_correct_Born_digital(self):
         """Test for when the directory argument is present and a valid path to "Born-digital"."""
         # Makes variables for function input and runs the function.
-        input_dir = os.path.join('test_data', 'test_script_valid', 'Born-digital')
+        input_dir = os.path.join('test_data', 'script', 'valid', 'Born-digital')
         sys_argv = ['validate_fixity.py', input_dir]
         input_directory, error = check_argument(sys_argv)
 
