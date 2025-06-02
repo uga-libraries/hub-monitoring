@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
         as well as an accession without a preservation log."""
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        input_directory = join(getcwd(), 'test_data', 'script', 'mix')
+        input_directory = join(getcwd(), 'test_data', 'script', 'mix', 'born-digital')
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, stdout=subprocess.PIPE)
 
         # Verifies the script printed the correct message about the missing preservation log and validation errors.
@@ -137,7 +137,7 @@ class MyTestCase(unittest.TestCase):
     def test_restart(self):
         """Test for when the script is being restarted after a break
         and uses a pre-existing fixity validation log where some accessions already have a validation result"""
-        input_directory = join(getcwd(), 'test_data', 'script', 'restart')
+        input_directory = join(getcwd(), 'test_data', 'script', 'restart', 'born-digital')
 
         # Makes the fixity validation log.
         coll_path = join(input_directory, 'backlogged', 'coll_2023')
@@ -219,7 +219,7 @@ class MyTestCase(unittest.TestCase):
         """
         # Makes the variables used for script input and runs the script.
         script = join(getcwd(), '..', '..', 'validate_fixity.py')
-        input_directory = join(getcwd(), 'test_data', 'script', 'valid')
+        input_directory = join(getcwd(), 'test_data', 'script', 'valid', 'Born-digital')
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, stdout=subprocess.PIPE)
 
         # Verifies the script printed the correct message about validation errors.
