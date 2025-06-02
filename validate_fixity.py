@@ -472,13 +472,13 @@ if __name__ == '__main__':
         print(error)
         sys.exit(1)
 
-    # Makes the fixity_validation_log.csv with all accessions in the input_directory, if it does not exist.
-    # If it does exist, it means the script is being restarted and will use the log to restart where it left off.
+    # Makes the fixity_validation_log.csv, if it does not exist, with accession folders to check.
+    # If it already exists, it means the script is being restarted and will use the log to restart where it left off.
     fixity_validation_log_path = check_restart(input_directory)
     if not fixity_validation_log_path:
         fixity_validation_log(input_directory)
-        fixity_validation_log_path = os.path.join(input_directory,
-                                                  f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
+        today = date.today().strftime('%Y-%m-%d')
+        fixity_validation_log_path = os.path.join(input_directory, f'fixity_validation_log_{today}.csv')
 
     # Validates every accession in the log that has not yet been validated (Validation_Result is blank).
     log_df = pd.read_csv(fixity_validation_log_path)
