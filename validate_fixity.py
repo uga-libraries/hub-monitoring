@@ -54,7 +54,7 @@ def accession_test(folder_name):
 
 
 def check_argument(arg_list):
-    """Check if the required argument input_directory is present and a valid directory
+    """Check if the required argument input_directory is present and a valid directory with the expected name
 
     @:parameter
     arg_list (list): the contents of sys.argv after starting the script
@@ -64,15 +64,18 @@ def check_argument(arg_list):
     error (string, None): string with the error message, or None if no error
     """
 
-    # Verifies the required argument (input_directory) is present and a valid path.
-    # If the number of arguments is incorrect, dir_path is set to None.
-    # If there is no error, error is set to None.
+    # Verifies the required argument (input_directory) is present
+    # and a valid path with the expected name (Born-digital or born-digital).
+    # If there is an error, dir_path is set to None. If there is no error, error is set to None.
     if len(arg_list) == 1:
         return None, "Missing required argument: input_directory"
     elif len(arg_list) == 2:
         dir_path = arg_list[1]
         if os.path.exists(dir_path):
-            return dir_path, None
+            if os.path.basename(dir_path).lower() == 'born-digital':
+                return dir_path, None
+            else:
+                return None, f"Provided input_directory '{dir_path}' is not to folder 'Born-digital' or 'born-digital'"
         else:
             return None, f"Provided input_directory '{dir_path}' does not exist"
     else:
