@@ -102,15 +102,19 @@ def check_restart(acc_dir):
 
 
 def fixity_validation_log(acc_dir):
-    """Make a log for fixity validation with every accession in the input_directory
+    """Make a log for fixity validation with every folder at the accession level in the input_directory
 
-    Status is backlogged or closed.
-    Collection and Accession are identifiers.
-    Accession_Path is the path to the folder which contains either the bag or initial manifest.
-    Fixity_Type is Bag or InitialManifest and will be used to determine how to validate the accession.
-    Bag_Name is the name of the bag folder, for bags. If it is an initial manifest, this is None.
-    Manifest_Name is the name of the initialmanifest file. If it is a bag, this is None.
-    Validation_Result is None and will be updated when the accession is later validated.
+    Status is backlogged or closed (name of folder at first level within input_directory).
+    Collection is an identifier and potentially the name (name of folder at second level within input_directory).
+    Accession is an identifier OR a non-accession folder (name of folder at third level within input_directory).
+    Accession_Path is the full path to the folder which contains the digital content.
+    Fixity_Type is Bag or Zip and will be used to determine how to validate the accession, or None.
+    Fixity is the name of the bag folder or zip md5 file with the fixity information, or None.
+    Result is None for accessions to validate, "Not an accession", or "No fixity".
+
+    There are other folders frequently at the accession level, such as FITS files and copies for appraisal.
+    Everything at this level is included in the log so the archivist can verify
+    they are not accessions that did not follow naming conventions.
 
     @:parameter
     acc_dir (string): directory with the accessions and where the log is saved (script argument input_directory)
@@ -123,33 +127,39 @@ def fixity_validation_log(acc_dir):
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
     with (open(log_path, 'w', newline='') as open_log):
         log_writer = csv.writer(open_log)
-        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
-                             'Bag_Name', 'Manifest_Name', 'Validation_Result'])
+        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'])
 
-        # Finds every accession and adds it to the fixity validation log.
-        for root, dirs, files in os.walk(acc_dir):
-            parent_dir = os.path.basename(root)
-            # Identifies bags based on the folder name ("acc#_bag") with a parent folder that is an accession number
-            # and not being in an appraisal folder.
-            for folder in dirs:
-                if folder.endswith('_bag') and accession_test(folder.replace('_bag', '')):
-                    if 'Appraisal' not in root:
-                        if accession_test(parent_dir):
-                            path_list = root.split('\\')
-                            log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root, 'Bag', folder,
-                                                 None, None])
-            # Identifies manifests based on the name of the manifest (initialmanifest_date.csv),
-            # but only includes it is not also an accession with a bag, it isn't in an appraisal folder,
-            # and the parent folder is an accession number.
-            # If there are both, the bag folder and initial manifest will be in the same parent folder.
-            for file in files:
-                if file.startswith('initialmanifest') and file.endswith('.csv'):
-                    if len([x for x in dirs if x.endswith("_bag")]) == 0:
-                        if 'Appraisal' not in root:
-                            if accession_test(parent_dir):
-                                path_list = root.split('\\')
-                                log_writer.writerow([path_list[-3], path_list[-2], path_list[-1], root,
-                                                     'InitialManifest', None, file, None])
+        # Navigates the input_directory to get information about each folder at the accession level and adds to the log.
+        for status in os.listdir(acc_dir):
+            # There are sometimes additional folders at the status level, which never contain accessions to validate.
+            if status == 'backlogged' or status == 'closed':
+                # Every folder at the collection level is included.
+                for collection in os.listdir(os.path.join(acc_dir, status)):
+                    # Every folder at the accession level is included but has text in Result
+                    # if it is not identified as an accession to be validated.
+                    for folder in os.listdir(os.path.join(acc_dir, status, collection)):
+                        accession_path = os.path.join(acc_dir, status, collection, folder)
+                        is_accession = accession_test(folder)
+                        if is_accession:
+                            if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
+                                fixity_type = 'Bag'
+                                fixity = f'{folder}_bag'
+                                result = None
+                            elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
+                                fixity_type = 'Zip'
+                                fixity = f'{folder}_zip_md5.txt'
+                                result = None
+                            else:
+                                fixity_type = None
+                                fixity = None
+                                result = 'No fixity information'
+                        else:
+                            fixity_type = None
+                            fixity = None
+                            result = 'Not an accession'
+                        # Adds information for folder to the log.
+                        row = [status, collection, folder, accession_path, fixity_type, fixity, result]
+                        log_writer.writerow(row)
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
@@ -493,11 +503,11 @@ if __name__ == '__main__':
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or has an initial manifest.
         if accession.Fixity_Type == 'Bag':
-            result = validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, result)
+            valid = validate_bag(os.path.join(accession.Accession_Path, accession.Bag_Name), input_directory)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
         elif accession.Fixity_Type == 'InitialManifest':
-            result = validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, result)
+            valid = validate_manifest(accession.Accession_Path, accession.Manifest_Name, input_directory)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
         else:
             print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
 
