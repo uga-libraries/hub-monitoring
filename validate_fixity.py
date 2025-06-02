@@ -493,7 +493,7 @@ if __name__ == '__main__':
 
     # Validates every accession in the log that has not yet been validated (Validation_Result is blank).
     log_df = pd.read_csv(fixity_validation_log_path)
-    for accession in log_df[log_df['Validation_Result'].isnull()].itertuples():
+    for accession in log_df[log_df['Result'].isnull()].itertuples():
 
         # Prints the script progress.
         print(f'Starting on accession {accession.Accession_Path} ({accession.Fixity_Type})')
@@ -512,9 +512,8 @@ if __name__ == '__main__':
         else:
             print(f'Fixity_Type {accession.Fixity_type} is not an expected value. Cannot validate this accession.')
 
-    # Prints if there were any validation errors, based on the Validation_Result column.
-    # The only values expected if it is valid are "Valid" and "Valid (bag manifest)".
-    error_df = log_df.loc[~log_df['Validation_Result'].isin(['Valid', 'Valid (bag manifest)'])]
+    # Prints if there were any validation errors, based on the Result column.
+    error_df = log_df.loc[~log_df['Result'].isin(['Valid', 'Valid (bag manifest)', 'Not an accession'])]
     if error_df.empty:
         print('\nNo validation errors.')
     else:
