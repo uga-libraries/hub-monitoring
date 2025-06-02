@@ -78,6 +78,25 @@ class MyTestCase(unittest.TestCase):
                      'Bag', 'no-acc-num_bag', 'BLANK']]
         self.assertEqual(result, expected, "Problem with test for extra_status")
 
+    def test_no_acc(self):
+        """Test for when there are folders at the "accession" level that aren't accessions (included in log)"""
+        # Makes the variable for function input and runs the function.
+        acc_dir = os.path.join('test_data', 'log', 'no_acc', 'Born-digital')
+        fixity_validation_log(acc_dir)
+
+        # Verifies the log has the correct values.
+        result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
+                    ['backlogged', 'ua22-333 records', '2022-1-er',
+                     os.path.join(acc_dir, 'backlogged', 'ua22-333 records', '2022-1-er'),
+                     'Bag', '2022-1-er_bag', 'BLANK'],
+                    ['backlogged', 'ua22-333 records', 'Appraisal copy',
+                     os.path.join(acc_dir, 'backlogged', 'ua22-333 records', 'Appraisal copy'),
+                     'BLANK', 'BLANK', 'Not an accession'],
+                    ['closed', 'rbrl333', 'access', os.path.join(acc_dir, 'closed', 'rbrl333', 'access'),
+                     'BLANK', 'BLANK', 'Not an accession']]
+        self.assertEqual(result, expected, "Problem with test for no_acc")
+
 
 if __name__ == '__main__':
     unittest.main()
