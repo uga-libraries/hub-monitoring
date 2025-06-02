@@ -132,34 +132,35 @@ def fixity_validation_log(acc_dir):
         # Navigates the input_directory to get information about each folder at the accession level and adds to the log.
         for status in os.listdir(acc_dir):
             # There are sometimes additional folders at the status level, which never contain accessions to validate.
-            if status == 'backlogged' or status == 'closed':
+            if status == 'backlogged' or status == 'closed' and os.path.isdir(os.path.join(acc_dir, status)):
                 # Every folder at the collection level is included.
                 for collection in os.listdir(os.path.join(acc_dir, status)):
                     # Every folder at the accession level is included but has text in Result
                     # if it is not identified as an accession to be validated.
-                    for folder in os.listdir(os.path.join(acc_dir, status, collection)):
-                        accession_path = os.path.join(acc_dir, status, collection, folder)
-                        is_accession = accession_test(folder)
-                        if is_accession:
-                            if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
-                                fixity_type = 'Bag'
-                                fixity = f'{folder}_bag'
-                                result = None
-                            elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
-                                fixity_type = 'Zip'
-                                fixity = f'{folder}_zip_md5.txt'
-                                result = None
+                    if os.path.isdir(os.path.join(acc_dir, status, collection)):
+                        for folder in os.listdir(os.path.join(acc_dir, status, collection)):
+                            accession_path = os.path.join(acc_dir, status, collection, folder)
+                            is_accession = accession_test(folder)
+                            if is_accession:
+                                if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
+                                    fixity_type = 'Bag'
+                                    fixity = f'{folder}_bag'
+                                    result = None
+                                elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
+                                    fixity_type = 'Zip'
+                                    fixity = f'{folder}_zip_md5.txt'
+                                    result = None
+                                else:
+                                    fixity_type = None
+                                    fixity = None
+                                    result = 'No fixity information'
                             else:
                                 fixity_type = None
                                 fixity = None
-                                result = 'No fixity information'
-                        else:
-                            fixity_type = None
-                            fixity = None
-                            result = 'Not an accession'
-                        # Adds information for folder to the log.
-                        row = [status, collection, folder, accession_path, fixity_type, fixity, result]
-                        log_writer.writerow(row)
+                                result = 'Not an accession'
+                            # Adds information for folder to the log.
+                            row = [status, collection, folder, accession_path, fixity_type, fixity, result]
+                            log_writer.writerow(row)
 
 
 def manifest_validation_log(report_dir, acc_id, errors):
