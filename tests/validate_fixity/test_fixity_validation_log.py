@@ -26,8 +26,7 @@ class MyTestCase(unittest.TestCase):
         fixity_validation_log(acc_dir)
 
         # Verifies the log has the correct values.
-        today = date.today().strftime('%Y-%m-%d')
-        result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{today}.csv"))
+        result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
                     ['backlogged', 'harg_ms1234 papers', '2021_12_er',
                      os.path.join(acc_dir, 'backlogged', 'harg_ms1234 papers', '2021_12_er'),
@@ -42,6 +41,29 @@ class MyTestCase(unittest.TestCase):
                      os.path.join(acc_dir, 'closed', 'harg_ms2000 papers', '2002_02_er'),
                      'Bag', '2002_02_er_bag', 'BLANK']]
         self.assertEqual(result, expected, "Problem with test for acc_bag")
+
+    def test_acc_zip(self):
+        """Test for when the accessions are zipped with a md5 in a text file for fixity validation"""
+        # Makes the variable for function input and runs the function.
+        acc_dir = os.path.join('test_data', 'log', 'acc_zip', 'born-digital')
+        fixity_validation_log(acc_dir)
+
+        # Verifies the log has the correct values.
+        result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
+                    ['backlogged', 'rbrl123', '2010-01-er',
+                     os.path.join(acc_dir, 'backlogged', 'rbrl123', '2010-01-er'),
+                     'Zip', '2010-01-er_zip_md5.txt', 'BLANK'],
+                    ['backlogged', 'rbrl123', '2010-02-er',
+                     os.path.join(acc_dir, 'backlogged', 'rbrl123', '2010-02-er'),
+                     'Zip', '2010-02-er_zip_md5.txt', 'BLANK'],
+                    ['backlogged', 'rbrl456abc', '2010-06-er',
+                     os.path.join(acc_dir, 'backlogged', 'rbrl456abc', '2010-06-er'),
+                     'Zip', '2010-06-er_zip_md5.txt', 'BLANK'],
+                    ['closed', 'rbrl333', 'no-acc-num',
+                     os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),
+                     'Zip', 'no-acc-num_zip_md5.txt', 'BLANK']]
+        self.assertEqual(result, expected, "Problem with test for acc_zip")
 
 
 if __name__ == '__main__':
