@@ -1,0 +1,1 @@
+Placeholder for a folder that is not an accession and should be skipped
