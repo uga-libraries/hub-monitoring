@@ -77,18 +77,18 @@ class MyTestCase(unittest.TestCase):
                      'Validation_Result'],
                     ['backlogged', 'test_001', '2023_test001_002_er',
                      join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'), 'Bag',
-                     '2023_test001_002_er_bag', 'nan', 'Valid'],
+                     '2023_test001_002_er_bag', 'BLANK', 'Valid'],
                     ['backlogged', 'test_001', '2023_test001_004_er',
                      join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'), 'Bag',
-                     '2023_test001_004_er_bag', 'nan',
+                     '2023_test001_004_er_bag', 'BLANK',
                      'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
                      'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
                     ['backlogged', 'test_005', '2023_test005_001_er',
                      join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'), 'InitialManifest',
-                     'nan', 'initialmanifest_20230501.csv', '2 manifest errors'],
+                     'BLANK', 'initialmanifest_20230501.csv', '2 manifest errors'],
                     ['closed', 'test_123', '2023_test123_001_er',
                      join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'InitialManifest',
-                     'nan', 'initialmanifest_20230501.csv', 'Valid']]
+                     'BLANK', 'initialmanifest_20230501.csv', 'Valid']]
         self.assertEqual(result, expected, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
@@ -97,8 +97,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.2.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.1', '2023.1.2.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.2.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.1.2.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_002_er preservation log')
 
@@ -108,8 +108,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.4.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.1', '2023.1.4.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.4.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.1.4.ER. The bag is not valid. Bag validation failed: '
                      'data\\CD_2\\File2.txt md5 validation failed: expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" '
                      'found="85c8fbcb2ff1d73cb94ed9c355eb20d5"', 'validate_fixity.py']]
@@ -121,9 +121,9 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.001', 'Copied.', 'Jane Doe'],
                     ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.002', 'Copied.', 'Jane Doe'],
-                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'nan', 'Can\'t bag; made manifest.', 'Jane Doe'],
-                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'nan', 'Validated manifest. Valid.', 'Jane Doe'],
-                    ['TEST.005', '2023.test005.001.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Can\'t bag; made manifest.', 'Jane Doe'],
+                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Validated manifest. Valid.', 'Jane Doe'],
+                    ['TEST.005', '2023.test005.001.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated manifest for accession 2023.test005.001.ER. The manifest is not valid.',
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for mix, 2023_test005_001_er preservation log')
@@ -133,7 +133,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['File', 'MD5', 'MD5_Source'],
                     ['Z:\\2023_test005_001_er\\CD_1\\File1.txt', 'CA1EA02C10B7C37F425B9B7DD86D5E11', 'Manifest'],
                     ['Number of files does not match. 1 files in the accession folder and 2 in the manifest.',
-                     'nan', 'nan']]
+                     'BLANK', 'BLANK']]
         self.assertEqual(result, expected, 'Problem with for mix, 2023_test005_001_er manifest log')
 
     def test_restart(self):
@@ -175,13 +175,13 @@ class MyTestCase(unittest.TestCase):
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Bag_Name',
                      'Manifest_Name', 'Validation_Result'],
                     ['backlogged', 'coll_2023', '2023_test001_001_er', join(coll_path, '2023_test001_001_er'),
-                     'Bag', '2023_test001_001_er_bag', 'nan', 'Valid'],
+                     'Bag', '2023_test001_001_er_bag', 'BLANK', 'Valid'],
                     ['backlogged', 'coll_2023', '2023_test001_005_er', join(coll_path, '2023_test001_005_er'),
-                     'Bag', '2023_test001_005_er_bag', 'nan', 'Bag validation failed'],
+                     'Bag', '2023_test001_005_er_bag', 'BLANK', 'Bag validation failed'],
                     ['backlogged', 'coll_2023', '2023_test004_002_er', join(coll_path, '2023_test004_002_er'),
-                     'InitialManifest', 'nan', 'initialmanifest_20231124.csv', 'Valid'],
+                     'InitialManifest', 'BLANK', 'initialmanifest_20231124.csv', 'Valid'],
                     ['backlogged', 'coll_2023', '2023_test005_004_er', join(coll_path, '2023_test005_004_er'),
-                     'InitialManifest', 'nan', 'initialmanifest_20230521.csv', '1 manifest errors']]
+                     'InitialManifest', 'BLANK', 'initialmanifest_20230521.csv', '1 manifest errors']]
         self.assertEqual(result, expected, 'Problem with test for restart, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test004_002_er have been updated.
@@ -190,9 +190,9 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied, no errors.', 'JD'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied, no errors.', 'JD'],
-                    ['T4', '2023.T4.02.ER', '2023-10-03', 'nan', "Can't bag; made manifest.", 'JD'],
-                    ['T4', '2023.T4.02.ER', '2023-10-03', 'nan', 'Validated manifest. Valid.', 'JD'],
-                    ['T4', '2023.T4.02.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['T4', '2023.T4.02.ER', '2023-10-03', 'BLANK', "Can't bag; made manifest.", 'JD'],
+                    ['T4', '2023.T4.02.ER', '2023-10-03', 'BLANK', 'Validated manifest. Valid.', 'JD'],
+                    ['T4', '2023.T4.02.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated manifest for accession 2023.T4.02.ER. The manifest is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for restart, 2023_test004_002_er preservation log')
 
@@ -202,9 +202,9 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
-                    ['T5', '2023.T5.04.ER', '2023-10-03', 'nan', "Can't bag; made manifest.", 'JD'],
-                    ['T5', '2023.T5.04.ER', '2023-10-03', 'nan', 'Validated manifest. Valid.', 'JD'],
-                    ['T5', '2023.T5.04.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['T5', '2023.T5.04.ER', '2023-10-03', 'BLANK', "Can't bag; made manifest.", 'JD'],
+                    ['T5', '2023.T5.04.ER', '2023-10-03', 'BLANK', 'Validated manifest. Valid.', 'JD'],
+                    ['T5', '2023.T5.04.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated manifest for accession 2023.T5.04.ER. The manifest is not valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for restart, 2023_test005_004_er preservation log')
 
@@ -253,8 +253,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.1.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.1', '2023.1.1.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.1.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.1.1.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, 2023_test001_001_er preservation log')
 
@@ -265,9 +265,9 @@ class MyTestCase(unittest.TestCase):
         # expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
         #             ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.001', 'Copied.', 'Jane Doe'],
         #             ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.002', 'Copied.', 'Jane Doe'],
-        #             ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'nan', 'Can\'t bag; made manifest.', 'Jane Doe'],
-        #             ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'nan', 'Validated manifest. Valid.', 'Jane Doe'],
-        #             ['TEST.004', '2023.test004.003.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+        #             ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'BLANK', 'Can\'t bag; made manifest.', 'Jane Doe'],
+        #             ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'BLANK', 'Validated manifest. Valid.', 'Jane Doe'],
+        #             ['TEST.004', '2023.test004.003.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
         #              'Validated manifest for accession 2023.test004.003.ER. The manifest is valid.',
         #              'validate_fixity.py']]
         # self.assertEqual(result, expected, 'Problem with test for valid, 2023_test004_003_er preservation log')
