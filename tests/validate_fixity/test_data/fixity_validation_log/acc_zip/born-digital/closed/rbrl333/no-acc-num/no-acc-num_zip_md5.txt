@@ -1,0 +1,1 @@
+503ea0ca3cd71c16c24ecc7c0c6cb6a3  C:\GitHub\hub-monitoring\tests\validate_fixity\test_data\log\acc_zip\born-digital\closed\rbrl333\no-acc-num\no-acc-num.zip

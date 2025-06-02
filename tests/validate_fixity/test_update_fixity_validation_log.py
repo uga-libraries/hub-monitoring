@@ -13,10 +13,9 @@ class MyTestCase(unittest.TestCase):
 
     def setUp(self):
         """Make the dataframe and csv of the log that the tests will update"""
-        row_list = [['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', None, None],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'InitialManifest', None, 'initialmanifest.csv', None]]
-        columns_list = ['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
-                        'Bag_Name', 'Manifest_Name', 'Validation_Result']
+        row_list = [['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', None],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', None]]
+        columns_list = ['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result']
         self.log_df = pd.DataFrame(row_list, columns=columns_list)
         self.log_df.to_csv('fixity_validation_20241031.csv', index=False)
 
@@ -31,11 +30,10 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
-                     'Bag_Name', 'Manifest_Name', 'Validation_Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'nan', 'Valid'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'InitialManifest', 'nan', 'initialmanifest.csv', 'nan']]
-        self.assertEqual(result, expected, "Problem with tst for one change to the log")
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'Valid'],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'BLANK']]
+        self.assertEqual(result, expected, "Problem with test for one change to the log")
 
     def test_two_changes(self):
         """Test for adding the validation result to two rows."""
@@ -44,10 +42,9 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type',
-                     'Bag_Name', 'Manifest_Name', 'Validation_Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'nan', 'Not valid'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'InitialManifest', 'nan', 'initialmanifest.csv', 'Valid']]
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'Not valid'],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'Valid']]
         self.assertEqual(result, expected, "Problem with tst for two changes to the log")
 
 

@@ -1,0 +1,1 @@
+c60e73ba1478fca264565db4a049e5fe  C:\GitHub\hub-monitoring\tests\validate_fixity\test_data\log\acc_zip\born-digital\backlogged\rbrl456abc\2010-06-er.zip

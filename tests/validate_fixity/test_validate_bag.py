@@ -19,12 +19,12 @@ class MyTestCase(unittest.TestCase):
         """Return the preservation logs to the original contents after testing,
         and delete other function outputs."""
         # Replaces the updated preservation logs for these accessions with a copy of the original logs.
-        accessions = [join('test_data', 'test_001_bags_valid', '2023_test001_001_er'),
-                      join('test_data', 'test_002_bags_invalid', '2023_test002_001_er'),
-                      join('test_data', 'test_002_bags_invalid', '2023_test002_002_er'),
-                      join('test_data', 'test_002_bags_invalid', '2023_test002_003_er'),
-                      join('test_data', 'test_002_bags_invalid', '2023_test002_004_er'),
-                      join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')]
+        accessions = [join('test_data', 'validate_bag', '2023_test001_001_er'),
+                      join('test_data', 'validate_bag', '2023_test002_001_er'),
+                      join('test_data', 'validate_bag', '2023_test002_002_er'),
+                      join('test_data', 'validate_bag', '2023_test002_003_er'),
+                      join('test_data', 'validate_bag', '2023_test002_004_er'),
+                      join('test_data', 'validate_bag', '2023_test002_005_er')]
         for accession in accessions:
             copyfile(join(accession, 'preservation_log_copy.txt'), join(accession, 'preservation_log.txt'))
 
@@ -59,7 +59,7 @@ class MyTestCase(unittest.TestCase):
     def test_file_added(self):
         """Test for when the bag is not valid because a file was added"""
         # Makes variables for function input and runs the function.
-        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_001_er')
+        accession_path = join('test_data', 'validate_bag', '2023_test002_001_er')
         bag_name = '2023_test002_001_er_bag'
         input_directory = 'test_data'
         result = validate_bag(join(accession_path, bag_name), input_directory)
@@ -73,8 +73,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.1.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.2', '2023.2.1.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.1.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.2.1.ER. The bag is not valid. '
                      'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes',
                      'validate_fixity.py']]
@@ -83,7 +83,7 @@ class MyTestCase(unittest.TestCase):
     def test_file_deleted(self):
         """Test for when the bag is not valid because a file was deleted"""
         # Makes variables for function input and runs the function.
-        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_002_er')
+        accession_path = join('test_data', 'validate_bag', '2023_test002_002_er')
         bag_name = '2023_test002_002_er_bag'
         input_directory = 'test_data'
         result = validate_bag(join(accession_path, bag_name), input_directory)
@@ -97,8 +97,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.2.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.2.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.2', '2023.2.2.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.2.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.2.2.ER. The bag is not valid. '
                      'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes',
                      'validate_fixity.py']]
@@ -107,7 +107,7 @@ class MyTestCase(unittest.TestCase):
     def test_file_edited(self):
         """Test for when the bag is not valid because a file was edited"""
         # Makes variables for function input and runs the function.
-        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_003_er')
+        accession_path = join('test_data', 'validate_bag', '2023_test002_003_er')
         bag_name = '2023_test002_003_er_bag'
         input_directory = 'test_data'
         result = validate_bag(join(accession_path, bag_name), input_directory)
@@ -121,8 +121,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.3.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.3.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.3.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.2', '2023.2.3.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.3.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.2.3.ER. The bag is not valid. Payload-Oxum validation failed. '
                      'Expected 3 files and 47 bytes but found 3 files and 79 bytes',
                      'validate_fixity.py']]
@@ -131,7 +131,7 @@ class MyTestCase(unittest.TestCase):
     def test_fixity_changed(self):
         """Test for when the bag is not valid because a file's fixity was changed in the manifest"""
         # Makes variables for function input and runs the function.
-        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_004_er')
+        accession_path = join('test_data', 'validate_bag', '2023_test002_004_er')
         bag_name = '2023_test002_004_er_bag'
         input_directory = 'test_data'
         result = validate_bag(join(accession_path, bag_name), input_directory)
@@ -146,8 +146,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.4.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.4.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.2', '2023.2.4.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.4.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.2.4.ER. The bag is not valid. Bag validation failed: '
                      'data\\CD_2\\File2.txt md5 validation failed: '
                      'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"',
@@ -157,7 +157,7 @@ class MyTestCase(unittest.TestCase):
     def test_missing_bag_info(self):
         """Test for when the bag is not valid because bag-info.txt is missing"""
         # Makes variables for function input and runs the function.
-        accession_path = join('test_data', 'test_002_bags_invalid', '2023_test002_005_er')
+        accession_path = join('test_data', 'validate_bag', '2023_test002_005_er')
         bag_name = '2023_test002_005_er_bag'
         input_directory = 'test_data'
         result = validate_bag(join(accession_path, bag_name), input_directory)
@@ -171,8 +171,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.2', '2023.2.5.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.5.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.2', '2023.2.5.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.2', '2023.2.5.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.2', '2023.2.5.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.2.5.ER. The bag is not valid. Bag validation failed: '
                      'bag-info.txt exists in manifest but was not found on filesystem', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for missing bag-info.txt, preservation_log.txt')
@@ -180,7 +180,7 @@ class MyTestCase(unittest.TestCase):
     def test_valid(self):
         """Test for when the bag is valid"""
         # Makes variables for function input and runs the function.
-        accession_path = join('test_data', 'test_001_bags_valid', '2023_test001_001_er')
+        accession_path = join('test_data', 'validate_bag', '2023_test001_001_er')
         bag_name = '2023_test001_001_er_bag'
         input_directory = 'test_data'
         result = validate_bag(join(accession_path, bag_name), input_directory)
@@ -194,8 +194,8 @@ class MyTestCase(unittest.TestCase):
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.1.ER', '2023-10-31', 'nan', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.1.ER', date.today().strftime('%Y-%m-%d'), 'nan',
+                    ['TEST.1', '2023.1.1.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.1.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.1.1.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, preservation_log.txt')
 

@@ -1,0 +1,1 @@
+d9c3e628f035cc7dbd814855aa40a911  C:\GitHub\hub-monitoring\tests\validate_fixity\test_data\script\valid\Born-digital\closed\test_004\2023_test004_003_er\2023_test004_003_er.zip
