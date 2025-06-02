@@ -65,6 +65,19 @@ class MyTestCase(unittest.TestCase):
                      'Zip', 'no-acc-num_zip_md5.txt', 'BLANK']]
         self.assertEqual(result, expected, "Problem with test for acc_zip")
 
+    def test_extra_status(self):
+        """Test for when there is another folder at the "status" level (not included in log)"""
+        # Makes the variable for function input and runs the function.
+        acc_dir = os.path.join('test_data', 'log', 'extra_status', 'born-digital')
+        fixity_validation_log(acc_dir)
+
+        # Verifies the log has the correct values.
+        result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
+                    ['closed', 'rbrl333', 'no-acc-num', os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),
+                     'Bag', 'no-acc-num_bag', 'BLANK']]
+        self.assertEqual(result, expected, "Problem with test for extra_status")
+
 
 if __name__ == '__main__':
     unittest.main()

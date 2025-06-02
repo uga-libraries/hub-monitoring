@@ -1,0 +1,1 @@
+Placeholder for a folder that is not in backlogged or closed and should be skipped
