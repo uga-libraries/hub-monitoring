@@ -15,14 +15,14 @@ class MyTestCase(unittest.TestCase):
         folders = ['acc_bag', 'acc_zip', 'extra_status', 'no_acc', 'no_fixity']
         log_name = f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"
         for folder in folders:
-            log_path = os.path.join(os.getcwd(), 'test_data', 'log', folder, 'born-digital', log_name)
+            log_path = os.path.join(os.getcwd(), 'test_data', 'fixity_validation_log', folder, 'born-digital', log_name)
             if os.path.exists(log_path):
                 os.remove(log_path)
 
     def test_acc_bag(self):
         """Test for when the accessions are in bags for fixity validation"""
         # Makes the variable for function input and runs the function.
-        acc_dir = os.path.join('test_data', 'log', 'acc_bag', 'born-digital')
+        acc_dir = os.path.join('test_data', 'fixity_validation_log', 'acc_bag', 'born-digital')
         fixity_validation_log(acc_dir)
 
         # Verifies the log has the correct values.
@@ -45,7 +45,7 @@ class MyTestCase(unittest.TestCase):
     def test_acc_zip(self):
         """Test for when the accessions are zipped with a md5 in a text file for fixity validation"""
         # Makes the variable for function input and runs the function.
-        acc_dir = os.path.join('test_data', 'log', 'acc_zip', 'born-digital')
+        acc_dir = os.path.join('test_data', 'fixity_validation_log', 'acc_zip', 'born-digital')
         fixity_validation_log(acc_dir)
 
         # Verifies the log has the correct values.
@@ -68,7 +68,7 @@ class MyTestCase(unittest.TestCase):
     def test_extra_status(self):
         """Test for when there is another folder at the "status" level (not included in log)"""
         # Makes the variable for function input and runs the function.
-        acc_dir = os.path.join('test_data', 'log', 'extra_status', 'born-digital')
+        acc_dir = os.path.join('test_data', 'fixity_validation_log', 'extra_status', 'born-digital')
         fixity_validation_log(acc_dir)
 
         # Verifies the log has the correct values.
@@ -81,7 +81,7 @@ class MyTestCase(unittest.TestCase):
     def test_no_acc(self):
         """Test for when there are folders at the "accession" level that aren't accessions (included in log)"""
         # Makes the variable for function input and runs the function.
-        acc_dir = os.path.join('test_data', 'log', 'no_acc', 'Born-digital')
+        acc_dir = os.path.join('test_data', 'fixity_validation_log', 'no_acc', 'Born-digital')
         fixity_validation_log(acc_dir)
 
         # Verifies the log has the correct values.
@@ -100,7 +100,7 @@ class MyTestCase(unittest.TestCase):
     def test_no_fixity(self):
         """Test for when there are folders that are accessions but don't have fixity information  (included in log)"""
         # Makes the variable for function input and runs the function.
-        acc_dir = os.path.join('test_data', 'log', 'no_fixity', 'born-digital')
+        acc_dir = os.path.join('test_data', 'fixity_validation_log', 'no_fixity', 'born-digital')
         fixity_validation_log(acc_dir)
 
         # Verifies the log has the correct values.
