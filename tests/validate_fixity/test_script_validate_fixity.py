@@ -17,7 +17,7 @@ def csv_to_list(csv_path, delimiter=','):
     Blanks are filled with a string because np.nan comparisons work inconsistently.
     """
     df = read_csv(csv_path, delimiter=delimiter)
-    df = df.fillna('nan')
+    df = df.fillna('BLANK')
     csv_list = [df.columns.tolist()] + df.values.tolist()
     return csv_list
 
