@@ -164,28 +164,6 @@ def fixity_validation_log(acc_dir):
                                 log_writer.writerow(row)
 
 
-def manifest_validation_log(report_dir, acc_id, errors):
-    """Make a log with all file validation errors from a single accession
-
-    This is too much information to include in the preservation log.
-    The file is saved in the input_directory.
-
-    @:parameter
-    report_dir (string): directory where the report is saved (script argument input_directory)
-    acc_id (string): the accession number, used for naming the report
-    errors (list): a list of validation errors to include in the report
-
-    @:returns
-    None
-    """
-
-    with open(os.path.join(report_dir, f'{acc_id}_manifest_validation_errors.csv'), 'w', newline='',
-              encoding='utf-8') as open_log:
-        log_writer = csv.writer(open_log)
-        log_writer.writerow(['File', 'MD5', 'MD5_Source'])
-        log_writer.writerows(errors)
-
-
 def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
     """Update an accession's preservation log with the validation results
 
