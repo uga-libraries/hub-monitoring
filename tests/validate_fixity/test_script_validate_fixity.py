@@ -15,7 +15,7 @@ def csv_to_list(csv_path, delimiter=','):
     Delimiter is supplied so this works on the preservation log, which is tab separated instead of commas.
     Blanks are filled with a string because np.nan comparisons work inconsistently.
     """
-    df = pd.read_csv(csv_path, delimiter=delimiter)
+    df = pd.read_csv(csv_path, dtype=str, delimiter=delimiter)
     df = df.fillna('BLANK')
     csv_list = [df.columns.tolist()] + df.values.tolist()
     return csv_list
