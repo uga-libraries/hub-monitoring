@@ -359,6 +359,51 @@ def validate_bag_manifest(bag_dir, report_dir):
         return f'{len(error_list)} bag manifest errors'
 
 
+def validate_zip(acc_dir, zip_md5):
+    """Validate a zipped accession with a zip md5 text file and log the results
+
+    Accession's with long file paths cannot be bagged.
+    They are zipped and have a file accession-id_zip_md5.txt with the zip MD5 instead.
+
+    @:parameter
+    acc_dir (string): the path to an accession folder
+    zip_md5 (string): the name of the file in the accession folder
+
+    @:returns
+    validation_result (string): the validation error or "Valid"
+    """
+
+    # Reads the expected MD5 from the zip_md5 text file.
+    # The file has one row, with text formatted MD5<space><space>Zip_Path (md5deep output)
+    zip_md5_path = os.path.join(acc_dir, zip_md5)
+    with open(zip_md5_path) as open_file:
+        text = open_file.read()
+        expected_md5 = text.split(' ')[0]
+
+    # Calculates the current MD5 of the accession zip file.
+    # The file is named accession-id.zip
+    acc_zip_path = os.path.join(acc_dir, f'{os.path.basename(acc_dir)}.zip')
+    with open(acc_zip_path, 'rb') as open_file:
+        data = open_file.read()
+        current_md5 = hashlib.md5(data).hexdigest()
+
+    # Updates the preservation log and returns the validation result.
+    # The accession is valid if the MD5s are identical.
+    if expected_md5 == current_md5:
+        try:
+            update_preservation_log(acc_dir, True, 'zip md5')
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
+        return 'Valid'
+    else:
+        error_message = f'Fixity changed from {expected_md5} to {current_md5}.'
+        try:
+            update_preservation_log(acc_dir, False, 'zip md5', error_message)
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
+        return error_message
+
+
 if __name__ == '__main__':
 
     # Gets the path to the directory with the accessions to be validated from the script argument.
