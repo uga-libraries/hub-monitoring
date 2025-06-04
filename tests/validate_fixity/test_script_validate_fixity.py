@@ -26,29 +26,29 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder,
-        and delete all other test outputs if they were created."""
+        and delete the fixity validation log if it was created."""
 
         # For each accession, replaces the updated log with a copy of the original log from the accession folder.
-        accessions = [os.path.join('test_data', 'script', 'mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_002_er'),
-                      os.path.join('test_data', 'script', 'mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_004_er'),
-                      os.path.join('test_data', 'script', 'mix', 'born-digital', 'backlogged', 'test_005', '2023_test005_001_er'),
-                      os.path.join('test_data', 'script', 'restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test004_002_er'),
-                      os.path.join('test_data', 'script', 'restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test005_004_er'),
-                      os.path.join('test_data', 'script', 'valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
-                      os.path.join('test_data', 'script', 'valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
+        accessions = [os.path.join('mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_002_er'),
+                      os.path.join('mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_004_er'),
+                      os.path.join('mix', 'born-digital', 'backlogged', 'test_005', '2023_test005_001_er'),
+                      os.path.join('restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test004_002_er'),
+                      os.path.join('restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test005_004_er'),
+                      os.path.join('valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
+                      os.path.join('valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
-            shutil.copyfile(os.path.join(accession, 'preservation_log_copy.txt'), os.path.join(accession, 'preservation_log.txt'))
+            accession_path = os.path.join('test_data', 'script', accession)
+            shutil.copyfile(os.path.join(accession_path, 'preservation_log_copy.txt'),
+                            os.path.join(accession_path, 'preservation_log.txt'))
 
-        # Deletes any script output that is present.
-        today = date.today().strftime('%Y-%m-%d')
-        outputs = [os.path.join('test_data', 'script', 'mix', 'born-digital', f'fixity_validation_log_{today}.csv'),
-                   os.path.join('test_data', 'script', 'mix', 'born-digital', '2023_test005_001_er_manifest_validation_errors.csv'),
-                   os.path.join('test_data', 'script', 'restart', 'born-digital', '2023_test005_004_er_manifest_validation_errors.csv'),
-                   os.path.join('test_data', 'script', 'restart', 'born-digital', f"fixity_validation_log_{today}.csv"),
-                   os.path.join('test_data', 'script', 'valid', 'Born-digital', f'fixity_validation_log_{today}.csv')]
-        for output in outputs:
-            if os.path.exists(output):
-                os.remove(output)
+        # Deletes the fixity validation log, if present.
+        input_dirs = [os.path.join('test_data', 'script', 'mix', 'born-digital'),
+                      os.path.join('test_data', 'script', 'restart', 'born-digital'),
+                      os.path.join('test_data', 'script', 'valid', 'Born-digital')]
+        for input_dir in input_dirs:
+            log_path = os.path.join(input_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
+            if os.path.exists(log_path):
+                os.remove(log_path)
 
     def test_mix(self):
         """Test for when the script runs correctly on a mix of valid and not valid accessions,
