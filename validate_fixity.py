@@ -147,21 +147,25 @@ def fixity_validation_log(acc_dir):
                                     if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
                                         fixity_type = 'Bag'
                                         fixity = f'{folder}_bag'
+                                        is_valid = None
                                         result = None
                                     elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
                                         fixity_type = 'Zip'
                                         fixity = f'{folder}_zip_md5.txt'
+                                        is_valid = None
                                         result = None
                                     else:
                                         fixity_type = None
                                         fixity = None
+                                        is_valid = 'False'
                                         result = 'No fixity information'
                                 else:
                                     fixity_type = None
                                     fixity = None
+                                    is_valid = 'Skipped'
                                     result = 'Not an accession'
                                 # Adds information for folder to the log.
-                                row = [status, collection, folder, accession_path, fixity_type, fixity, None, result]
+                                row = [status, collection, folder, accession_path, fixity_type, fixity, is_valid, result]
                                 log_writer.writerow(row)
 
 
@@ -252,10 +256,9 @@ def update_fixity_validation_log(log_path, df, row, result):
     df.loc[row, 'Result'] = result
 
     # Determines if valid, based on result, and adds to Valid column.
+    # Rows skipped for not being an accession already have a value in this column.
     if result.startswith('Valid'):
         is_valid = True
-    elif result == 'Not an accession':
-        is_valid = 'Skipped'
     else:
         is_valid = False
     df.loc[row, 'Valid'] = is_valid

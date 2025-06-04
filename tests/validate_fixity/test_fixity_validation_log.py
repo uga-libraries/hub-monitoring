@@ -92,9 +92,9 @@ class MyTestCase(unittest.TestCase):
                      'Bag', '2022-1-er_bag', 'BLANK', 'BLANK'],
                     ['backlogged', 'ua22-333 records', 'Appraisal copy',
                      os.path.join(acc_dir, 'backlogged', 'ua22-333 records', 'Appraisal copy'),
-                     'BLANK', 'BLANK', 'BLANK', 'Not an accession'],
+                     'BLANK', 'BLANK', 'Skipped', 'Not an accession'],
                     ['closed', 'harg1234', 'access', os.path.join(acc_dir, 'closed', 'harg1234', 'access'),
-                     'BLANK', 'BLANK', 'BLANK', 'Not an accession']]
+                     'BLANK', 'BLANK', 'Skipped', 'Not an accession']]
         self.assertEqual(result, expected, "Problem with test for no_acc")
 
     def test_no_fixity(self):
@@ -107,9 +107,9 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Valid', 'Result'],
                     ['closed', 'rbrl333', '2002_02_er', os.path.join(acc_dir, 'closed', 'rbrl333', '2002_02_er'),
-                     'BLANK', 'BLANK', 'BLANK', 'No fixity information'],
+                     'BLANK', 'BLANK', 'False', 'No fixity information'],
                     ['closed', 'rbrl333', 'no-acc-num', os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),
-                     'BLANK', 'BLANK', 'BLANK', 'No fixity information']]
+                     'BLANK', 'BLANK', 'False', 'No fixity information']]
         self.assertEqual(result, expected, "Problem with test for no_acc")
 
 
