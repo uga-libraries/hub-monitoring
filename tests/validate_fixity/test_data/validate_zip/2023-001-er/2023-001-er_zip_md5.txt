@@ -1,0 +1,1 @@
+0000xxx000x0000x000xx0000xx00x00  C:\Users\ahanson\Documents\GitHub\hub-monitoring\tests\validate_fixity\test_data\validate_zip\2023-001-er\2023-001-er.zip

@@ -1,0 +1,1 @@
+ca5663797f500e47c4f49097f9a5c8fd  C:\Users\ahanson\Documents\GitHub\hub-monitoring\tests\validate_fixity\test_data\validate_zip\2023-002-er\2023-002-er.zip

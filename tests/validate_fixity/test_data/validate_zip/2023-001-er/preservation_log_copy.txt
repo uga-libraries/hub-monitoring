@@ -1,0 +1,5 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+T4	2023.1.ER	2023-10-03	CD.1	Virus scanned and copied, no errors.	JD
+T4	2023.1.ER	2023-10-03	CD.2	Virus scanned and copied, no errors.	JD
+T4	2023.1.ER	2023-10-03		Can't bag; zip and save MD5.	JD
+T4	2023.1.ER	2023-10-03		Validated zip MD5. Valid.	JD
