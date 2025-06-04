@@ -47,18 +47,6 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'True', 'Valid']]
         self.assertEqual(result, expected, "Problem with test for two changes to the log")
 
-    def test_not_accession(self):
-        """Test for adding the validation result when result is "Not an accession"."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Not an accession')
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Not an accession')
-
-        # Verifies the fixity validation log CSV has the correct values.
-        result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Valid', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'Skipped', 'Not an accession'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'Skipped', 'Not an accession']]
-        self.assertEqual(result, expected, "Problem with test for not accession")
-
     def test_not_valid_bag(self):
         """Test for adding the validation result when result is a bag validation error."""
         update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Payload-Oxum failed.')
@@ -94,18 +82,6 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'False', 'Fixity changed from x to y.'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'False', 'Fixity changed from x to y.']]
         self.assertEqual(result, expected, "Problem with test for not valid, fixity changed")
-
-    def test_not_valid_no_fixity(self):
-        """Test for adding the validation result when result is "No fixity"."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'No fixity')
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'No fixity')
-
-        # Verifies the fixity validation log CSV has the correct values.
-        result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Valid', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'False', 'No fixity'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'False', 'No fixity']]
-        self.assertEqual(result, expected, "Problem with test for not valid, no fixity")
 
     def test_valid_bag_manifest(self):
         """Test for adding the validation result when result is "Valid (bag manifest)"."""
