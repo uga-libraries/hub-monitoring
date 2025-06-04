@@ -174,8 +174,8 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     @:parameter
     acc_dir (string): the path to an accession folder, which contains the preservation log
     validation_result (Boolean): if an accession's file fixity is valid
-    validation_type (string): bag, bag manifest, or manifest
-    error_msg (None or string; optional): included for bag validation so error details can be in the log
+    validation_type (string): bag, bag manifest, or zip md5
+    error_msg (None or string; optional): included if there are additional error details to add to the log
 
     @:returns
     None
@@ -200,7 +200,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     today = date.today().strftime('%Y-%m-%d')
 
     # Calculates the action to include in the log entry for the validation.
-    # It includes the type of validation, if it was valid, and any bag validation error.
+    # It includes the type of validation, if it was valid, and any additional error message.
     if validation_result:
         action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
     else:
@@ -212,7 +212,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
         elif validation_type == 'bag manifest':
             action = f'Validated bag manifest for accession {accession}. The bag manifest is not valid.'
         else:
-            action = f'Validated manifest for accession {accession}. The manifest is not valid.'
+            action = f'Validated zip md5 for accession {accession}. The zip is not valid. {error_msg}'
 
     # Reads the contents of preservation_log.txt for checking for legacy formatting.
     with open(log_path) as open_log:
@@ -225,7 +225,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
               f'could not update with validation result.\n')
         return
 
-    # Adds a row to the end of the preservation log for the bag validation.
+    # Adds a row to the end of the preservation log for the accession validation.
     # First adds a line return after existing text, if missing, so the new data is on its own row.
     log_row = [collection, accession, today, None, action, 'validate_fixity.py']
     with open(log_path, 'a', newline='') as open_log:

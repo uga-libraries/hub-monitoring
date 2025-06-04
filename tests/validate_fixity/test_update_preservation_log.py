@@ -104,52 +104,54 @@ class MyTestCase(unittest.TestCase):
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for bag manifest, valid')
 
-    def test_manifest_not_valid(self):
-        """Test for when the manifest is not valid"""
+    def test_zip_not_valid(self):
+        """Test for when the MD5 for the zip is not valid (is changed)"""
         # Makes the variables needed for function input and runs the function.
         acc_dir = join('test_data', 'update_preservation_log', '2023_test003_005_er')
         valid = False
-        update_preservation_log(acc_dir, valid, 'manifest')
+        error_message = 'Fixity changed from xxxxxxxxx to yyyyyyyyy.'
+        update_preservation_log(acc_dir, valid, 'zip md5', error_message)
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.5.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.5.ER', '2023-02-28', 'BLANK', 'Made manifest, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.5.ER', '2023-02-28', 'BLANK', 'Made zip, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.5.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
-                     'Validated manifest for accession 2023.3.5.ER. The manifest is not valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for manifest, not valid')
+                     'Validated zip md5 for accession 2023.3.5.ER. The zip is not valid. '
+                     'Fixity changed from xxxxxxxxx to yyyyyyyyy.', 'validate_fixity.py']]
+        self.assertEqual(result, expected, 'Problem with test for zip, not valid')
 
-    def test_manifest_valid(self):
-        """Test for when the manifest is valid"""
+    def test_zip_valid(self):
+        """Test for when the MD5 for the zip is valid (has not changed)"""
         # Makes the variables needed for function input and runs the function.
         acc_dir = join('test_data', 'update_preservation_log', '2023_test003_006_er')
         valid = True
-        update_preservation_log(acc_dir, valid, 'manifest')
+        update_preservation_log(acc_dir, valid, 'zip md5')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.6.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.6.ER', '2023-02-28', 'BLANK', 'Made manifest, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.6.ER', '2023-02-28', 'BLANK', 'Made zip, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.6.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
-                     'Validated manifest for accession 2023.3.6.ER. The manifest is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for manifest, valid')
+                     'Validated zip md5 for accession 2023.3.6.ER. The zip md5 is valid.', 'validate_fixity.py']]
+        self.assertEqual(result, expected, 'Problem with test for zip, valid')
 
     def test_no_end_return(self):
         """Test for when the preservation_log.txt has no return at the end of the last line"""
         # Makes the variables needed for function input and runs the function.
         acc_dir = join('test_data', 'update_preservation_log', '2023_test003_007_er')
         valid = True
-        update_preservation_log(acc_dir, valid, 'manifest')
+        update_preservation_log(acc_dir, valid, 'bag')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.7.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
-                    ['TEST.3', '2023.3.7.ER', '2023-02-28', 'BLANK', 'Made manifest, no errors.', 'Jane Doe'],
+                    ['TEST.3', '2023.3.7.ER', '2023-02-28', 'BLANK', 'Made bag, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.7.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
-                     'Validated manifest for accession 2023.3.7.ER. The manifest is valid.', 'validate_fixity.py']]
+                     'Validated bag for accession 2023.3.7.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for no end return')
 
     def test_nonstandard(self):
@@ -159,7 +161,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables needed for function input and runs the function.
         acc_dir = join('test_data', 'update_preservation_log', '2023_test003_008_er')
         valid = True
-        update_preservation_log(acc_dir, valid, 'manifest')
+        update_preservation_log(acc_dir, valid, 'bag')
 
         # Verifies the contents of the log have NOT been updated.
         result = csv_to_list(join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -175,7 +177,7 @@ class MyTestCase(unittest.TestCase):
     #     # Makes the variables needed for function input and runs the function.
     #     acc_dir = join('test_data', 'update_preservation_log', '2023_test003_009_er')
     #     valid = True
-    #     update_preservation_log(acc_dir, valid, 'manifest')
+    #     update_preservation_log(acc_dir, valid, 'bag')
     #
     #     # This test will always say it passes. Look at what it prints to determine if it is correct.
     #     self.assertEqual(True, True)
