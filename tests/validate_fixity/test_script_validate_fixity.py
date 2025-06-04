@@ -57,6 +57,7 @@ class MyTestCase(unittest.TestCase):
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
         input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'mix', 'born-digital')
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, capture_output=True, text=True)
+        today = date.today().strftime('%Y-%m-%d')
 
         # # Verifies the script printed the correct message about the missing preservation log and validation errors.
         result = output.stdout
@@ -69,7 +70,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for mix, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
-        today = date.today().strftime('%Y-%m-%d')
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
                     ['backlogged', 'test_001', '2023_test001_002_er',
@@ -152,6 +152,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, capture_output=True, text=True)
+        today = date.today().strftime('%Y-%m-%d')
 
         # Verifies the script printed the correct message about validation errors.
         result = output.stdout
@@ -161,7 +162,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for restart, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
-        today = date.today().strftime('%Y-%m-%d')
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
                     ['backlogged', 'coll_2023', '2023_test001_001_er', os.path.join(coll_path, '2023_test001_001_er'),
@@ -183,7 +183,7 @@ class MyTestCase(unittest.TestCase):
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied, no errors.', 'JD'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'BLANK', "Can't bag; made zip.", 'JD'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'BLANK', 'Validated zip. Valid.', 'JD'],
-                    ['T4', '2023.T4.02.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
+                    ['T4', '2023.T4.02.ER', today, 'BLANK',
                      'Validated zip md5 for accession 2023.T4.02.ER. The zip md5 is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for restart, 2023_test004_002_er preservation log')
 
@@ -195,7 +195,7 @@ class MyTestCase(unittest.TestCase):
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'BLANK', "Can't bag; made zip.", 'JD'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'BLANK', 'Validated zip. Valid.', 'JD'],
-                    ['T5', '2023.T5.04.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
+                    ['T5', '2023.T5.04.ER', today, 'BLANK',
                      'Validated zip md5 for accession 2023.T5.04.ER. The zip is not valid. '
                      'Fixity changed from a1b11111cd111efa111b11c11111d1e1 to d3f13182fa611fcd011f70c42755e9e4.',
                      'validate_fixity.py']]
@@ -210,6 +210,7 @@ class MyTestCase(unittest.TestCase):
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
         input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'valid', 'Born-digital')
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, capture_output=True, text=True)
+        today = date.today().strftime('%Y-%m-%d')
 
         # Verifies the script printed the correct message about validation errors.
         result = output.stdout
@@ -220,7 +221,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result, expected, 'Problem with test for valid, printed message')
 
         # Verifies the contents of the fixity validation log.
-        today = date.today().strftime('%Y-%m-%d')
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'],
                     ['closed', 'test_001', '2023_test001_001_er',
@@ -240,7 +240,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
-                    ['TEST.1', '2023.1.1.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
+                    ['TEST.1', '2023.1.1.ER', today, 'BLANK',
                      'Validated bag for accession 2023.1.1.ER. The bag is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, 2023_test001_001_er preservation log')
 
@@ -252,7 +252,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.002', 'Copied.', 'Jane Doe'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'BLANK', 'Can\'t bag; made zip.', 'Jane Doe'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'BLANK', 'Validated zip. Valid.', 'Jane Doe'],
-                    ['TEST.004', '2023.test004.003.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
+                    ['TEST.004', '2023.test004.003.ER', today, 'BLANK',
                      'Validated zip md5 for accession 2023.test004.003.ER. The zip md5 is valid.',
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, 2023_test004_003_er preservation log')
