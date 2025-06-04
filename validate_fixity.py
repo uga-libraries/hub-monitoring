@@ -110,6 +110,7 @@ def fixity_validation_log(acc_dir):
     Accession_Path is the full path to the folder which contains the digital content.
     Fixity_Type is Bag or Zip and will be used to determine how to validate the accession, or None.
     Fixity is the name of the bag folder or zip md5 file with the fixity information, or None.
+    Valid is None and will be updated with True, False, or Skipped after validation.
     Result is None for accessions to validate, "Not an accession", or "No fixity".
 
     There are other folders frequently at the accession level, such as FITS files and copies for appraisal.
@@ -127,7 +128,7 @@ def fixity_validation_log(acc_dir):
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
     with (open(log_path, 'w', newline='') as open_log):
         log_writer = csv.writer(open_log)
-        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'])
+        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Valid', 'Result'])
 
         # Navigates the input_directory to get information about each folder at the accession level and adds to the log.
         for status in os.listdir(acc_dir):
@@ -146,21 +147,25 @@ def fixity_validation_log(acc_dir):
                                     if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
                                         fixity_type = 'Bag'
                                         fixity = f'{folder}_bag'
+                                        is_valid = None
                                         result = None
                                     elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
                                         fixity_type = 'Zip'
                                         fixity = f'{folder}_zip_md5.txt'
+                                        is_valid = None
                                         result = None
                                     else:
                                         fixity_type = None
                                         fixity = None
+                                        is_valid = 'False'
                                         result = 'No fixity information'
                                 else:
                                     fixity_type = None
                                     fixity = None
+                                    is_valid = 'Skipped'
                                     result = 'Not an accession'
                                 # Adds information for folder to the log.
-                                row = [status, collection, folder, accession_path, fixity_type, fixity, result]
+                                row = [status, collection, folder, accession_path, fixity_type, fixity, is_valid, result]
                                 log_writer.writerow(row)
 
 
@@ -247,7 +252,19 @@ def update_fixity_validation_log(log_path, df, row, result):
     None
     """
 
+    # Adds validation result to Result column.
     df.loc[row, 'Result'] = result
+
+    # Determines if valid, based on result, and adds to Valid column.
+    # Rows skipped for not being an accession already have a value in this column.
+    if result.startswith('Valid'):
+        is_valid = True
+    else:
+        is_valid = False
+    df.loc[row, 'Valid'] = is_valid
+
+    # Saves the updated information to fixity_validation_log.csv, so if the script breaks,
+    # the information is correct for all accessions prior to the break.
     df.to_csv(log_path, index=False)
 
 
