@@ -110,6 +110,7 @@ def fixity_validation_log(acc_dir):
     Accession_Path is the full path to the folder which contains the digital content.
     Fixity_Type is Bag or Zip and will be used to determine how to validate the accession, or None.
     Fixity is the name of the bag folder or zip md5 file with the fixity information, or None.
+    Valid is None and will be updated with True, False, or Skipped after validation.
     Result is None for accessions to validate, "Not an accession", or "No fixity".
 
     There are other folders frequently at the accession level, such as FITS files and copies for appraisal.
@@ -127,7 +128,7 @@ def fixity_validation_log(acc_dir):
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
     with (open(log_path, 'w', newline='') as open_log):
         log_writer = csv.writer(open_log)
-        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Result'])
+        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Valid', 'Result'])
 
         # Navigates the input_directory to get information about each folder at the accession level and adds to the log.
         for status in os.listdir(acc_dir):
@@ -160,7 +161,7 @@ def fixity_validation_log(acc_dir):
                                     fixity = None
                                     result = 'Not an accession'
                                 # Adds information for folder to the log.
-                                row = [status, collection, folder, accession_path, fixity_type, fixity, result]
+                                row = [status, collection, folder, accession_path, fixity_type, fixity, None, result]
                                 log_writer.writerow(row)
 
 
