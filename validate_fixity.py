@@ -248,7 +248,20 @@ def update_fixity_validation_log(log_path, df, row, result):
     None
     """
 
+    # Adds validation result to Result column.
     df.loc[row, 'Result'] = result
+
+    # Determines if valid, based on result, and adds to Valid column.
+    if result.startswith('Valid'):
+        is_valid = True
+    elif result == 'Not an accession':
+        is_valid = 'Skipped'
+    else:
+        is_valid = False
+    df.loc[row, 'Valid'] = is_valid
+
+    # Saves the updated information to fixity_validation_log.csv, so if the script breaks,
+    # the information is correct for all accessions prior to the break.
     df.to_csv(log_path, index=False)
 
 
