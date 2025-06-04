@@ -193,26 +193,23 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     # and they are formatted differently than the folder names so must be taken from the log.
     with open(log_path, 'r') as open_log:
         last_row = open_log.readlines()[-1].split('\t')
-        collection = last_row[0]
-        accession = last_row[1]
-
-    # Formats today's date YYYY-MM-DD to include in the log entry for bag validation.
-    today = date.today().strftime('%Y-%m-%d')
+        collection_id = last_row[0]
+        accession_id = last_row[1]
 
     # Calculates the action to include in the log entry for the validation.
     # It includes the type of validation, if it was valid, and any additional error message.
     if validation_result:
-        action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
+        action = f'Validated {validation_type} for accession {accession_id}. The {validation_type} is valid.'
     else:
         if validation_type == 'bag':
             if error_msg.startswith('BagError'):
-                action = f'Validated bag for accession {accession}. The bag could not be validated. {error_msg}'
+                action = f'Validated bag for accession {accession_id}. The bag could not be validated. {error_msg}'
             else:
-                action = f'Validated bag for accession {accession}. The bag is not valid. {error_msg}'
+                action = f'Validated bag for accession {accession_id}. The bag is not valid. {error_msg}'
         elif validation_type == 'bag manifest':
-            action = f'Validated bag manifest for accession {accession}. The bag manifest is not valid.'
+            action = f'Validated bag manifest for accession {accession_id}. The bag manifest is not valid.'
         else:
-            action = f'Validated zip md5 for accession {accession}. The zip is not valid. {error_msg}'
+            action = f'Validated zip md5 for accession {accession_id}. The zip is not valid. {error_msg}'
 
     # Reads the contents of preservation_log.txt for checking for legacy formatting.
     with open(log_path) as open_log:
@@ -227,7 +224,8 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
 
     # Adds a row to the end of the preservation log for the accession validation.
     # First adds a line return after existing text, if missing, so the new data is on its own row.
-    log_row = [collection, accession, today, None, action, 'validate_fixity.py']
+    validation_date = date.today().strftime('%Y-%m-%d')
+    log_row = [collection_id, accession_id, validation_date, None, action, 'validate_fixity.py']
     with open(log_path, 'a', newline='') as open_log:
         if not log_text.endswith('\n'):
             open_log.write('\n')
