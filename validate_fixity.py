@@ -17,7 +17,7 @@ Returns:
 """
 import bagit
 import csv
-from datetime import date
+from datetime import date, datetime
 import hashlib
 import os
 import re
@@ -265,6 +265,11 @@ def update_fixity_validation_log(log_path, df, row, result):
     else:
         is_valid = False
     df.loc[row, 'Valid'] = is_valid
+
+    # Adds the time of validation (using the current time, when the log is updated just after validation) to log.
+    # This is used to update preservation logs if they had formatting errors and for stats on this process.
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
+    df.loc[row, 'Valid_Time'] = timestamp
 
     # Saves the updated information to fixity_validation_log.csv, so if the script breaks,
     # the information is correct for all accessions prior to the break.
