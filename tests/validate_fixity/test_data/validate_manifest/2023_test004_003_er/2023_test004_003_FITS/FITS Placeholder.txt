@@ -1,1 +1,0 @@
-In production, this folder would have 1 FITS XML file per file in the accession.

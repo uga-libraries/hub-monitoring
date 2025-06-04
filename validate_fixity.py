@@ -164,28 +164,6 @@ def fixity_validation_log(acc_dir):
                                 log_writer.writerow(row)
 
 
-def manifest_validation_log(report_dir, acc_id, errors):
-    """Make a log with all file validation errors from a single accession
-
-    This is too much information to include in the preservation log.
-    The file is saved in the input_directory.
-
-    @:parameter
-    report_dir (string): directory where the report is saved (script argument input_directory)
-    acc_id (string): the accession number, used for naming the report
-    errors (list): a list of validation errors to include in the report
-
-    @:returns
-    None
-    """
-
-    with open(os.path.join(report_dir, f'{acc_id}_manifest_validation_errors.csv'), 'w', newline='',
-              encoding='utf-8') as open_log:
-        log_writer = csv.writer(open_log)
-        log_writer.writerow(['File', 'MD5', 'MD5_Source'])
-        log_writer.writerows(errors)
-
-
 def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
     """Update an accession's preservation log with the validation results
 
@@ -196,8 +174,8 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     @:parameter
     acc_dir (string): the path to an accession folder, which contains the preservation log
     validation_result (Boolean): if an accession's file fixity is valid
-    validation_type (string): bag, bag manifest, or manifest
-    error_msg (None or string; optional): included for bag validation so error details can be in the log
+    validation_type (string): bag, bag manifest, or zip md5
+    error_msg (None or string; optional): included if there are additional error details to add to the log
 
     @:returns
     None
@@ -215,26 +193,23 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
     # and they are formatted differently than the folder names so must be taken from the log.
     with open(log_path, 'r') as open_log:
         last_row = open_log.readlines()[-1].split('\t')
-        collection = last_row[0]
-        accession = last_row[1]
-
-    # Formats today's date YYYY-MM-DD to include in the log entry for bag validation.
-    today = date.today().strftime('%Y-%m-%d')
+        collection_id = last_row[0]
+        accession_id = last_row[1]
 
     # Calculates the action to include in the log entry for the validation.
-    # It includes the type of validation, if it was valid, and any bag validation error.
+    # It includes the type of validation, if it was valid, and any additional error message.
     if validation_result:
-        action = f'Validated {validation_type} for accession {accession}. The {validation_type} is valid.'
+        action = f'Validated {validation_type} for accession {accession_id}. The {validation_type} is valid.'
     else:
         if validation_type == 'bag':
             if error_msg.startswith('BagError'):
-                action = f'Validated bag for accession {accession}. The bag could not be validated. {error_msg}'
+                action = f'Validated bag for accession {accession_id}. The bag could not be validated. {error_msg}'
             else:
-                action = f'Validated bag for accession {accession}. The bag is not valid. {error_msg}'
+                action = f'Validated bag for accession {accession_id}. The bag is not valid. {error_msg}'
         elif validation_type == 'bag manifest':
-            action = f'Validated bag manifest for accession {accession}. The bag manifest is not valid.'
+            action = f'Validated bag manifest for accession {accession_id}. The bag manifest is not valid.'
         else:
-            action = f'Validated manifest for accession {accession}. The manifest is not valid.'
+            action = f'Validated zip md5 for accession {accession_id}. The zip is not valid. {error_msg}'
 
     # Reads the contents of preservation_log.txt for checking for legacy formatting.
     with open(log_path) as open_log:
@@ -247,9 +222,10 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
               f'could not update with validation result.\n')
         return
 
-    # Adds a row to the end of the preservation log for the bag validation.
+    # Adds a row to the end of the preservation log for the accession validation.
     # First adds a line return after existing text, if missing, so the new data is on its own row.
-    log_row = [collection, accession, today, None, action, 'validate_fixity.py']
+    validation_date = date.today().strftime('%Y-%m-%d')
+    log_row = [collection_id, accession_id, validation_date, None, action, 'validate_fixity.py']
     with open(log_path, 'a', newline='') as open_log:
         if not log_text.endswith('\n'):
             open_log.write('\n')
@@ -378,101 +354,58 @@ def validate_bag_manifest(bag_dir, report_dir):
         df_right['MD5_Source'] = 'Current'
         error_list.extend(df_right.values.tolist())
         accession_number = os.path.basename(os.path.dirname(bag_dir))
-        manifest_validation_log(report_dir, accession_number, error_list)
+        with open(os.path.join(report_dir, f'{accession_number}_manifest_validation_errors.csv'), 'w', newline='',
+                  encoding='utf-8') as open_log:
+            log_writer = csv.writer(open_log)
+            log_writer.writerow(['File', 'MD5', 'MD5_Source'])
+            log_writer.writerows(error_list)
 
         return f'{len(error_list)} bag manifest errors'
 
 
-def validate_manifest(acc_dir, manifest, report_dir):
-    """Validate an accession with an initial manifest and log the results
+def validate_zip(acc_dir, zip_md5):
+    """Validate a zipped accession with a zip md5 text file and log the results
 
     Accession's with long file paths cannot be bagged.
-    They contain a file "initialmanifest_YYYYMMDD.csv" instead.
-    Inspired by https://github.com/uga-libraries/verify-md5-KDPmanifests/blob/main/hashverify.py
+    They are zipped and have a file accession-id_zip_md5.txt with the zip MD5 instead.
 
     @:parameter
     acc_dir (string): the path to an accession folder
-    manifest (string): the path to the accession's manifest file
-    report_dir (string): directory where the report is saved (script argument input_directory)
+    zip_md5 (string): the name of the file in the accession folder
 
     @:returns
     validation_result (string): the validation error or "Valid"
     """
 
-    # Gets the path to the folder with the accession's files.
-    # The accession folder contains this folder and optionally a folder with FITS XML files.
-    acc_files = None
-    for item in os.listdir(acc_dir):
-        if os.path.isdir(os.path.join(acc_dir, item)) and not item.endswith('FITS'):
-            acc_files = os.path.join(acc_dir, item)
+    # Reads the expected MD5 from the zip_md5 text file.
+    # The file has one row, with text formatted MD5<space><space>Zip_Path (md5deep output)
+    zip_md5_path = os.path.join(acc_dir, zip_md5)
+    with open(zip_md5_path) as open_file:
+        text = open_file.read()
+        expected_md5 = text.split(' ')[0]
 
-    # If acc_files is still None,
-    # the folder has likely been incorrectly identified as an accession to validate with a manifest.
-    if acc_files is None:
-        return 'Unable to identify folder to validate with the manifest'
+    # Calculates the current MD5 of the accession zip file.
+    # The file is named accession-id.zip
+    acc_zip_path = os.path.join(acc_dir, f'{os.path.basename(acc_dir)}.zip')
+    with open(acc_zip_path, 'rb') as open_file:
+        data = open_file.read()
+        current_md5 = hashlib.md5(data).hexdigest()
 
-    # Makes a dataframe with the path and MD5 of every file in acc_files.
-    files_list = []
-    for root, dirs, files in os.walk(acc_files):
-        for file in files:
-            filepath = os.path.join(root, file)
-            # If the file path is too long, it causes a FileNotFoundError and cannot calculate the MD5.
-            try:
-                with open(filepath, 'rb') as open_file:
-                    data = open_file.read()
-                    md5_generated = hashlib.md5(data).hexdigest()
-                files_list.append([filepath, md5_generated.upper()])
-            except FileNotFoundError:
-                files_list.append([filepath, 'FileNotFoundError-cannot-calculate-md5'])
-    df_files = pd.DataFrame(files_list, columns=['Acc_Path', 'Acc_MD5'], dtype=object)
-
-    # Reads the manifest into a dataframe.
-    df_manifest = pd.read_csv(os.path.join(acc_dir, manifest), dtype=object)
-
-    # Merge the two dataframes to compare them.
-    df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='MD5', right_on='Acc_MD5', indicator='Match')
-
-    # Determines if everything matched (values in Match will all be both)
-    all_match = df_compare['Match'].eq('both').all(axis=0)
-
-    # Makes a list of the path, MD5, and source of the MD5 (manifest or file) for any that did not match,
-    # if there were any that did not match.
-    error_list = []
-    if not all_match:
-        df_left = df_compare[df_compare['Match'] == 'left_only']
-        df_left = df_left[['File', 'MD5']]
-        df_left['MD5_Source'] = 'Manifest'
-        error_list.extend(df_left.values.tolist())
-        df_right = df_compare[df_compare['Match'] == 'right_only']
-        df_right = df_right[['Acc_Path', 'Acc_MD5']]
-        df_right['MD5_Source'] = 'Current'
-        error_list.extend(df_right.values.tolist())
-
-    # Compares the number of files in the accession to the number of files in the manifest
-    # to detect if the number of duplicate files has changed.
-    accession_count = len(df_files.index)
-    manifest_count = len(df_manifest.index)
-    if accession_count != manifest_count:
-        error_list.append([f'Number of files does not match. '
-                          f'{accession_count} files in the accession folder and {manifest_count} in the manifest.'])
-
-    # Determines if there were any errors, based on the contents of errors_list.
-    valid = len(error_list) == 0
-
-    # Updates the preservation log.
-    try:
-        update_preservation_log(acc_dir, valid, 'manifest')
-    except IndexError:
-        print("Cannot update preservation log: nonstandard delimiter")
-
-    # Returns the validation result, either the number of errors or "Valid".
-    # If there were errors, also saves the full results to a log in the input_directory.
-    if valid:
+    # Updates the preservation log and returns the validation result.
+    # The accession is valid if the MD5s are identical.
+    if expected_md5 == current_md5:
+        try:
+            update_preservation_log(acc_dir, True, 'zip md5')
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
         return 'Valid'
     else:
-        accession_number = os.path.basename(acc_dir)
-        manifest_validation_log(report_dir, accession_number, error_list)
-        return f'{len(error_list)} manifest errors'
+        error_message = f'Fixity changed from {expected_md5} to {current_md5}.'
+        try:
+            update_preservation_log(acc_dir, False, 'zip md5', error_message)
+        except IndexError:
+            print("Cannot update preservation log: nonstandard delimiter")
+        return error_message
 
 
 if __name__ == '__main__':
@@ -503,15 +436,13 @@ if __name__ == '__main__':
         df_row_index = log_df.index[log_df['Accession'] == accession.Accession].tolist()[0]
 
         # Validates the accession, including updating the preservation log and fixity validation log.
-        # Different validation functions are used depending on if it is in a bag or has an initial manifest.
+        # Different validation functions are used depending on if it is in a bag or is zipped.
         if accession.Fixity_Type == 'Bag':
             valid = validate_bag(os.path.join(accession.Accession_Path, accession.Fixity), input_directory)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
-        elif accession.Fixity_Type == 'InitialManifest':
-            valid = validate_manifest(accession.Accession_Path, accession.Fixity, input_directory)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
         else:
-            print(f'Fixity_Type {accession.Fixity_Type} is not an expected value. Cannot validate this accession.')
+            valid = validate_zip(accession.Accession_Path, accession.Fixity)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
 
     # Prints if there were any validation errors, based on the Result column.
     error_df = log_df.loc[~log_df['Result'].isin(['Valid', 'Valid (bag manifest)', 'Not an accession'])]
