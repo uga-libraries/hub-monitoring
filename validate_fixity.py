@@ -354,7 +354,11 @@ def validate_bag_manifest(bag_dir, report_dir):
         df_right['MD5_Source'] = 'Current'
         error_list.extend(df_right.values.tolist())
         accession_number = os.path.basename(os.path.dirname(bag_dir))
-        manifest_validation_log(report_dir, accession_number, error_list)
+        with open(os.path.join(report_dir, f'{accession_number}_manifest_validation_errors.csv'), 'w', newline='',
+                  encoding='utf-8') as open_log:
+            log_writer = csv.writer(open_log)
+            log_writer.writerow(['File', 'MD5', 'MD5_Source'])
+            log_writer.writerows(error_list)
 
         return f'{len(error_list)} bag manifest errors'
 
