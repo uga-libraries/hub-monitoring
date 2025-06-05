@@ -319,7 +319,7 @@ def validate_bag(bag_dir, report_dir):
 
 
 def validate_bag_manifest(bag_dir, report_dir):
-    """Validate an accession with the bag manifest and returns the result for the logs
+    """Validate an accession with the bag manifest and return the result for the logs
 
     Used if the accession cannot be validated using bagit, which happens if the path is too long.
 
@@ -328,7 +328,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    validation_result (string): the validation error or "Valid (bag manifest)"
+    validation_result (string): "Valid (bag manifest)" or the number of errors
     """
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
@@ -361,7 +361,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     # If there were errors, also saves the path, MD5, and source of the MD5 (manifest or file) that did not match
     # to a log in the input_directory.
     if all_match:
-        return 'Valid (bag manifest)'
+        validation_result = 'Valid (bag manifest - could not validate with bagit)'
     else:
         error_list = []
         df_left = df_compare[df_compare['Match'] == 'left_only']
@@ -378,12 +378,12 @@ def validate_bag_manifest(bag_dir, report_dir):
             log_writer = csv.writer(open_log)
             log_writer.writerow(['File', 'MD5', 'MD5_Source'])
             log_writer.writerows(error_list)
-
-        return f'{len(error_list)} bag manifest errors'
+        validation_result = f'Could not validate with bagit. Bag manifest not valid: {len(error_list)} errors'
+    return validation_result
 
 
 def validate_zip(acc_dir, zip_md5):
-    """Validate a zipped accession with a zip md5 text file and returns the result for the logs
+    """Validate a zipped accession with a zip md5 text file and return the result for the logs
 
     Accession's with long file paths cannot be bagged.
     They are zipped and have a file accession-id_zip_md5.txt with the zip MD5 instead.
