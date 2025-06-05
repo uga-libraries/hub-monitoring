@@ -172,29 +172,26 @@ def fixity_validation_log(acc_dir):
                                 log_writer.writerow(row)
 
 
-def update_preservation_log(acc_dir, validation_result, validation_type, error_msg=None):
-    """Update an accession's preservation log with the validation results
+def update_preservation_log(acc_dir, validation_result, fixity_type):
+    """Update an accession's preservation log with the validation results and return a status for the validation log
 
-    If there is no preservation log, or it does not have the expected columns,
-    it will print an error and not do the rest of the function.
-    The validation result will still be in fixity_validation.csv.
+    Preservation log status is to have a record in fixity_validation.csv if there were problems updating the log,
+    so that the archivist can address. This happens if the log is missing or has legacy formatting.
 
     @:parameter
     acc_dir (string): the path to an accession folder, which contains the preservation log
-    validation_result (Boolean): if an accession's file fixity is valid
-    validation_type (string): bag, bag manifest, or zip md5
-    error_msg (None or string; optional): included if there are additional error details to add to the log
+    validation_result (string): information returned from the validation function for the fixity type
+    fixity_type (string): bag, bag manifest, or zip md5
 
     @:returns
-    None
+    log_status (string): "Updated" or why it did not update
     """
 
     # Verifies the preservation log exists.
-    # If not, prints an error and does not do the rest of this function.
+    # If not, returns the status for the fixity validation log and does not do the rest of this function.
     log_path = os.path.join(acc_dir, 'preservation_log.txt')
     if not os.path.exists(log_path):
-        print(f'ERROR: accession {os.path.basename(acc_dir)} has no preservation log.\n')
-        return
+        return 'Log path not found'
 
     # Gets the collection and accession numbers from the preservation log.
     # These are the first two columns, the values are the same for every row in the preservation log,
@@ -206,29 +203,24 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
 
     # Calculates the action to include in the log entry for the validation.
     # It includes the type of validation, if it was valid, and any additional error message.
-    if validation_result:
-        action = f'Validated {validation_type} for accession {accession_id}. The {validation_type} is valid.'
+    if validation_result == 'Valid':
+        action = f'Validated {fixity_type.lower()} for accession {accession_id}. The {fixity_type.lower()} is valid.'
+    elif validation_result.startswith('Valid (bag manifest'):
+        action = f'Validated bag for accession {accession_id}. {validation_result}'
     else:
-        if validation_type == 'bag':
-            if error_msg.startswith('BagError'):
-                action = f'Validated bag for accession {accession_id}. The bag could not be validated. {error_msg}'
-            else:
-                action = f'Validated bag for accession {accession_id}. The bag is not valid. {error_msg}'
-        elif validation_type == 'bag manifest':
-            action = f'Validated bag manifest for accession {accession_id}. The bag manifest is not valid.'
+        if fixity_type == 'Bag':
+            action = f'Validated bag for accession {accession_id}. The bag is not valid. {validation_result}'
         else:
-            action = f'Validated zip md5 for accession {accession_id}. The zip is not valid. {error_msg}'
+            action = f'Validated zip md5 for accession {accession_id}. The zip is not valid. {validation_result}'
 
     # Reads the contents of preservation_log.txt for checking for legacy formatting.
     with open(log_path) as open_log:
         log_text = open_log.read()
 
     # Checks if the log starts with the expected column row.
-    # If not, prints an error and does not update the log.
+    # If not, returns the status for the fixity validation log and does not do the rest of the function.
     if not log_text.startswith('Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff'):
-        print(f'ERROR: accession {os.path.basename(acc_dir)} has nonstandard columns in the preservation log; '
-              f'could not update with validation result.\n')
-        return
+        return 'Nonstandard columns'
 
     # Adds a row to the end of the preservation log for the accession validation.
     # First adds a line return after existing text, if missing, so the new data is on its own row.
@@ -239,6 +231,7 @@ def update_preservation_log(acc_dir, validation_result, validation_type, error_m
             open_log.write('\n')
         log_writer = csv.writer(open_log, delimiter='\t')
         log_writer.writerow(log_row)
+    return 'Updated'
 
 
 def update_fixity_validation_log(log_path, df, row, result):
@@ -284,7 +277,7 @@ def validate_bag(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    validation_result (string): "Valid", "Valid (bag manifest - ...", or an error message
+    validation_result (string): "Valid", "Valid (bag manifest - ...)", or an error message
     """
 
     # Tries to make a bag object, so that bagit library can validate it.
@@ -317,7 +310,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    validation_result (string): "Valid (bag manifest)" or the number of errors
+    validation_result (string): "Valid (bag manifest - ...)" or the number of errors
     """
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
