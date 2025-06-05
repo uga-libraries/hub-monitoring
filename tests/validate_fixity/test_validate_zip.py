@@ -2,11 +2,9 @@
 Tests for the function validate_zip(), which validates a zipped accession using an MD5 from a text file
 and returns information for the logs.
 """
-from datetime import date
 import os
 import unittest
 from validate_fixity import validate_zip
-from test_script_validate_fixity import csv_to_list
 
 
 class MyTestCase(unittest.TestCase):
