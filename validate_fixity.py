@@ -277,14 +277,14 @@ def update_fixity_validation_log(log_path, df, row, result):
 
 
 def validate_bag(bag_dir, report_dir):
-    """Validate an accession's bag with bagit and log the results
+    """Validate an accession's bag with bagit and return the result for the logs
 
     @:parameter
     bag_dir (string): the path to an accession's bag
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
-    validation_result (string): the validation error, "Valid", or "Valid (bag manifest)"
+    validation_result (string): "Valid", "Valid (bag manifest - ...", or an error message
     """
 
     # Tries to make a bag object, so that bagit library can validate it.
@@ -293,29 +293,18 @@ def validate_bag(bag_dir, report_dir):
     # and also tries to validate the bag using the manifest.
     try:
         new_bag = bagit.Bag(bag_dir)
-    except bagit.BagError as errors:
-        try:
-            update_preservation_log(os.path.dirname(bag_dir), False, 'bag', f'BagError: {str(errors)}')
-        except IndexError:
-            print("Cannot update preservation log: nonstandard delimiter")
+    except bagit.BagError:
         validation_result = validate_bag_manifest(bag_dir, report_dir)
         return validation_result
 
-    # Validates the bag and updates the preservation log.
-    # If there is a validation error, also adds it to the script report.
+    # If the bag object was made, validates the bag and returns the validation result,
+    # which is used to update the preservation log and fixity validation log.
     try:
         new_bag.validate()
-        try:
-            update_preservation_log(os.path.dirname(bag_dir), True, 'bag')
-        except IndexError:
-            print("Cannot update preservation log: nonstandard delimiter")
-        return "Valid"
+        validation_result = 'Valid'
     except bagit.BagValidationError as errors:
-        try:
-            update_preservation_log(os.path.dirname(bag_dir), False, 'bag', str(errors))
-        except IndexError:
-            print("Cannot update preservation log: nonstandard delimiter")
-        return str(errors)
+        validation_result = str(errors)
+    return validation_result
 
 
 def validate_bag_manifest(bag_dir, report_dir):
@@ -357,7 +346,8 @@ def validate_bag_manifest(bag_dir, report_dir):
     # Determines if everything matched (values in Match will all be both).
     all_match = df_compare['Match'].eq('both').all(axis=0)
 
-    # Returns the validation result, either the number of errors or "Valid".
+    # Returns the validation result, either the number of errors or "Valid",
+    # which is used to update the preservation log and fixity validation log.
     # If there were errors, also saves the path, MD5, and source of the MD5 (manifest or file) that did not match
     # to a log in the input_directory.
     if all_match:
