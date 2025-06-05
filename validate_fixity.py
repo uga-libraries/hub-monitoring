@@ -319,7 +319,7 @@ def validate_bag(bag_dir, report_dir):
 
 
 def validate_bag_manifest(bag_dir, report_dir):
-    """Validate an accession with the bag manifest and log the results
+    """Validate an accession with the bag manifest and returns the result for the logs
 
     Used if the accession cannot be validated using bagit, which happens if the path is too long.
 
@@ -357,12 +357,6 @@ def validate_bag_manifest(bag_dir, report_dir):
     # Determines if everything matched (values in Match will all be both).
     all_match = df_compare['Match'].eq('both').all(axis=0)
 
-    # Updates the preservation log.
-    try:
-        update_preservation_log(os.path.dirname(bag_dir), all_match, 'bag manifest')
-    except IndexError:
-        print("Cannot update preservation log: nonstandard delimiter")
-
     # Returns the validation result, either the number of errors or "Valid".
     # If there were errors, also saves the path, MD5, and source of the MD5 (manifest or file) that did not match
     # to a log in the input_directory.
@@ -389,7 +383,7 @@ def validate_bag_manifest(bag_dir, report_dir):
 
 
 def validate_zip(acc_dir, zip_md5):
-    """Validate a zipped accession with a zip md5 text file and returns results for the logs
+    """Validate a zipped accession with a zip md5 text file and returns the result for the logs
 
     Accession's with long file paths cannot be bagged.
     They are zipped and have a file accession-id_zip_md5.txt with the zip MD5 instead.
@@ -399,7 +393,7 @@ def validate_zip(acc_dir, zip_md5):
     zip_md5 (string): the name of the file in the accession folder
 
     @:returns
-    validation_result (string): the validation error or "Valid"
+    validation_result (string): "Valid" or how the fixity changed
     """
 
     # Reads the expected MD5 from the zip_md5 text file.
@@ -416,13 +410,13 @@ def validate_zip(acc_dir, zip_md5):
         data = open_file.read()
         current_md5 = hashlib.md5(data).hexdigest()
 
-    # Updates the preservation log and returns the validation result.
+    # Returns the validation result, which is used to update the preservation log and fixity validation log.
     # The accession is valid if the MD5s are identical.
     if expected_md5 == current_md5:
-        return 'Valid'
+        validation_result = 'Valid'
     else:
-        error_message = f'Fixity changed from {expected_md5} to {current_md5}.'
-        return error_message
+        validation_result = f'Fixity changed from {expected_md5} to {current_md5}.'
+    return validation_result
 
 
 if __name__ == '__main__':
