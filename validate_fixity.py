@@ -20,7 +20,6 @@ import csv
 from datetime import date, datetime
 import hashlib
 import os
-import re
 import sys
 
 import pandas as pd
