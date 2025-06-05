@@ -389,7 +389,7 @@ def validate_bag_manifest(bag_dir, report_dir):
 
 
 def validate_zip(acc_dir, zip_md5):
-    """Validate a zipped accession with a zip md5 text file and log the results
+    """Validate a zipped accession with a zip md5 text file and returns results for the logs
 
     Accession's with long file paths cannot be bagged.
     They are zipped and have a file accession-id_zip_md5.txt with the zip MD5 instead.
@@ -419,17 +419,9 @@ def validate_zip(acc_dir, zip_md5):
     # Updates the preservation log and returns the validation result.
     # The accession is valid if the MD5s are identical.
     if expected_md5 == current_md5:
-        try:
-            update_preservation_log(acc_dir, True, 'zip md5')
-        except IndexError:
-            print("Cannot update preservation log: nonstandard delimiter")
         return 'Valid'
     else:
         error_message = f'Fixity changed from {expected_md5} to {current_md5}.'
-        try:
-            update_preservation_log(acc_dir, False, 'zip md5', error_message)
-        except IndexError:
-            print("Cannot update preservation log: nonstandard delimiter")
         return error_message
 
 
