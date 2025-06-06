@@ -173,6 +173,44 @@ def fixity_validation_log(acc_dir):
                                 log_writer.writerow(row)
 
 
+def update_fixity_validation_log(log_path, df, row, pres_log, result):
+    """Add the validation result for an accession to the fixity validation log dataframe and csv
+
+    @:parameter
+    log_path (string): the path to the fixity validation log
+    df (dataframe): the dataframe with the current fixity validation log information
+    row (dataframe index): the dataframe index number of the accession
+    pres_log(string): the status of the preservation log, "Updated" or an error message
+    result (string): the validation error or "Valid"
+    report_dir (string): directory where the report is saved (script argument input_directory)
+
+    @:returns
+    None
+    """
+
+    # Adds preservation log status to the Pres_Log column.
+    df.loc[row, 'Pres_Log'] = pres_log
+
+    # Adds validation result to the Result column.
+    df.loc[row, 'Result'] = result
+
+    # Determines if the fixity is valid, based on validation result, and adds to the Valid column.
+    if result.startswith('Valid'):
+        is_valid = True
+    else:
+        is_valid = False
+    df.loc[row, 'Valid'] = is_valid
+
+    # Adds the time of validation to the "Valid_Type" column.
+    # This is used to update preservation logs if they had formatting errors and for stats on this process.
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
+    df.loc[row, 'Valid_Time'] = timestamp
+
+    # Saves the updated information to fixity validation log, so if the script breaks,
+    # the information is correct for all accessions validated prior to then.
+    df.to_csv(log_path, index=False)
+
+
 def update_preservation_log(acc_dir, validation_result, fixity_type):
     """Update an accession's preservation log with the validation results and return a status for the validation log
 
@@ -228,44 +266,6 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
         log_writer = csv.writer(open_log, delimiter='\t')
         log_writer.writerow(log_row)
     return 'Updated'
-
-
-def update_fixity_validation_log(log_path, df, row, pres_log, result):
-    """Add the validation result for an accession to the fixity validation log dataframe and csv
-
-    @:parameter
-    log_path (string): the path to the fixity validation log
-    df (dataframe): the dataframe with the current fixity validation log information
-    row (dataframe index): the dataframe index number of the accession
-    pres_log(string): the status of the preservation log, "Updated" or an error message
-    result (string): the validation error or "Valid"
-    report_dir (string): directory where the report is saved (script argument input_directory)
-
-    @:returns
-    None
-    """
-
-    # Adds preservation log status to the Pres_Log column.
-    df.loc[row, 'Pres_Log'] = pres_log
-
-    # Adds validation result to the Result column.
-    df.loc[row, 'Result'] = result
-
-    # Determines if the fixity is valid, based on validation result, and adds to the Valid column.
-    if result.startswith('Valid'):
-        is_valid = True
-    else:
-        is_valid = False
-    df.loc[row, 'Valid'] = is_valid
-
-    # Adds the time of validation to the "Valid_Type" column.
-    # This is used to update preservation logs if they had formatting errors and for stats on this process.
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
-    df.loc[row, 'Valid_Time'] = timestamp
-
-    # Saves the updated information to fixity validation log, so if the script breaks,
-    # the information is correct for all accessions validated prior to then.
-    df.to_csv(log_path, index=False)
 
 
 def validate_bag(bag_dir, report_dir):
