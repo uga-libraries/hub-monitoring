@@ -17,10 +17,10 @@ class MyTestCase(unittest.TestCase):
 
     def setUp(self):
         """Make the dataframe and csv of the log that the tests will update"""
-        row_list = [['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', None, None, None],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', None, None, None]]
+        row_list = [['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', None, None, None, None],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', None, None, None, None]]
         columns_list = ['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                        'Valid', 'Valid_Time', 'Result']
+                        'Pres_Log', 'Valid', 'Valid_Time', 'Result']
         self.log_df = pd.DataFrame(row_list, columns=columns_list)
         self.log_df.to_csv('fixity_validation_20241031.csv', index=False)
 
@@ -31,91 +31,103 @@ class MyTestCase(unittest.TestCase):
 
     def test_one_change(self):
         """Test for adding the validation result to one row and result is "Valid"."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Valid')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Log path not found', 'Valid')
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                     'Valid', 'Valid_Time', 'Result'],
+                     'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
-                     'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
+                     'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
-                     'BLANK', 'BLANK', 'BLANK']]
+                     'BLANK', 'BLANK', 'BLANK', 'BLANK']]
         self.assertEqual(result, expected, "Problem with test for one change to the log")
 
     def test_two_changes(self):
         """Test for adding the validation result to two rows and result is "Valid"."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Valid')
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Valid')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Log path not found', 'Valid')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Nonstandard columns', 'Valid')
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                     'Valid', 'Valid_Time', 'Result'],
+                     'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
-                     'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
+                     'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
-                     'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
+                     'Nonstandard columns', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
         self.assertEqual(result, expected, "Problem with test for two changes to the log")
 
     def test_not_valid_bag(self):
         """Test for adding the validation result when result is a bag validation error."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Payload-Oxum failed.')
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Bag validation failed.')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Updated', 'Payload-Oxum')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Updated', 'Not valid')
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                     'Valid', 'Valid_Time', 'Result'],
+                     'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
-                     'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Payload-Oxum failed.'],
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Payload-Oxum'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
-                     'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Bag validation failed.']]
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Not valid']]
         self.assertEqual(result, expected, "Problem with test for not valid, bag error")
 
     def test_not_valid_bag_manifest(self):
-        """Test for adding the validation result when result is "# bag manifest errors"."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, '1 bag manifest errors.')
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, '99 bag manifest errors.')
+        """Test for adding the validation result 'Could not validate with bagit. Bag manifest not valid: # errors'"""
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Updated',
+                                     'Could not validate with bagit. Bag manifest not valid: 1 errors')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Updated',
+                                     'Could not validate with bagit. Bag manifest not valid: 99 errors')
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                     'Valid', 'Valid_Time', 'Result'],
+                     'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
-                     'False', datetime.now().strftime('%Y-%m-%d %H:%M'), '1 bag manifest errors.'],
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Could not validate with bagit. Bag manifest not valid: 1 errors'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
-                     'False', datetime.now().strftime('%Y-%m-%d %H:%M'), '99 bag manifest errors.']]
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Could not validate with bagit. Bag manifest not valid: 99 errors']]
         self.assertEqual(result, expected, "Problem with test for not valid, bag manifest")
 
     def test_not_valid_fixity_changed(self):
-        """Test for adding the validation result when result is "Fixity changed from..."."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Fixity changed from x to y.')
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Fixity changed from x to y.')
+        """Test for adding the validation result 'Fixity changed from [MD5] to [MD5]'"""
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Updated',
+                                     'Fixity changed from xxxxxxxxx to yyyyyyyyy.')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Updated',
+                                     'Fixity changed from aaaaaaaaa to bbbbbbbbb.')
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                     'Valid', 'Valid_Time', 'Result'],
+                     'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
-                     'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Fixity changed from x to y.'],
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Fixity changed from xxxxxxxxx to yyyyyyyyy.'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
-                     'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Fixity changed from x to y.']]
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Fixity changed from aaaaaaaaa to bbbbbbbbb.']]
         self.assertEqual(result, expected, "Problem with test for not valid, fixity changed")
 
     def test_valid_bag_manifest(self):
-        """Test for adding the validation result when result is "Valid (bag manifest)"."""
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Valid (bag manifest)')
-        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Valid (bag manifest)')
+        """Test for adding the validation result 'Valid (bag manifest - could not validate with bagit)'"""
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Updated',
+                                     'Valid (bag manifest - could not validate with bagit)')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Updated',
+                                     'Valid (bag manifest - could not validate with bagit)')
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
         expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                     'Valid', 'Valid_Time', 'Result'],
+                     'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
-                     'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid (bag manifest)'],
+                     'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Valid (bag manifest - could not validate with bagit)'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
-                     'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid (bag manifest)']]
+                     'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Valid (bag manifest - could not validate with bagit)']]
         self.assertEqual(result, expected, "Problem with test for valid bag manifest")
 
 
