@@ -203,8 +203,7 @@ def update_fixity_validation_log(log_path, df, row, pres_log, result):
 
     # Adds the time of validation to the "Valid_Type" column.
     # This is used to update preservation logs if they had formatting errors and for stats on this process.
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
-    df.loc[row, 'Valid_Time'] = timestamp
+    df.loc[row, 'Valid_Time'] = datetime.now().strftime('%Y-%m-%d %H:%M')
 
     # Saves the updated information to fixity validation log, so if the script breaks,
     # the information is correct for all accessions validated prior to then.
