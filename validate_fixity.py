@@ -194,20 +194,17 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
     if not os.path.exists(log_path):
         return 'Log path not found'
 
-    # Checks if the log starts with the expected column row.
+    # Checks if the log starts with the expected column header row.
+    # If yes, gets the ids from the first two columns of the last row, so the id formatting in the log is consistent.
     # If not, returns the status for the fixity validation log and does not do the rest of the function.
-    with open(log_path) as open_log:
-        log_text = open_log.read()
-        if not log_text.startswith('Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff'):
-            return 'Nonstandard columns'
-
-    # Gets the collection and accession numbers from the preservation log.
-    # These are the first two columns, the values are the same for every row in the preservation log,
-    # and they are formatted differently than the folder names so must be taken from the log.
     with open(log_path, 'r') as open_log:
-        last_row = open_log.readlines()[-1].split('\t')
-        collection_id = last_row[0]
-        accession_id = last_row[1]
+        log_lines = open_log.readlines()
+        first_row = log_lines[0]
+        if not first_row == 'Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff\n':
+            return 'Nonstandard columns'
+        last_row_list = log_lines[-1].split('\t')
+        collection_id = last_row_list[0]
+        accession_id = last_row_list[1]
 
     # Calculates the action to include in the log entry for the validation.
     # It includes the type of validation, if it was valid, and any additional error message.
@@ -226,7 +223,7 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
     validation_date = date.today().strftime('%Y-%m-%d')
     log_row = [collection_id, accession_id, validation_date, None, action, 'validate_fixity.py']
     with open(log_path, 'a', newline='') as open_log:
-        if not log_text.endswith('\n'):
+        if not log_lines[-1].endswith('\n'):
             open_log.write('\n')
         log_writer = csv.writer(open_log, delimiter='\t')
         log_writer.writerow(log_row)
