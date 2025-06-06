@@ -27,7 +27,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the log has the correct values.
         result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['backlogged', 'harg_ms1234 papers', '2021_12_er',
                      os.path.join(acc_dir, 'backlogged', 'harg_ms1234 papers', '2021_12_er'),
                      'Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK'],
@@ -50,7 +50,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the log has the correct values.
         result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['backlogged', 'rbrl123', '2010-01-er',
                      os.path.join(acc_dir, 'backlogged', 'rbrl123', '2010-01-er'),
                      'Zip', 'BLANK', 'BLANK', 'BLANK', 'BLANK'],
@@ -73,7 +73,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the log has the correct values.
         result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'rbrl333', 'no-acc-num', os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),
                      'Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK']]
         self.assertEqual(result, expected, "Problem with test for extra_status")
@@ -86,7 +86,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the log has the correct values.
         result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['backlogged', 'ua22-333 records', '2022-1-er',
                      os.path.join(acc_dir, 'backlogged', 'ua22-333 records', '2022-1-er'),
                      'Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK'],
@@ -105,7 +105,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the log has the correct values.
         result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'rbrl333', '2002_02_er', os.path.join(acc_dir, 'closed', 'rbrl333', '2002_02_er'),
                      'BLANK', 'BLANK', 'False', 'BLANK', 'No fixity information'],
                     ['closed', 'rbrl333', 'no-acc-num', os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),

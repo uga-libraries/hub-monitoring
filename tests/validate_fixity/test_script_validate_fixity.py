@@ -40,9 +40,9 @@ class MyTestCase(unittest.TestCase):
                       os.path.join('valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
                       os.path.join('valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
-            accession_path = os.path.join('test_data', 'script', accession)
-            shutil.copyfile(os.path.join(accession_path, 'preservation_log_copy.txt'),
-                            os.path.join(accession_path, 'preservation_log.txt'))
+            Path = os.path.join('test_data', 'script', accession)
+            shutil.copyfile(os.path.join(Path, 'preservation_log_copy.txt'),
+                            os.path.join(Path, 'preservation_log.txt'))
 
         # Deletes the fixity validation log, if present.
         input_dirs = [os.path.join('test_data', 'script', 'mix', 'born-digital'),
@@ -73,8 +73,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the contents of the fixity validation log are correct.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log',
-                     'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['backlogged', 'test_001', '2023_test001_002_er',
                      os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'), 'Bag',
                      'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
@@ -138,8 +137,7 @@ class MyTestCase(unittest.TestCase):
         # Makes the fixity validation log, as if the first two accessions had validated when running the script earlier.
         # It is made by the test instead of stored in the repo so the date in the filename will be correct.
         coll_path = os.path.join(input_directory, 'backlogged', 'coll_2023')
-        rows = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log',
-                 'Valid', 'Valid_Time', 'Result'],
+        rows = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                 ['backlogged', 'coll_2023', '2023_test001_001_er', os.path.join(coll_path, '2023_test001_001_er'),
                  'Bag', 'Updated', 'True', '2000-01-01 12:12', 'Valid'],
                 ['backlogged', 'coll_2023', '2023_test001_005_er', os.path.join(coll_path, '2023_test001_005_er'),
@@ -167,8 +165,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the contents of the fixity validation log are correct.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log',
-                     'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['backlogged', 'coll_2023', '2023_test001_001_er', os.path.join(coll_path, '2023_test001_001_er'),
                      'Bag', 'Updated', 'True', '2000-01-01 12:12', 'Valid'],
                     ['backlogged', 'coll_2023', '2023_test001_005_er', os.path.join(coll_path, '2023_test001_005_er'),
@@ -227,8 +224,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the contents of the fixity validation log.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log',
-                     'Valid', 'Valid_Time', 'Result'],
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'test_001', '2023_test001_001_er',
                      os.path.join(input_directory, 'closed', 'test_001', '2023_test001_001_er'), 'Bag',
                      'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
