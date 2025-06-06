@@ -12,9 +12,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is not valid because a file was added"""
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_001_er')
-        bag_name = '2023_test002_001_er_bag'
         input_directory = 'test_data'
-        result = validate_bag(os.path.join(accession_path, bag_name), input_directory)
+        result = validate_bag(accession_path, input_directory)
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes'
@@ -24,9 +23,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is not valid because a file was deleted"""
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_002_er')
-        bag_name = '2023_test002_002_er_bag'
         input_directory = 'test_data'
-        result = validate_bag(os.path.join(accession_path, bag_name), input_directory)
+        result = validate_bag(accession_path, input_directory)
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes'
@@ -36,9 +34,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is not valid because a file was edited"""
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_003_er')
-        bag_name = '2023_test002_003_er_bag'
         input_directory = 'test_data'
-        result = validate_bag(os.path.join(accession_path, bag_name), input_directory)
+        result = validate_bag(accession_path, input_directory)
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 3 files and 79 bytes'
@@ -48,9 +45,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is not valid because a file's fixity was changed in the manifest"""
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_004_er')
-        bag_name = '2023_test002_004_er_bag'
         input_directory = 'test_data'
-        result = validate_bag(os.path.join(accession_path, bag_name), input_directory)
+        result = validate_bag(accession_path, input_directory)
 
         # Verifies the function returned the correct validation_result.
         expected = ('Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
@@ -61,9 +57,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is not valid because bag-info.txt is missing"""
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_005_er')
-        bag_name = '2023_test002_005_er_bag'
         input_directory = 'test_data'
-        result = validate_bag(os.path.join(accession_path, bag_name), input_directory)
+        result = validate_bag(accession_path, input_directory)
 
         # Verifies the function returned the correct validation_result.
         expected = 'Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem'
@@ -73,9 +68,8 @@ class MyTestCase(unittest.TestCase):
         """Test for when the bag is valid"""
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test001_001_er')
-        bag_name = '2023_test001_001_er_bag'
         input_directory = 'test_data'
-        result = validate_bag(os.path.join(accession_path, bag_name), input_directory)
+        result = validate_bag(accession_path, input_directory)
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid'

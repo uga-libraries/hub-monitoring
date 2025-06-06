@@ -106,7 +106,6 @@ def fixity_validation_log(acc_dir):
     Accession is an identifier OR a non-accession folder (name of folder at third level within input_directory).
     Accession_Path is the full path to the folder which contains the digital content.
     Fixity_Type is Bag or Zip and will be used to determine how to validate the accession, or None.
-    Fixity is the name of the bag folder or zip md5 file with the fixity information, or None.
     Pres_Log is None for all, and is for errors encountered updating the preservation log during validation.
     Valid is None or has text if Result also has text.
     Valid_Time is None for all, and is for the time that validation finishes.
@@ -125,10 +124,10 @@ def fixity_validation_log(acc_dir):
 
     # Makes the fixity validation log with a header in the input_directory.
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
+    header = ['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result']
     with (open(log_path, 'w', newline='') as open_log):
         log_writer = csv.writer(open_log)
-        log_writer.writerow(['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
-                             'Pres_Log', 'Valid', 'Valid_Time', 'Result'])
+        log_writer.writerow(header)
 
         # Navigates the input_directory to get information about each folder at the accession level and adds to the log.
         for status in os.listdir(acc_dir):
@@ -145,31 +144,26 @@ def fixity_validation_log(acc_dir):
                             accession_path = os.path.join(acc_dir, status, collection, folder)
                             if os.path.isdir(accession_path):
                                 is_accession = accession_test(folder)
-                                # Gets information for log besides the iterators (status, collection, folder).
+                                # Gets information for log besides the iterators (status, collection, folder/accession).
                                 if is_accession:
                                     if os.path.exists(os.path.join(accession_path, f'{folder}_bag')):
                                         fixity_type = 'Bag'
-                                        fixity = f'{folder}_bag'
                                         is_valid = None
                                         result = None
                                     elif os.path.exists(os.path.join(accession_path, f'{folder}_zip_md5.txt')):
                                         fixity_type = 'Zip'
-                                        fixity = f'{folder}_zip_md5.txt'
                                         is_valid = None
                                         result = None
                                     else:
                                         fixity_type = None
-                                        fixity = None
                                         is_valid = 'False'
                                         result = 'No fixity information'
                                 else:
                                     fixity_type = None
-                                    fixity = None
                                     is_valid = 'Skipped'
                                     result = 'Not an accession'
                                 # Adds information for folder, regardless of if it is an accession, to the log.
-                                row = [status, collection, folder, accession_path, fixity_type, fixity,
-                                       None, is_valid, None, result]
+                                row = [status, collection, folder, accession_path, fixity_type, None, is_valid, None, result]
                                 log_writer.writerow(row)
 
 
@@ -267,11 +261,11 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
     return 'Updated'
 
 
-def validate_bag(bag_dir, report_dir):
+def validate_bag(acc_dir, report_dir):
     """Validate an accession's bag with bagit and return the result for the logs
 
     @:parameter
-    bag_dir (string): the path to an accession's bag
+    acc_dir (string): the path to an accession folder
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
@@ -282,9 +276,9 @@ def validate_bag(bag_dir, report_dir):
     # There are cases where filenames or path length prevent it from making a bag,
     # in which case it tries to validate the bag using the manifest.
     try:
-        new_bag = bagit.Bag(bag_dir)
+        new_bag = bagit.Bag(os.path.join(acc_dir, f'{os.path.basename(acc_dir)}_bag'))
     except bagit.BagError:
-        validation_result = validate_bag_manifest(bag_dir, report_dir)
+        validation_result = validate_bag_manifest(acc_dir, report_dir)
         return validation_result
 
     # If the bag object was made, validates the bag and returns the validation result,
@@ -297,13 +291,13 @@ def validate_bag(bag_dir, report_dir):
     return validation_result
 
 
-def validate_bag_manifest(bag_dir, report_dir):
+def validate_bag_manifest(acc_dir, report_dir):
     """Validate an accession with the bag manifest and return the result for the logs
 
     Used if the accession cannot be validated using bagit, which happens if the path is too long.
 
     @:parameter
-    bag_dir (string): the path to an accession's bag
+    acc_dir (string): the path to an accession folder
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
@@ -312,7 +306,7 @@ def validate_bag_manifest(bag_dir, report_dir):
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
     files_list = []
-    for root, dirs, files in os.walk(os.path.join(bag_dir, 'data')):
+    for root, dirs, files in os.walk(os.path.join(acc_dir, f'{os.path.basename(acc_dir)}_bag', 'data')):
         for file in files:
             filepath = os.path.join(root, file)
             # If the file path is too long, it causes a FileNotFoundError and cannot calculate the MD5.
@@ -327,8 +321,8 @@ def validate_bag_manifest(bag_dir, report_dir):
 
     # Reads the bag manifest into a dataframe.
     # Each row is "MD5  data/path" and the file does not have a header row.
-    df_manifest = pd.read_csv(os.path.join(bag_dir, 'manifest-md5.txt'), delimiter='  data/', engine='python',
-                              names=['Bag_MD5', 'Bag_Path'], dtype=object)
+    df_manifest = pd.read_csv(os.path.join(acc_dir, f'{os.path.basename(acc_dir)}_bag', 'manifest-md5.txt'),
+                              delimiter='  data/', engine='python', names=['Bag_MD5', 'Bag_Path'], dtype=object)
 
     # Merge the two dataframes to compare them.
     df_compare = pd.merge(df_manifest, df_files, how='outer', left_on='Bag_MD5', right_on='Acc_MD5', indicator='Match')
@@ -352,7 +346,7 @@ def validate_bag_manifest(bag_dir, report_dir):
         df_right = df_right[['Acc_Path', 'Acc_MD5']]
         df_right['MD5_Source'] = 'Current'
         error_list.extend(df_right.values.tolist())
-        accession_number = os.path.basename(os.path.dirname(bag_dir))
+        accession_number = os.path.basename(os.path.basename(acc_dir))
         with open(os.path.join(report_dir, f'{accession_number}_manifest_validation_errors.csv'), 'w', newline='',
                   encoding='utf-8') as open_log:
             log_writer = csv.writer(open_log)
@@ -362,7 +356,7 @@ def validate_bag_manifest(bag_dir, report_dir):
     return validation_result
 
 
-def validate_zip(acc_dir, zip_md5):
+def validate_zip(acc_dir):
     """Validate a zipped accession with a zip md5 text file and return the result for the logs
 
     Accession's with long file paths cannot be bagged.
@@ -370,7 +364,6 @@ def validate_zip(acc_dir, zip_md5):
 
     @:parameter
     acc_dir (string): the path to an accession folder
-    zip_md5 (string): the name of the file in the accession folder
 
     @:returns
     validation_result (string): "Valid" or how the fixity changed
@@ -378,7 +371,7 @@ def validate_zip(acc_dir, zip_md5):
 
     # Reads the expected MD5 from the zip_md5 text file.
     # The file has one row, with text formatted MD5<space><space>Zip_Path (md5deep output)
-    zip_md5_path = os.path.join(acc_dir, zip_md5)
+    zip_md5_path = os.path.join(acc_dir, f'{os.path.basename(acc_dir)}_zip_md5.txt')
     with open(zip_md5_path) as open_file:
         text = open_file.read()
         expected_md5 = text.split(' ')[0]
@@ -430,11 +423,11 @@ if __name__ == '__main__':
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or is zipped.
         if acc.Fixity_Type == 'Bag':
-            valid = validate_bag(os.path.join(acc.Accession_Path, acc.Fixity), input_directory)
+            valid = validate_bag(acc.Accession_Path, input_directory)
             log_status = update_preservation_log(acc.Accession_Path, valid, acc.Fixity_Type)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         else:
-            valid = validate_zip(acc.Accession_Path, acc.Fixity)
+            valid = validate_zip(acc.Accession_Path)
             log_status = update_preservation_log(acc.Accession_Path, valid, acc.Fixity_Type)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
 

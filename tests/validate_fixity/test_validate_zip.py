@@ -13,8 +13,7 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession zip MD5 has changed"""
         # Makes the variables for the function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_zip', '2023-001-er')
-        fixity = '2023-001-er_zip_md5.txt'
-        valid = validate_zip(accession_path, fixity)
+        valid = validate_zip(accession_path)
 
         # Verifies the function returned the correct validation_result.
         expected = 'Fixity changed from 0000xxx000x0000x000xx0000xx00x00 to 6467ceb233d0519f561cd4367bd19e55.'
@@ -24,8 +23,7 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession zip MD5 is still the same"""
         # Makes the variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_zip', '2023-002-er')
-        fixity = '2023-002-er_zip_md5.txt'
-        valid = validate_zip(accession_path, fixity)
+        valid = validate_zip(accession_path)
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid'
