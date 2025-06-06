@@ -234,19 +234,23 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
     return 'Updated'
 
 
-def update_fixity_validation_log(log_path, df, row, result):
+def update_fixity_validation_log(log_path, df, row, pres_log, result):
     """Add the validation result for an accession to the fixity validation log dataframe and csv
 
     @:parameter
     log_path (string): the path to the fixity_validation_log.csv
     df (dataframe): the dataframe with the current fixity validation log information
     row (dataframe index): the dataframe index number of the accession
+    pres_log(string): the status of the preservation log, "Updated" or an error message
     result (string): the validation error or "Valid"
     report_dir (string): directory where the report is saved (script argument input_directory)
 
     @:returns
     None
     """
+
+    # Adds pres_log to Pres_Log column.
+    df.loc[row, 'Pres_Log'] = pres_log
 
     # Adds validation result to Result column.
     df.loc[row, 'Result'] = result
