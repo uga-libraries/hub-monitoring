@@ -437,10 +437,12 @@ if __name__ == '__main__':
         # Different validation functions are used depending on if it is in a bag or is zipped.
         if accession.Fixity_Type == 'Bag':
             valid = validate_bag(os.path.join(accession.Accession_Path, accession.Fixity), input_directory)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
+            log_status = update_preservation_log(accession.Accession_Path, valid, accession.Fixity_Type)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         else:
             valid = validate_zip(accession.Accession_Path, accession.Fixity)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, valid)
+            log_status = update_preservation_log(accession.Accession_Path, valid, accession.Fixity_Type)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
 
     # Prints if there were any validation errors, based on the Result column.
     error_df = log_df.loc[~log_df['Result'].isin(['Valid', 'Valid (bag manifest)', 'Not an accession'])]

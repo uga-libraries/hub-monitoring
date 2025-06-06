@@ -68,30 +68,29 @@ class MyTestCase(unittest.TestCase):
                     f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_004_er (Bag)\n'
                     f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (Zip)\n'
                     f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (Zip)\n'
-                    'ERROR: accession 2023_test123_001_er has no preservation log.\n\n'
                     '\nValidation errors found, see fixity_validation_log.csv in the input_directory.\n')
         self.assertEqual(result, expected, 'Problem with test for mix, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Pres_Log',
                      'Valid', 'Valid_Time', 'Result'],
                     ['backlogged', 'test_001', '2023_test001_002_er',
-                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'),
-                     'Bag', '2023_test001_002_er_bag', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
+                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'), 'Bag',
+                     '2023_test001_002_er_bag', 'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['backlogged', 'test_001', '2023_test001_004_er',
-                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'),
-                     'Bag', '2023_test001_004_er_bag', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'), 'Bag',
+                     '2023_test001_004_er_bag', 'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
                      'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
                     ['backlogged', 'test_005', '2023_test005_001_er',
-                     os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'),
-                     'Zip', '2023_test005_001_er_zip_md5.txt', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'), 'Zip',
+                     '2023_test005_001_er_zip_md5.txt', 'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Fixity changed from xxx00f6a775ac9bd804c276c889fxxx to 06000f6a775ac9bd804c276c889f6bc7.'],
                     ['closed', 'test_123', '2023_test123_001_er',
-                     os.path.join(input_directory, 'closed', 'test_123', '2023_test123_001_er'),
-                     'Zip', '2023_test123_001_er_zip_md5.txt', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
-                     'Valid']]
+                     os.path.join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'Zip',
+                     '2023_test123_001_er_zip_md5.txt', 'Log path not found', 'True',
+                     datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
         self.assertEqual(result, expected, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
@@ -140,16 +139,16 @@ class MyTestCase(unittest.TestCase):
         # Makes the fixity validation log, as if the first two accessions had validated when running the script earlier.
         # It is made by the test instead of stored in the repo so the date in the filename will be correct.
         coll_path = os.path.join(input_directory, 'backlogged', 'coll_2023')
-        rows = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        rows = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Pres_Log',
                  'Valid', 'Valid_Time', 'Result'],
                 ['backlogged', 'coll_2023', '2023_test001_001_er', os.path.join(coll_path, '2023_test001_001_er'),
-                 'Bag', '2023_test001_001_er_bag', 'True', '2000-01-01 12:12', 'Valid'],
+                 'Bag', '2023_test001_001_er_bag', 'Updated', 'True', '2000-01-01 12:12', 'Valid'],
                 ['backlogged', 'coll_2023', '2023_test001_005_er', os.path.join(coll_path, '2023_test001_005_er'),
-                 'Bag', '2023_test001_005_er_bag', 'False', '2000-01-01 12:13', 'Bag validation failed'],
+                 'Bag', '2023_test001_005_er_bag', 'Updated', 'False', '2000-01-01 12:13', 'Bag validation failed'],
                 ['backlogged', 'coll_2023', '2023_test004_002_er', os.path.join(coll_path, '2023_test004_002_er'),
-                 'Zip', '2023_test004_002_er_zip_md5.txt', None, None, None],
+                 'Zip', '2023_test004_002_er_zip_md5.txt', None, None, None, None],
                 ['backlogged', 'coll_2023', '2023_test005_004_er', os.path.join(coll_path, '2023_test005_004_er'),
-                 'Zip', '2023_test005_004_er_zip_md5.txt', None, None, None]]
+                 'Zip', '2023_test005_004_er_zip_md5.txt', None, None, None, None]]
         log_path = os.path.join(input_directory, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
         with open(log_path, 'w', newline='') as open_log:
             log_writer = csv.writer(open_log)
@@ -169,17 +168,18 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the contents of the fixity validation log are correct.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Pres_Log',
                      'Valid', 'Valid_Time', 'Result'],
                     ['backlogged', 'coll_2023', '2023_test001_001_er', os.path.join(coll_path, '2023_test001_001_er'),
-                     'Bag', '2023_test001_001_er_bag', 'True', '2000-01-01 12:12', 'Valid'],
+                     'Bag', '2023_test001_001_er_bag', 'Updated', 'True', '2000-01-01 12:12', 'Valid'],
                     ['backlogged', 'coll_2023', '2023_test001_005_er', os.path.join(coll_path, '2023_test001_005_er'),
-                     'Bag', '2023_test001_005_er_bag', 'False', '2000-01-01 12:13', 'Bag validation failed'],
+                     'Bag', '2023_test001_005_er_bag', 'Updated', 'False', '2000-01-01 12:13', 'Bag validation failed'],
                     ['backlogged', 'coll_2023', '2023_test004_002_er', os.path.join(coll_path, '2023_test004_002_er'),
-                     'Zip', '2023_test004_002_er_zip_md5.txt', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
-                     'Valid'],
+                     'Zip', '2023_test004_002_er_zip_md5.txt', 'Updated', 'True',
+                     datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['backlogged', 'coll_2023', '2023_test005_004_er', os.path.join(coll_path, '2023_test005_004_er'),
-                     'Zip', '2023_test005_004_er_zip_md5.txt', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Zip', '2023_test005_004_er_zip_md5.txt', 'Updated', 'False',
+                     datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Fixity changed from a1b11111cd111efa111b11c11111d1e1 to d3f13182fa611fcd011f70c42755e9e4.']]
         self.assertEqual(result, expected, 'Problem with test for restart, fixity validation log')
 
@@ -192,7 +192,7 @@ class MyTestCase(unittest.TestCase):
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'BLANK', "Can't bag; made zip.", 'JD'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'BLANK', 'Validated zip. Valid.', 'JD'],
                     ['T4', '2023.T4.02.ER', today, 'BLANK',
-                     'Validated zip md5 for accession 2023.T4.02.ER. The zip md5 is valid.', 'validate_fixity.py']]
+                     'Validated zip for accession 2023.T4.02.ER. The zip is valid.', 'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for restart, 2023_test004_002_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test005_004_er have been updated.
@@ -230,17 +230,17 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the contents of the fixity validation log.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity', 'Pres_Log',
                      'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'test_001', '2023_test001_001_er',
-                     os.path.join(input_directory, 'closed', 'test_001', '2023_test001_001_er'),
-                     'Bag', '2023_test001_001_er_bag', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
+                     os.path.join(input_directory, 'closed', 'test_001', '2023_test001_001_er'), 'Bag',
+                     '2023_test001_001_er_bag', 'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['closed', 'test_004', '2023_test004_003_er',
-                     os.path.join(input_directory, 'closed', 'test_004', '2023_test004_003_er'),
-                     'Zip', '2023_test004_003_er_zip_md5.txt', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     os.path.join(input_directory, 'closed', 'test_004', '2023_test004_003_er'), 'Zip',
+                     '2023_test004_003_er_zip_md5.txt', 'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Valid'],
                     ['closed', 'to_skip', 'to_skip', os.path.join(input_directory, 'closed', 'to_skip', 'to_skip'),
-                    'BLANK', 'BLANK', 'Skipped', 'BLANK', 'Not an accession']]
+                    'BLANK', 'BLANK', 'BLANK', 'Skipped', 'BLANK', 'Not an accession']]
         self.assertEqual(result, expected, 'Problem with test for valid, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test001_001_er have been updated.
@@ -263,7 +263,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'BLANK', 'Can\'t bag; made zip.', 'Jane Doe'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'BLANK', 'Validated zip. Valid.', 'Jane Doe'],
                     ['TEST.004', '2023.test004.003.ER', today, 'BLANK',
-                     'Validated zip md5 for accession 2023.test004.003.ER. The zip md5 is valid.',
+                     'Validated zip for accession 2023.test004.003.ER. The zip is valid.',
                      'validate_fixity.py']]
         self.assertEqual(result, expected, 'Problem with test for valid, 2023_test004_003_er preservation log')
 
