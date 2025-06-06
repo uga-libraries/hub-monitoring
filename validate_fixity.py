@@ -418,24 +418,24 @@ if __name__ == '__main__':
 
     # Validates every accession in the log that has not yet been validated (Result is blank).
     log_df = pd.read_csv(fixity_validation_log_path)
-    for accession in log_df[log_df['Result'].isnull()].itertuples():
+    for acc in log_df[log_df['Result'].isnull()].itertuples():
 
         # Prints the script progress.
-        print(f'Starting on accession {accession.Accession_Path} ({accession.Fixity_Type})')
+        print(f'Starting on accession {acc.Accession_Path} ({acc.Fixity_Type})')
 
         # Calculates the row index in the fixity validation log dataframe for the accession,
         # to use for later adding the validation result.
-        df_row_index = log_df.index[log_df['Accession'] == accession.Accession].tolist()[0]
+        df_row_index = log_df.index[log_df['Accession'] == acc.Accession].tolist()[0]
 
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or is zipped.
-        if accession.Fixity_Type == 'Bag':
-            valid = validate_bag(os.path.join(accession.Accession_Path, accession.Fixity), input_directory)
-            log_status = update_preservation_log(accession.Accession_Path, valid, accession.Fixity_Type)
+        if acc.Fixity_Type == 'Bag':
+            valid = validate_bag(os.path.join(acc.Accession_Path, acc.Fixity), input_directory)
+            log_status = update_preservation_log(acc.Accession_Path, valid, acc.Fixity_Type)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         else:
-            valid = validate_zip(accession.Accession_Path, accession.Fixity)
-            log_status = update_preservation_log(accession.Accession_Path, valid, accession.Fixity_Type)
+            valid = validate_zip(acc.Accession_Path, acc.Fixity)
+            log_status = update_preservation_log(acc.Accession_Path, valid, acc.Fixity_Type)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
 
     # Prints if there were any validation errors, based on the Result column.
