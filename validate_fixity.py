@@ -409,31 +409,31 @@ if __name__ == '__main__':
         today = date.today().strftime('%Y-%m-%d')
         fixity_validation_log_path = os.path.join(input_directory, f'fixity_validation_log_{today}.csv')
 
-    # # Validates every accession in the log that has not yet been validated (Result is blank).
-    # log_df = pd.read_csv(fixity_validation_log_path)
-    # for acc in log_df[log_df['Result'].isnull()].itertuples():
-    #
-    #     # Prints the script progress.
-    #     print(f'Starting on accession {acc.Path} ({acc.Fixity_Type})')
-    #
-    #     # Calculates the row index in the fixity validation log dataframe for the accession,
-    #     # to use for later adding the validation result.
-    #     df_row_index = log_df.index[log_df['Accession'] == acc.Accession].tolist()[0]
-    #
-    #     # Validates the accession, including updating the preservation log and fixity validation log.
-    #     # Different validation functions are used depending on if it is in a bag or is zipped.
-    #     if acc.Fixity_Type == 'Bag':
-    #         valid = validate_bag(acc.Path, input_directory)
-    #         log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
-    #         update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
-    #     else:
-    #         valid = validate_zip(acc.Path)
-    #         log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
-    #         update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
-    #
-    # # Prints if there were any validation errors, based on the Result column.
-    # error_df = log_df.loc[~log_df['Result'].isin(['Valid', 'Valid (bag manifest)', 'Not an accession'])]
-    # if error_df.empty:
-    #     print('\nNo validation errors.')
-    # else:
-    #     print('\nValidation errors found, see the fixity validation log in the input_directory.')
+    # Validates every accession in the log that has not yet been validated (Result is blank).
+    log_df = pd.read_csv(fixity_validation_log_path)
+    for acc in log_df[log_df['Result'].isnull()].itertuples():
+
+        # Prints the script progress.
+        print(f'Starting on accession {acc.Path} ({acc.Fixity_Type})')
+
+        # Calculates the row index in the fixity validation log dataframe for the accession,
+        # to use for later adding the validation result.
+        df_row_index = log_df.index[log_df['Accession'] == acc.Accession].tolist()[0]
+
+        # Validates the accession, including updating the preservation log and fixity validation log.
+        # Different validation functions are used depending on if it is in a bag or is zipped.
+        if acc.Fixity_Type == 'Bag':
+            valid = validate_bag(acc.Path, input_directory)
+            log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
+        else:
+            valid = validate_zip(acc.Path)
+            log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
+
+    # Prints if there were any validation errors, based on the Result column.
+    error_df = log_df.loc[~log_df['Result'].isin(['Valid', 'Valid (bag manifest)', 'Not an accession'])]
+    if error_df.empty:
+        print('\nNo validation errors.')
+    else:
+        print('\nValidation errors found, see the fixity validation log in the input_directory.')
