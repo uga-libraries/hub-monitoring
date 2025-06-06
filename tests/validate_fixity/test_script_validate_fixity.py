@@ -68,7 +68,7 @@ class MyTestCase(unittest.TestCase):
                     f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_004_er (Bag)\n'
                     f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (Zip)\n'
                     f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (Zip)\n'
-                    '\nValidation errors found, see fixity_validation_log.csv in the input_directory.\n')
+                    '\nValidation errors found, see the fixity validation log in the input_directory.\n')
         self.assertEqual(result, expected, 'Problem with test for mix, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
@@ -163,7 +163,7 @@ class MyTestCase(unittest.TestCase):
         result = output.stdout
         expected = (f'Starting on accession {coll_path}\\2023_test004_002_er (Zip)\n'
                     f'Starting on accession {coll_path}\\2023_test005_004_er (Zip)\n'
-                    '\nValidation errors found, see fixity_validation_log.csv in the input_directory.\n')
+                    '\nValidation errors found, see the fixity validation log in the input_directory.\n')
         self.assertEqual(result, expected, 'Problem with test for restart, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
