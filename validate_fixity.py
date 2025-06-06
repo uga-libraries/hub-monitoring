@@ -194,6 +194,13 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
     if not os.path.exists(log_path):
         return 'Log path not found'
 
+    # Checks if the log starts with the expected column row.
+    # If not, returns the status for the fixity validation log and does not do the rest of the function.
+    with open(log_path) as open_log:
+        log_text = open_log.read()
+        if not log_text.startswith('Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff'):
+            return 'Nonstandard columns'
+
     # Gets the collection and accession numbers from the preservation log.
     # These are the first two columns, the values are the same for every row in the preservation log,
     # and they are formatted differently than the folder names so must be taken from the log.
@@ -213,13 +220,6 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
             action = f'Validated bag for accession {accession_id}. The bag is not valid. {validation_result}'
         else:
             action = f'Validated zip md5 for accession {accession_id}. The zip is not valid. {validation_result}'
-
-    # Checks if the log starts with the expected column row.
-    # If not, returns the status for the fixity validation log and does not do the rest of the function.
-    with open(log_path) as open_log:
-        log_text = open_log.read()
-        if not log_text.startswith('Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff'):
-            return 'Nonstandard columns'
 
     # Adds a row to the end of the preservation log for the accession validation.
     # First adds a line return after existing text, if missing, so the new data is on its own row.
