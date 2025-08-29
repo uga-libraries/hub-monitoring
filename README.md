@@ -42,7 +42,7 @@ accession_completeness_report.py
 collection_summary.py
 
 - input_directory (required): the directory with the folders to be summarized,
-  which must be the directory containing the status folders
+  which must be the directory containing the status folders ("born-digital")
 
 format_list.py
 
@@ -57,8 +57,8 @@ risk_update.py
 
 validate_fixity.py
 
-- input_directory (required): the directory that contains the content to be validated (in bags or with a manifest),
-  which may be any folder in the expected file directory structure
+- input_directory (required): the directory that contains the content to be validated (in bags or zipped),
+  which must be in the directory containing the status folders ("born-digital")
 
 ### Testing
 

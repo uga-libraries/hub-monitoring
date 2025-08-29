@@ -52,7 +52,7 @@ Scripts should be run in the following order:
 | Script Name                      | Script Function                                                                                                                              |
 |----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
 | accession_completeness_report.py | Checks each accession for the presence of a bag, preservation log, and full risk report, and generates a report of anything that is missing. |
-| validate_fixity.py               | Validates the fixity for every accession in a directory using either bag data or a checksum manifest.                                        |
+| validate_fixity.py               | Validates the fixity for every accession in a directory using either bag data or a zip md5.                                                  |
 | risk_update.py                   | Makes an updated risk spreadsheet for every accession in a directory.                                                                        |
 | format_list.py                   | Makes a spreadsheet with the format data from every full risk spreadsheet in a directory.                                                    |
 | collection_summary.py            | Makes spreadsheets with summary data about each accession and collection in each department folder.                                          |
@@ -100,7 +100,7 @@ review.
 By default, the script uses each bag’s built-in validation function to check the fixity of the contents. If the 
 accession does not contain a bag, it will use the initial file manifest CSV instead.  
 
-This is time consuming to run, taking days for each folder, and depends on file naming and directory organizating conventions that can be variable.
+This is time-consuming to run, taking days for each folder, and depends on file naming and directory organizing conventions that can be variable.
 It can be helpful to generate just the fixity_validation_log by commenting out the rest of the script to verify the right folders are identified as accessions
 and once that is correct do the verification.
 
