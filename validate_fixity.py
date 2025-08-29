@@ -1,14 +1,16 @@
 """Validates the fixity for every accession in a directory
 
-Accessions are most commonly in bags, but legacy accessions may have a manifest instead.
-If bagit cannot work with the bag, the bag manifest is used instead.
+Accessions are most commonly in bags, but legacy accessions may be zipped instead.
+If bagit cannot run on bag (generally a path length problem), the bag manifest is used instead.
 
-The preservation log (in the accession folder) will be updated with the validation result for every accession.
+The preservation log (in the accession folder) will be updated with the validation result for every accession
+and a fixity validation log tracks the validation process.
 If there are validation errors, they are added to fixity validation log in the input_directory.
 If there are validation errors from a bag manifest, they are also saved to a log in the input_directory.
 
 Parameter:
-    input_directory (required): the directory that contains the accession folders
+    input_directory (required): the directory that contains the accession folders,
+                                structured born-digital/status/collection/accession
 
 Returns:
     Updates the preservation log of each accession with the validation result
@@ -112,8 +114,8 @@ def fixity_validation_log(acc_dir):
     Result is None for accessions to validate, "Not an accession", or "No fixity".
 
     There are other folders frequently at the accession level, such as FITS files and copies for appraisal.
-    Everything at this level is included in the log so the archivist can verify
-    they are not accessions that did not follow naming conventions.
+    Everything at this level is included in the log so the archivist can verify they are not accessions.
+    This gives us confidence that we didn't miss any accessions with naming errors.
 
     @:parameter
     acc_dir (string): directory with the accessions and where the log is saved (script argument input_directory)
@@ -167,7 +169,7 @@ def fixity_validation_log(acc_dir):
                                 log_writer.writerow(row)
 
 
-def update_fixity_validation_log(log_path, df, row, pres_log, result):
+def update_fixity_validation_log(log_path, df, row, pres_log, validation_result):
     """Add the validation result for an accession to the fixity validation log dataframe and csv
 
     @:parameter
@@ -175,8 +177,7 @@ def update_fixity_validation_log(log_path, df, row, pres_log, result):
     df (dataframe): the dataframe with the current fixity validation log information
     row (dataframe index): the dataframe index number of the accession
     pres_log(string): the status of the preservation log, "Updated" or an error message
-    result (string): the validation error or "Valid"
-    report_dir (string): directory where the report is saved (script argument input_directory)
+    validation_result (string): the validation error or "Valid"
 
     @:returns
     None
@@ -186,10 +187,10 @@ def update_fixity_validation_log(log_path, df, row, pres_log, result):
     df.loc[row, 'Pres_Log'] = pres_log
 
     # Adds validation result to the Result column.
-    df.loc[row, 'Result'] = result
+    df.loc[row, 'Result'] = validation_result
 
     # Determines if the fixity is valid, based on validation result, and adds to the Valid column.
-    if result.startswith('Valid'):
+    if validation_result.startswith('Valid'):
         is_valid = True
     else:
         is_valid = False
@@ -359,7 +360,7 @@ def validate_bag_manifest(acc_dir, report_dir):
 def validate_zip(acc_dir):
     """Validate a zipped accession with a zip md5 text file and return the result for the logs
 
-    Accession's with long file paths cannot be bagged.
+    Accessions with long file paths cannot be bagged.
     They are zipped and have a file accession-id_zip_md5.txt with the zip MD5 instead.
 
     @:parameter
