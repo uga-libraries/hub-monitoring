@@ -266,12 +266,13 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
     return 'Updated'
 
 
-def validate_bag(acc_dir, report_dir):
+def validate_bag(acc_dir, report_dir, bag_name):
     """Validate an accession's bag with bagit and return the result for the logs
 
     @:parameter
     acc_dir (string): the path to an accession folder
     report_dir (string): directory where the report is saved (script argument input_directory)
+    bag_name (string): the folder name of the bag, either acc_bag or acc_zipped_bag
 
     @:returns
     validation_result (string): "Valid", "Valid (bag manifest - ...)", or an error message
@@ -281,7 +282,7 @@ def validate_bag(acc_dir, report_dir):
     # There are cases where filenames or path length prevent it from making a bag,
     # in which case it tries to validate the bag using the manifest.
     try:
-        new_bag = bagit.Bag(os.path.join(acc_dir, f'{os.path.basename(acc_dir)}_bag'))
+        new_bag = bagit.Bag(os.path.join(acc_dir, bag_name))
     except bagit.BagError:
         validation_result = validate_bag_manifest(acc_dir, report_dir)
         return validation_result
