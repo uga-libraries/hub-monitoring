@@ -430,7 +430,7 @@ if __name__ == '__main__':
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or is zipped.
         if acc.Fixity_Type == 'Bag':
-            valid = validate_bag(acc.Path, input_directory)
+            valid = validate_bag(acc.Path, input_directory, f'{acc.Accession}_bag')
             log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         else:
