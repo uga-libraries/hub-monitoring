@@ -127,7 +127,7 @@ def fixity_validation_log(acc_dir):
     # Makes the fixity validation log with a header in the input_directory.
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
     header = ['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result']
-    with (open(log_path, 'w', newline='') as open_log):
+    with open(log_path, 'w', newline='') as open_log:
         log_writer = csv.writer(open_log)
         log_writer.writerow(header)
 
@@ -150,6 +150,10 @@ def fixity_validation_log(acc_dir):
                                 if is_accession:
                                     if os.path.exists(os.path.join(folder_path, f'{folder}_bag')):
                                         fixity_type = 'Bag'
+                                        is_valid = None
+                                        result = None
+                                    elif os.path.exists(os.path.join(folder_path, f'{folder}_zipped_bag')):
+                                        fixity_type = 'Zipped_Bag'
                                         is_valid = None
                                         result = None
                                     elif os.path.exists(os.path.join(folder_path, f'{folder}_zip_md5.txt')):
