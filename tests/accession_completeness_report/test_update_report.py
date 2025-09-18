@@ -29,7 +29,7 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list(join('update_report_test_data', f'accession_completeness_report_{today}.csv'))
         expected = [['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Initial_Manifest', 'Bag'],
                     ['backlogged', 'coll_1', 'acc_1_1', True, True, True, True]]
-        self.assertEqual(result, expected, "Problem with test for new report")
+        self.assertEqual(expected, result, "Problem with test for new report")
 
     def test_existing_report(self):
         """Test for adding to an existing accession completeness report"""
@@ -49,7 +49,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Initial_Manifest', 'Bag'],
                     ['backlogged', 'coll_1', 'acc_1_1', True, True, True, True],
                     ['backlogged', 'coll_1', 'acc_1_2', False, False, True, True]]
-        self.assertEqual(result, expected, "Problem with test for existing report")
+        self.assertEqual(expected, result, "Problem with test for existing report")
 
 
 if __name__ == '__main__':

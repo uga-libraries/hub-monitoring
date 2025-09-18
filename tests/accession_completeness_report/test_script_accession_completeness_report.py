@@ -43,7 +43,7 @@ class MyTestCase(unittest.TestCase):
                     f"Starting on accession {join(input_directory, 'backlogged', 'coll_2', 'acc_2_1')}\r\n"
                     f"Starting on accession {join(input_directory, 'backlogged', 'coll_2', 'acc_2_2')}\r\n"
                     f"\r\nAll accessions are complete.\r\n")
-        self.assertEqual(result, expected, "Problem with test for complete, printed message")
+        self.assertEqual(expected, result, "Problem with test for complete, printed message")
 
         # Tests the csv was not made.
         result = exists(join(input_directory, f'accession_completeness_report_{today}.csv'))
@@ -68,7 +68,7 @@ class MyTestCase(unittest.TestCase):
                     f"Starting on accession {join(input_directory, 'backlogged', 'coll_2', 'acc_2_3')}\r\n"
                     f"Starting on accession {join(input_directory, 'closed', 'coll_3', 'acc_3_1')}\r\n"
                     f"\r\nIncomplete accessions found. See {report_path}.\r\n")
-        self.assertEqual(result, expected, "Problem with test for incomplete, printed message")
+        self.assertEqual(expected, result, "Problem with test for incomplete, printed message")
 
         # Tests the contents of the csv are correct.
         result = csv_to_list(report_path)
@@ -77,7 +77,7 @@ class MyTestCase(unittest.TestCase):
                     ['backlogged', 'coll_2', 'acc_2_1', True, True, False, False],
                     ['backlogged', 'coll_2', 'acc_2_3', False, False, True, True],
                     ['closed', 'coll_3', 'acc_3_1', True, False, False, False]]
-        self.assertEqual(result, expected, "Problem with test for incomplete, report")
+        self.assertEqual(expected, result, "Problem with test for incomplete, report")
 
 
 if __name__ == '__main__':

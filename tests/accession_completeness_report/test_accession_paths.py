@@ -13,14 +13,14 @@ class MyTestCase(unittest.TestCase):
         coll_path = join('accession_paths_test_data', 'coll_1')
         accession_list = accession_paths(coll_path)
         expected = [join(coll_path, 'acc_1_1')]
-        self.assertEqual(accession_list, expected, "Problem with test for one path")
+        self.assertEqual(expected, accession_list, "Problem with test for one path")
 
     def test_multiple_paths(self):
         """Test for when there are three accession folders in the collection folder and nothing else"""
         coll_path = join('accession_paths_test_data', 'coll_2')
         accession_list = accession_paths(coll_path)
         expected = [join(coll_path, 'acc_2_1'), join(coll_path, 'acc_2_2'), join(coll_path, 'acc_2_3')]
-        self.assertEqual(accession_list, expected, "Problem with test for multiple paths")
+        self.assertEqual(expected, accession_list, "Problem with test for multiple paths")
 
     def test_skip_file(self):
         """Test for when there is a file that will not be included within the collection folder,
@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
         coll_path = join('accession_paths_test_data', 'coll_3')
         accession_list = accession_paths(coll_path)
         expected = [join(coll_path, 'acc_3_1')]
-        self.assertEqual(accession_list, expected, "Problem with test for skip file")
+        self.assertEqual(expected, accession_list, "Problem with test for skip file")
 
     def test_skip_folders(self):
         """Test for when each of the skipped folder names are present in the collection folder,
@@ -36,7 +36,7 @@ class MyTestCase(unittest.TestCase):
         coll_path = join('accession_paths_test_data', 'coll_4')
         accession_list = accession_paths(coll_path)
         expected = [join(coll_path, 'acc_4_1'), join(coll_path, 'acc_4_2')]
-        self.assertEqual(accession_list, expected, "Problem with test for skip folders")
+        self.assertEqual(expected, accession_list, "Problem with test for skip folders")
 
 
 if __name__ == '__main__':
