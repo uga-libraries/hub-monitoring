@@ -40,7 +40,7 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'harg_ms2000 papers', '2002_02_er',
                      os.path.join(acc_dir, 'closed', 'harg_ms2000 papers', '2002_02_er'),
                      'Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK']]
-        self.assertEqual(result, expected, "Problem with test for acc_bag")
+        self.assertEqual(expected, result, "Problem with test for acc_bag")
 
     def test_acc_zipped_bag(self):
         """Test for when the accessions are in bags for fixity validation, with a different naming convention"""
@@ -64,7 +64,7 @@ class MyTestCase(unittest.TestCase):
             ['closed', 'harg_ms2000 papers', '2002_02_er',
              os.path.join(acc_dir, 'closed', 'harg_ms2000 papers', '2002_02_er'),
              'Zipped_Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK']]
-        self.assertEqual(result, expected, "Problem with test for acc_zipped_bag")
+        self.assertEqual(expected, result, "Problem with test for acc_zipped_bag")
 
     def test_acc_zip(self):
         """Test for when the accessions are zipped with a md5 in a text file for fixity validation"""
@@ -87,7 +87,7 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'rbrl333', 'no-acc-num',
                      os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),
                      'Zip', 'BLANK', 'BLANK', 'BLANK', 'BLANK']]
-        self.assertEqual(result, expected, "Problem with test for acc_zip")
+        self.assertEqual(expected, result, "Problem with test for acc_zip")
 
     def test_extra_status(self):
         """Test for when there is another folder at the "status" level (not included in log)"""
@@ -100,7 +100,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                     ['closed', 'rbrl333', 'no-acc-num', os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),
                      'Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK']]
-        self.assertEqual(result, expected, "Problem with test for extra_status")
+        self.assertEqual(expected, result, "Problem with test for extra_status")
 
     def test_no_acc(self):
         """Test for when there are folders at the "accession" level that aren't accessions (included in log)"""
@@ -119,7 +119,7 @@ class MyTestCase(unittest.TestCase):
                      'BLANK', 'BLANK', 'Skipped', 'BLANK', 'Not an accession'],
                     ['closed', 'harg1234', 'access', os.path.join(acc_dir, 'closed', 'harg1234', 'access'),
                      'BLANK', 'BLANK', 'Skipped', 'BLANK', 'Not an accession']]
-        self.assertEqual(result, expected, "Problem with test for no_acc")
+        self.assertEqual(expected, result, "Problem with test for no_acc")
 
     def test_no_fixity(self):
         """Test for when there are folders that are accessions but don't have fixity information  (included in log)"""
@@ -134,7 +134,7 @@ class MyTestCase(unittest.TestCase):
                      'BLANK', 'BLANK', 'False', 'BLANK', 'No fixity information'],
                     ['closed', 'rbrl333', 'no-acc-num', os.path.join(acc_dir, 'closed', 'rbrl333', 'no-acc-num'),
                      'BLANK', 'BLANK', 'False', 'BLANK', 'No fixity information']]
-        self.assertEqual(result, expected, "Problem with test for no_acc")
+        self.assertEqual(expected, result, "Problem with test for no_acc")
 
 
 if __name__ == '__main__':

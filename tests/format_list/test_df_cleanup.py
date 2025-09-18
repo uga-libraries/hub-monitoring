@@ -45,7 +45,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
                     ['format1', 'v1', 111, 'Low Risk'],
                     ['format2', 'v2', 222, 'High Risk']]
-        self.assertEqual(result, expected, "Problem with test for all columns")
+        self.assertEqual(expected, result, "Problem with test for all columns")
 
     def test_duplicates(self):
         """Test duplicates of files with the same NARA risk level"""
@@ -63,7 +63,7 @@ class MyTestCase(unittest.TestCase):
                     ['format1', 'v1', 111, 'Low Risk'],
                     ['format1', 'v1', 111, 'Moderate Risk'],
                     ['format1', 'v1', 222, 'Low Risk']]
-        self.assertEqual(result, expected, "Problem with test for duplicates")
+        self.assertEqual(expected, result, "Problem with test for duplicates")
 
     def test_nara_blank(self):
         """Test filling blank NARA risk level with No Match"""
@@ -78,7 +78,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
                     ['format1', 'v1', 111, 'No Match'],
                     ['format2', 'v2', 222, 'No Match']]
-        self.assertEqual(result, expected, "Problem with test for NARA blank risk level")
+        self.assertEqual(expected, result, "Problem with test for NARA blank risk level")
 
     def test_nara_rename(self):
         """Test renaming NARA_Risk Level to NARA_Risk_Level"""
@@ -91,7 +91,7 @@ class MyTestCase(unittest.TestCase):
         result = df_to_list(df_formats)
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
                     ['format1', 'v1', 111, 'No Match']]
-        self.assertEqual(result, expected, "Problem with test for NARA rename risk level")
+        self.assertEqual(expected, result, "Problem with test for NARA rename risk level")
 
     def test_version_blank(self):
         """Test filling blank version with no-version"""
@@ -106,7 +106,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
                     ['format1', 'no-version', 111, 'Low Risk'],
                     ['format2', 'no-version', 222, 'High Risk']]
-        self.assertEqual(result, expected, "Problem with test for version blank")
+        self.assertEqual(expected, result, "Problem with test for version blank")
 
     def test_version_string(self):
         """Test changing numerical version numbers to strings"""
@@ -121,7 +121,7 @@ class MyTestCase(unittest.TestCase):
         expected = [['FITS_Format_Name', 'FITS_Format_Version', 'FITS_Size_KB', 'NARA_Risk_Level'],
                     ['format1', '1', 111, 'Low Risk'],
                     ['format2', '2', 222, 'High Risk']]
-        self.assertEqual(result, expected, "Problem with test for version blank")
+        self.assertEqual(expected, result, "Problem with test for version blank")
 
 
 if __name__ == '__main__':

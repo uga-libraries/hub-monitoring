@@ -19,7 +19,7 @@ class MyTestCase(unittest.TestCase):
         expected = ['2024-31-er', 'rbrl003', 'closed', '2024', 0, 0, 0, 0, 0, 0,
                     'Accession 2024-31-er has no risk csv. ',
                     'Did not calculate size for accession 2024-31-er due to folder organization. ']
-        self.assertEqual(accession_data, expected, "Problem with test for error messages")
+        self.assertEqual(expected, accession_data, "Problem with test for error messages")
 
     def test_no_error_messages(self):
         """Test for when the accession does not have any error messages."""
@@ -30,7 +30,7 @@ class MyTestCase(unittest.TestCase):
         accession_data = get_accession_data(input_directory, status, collection, accession)
 
         expected = ['2022-15-er', 'ms0001 Person papers', 'backlogged', '2024', .00001, 3, 0, 0, 1, 2, None, None]
-        self.assertEqual(accession_data, expected, "Problem with test for no error messages")
+        self.assertEqual(expected, accession_data, "Problem with test for no error messages")
 
 
 if __name__ == '__main__':

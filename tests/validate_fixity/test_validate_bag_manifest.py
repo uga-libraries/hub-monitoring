@@ -29,14 +29,14 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Could not validate with bagit. Bag manifest not valid: 1 errors'
-        self.assertEqual(result, expected, 'Problem with test for not valid bag, validation_result')
+        self.assertEqual(expected, result, 'Problem with test for not valid bag, validation_result')
 
         # Verifies the manifest log has the correct values.
         result = csv_to_list(os.path.join('test_data', '2023_test002_001_er_manifest_validation_errors.csv'))
         expected = [['File', 'MD5', 'MD5_Source'],
                     [os.path.join(acc_dir, '2023_test002_001_er_bag', 'data', 'CD_2', 'New Text Document.txt'),
                      '0ee0d2e5ec9772cce389da723946d788', 'Current']]
-        self.assertEqual(result, expected, 'Problem with test for not valid bag, manifest')
+        self.assertEqual(expected, result, 'Problem with test for not valid bag, manifest')
 
     def test_not_valid_zipped_bag(self):
         """Test for when the bag is not valid and uses the acc_zipped_bag naming convention"""
@@ -47,7 +47,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Could not validate with bagit. Bag manifest not valid: 4 errors'
-        self.assertEqual(result, expected, 'Problem with test for not valid zipped bag, validation_result')
+        self.assertEqual(expected, result, 'Problem with test for not valid zipped bag, validation_result')
 
         # Verifies the manifest log has the correct values.
         data_path = os.path.join(acc_dir, '2023_test003_011_er_zipped_bag', 'data')
@@ -57,7 +57,7 @@ class MyTestCase(unittest.TestCase):
                     [os.path.join(data_path, 'data.zip'), '7a781f9ad56aafd228607f20c90adfc2', 'Current'],
                     [os.path.join(data_path, 'new_file.txt'), '9ecc761c0dd665a119ca11c963b28e43', 'Current'],
                     [os.path.join(data_path, 'new_file_2.txt'), '9ecc761c0dd665a119ca11c963b28e43', 'Current']]
-        self.assertEqual(result, expected, 'Problem with test for not valid zipped bag, manifest')
+        self.assertEqual(expected, result, 'Problem with test for not valid zipped bag, manifest')
 
     def test_valid_bag(self):
         """Test for when the bag is valid and uses the acc_bag naming convention"""
@@ -68,11 +68,11 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid (bag manifest - could not validate with bagit)'
-        self.assertEqual(result, expected, 'Problem with test for valid bag, validation_result')
+        self.assertEqual(expected, result, 'Problem with test for valid bag, validation_result')
 
         # Verifies the manifest log was not made.
         result = os.path.exists(os.path.join('test_data', '2023_test001_002_er_manifest_validation_errors.csv'))
-        self.assertEqual(result, False, 'Problem with test for valid bag, manifest_validation_errors.csv')
+        self.assertEqual(False, result, 'Problem with test for valid bag, manifest_validation_errors.csv')
 
     def test_valid_zipped_bag(self):
         """Test for when the bag is valid and uses the acc_zipped_bag naming convention"""
@@ -83,11 +83,11 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid (bag manifest - could not validate with bagit)'
-        self.assertEqual(result, expected, 'Problem with test for valid zipped bag, validation_result')
+        self.assertEqual(expected, result, 'Problem with test for valid zipped bag, validation_result')
 
         # Verifies the manifest log was not made.
         result = os.path.exists(os.path.join('test_data', '2023_test003_010_er_manifest_validation_errors.csv'))
-        self.assertEqual(result, False, 'Problem with test for valid zipped bag, manifest_validation_errors.csv')
+        self.assertEqual(False, result, 'Problem with test for valid zipped bag, manifest_validation_errors.csv')
 
 
 if __name__ == '__main__':

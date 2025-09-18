@@ -12,7 +12,7 @@ class MyTestCase(unittest.TestCase):
         """Test for when the accession number starts with the year"""
         acc_path = join('test_data', 'Hargrett_Hub', 'backlogged', 'ua01-001 Dept records', 'ua_01_032_ER')
         date = get_date(acc_path)
-        self.assertEqual(date, '2024', "Problem with test for the function")
+        self.assertEqual('2024', date, "Problem with test for the function")
 
 
 if __name__ == '__main__':

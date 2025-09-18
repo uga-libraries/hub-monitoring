@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
                     ['format1', 'v1', 'Moderate Risk', 2],
                     ['format1', 'v2', 'Low Risk', 2],
                     ['format1', 'v2', 'No Match', 3]]
-        self.assertEqual(result, expected, "Problem with test for repeats combined")
+        self.assertEqual(expected, result, "Problem with test for repeats combined")
 
     def test_repeats_not_combined(self):
         """Test for not combining repeating name, version, and/or risk combinations (all three don't match)"""
@@ -61,9 +61,8 @@ class MyTestCase(unittest.TestCase):
                     ['format7', 'v7', 'No Match', 1],
                     ['format7', 'v8', 'No Match', 1],
                     ['format8', 'v9', 'Moderate Risk', 1],
-                    ['format9', 'v9', 'Moderate Risk', 1]
-                    ]
-        self.assertEqual(result, expected, "Problem with test for repeats not combined")
+                    ['format9', 'v9', 'Moderate Risk', 1]]
+        self.assertEqual(expected, result, "Problem with test for repeats not combined")
 
     def test_unique(self):
         """Test for not combining unique name, version, risk combinations (none of the three match)"""
@@ -81,7 +80,7 @@ class MyTestCase(unittest.TestCase):
                     ['format2', 'v2', 'Moderate Risk', 1],
                     ['format3', 'v3', 'Low Risk', 1],
                     ['format4', 'v4', 'No Match', 1]]
-        self.assertEqual(result, expected, "Problem with test for unique")
+        self.assertEqual(expected, result, "Problem with test for unique")
 
 
 if __name__ == '__main__':
