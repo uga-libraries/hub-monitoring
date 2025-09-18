@@ -18,12 +18,12 @@ class MyTestCase(unittest.TestCase):
         if os.path.exists(os.path.join('test_data', '2023_test002_001_er_manifest_validation_errors.csv')):
             os.remove(os.path.join('test_data', '2023_test002_001_er_manifest_validation_errors.csv'))
 
-    def test_not_valid(self):
+    def test_not_valid_bag(self):
         """Test for when the bag is not valid"""
         # Makes the variables needed for function input and runs the function.
         acc_dir = os.path.join('test_data', 'validate_bag_manifest', '2023_test002_001_er')
         report_dir = 'test_data'
-        result = validate_bag_manifest(acc_dir, report_dir)
+        result = validate_bag_manifest(acc_dir, report_dir, '2023_test002_001_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = 'Could not validate with bagit. Bag manifest not valid: 1 errors'
@@ -34,14 +34,14 @@ class MyTestCase(unittest.TestCase):
         expected = [['File', 'MD5', 'MD5_Source'],
                     [os.path.join(acc_dir, f'{os.path.basename(acc_dir)}_bag', 'data', 'CD_2', 'New Text Document.txt'),
                      '0ee0d2e5ec9772cce389da723946d788', 'Current']]
-        self.assertEqual(result, expected, 'Problem with test for not valid, manifest_validation_errors.csv')
+        self.assertEqual(result, expected, 'Problem with test for not valid bag, manifest_validation_errors.csv')
 
-    def test_valid(self):
+    def test_valid_bag(self):
         """Test for when the bag is valid"""
         # Makes the variable needed for function input and runs the function.
         acc_dir = os.path.join('test_data', 'validate_bag_manifest', '2023_test001_002_er')
         report_dir = 'test_data'
-        result = validate_bag_manifest(acc_dir, report_dir)
+        result = validate_bag_manifest(acc_dir, report_dir, '2023_test001_002_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid (bag manifest - could not validate with bagit)'
@@ -49,7 +49,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the manifest log was not made.
         result = os.path.exists(os.path.join('test_data', '2023_test001_002_er_manifest_validation_errors.csv'))
-        self.assertEqual(result, False, 'Problem with test for valid, manifest_validation_errors.csv')
+        self.assertEqual(result, False, 'Problem with test for valid bag, manifest_validation_errors.csv')
 
 
 if __name__ == '__main__':

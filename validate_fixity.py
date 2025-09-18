@@ -284,7 +284,7 @@ def validate_bag(acc_dir, report_dir, bag_name):
     try:
         new_bag = bagit.Bag(os.path.join(acc_dir, bag_name))
     except bagit.BagError:
-        validation_result = validate_bag_manifest(acc_dir, report_dir)
+        validation_result = validate_bag_manifest(acc_dir, report_dir, bag_name)
         return validation_result
 
     # If the bag object was made, validates the bag and returns the validation result,
@@ -297,7 +297,7 @@ def validate_bag(acc_dir, report_dir, bag_name):
     return validation_result
 
 
-def validate_bag_manifest(acc_dir, report_dir):
+def validate_bag_manifest(acc_dir, report_dir, bag_name):
     """Validate an accession with the bag manifest and return the result for the logs
 
     Used if the accession cannot be validated using bagit, which happens if the path is too long.
@@ -305,6 +305,7 @@ def validate_bag_manifest(acc_dir, report_dir):
     @:parameter
     acc_dir (string): the path to an accession folder
     report_dir (string): directory where the report is saved (script argument input_directory)
+    bag_name (string): the folder name of the bag, either acc_bag or acc_zipped_bag
 
     @:returns
     validation_result (string): "Valid (bag manifest - ...)" or the number of errors
@@ -312,7 +313,7 @@ def validate_bag_manifest(acc_dir, report_dir):
 
     # Makes a dataframe with the path and MD5 of every file in the data folder of the bag.
     files_list = []
-    for root, dirs, files in os.walk(os.path.join(acc_dir, f'{os.path.basename(acc_dir)}_bag', 'data')):
+    for root, dirs, files in os.walk(os.path.join(acc_dir, bag_name, 'data')):
         for file in files:
             filepath = os.path.join(root, file)
             # If the file path is too long, it causes a FileNotFoundError and cannot calculate the MD5.
