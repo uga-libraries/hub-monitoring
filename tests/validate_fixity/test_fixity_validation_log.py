@@ -42,6 +42,30 @@ class MyTestCase(unittest.TestCase):
                      'Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK']]
         self.assertEqual(result, expected, "Problem with test for acc_bag")
 
+    def test_acc_zipped_bag(self):
+        """Test for when the accessions are in bags for fixity validation, with a different naming convention"""
+        # Makes the variable for function input and runs the function.
+        acc_dir = os.path.join('test_data', 'fixity_validation_log', 'acc_zipped_bag', 'born-digital')
+        fixity_validation_log(acc_dir)
+
+        # Verifies the log has the correct values.
+        result = csv_to_list(os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv"))
+        expected = [
+            ['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+            ['backlogged', 'harg_ms1234 papers', '2021_12_er',
+             os.path.join(acc_dir, 'backlogged', 'harg_ms1234 papers', '2021_12_er'),
+             'Zipped_Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK'],
+            ['backlogged', 'harg_ms1234 papers', '2021_345_ER',
+             os.path.join(acc_dir, 'backlogged', 'harg_ms1234 papers', '2021_345_ER'),
+             'Zipped_Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK'],
+            ['closed', 'harg_ms1000 papers', '2001_01_er',
+             os.path.join(acc_dir, 'closed', 'harg_ms1000 papers', '2001_01_er'),
+             'Zipped_Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK'],
+            ['closed', 'harg_ms2000 papers', '2002_02_er',
+             os.path.join(acc_dir, 'closed', 'harg_ms2000 papers', '2002_02_er'),
+             'Zipped_Bag', 'BLANK', 'BLANK', 'BLANK', 'BLANK']]
+        self.assertEqual(result, expected, "Problem with test for acc_zipped_bag")
+
     def test_acc_zip(self):
         """Test for when the accessions are zipped with a md5 in a text file for fixity validation"""
         # Makes the variable for function input and runs the function.

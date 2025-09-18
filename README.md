@@ -30,7 +30,11 @@ The file directory structure should be:
 For the risk update, download the latest version of NARA's Digital Preservation Plan spreadsheet (CSV version) from the 
 [U.S. National Archives Digital Preservation GitHub Repo](https://github.com/usnationalarchives/digital-preservation).
 
-For validating fixity, accessions should be bags or have a manifest. (UPDATE WITH MANIFEST INFO WHEN HAVE IT)
+For validating fixity, accessions should be bags or be zipped with the zip md5 stored in a text file. 
+Bags may be named accession_bag or accession_zipped_bag, where the contents of the bag are zipped to allow 
+bagging when there are character or path length issues we can't resolve at that time.
+Zipped accessions should be named accession.zip and have a file in the same directory named accession_zip_md5.txt,
+which contains one row of text formatted "MD5 path/to/accession.zip"
 
 ### Script Arguments
 
@@ -58,7 +62,7 @@ risk_update.py
 validate_fixity.py
 
 - input_directory (required): the directory that contains the content to be validated (in bags or zipped),
-  which must be in the directory containing the status folders ("born-digital")
+  which must be in the directory containing the status folders ("born-digital" or "Born-digital")
 
 ### Testing
 

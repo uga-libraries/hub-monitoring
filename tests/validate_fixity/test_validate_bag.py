@@ -13,7 +13,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_001_er')
         input_directory = 'test_data'
-        result = validate_bag(accession_path, input_directory)
+        result = validate_bag(accession_path, input_directory, '2023_test002_001_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes'
@@ -24,7 +24,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_002_er')
         input_directory = 'test_data'
-        result = validate_bag(accession_path, input_directory)
+        result = validate_bag(accession_path, input_directory, '2023_test002_002_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes'
@@ -35,7 +35,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_003_er')
         input_directory = 'test_data'
-        result = validate_bag(accession_path, input_directory)
+        result = validate_bag(accession_path, input_directory, '2023_test002_003_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 3 files and 79 bytes'
@@ -46,7 +46,7 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_004_er')
         input_directory = 'test_data'
-        result = validate_bag(accession_path, input_directory)
+        result = validate_bag(accession_path, input_directory, '2023_test002_004_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = ('Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
@@ -58,22 +58,33 @@ class MyTestCase(unittest.TestCase):
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test002_005_er')
         input_directory = 'test_data'
-        result = validate_bag(accession_path, input_directory)
+        result = validate_bag(accession_path, input_directory, '2023_test002_005_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = 'Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem'
         self.assertEqual(result, expected, 'Problem with test for missing bag-info.txt')
 
-    def test_valid(self):
-        """Test for when the bag is valid"""
+    def test_valid_bag(self):
+        """Test for when the bag is valid and uses the acc_bag naming convention"""
         # Makes variables for function input and runs the function.
         accession_path = os.path.join('test_data', 'validate_bag', '2023_test001_001_er')
         input_directory = 'test_data'
-        result = validate_bag(accession_path, input_directory)
+        result = validate_bag(accession_path, input_directory, '2023_test001_001_er_bag')
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid'
-        self.assertEqual(result, expected, 'Problem with test for valid')
+        self.assertEqual(result, expected, 'Problem with test for valid bag')
+
+    def test_valid_zipped_bag(self):
+        """Test for when the bag is valid and uses the acc_zipped_bag naming convention"""
+        # Makes variables for function input and runs the function.
+        accession_path = os.path.join('test_data', 'validate_bag', '2023_test001_002_er')
+        input_directory = 'test_data'
+        result = validate_bag(accession_path, input_directory, '2023_test001_002_er_zipped_bag')
+
+        # Verifies the function returned the correct validation_result.
+        expected = 'Valid'
+        self.assertEqual(result, expected, 'Problem with test for valid zipped bag')
 
 
 if __name__ == '__main__':
