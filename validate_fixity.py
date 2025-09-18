@@ -1,12 +1,13 @@
 """Validates the fixity for every accession in a directory
 
 Accessions are most commonly in bags, but legacy accessions may be zipped instead.
+Bags may be named accession_bag or accession_zipped_bag (contents are zipped because they cannot be bagged otherwise; bag is not zipped)
 If bagit cannot run on bag (generally a path length problem), the bag manifest is used instead.
 
 The preservation log (in the accession folder) will be updated with the validation result for every accession
 and a fixity validation log tracks the validation process.
-If there are validation errors, they are added to fixity validation log in the input_directory.
-If there are validation errors from a bag manifest, they are also saved to a log in the input_directory.
+If there are validation errors from a bag manifest, they are also saved to a log in the input_directory,
+as it is too much information to put in the fixity validation log.
 
 Parameter:
     input_directory (required): the directory that contains the accession folders,
