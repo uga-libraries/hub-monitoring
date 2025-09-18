@@ -17,7 +17,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 4 files and 90 bytes'
-        self.assertEqual(result, expected, 'Problem with test for file added')
+        self.assertEqual(expected, result, 'Problem with test for file added')
 
     def test_file_deleted(self):
         """Test for when the bag is not valid because a file was deleted"""
@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 2 files and 38 bytes'
-        self.assertEqual(result, expected, 'Problem with test for file deleted')
+        self.assertEqual(expected, result, 'Problem with test for file deleted')
 
     def test_file_edited(self):
         """Test for when the bag is not valid because a file was edited"""
@@ -39,7 +39,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Payload-Oxum validation failed. Expected 3 files and 47 bytes but found 3 files and 79 bytes'
-        self.assertEqual(result, expected, 'Problem with test for file edited')
+        self.assertEqual(expected, result, 'Problem with test for file edited')
 
     def test_fixity_changed(self):
         """Test for when the bag is not valid because a file's fixity was changed in the manifest"""
@@ -51,7 +51,7 @@ class MyTestCase(unittest.TestCase):
         # Verifies the function returned the correct validation_result.
         expected = ('Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
                     'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"')
-        self.assertEqual(result, expected, 'Problem with test for fixity changed')
+        self.assertEqual(expected, result, 'Problem with test for fixity changed')
 
     def test_missing_bag_info(self):
         """Test for when the bag is not valid because bag-info.txt is missing"""
@@ -62,7 +62,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem'
-        self.assertEqual(result, expected, 'Problem with test for missing bag-info.txt')
+        self.assertEqual(expected, result, 'Problem with test for missing bag-info.txt')
 
     def test_valid_bag(self):
         """Test for when the bag is valid and uses the acc_bag naming convention"""
@@ -73,7 +73,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid'
-        self.assertEqual(result, expected, 'Problem with test for valid bag')
+        self.assertEqual(expected, result, 'Problem with test for valid bag')
 
     def test_valid_zipped_bag(self):
         """Test for when the bag is valid and uses the acc_zipped_bag naming convention"""
@@ -84,7 +84,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid'
-        self.assertEqual(result, expected, 'Problem with test for valid zipped bag')
+        self.assertEqual(expected, result, 'Problem with test for valid zipped bag')
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Fixity changed from 0000xxx000x0000x000xx0000xx00x00 to 6467ceb233d0519f561cd4367bd19e55.'
-        self.assertEqual(valid, expected, 'Problem with test for not valid, validation_result')
+        self.assertEqual(expected, valid, 'Problem with test for not valid, validation_result')
 
     def test_valid(self):
         """Test for when the accession zip MD5 is still the same"""
@@ -27,7 +27,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the function returned the correct validation_result.
         expected = 'Valid'
-        self.assertEqual(valid, expected, 'Problem with test for valid, validation_result')
+        self.assertEqual(expected, valid, 'Problem with test for valid, validation_result')
 
 
 if __name__ == '__main__':

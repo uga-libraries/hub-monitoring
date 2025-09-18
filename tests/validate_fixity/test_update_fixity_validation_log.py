@@ -41,7 +41,7 @@ class MyTestCase(unittest.TestCase):
                      'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
                      'BLANK', 'BLANK', 'BLANK', 'BLANK']]
-        self.assertEqual(result, expected, "Problem with test for one change to the log")
+        self.assertEqual(expected, result, "Problem with test for one change to the log")
 
     def test_two_changes(self):
         """Test for adding the validation result to two rows and result is "Valid"."""
@@ -56,7 +56,7 @@ class MyTestCase(unittest.TestCase):
                      'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
                      'Nonstandard columns', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
-        self.assertEqual(result, expected, "Problem with test for two changes to the log")
+        self.assertEqual(expected, result, "Problem with test for two changes to the log")
 
     def test_not_valid_bag(self):
         """Test for adding the validation result when result is a bag validation error."""
@@ -71,7 +71,7 @@ class MyTestCase(unittest.TestCase):
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Payload-Oxum'],
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Not valid']]
-        self.assertEqual(result, expected, "Problem with test for not valid, bag error")
+        self.assertEqual(expected, result, "Problem with test for not valid, bag error")
 
     def test_not_valid_bag_manifest(self):
         """Test for adding the validation result 'Could not validate with bagit. Bag manifest not valid: # errors'"""
@@ -90,7 +90,7 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Could not validate with bagit. Bag manifest not valid: 99 errors']]
-        self.assertEqual(result, expected, "Problem with test for not valid, bag manifest")
+        self.assertEqual(expected, result, "Problem with test for not valid, bag manifest")
 
     def test_not_valid_fixity_changed(self):
         """Test for adding the validation result 'Fixity changed from [MD5] to [MD5]'"""
@@ -109,7 +109,7 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Fixity changed from aaaaaaaaa to bbbbbbbbb.']]
-        self.assertEqual(result, expected, "Problem with test for not valid, fixity changed")
+        self.assertEqual(expected, result, "Problem with test for not valid, fixity changed")
 
     def test_valid_bag_manifest(self):
         """Test for adding the validation result 'Valid (bag manifest - could not validate with bagit)'"""
@@ -128,7 +128,7 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Valid (bag manifest - could not validate with bagit)']]
-        self.assertEqual(result, expected, "Problem with test for valid bag manifest")
+        self.assertEqual(expected, result, "Problem with test for valid bag manifest")
 
 
 if __name__ == '__main__':

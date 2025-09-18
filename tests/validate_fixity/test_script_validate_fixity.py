@@ -69,7 +69,7 @@ class MyTestCase(unittest.TestCase):
                     f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (Zipped_Bag)\n'
                     f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (Zip)\n'
                     '\nValidation errors found, see the fixity validation log in the input_directory.\n')
-        self.assertEqual(result, expected, 'Problem with test for mix, printed message')
+        self.assertEqual(expected, result, 'Problem with test for mix, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
@@ -89,7 +89,7 @@ class MyTestCase(unittest.TestCase):
                     ['closed', 'test_123', '2023_test123_001_er',
                      os.path.join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'Zip',
                      'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
-        self.assertEqual(result, expected, 'Problem with test for mix, validation report')
+        self.assertEqual(expected, result, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
         log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er', 'preservation_log.txt')
@@ -100,7 +100,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.1', '2023.1.2.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
                     ['TEST.1', '2023.1.2.ER', today, 'BLANK',
                      'Validated bag for accession 2023.1.2.ER. The bag is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_002_er preservation log')
+        self.assertEqual(expected, result, 'Problem with test for mix, 2023_test001_002_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test001_004_er have been updated.
         log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er', 'preservation_log.txt')
@@ -113,7 +113,7 @@ class MyTestCase(unittest.TestCase):
                      'Validated bag for accession 2023.1.4.ER. The bag is not valid. Bag validation failed: '
                      'data\\CD_2\\File2.txt md5 validation failed: expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" '
                      'found="85c8fbcb2ff1d73cb94ed9c355eb20d5"', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test001_004_er preservation log')
+        self.assertEqual(expected, result, 'Problem with test for mix, 2023_test001_004_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test005_001_er have been updated.
         log_path = os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er', 'preservation_log.txt')
@@ -127,7 +127,7 @@ class MyTestCase(unittest.TestCase):
                      'Validated zip md5 for accession 2023.test005.001.ER. The zip is not valid. '
                      'Payload-Oxum validation failed. Expected 1 files and 589 bytes but found 2 files and 613 bytes',
                      'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for mix, 2023_test005_001_er preservation log')
+        self.assertEqual(expected, result, 'Problem with test for mix, 2023_test005_001_er preservation log')
 
     def test_restart(self):
         """Test for when the script is being restarted after a break
@@ -161,7 +161,7 @@ class MyTestCase(unittest.TestCase):
         expected = (f'Starting on accession {coll_path}\\2023_test004_002_er (Zip)\n'
                     f'Starting on accession {coll_path}\\2023_test005_004_er (Zipped_Bag)\n'
                     '\nValidation errors found, see the fixity validation log in the input_directory.\n')
-        self.assertEqual(result, expected, 'Problem with test for restart, printed message')
+        self.assertEqual(expected, result, 'Problem with test for restart, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
@@ -174,7 +174,7 @@ class MyTestCase(unittest.TestCase):
                      'Zip', 'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['backlogged', 'coll_2023', '2023_test005_004_er', os.path.join(coll_path, '2023_test005_004_er'),
                      'Zipped_Bag', 'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
-        self.assertEqual(result, expected, 'Problem with test for restart, fixity validation log')
+        self.assertEqual(expected, result, 'Problem with test for restart, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test004_002_er have been updated.
         log_path = os.path.join(input_directory, 'backlogged', 'coll_2023', '2023_test004_002_er', 'preservation_log.txt')
@@ -186,7 +186,7 @@ class MyTestCase(unittest.TestCase):
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'BLANK', 'Validated zip. Valid.', 'JD'],
                     ['T4', '2023.T4.02.ER', today, 'BLANK',
                      'Validated zip for accession 2023.T4.02.ER. The zip is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for restart, 2023_test004_002_er preservation log')
+        self.assertEqual(expected, result, 'Problem with test for restart, 2023_test004_002_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test005_004_er have been updated.
         log_path = os.path.join(input_directory, 'backlogged', 'coll_2023', '2023_test005_004_er', 'preservation_log.txt')
@@ -199,7 +199,7 @@ class MyTestCase(unittest.TestCase):
                     ['T5', '2023.T5.04.ER', today, 'BLANK',
                      'Validated zipped_bag for accession 2023.T5.04.ER. The zipped_bag is valid.',
                      'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for restart, 2023_test005_004_er preservation log')
+        self.assertEqual(expected, result, 'Problem with test for restart, 2023_test005_004_er preservation log')
 
     def test_valid(self):
         """Test for when the script runs correctly and both accessions are valid
@@ -218,7 +218,7 @@ class MyTestCase(unittest.TestCase):
         expected = (f'Starting on accession {status_path}\\test_001\\2023_test001_001_er (Bag)\n'
                     f'Starting on accession {status_path}\\test_004\\2023_test004_003_er (Zipped_Bag)\n'
                     '\nNo validation errors.\n')
-        self.assertEqual(result, expected, 'Problem with test for valid, printed message')
+        self.assertEqual(expected, result, 'Problem with test for valid, printed message')
 
         # Verifies the contents of the fixity validation log.
         result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
@@ -231,7 +231,7 @@ class MyTestCase(unittest.TestCase):
                      'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
                     ['closed', 'to_skip', 'to_skip', os.path.join(input_directory, 'closed', 'to_skip', 'to_skip'),
                     'BLANK', 'BLANK', 'Skipped', 'BLANK', 'Not an accession']]
-        self.assertEqual(result, expected, 'Problem with test for valid, fixity validation log')
+        self.assertEqual(expected, result, 'Problem with test for valid, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test001_001_er have been updated.
         log_path = os.path.join(input_directory, 'closed', 'test_001', '2023_test001_001_er', 'preservation_log.txt')
@@ -242,7 +242,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.1', '2023.1.1.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', today, 'BLANK',
                      'Validated bag for accession 2023.1.1.ER. The bag is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for valid, 2023_test001_001_er preservation log')
+        self.assertEqual(expected, result, 'Problem with test for valid, 2023_test001_001_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test004_003_er have been updated.
         log_path = os.path.join(input_directory, 'closed', 'test_004', '2023_test004_003_er', 'preservation_log.txt')
@@ -255,7 +255,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.004', '2023.test004.003.ER', today, 'BLANK',
                      'Validated zipped_bag for accession 2023.test004.003.ER. The zipped_bag is valid.',
                      'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for valid, 2023_test004_003_er preservation log')
+        self.assertEqual(expected, result, 'Problem with test for valid, 2023_test004_003_er preservation log')
 
     def test_arg_error(self):
         """Test for when the script argument is not correct and the script exits"""
@@ -272,7 +272,7 @@ class MyTestCase(unittest.TestCase):
         output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, stdout=subprocess.PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided input_directory 'test_data\\Error' does not exist\r\n"
-        self.assertEqual(result, expected, 'Problem with test for script argument error, printed error')
+        self.assertEqual(expected, result, 'Problem with test for script argument error, printed error')
 
 
 if __name__ == '__main__':

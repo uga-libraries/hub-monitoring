@@ -15,7 +15,7 @@ class MyTestCase(unittest.TestCase):
         fixity_validation_log_path = check_restart(input_directory)
 
         # Verifies fixity_validation_log_path has the correct value.
-        self.assertEqual(fixity_validation_log_path, None, "Problem with test for not restart")
+        self.assertEqual(None, fixity_validation_log_path, "Problem with test for not restart")
 
     def test_restart(self):
         """Test for when the script is being restarted (log is present)"""
@@ -25,7 +25,7 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies fixity_validation_log_path has the correct value.
         expected = os.path.join('test_data', 'check_restart', 'restart_yes', 'fixity_validation_log_20241031.csv')
-        self.assertEqual(fixity_validation_log_path, expected, "Problem with test for restart")
+        self.assertEqual(expected, fixity_validation_log_path, "Problem with test for restart")
 
 
 if __name__ == '__main__':

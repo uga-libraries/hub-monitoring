@@ -29,7 +29,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Updated', 'Problem with test for bag not valid, log_status')
+        self.assertEqual('Updated', log_status, 'Problem with test for bag not valid, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -39,7 +39,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.1.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.1.ER. The bag is not valid. '
                      'Payload-Oxum validation failed. Expected 2 files but found 3 files', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for bag not valid, log contents')
+        self.assertEqual(expected, result, 'Problem with test for bag not valid, log contents')
 
     def test_bag_valid(self):
         """Test for when the bag is valid"""
@@ -50,7 +50,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Updated', 'Problem with test for bag valid, log_status')
+        self.assertEqual('Updated', log_status, 'Problem with test for bag valid, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -59,7 +59,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.2.ER', '2023-02-28', 'BLANK', 'Bagged accession, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.2.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.2.ER. The bag is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for bag valid, log contents')
+        self.assertEqual(expected, result, 'Problem with test for bag valid, log contents')
 
     def test_bag_manifest_not_valid(self):
         """Test for when the bag cannot be validated with bagit and bag manifest is not valid"""
@@ -70,7 +70,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Updated', 'Problem with test for bag manifest not valid, log_status')
+        self.assertEqual('Updated', log_status, 'Problem with test for bag manifest not valid, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -80,7 +80,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.3.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.3.ER. The bag is not valid. Could not validate with bagit. '
                      'Bag manifest not valid: 12 errors', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for bag manifest not valid, log contents')
+        self.assertEqual(expected, result, 'Problem with test for bag manifest not valid, log contents')
 
     def test_bag_manifest_valid(self):
         """Test for when the bag cannot be validated with bagit and the bag manifest is valid"""
@@ -91,7 +91,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Updated', 'Problem with test for bag manifest valid, log_status')
+        self.assertEqual('Updated', log_status, 'Problem with test for bag manifest valid, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -101,7 +101,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.4.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.4.ER. '
                      'Valid (bag manifest - could not validate with bagit', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for bag manifest valid, log contents')
+        self.assertEqual(expected, result, 'Problem with test for bag manifest valid, log contents')
 
     def test_zip_not_valid(self):
         """Test for when the MD5 for the zip is not valid (is changed)"""
@@ -112,7 +112,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Updated', 'Problem with test for zip not valid, log_status')
+        self.assertEqual('Updated', log_status, 'Problem with test for zip not valid, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -122,7 +122,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.5.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated zip md5 for accession 2023.5.ER. The zip is not valid. '
                      'Fixity changed from xxxxxxxxx to yyyyyyyyy.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for zip not valid, log contents')
+        self.assertEqual(expected, result, 'Problem with test for zip not valid, log contents')
 
     def test_zip_valid(self):
         """Test for when the MD5 for the zip is valid (has not changed)"""
@@ -133,7 +133,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Updated', 'Problem with test for zip valid, log_status')
+        self.assertEqual('Updated', log_status, 'Problem with test for zip valid, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -142,7 +142,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.6.ER', '2023-02-28', 'BLANK', 'Made zip, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.6.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated zip for accession 2023.6.ER. The zip is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for zip valid, log contents')
+        self.assertEqual(expected, result, 'Problem with test for zip valid, log contents')
 
     def test_no_end_return(self):
         """Test for when the preservation_log.txt has no return at the end of the last line"""
@@ -153,7 +153,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Updated', 'Problem with test for no end return, log_status')
+        self.assertEqual('Updated', log_status, 'Problem with test for no end return, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -162,7 +162,7 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.7.ER', '2023-02-28', 'BLANK', 'Made bag, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.7.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.7.ER. The bag is valid.', 'validate_fixity.py']]
-        self.assertEqual(result, expected, 'Problem with test for no end return, log_status')
+        self.assertEqual(expected, result, 'Problem with test for no end return, log_status')
 
     def test_nonstandard(self):
         """Test for when the preservation_log.txt does not have the standard columns
@@ -175,13 +175,13 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Nonstandard columns', 'Problem with test for nonstandard, log_status')
+        self.assertEqual('Nonstandard columns', log_status, 'Problem with test for nonstandard, log_status')
 
         # Verifies the contents of the log have NOT been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Date', 'Electronic Media Identifier', 'Action', 'Staff'],
                     ['2023-02-28', 'Test003.008.CD1', 'Copied, no errors.', 'Jane Doe']]
-        self.assertEqual(result, expected, 'Problem with test for nonstandard, log contents')
+        self.assertEqual(expected, result, 'Problem with test for nonstandard, log contents')
 
     def test_no_log(self):
         """Test for when there is no preservation log to update.
@@ -193,7 +193,7 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual(log_status, 'Log path not found', 'Problem with test for no log, log_status')
+        self.assertEqual('Log path not found', log_status, 'Problem with test for no log, log_status')
 
 
 if __name__ == '__main__':
