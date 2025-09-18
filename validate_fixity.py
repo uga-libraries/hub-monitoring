@@ -433,6 +433,10 @@ if __name__ == '__main__':
             valid = validate_bag(acc.Path, input_directory, f'{acc.Accession}_bag')
             log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
+        elif acc.Fixity_Type == 'Zipped_Bag':
+            valid = validate_bag(acc.Path, input_directory, f'{acc.Accession}_zipped_bag')
+            log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
+            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         else:
             valid = validate_zip(acc.Path)
             log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
