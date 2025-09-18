@@ -43,7 +43,7 @@ class MyTestCase(unittest.TestCase):
                     ['Portable Network Graphics', '1', 'High Risk', 1, 205.688],
                     ['Portable Network Graphics', '1', 'Moderate Risk', 1, 257.638],
                     ['Unknown Binary', 'no-version', 'No Match', 1, 0.0]]
-        self.assertEqual(result, expected, 'Problem with test for correct')
+        self.assertEqual(expected, result, 'Problem with test for correct')
 
     def test_error(self):
         """Test for when the script argument is not correct and the script exits"""
@@ -60,7 +60,7 @@ class MyTestCase(unittest.TestCase):
         output = run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided input_directory 'script_test_data\\Error' does not exist\r\n"
-        self.assertEqual(result, expected, 'Problem with test for printed error')
+        self.assertEqual(expected, result, 'Problem with test for printed error')
 
 
 if __name__ == '__main__':

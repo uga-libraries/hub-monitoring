@@ -45,7 +45,7 @@ class MyTestCase(unittest.TestCase):
                      'Interleaf Document', 'ildoc|doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/329',
                      'High Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other']]
 
-        self.assertEqual(result, expected, "Problem with test for multiple risk csvs per accession")
+        self.assertEqual(expected, result, "Problem with test for multiple risk csvs per accession")
 
     def test_one_risk(self):
         """
@@ -86,7 +86,7 @@ class MyTestCase(unittest.TestCase):
                      'Comma Separated Values', 'csv', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/18',
                      'Low Risk', 'Retain', 'PRONOM', 'Not for TA', 'Not for Other']]
 
-        self.assertEqual(result, expected, "Problem with test for one risk csv")
+        self.assertEqual(expected, result, "Problem with test for one risk csv")
 
     def test_one_risk_each(self):
         """
@@ -133,7 +133,7 @@ class MyTestCase(unittest.TestCase):
                      'Microsoft Word for Macintosh 5.0', 'doc', 'https://www.nationalarchives.gov.uk/pronom/x-fmt/65',
                      'Moderate Risk', 'Transform to PDF', 'File Extension', 'Not for TA', 'Not for Other']]
 
-        self.assertEqual(result, expected, "Problem with test for one risk csv each accession")
+        self.assertEqual(expected, result, "Problem with test for one risk csv each accession")
 
 
 if __name__ == '__main__':

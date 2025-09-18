@@ -26,7 +26,7 @@ class MyTestCase(unittest.TestCase):
                     ['format1', 'v1', 'Low Risk', 0.0],
                     ['format2', 'v1', 'Moderate Risk', 0.0]]
 
-        self.assertEqual(result, expected, "Problem with test for combined KB")
+        self.assertEqual(expected, result, "Problem with test for combined KB")
 
     def test_combined_mb(self):
         """Test for combining name, version, and risk combinations with total sizes in MB (round to decimal GB)"""
@@ -44,7 +44,7 @@ class MyTestCase(unittest.TestCase):
                     ['format1', 'v1', 'Low Risk', 0.001],
                     ['format2', 'v1', 'Moderate Risk', 0.021]]
 
-        self.assertEqual(result, expected, "Problem with test for combined MB")
+        self.assertEqual(expected, result, "Problem with test for combined MB")
 
     def test_combined_gb(self):
         """Test for combining name, version, and risk combinations with total sizes in GB"""
@@ -62,7 +62,7 @@ class MyTestCase(unittest.TestCase):
                     ['format1', 'v1', 'Low Risk', 2.0],
                     ['format2', 'v1', 'Moderate Risk', 60.006]]
 
-        self.assertEqual(result, expected, "Problem with test for combined GB")
+        self.assertEqual(expected, result, "Problem with test for combined GB")
 
     def test_repeats_not_combined(self):
         """Test for not combining repeating name, version, and/or risk combinations (all three don't match)"""
@@ -96,7 +96,7 @@ class MyTestCase(unittest.TestCase):
                     ['format7', 'v8', 'No Match', 10.0],
                     ['format8', 'v9', 'Moderate Risk', 11.0],
                     ['format9', 'v9', 'Moderate Risk', 12.0]]
-        self.assertEqual(result, expected, "Problem with test for repeats not combined")
+        self.assertEqual(expected, result, "Problem with test for repeats not combined")
 
     def test_unique(self):
         """Test for not combining unique name, version, risk combinations (none of the three match)"""
@@ -114,7 +114,7 @@ class MyTestCase(unittest.TestCase):
                     ['format2', 'v2', 'Moderate Risk', 2.0],
                     ['format3', 'v3', 'Low Risk', 3.0],
                     ['format4', 'v4', 'No Match', 4.0]]
-        self.assertEqual(result, expected, "Problem with test for unique")
+        self.assertEqual(expected, result, "Problem with test for unique")
 
 
 if __name__ == '__main__':
