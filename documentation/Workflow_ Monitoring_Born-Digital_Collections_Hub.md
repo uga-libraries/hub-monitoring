@@ -92,17 +92,23 @@ next auditing cycle.
 
 ## Validate Fixity 
 
-The validate-fixity.py script should be run every year. It can be run at the top-level “born-digital” folder in each 
-library’s Hub share or at the status folder level. It will validate the fixity for each file in an accession and update 
-each accession’s preservation log with the result. It also creates a summary report of the validations for easier 
-review. 
+The validate-fixity.py script should be run six months, to keep up with the Hub backup schedule. 
+It can be run at the top-level “born-digital” folder in each library’s Hub share. 
+It will validate the fixity for each file in an accession and update each accession’s preservation log with the result. 
+It also creates a summary report of the validations for easier review. 
 
-By default, the script uses each bag’s built-in validation function to check the fixity of the contents. If the 
-accession does not contain a bag, it will use the initial file manifest CSV instead.  
+By default, the script uses each bag’s built-in validation function to check the fixity of the contents. 
+The bag may be named accession_bag or accession_zipped_bag (the contents of the bag are zipped, not the bag itself).
+If the bag cannot validate, it will use the bag manifest to validate.
+If the accession is zipped and has a file named accession_zip_md5.txt', it will validate the md5 of the zip.
 
-This is time-consuming to run, taking days for each folder, and depends on file naming and directory organizing conventions that can be variable.
-It can be helpful to generate just the fixity_validation_log by commenting out the rest of the script to verify the right folders are identified as accessions
-and once that is correct do the verification.
+We tried using the initial manifest for validation, but it is too inconsistent about if it could find the path to calculate MD5.
+This seems to be from how Python interacts with Hub, as the same file may or may not be found on different occasions
+and every file we've checked is still present.
+
+This is time-consuming to run, taking days for each born-digital folder.
+Create just the fixity_validation_log to verify everything is correctly identified as an accession or not an accession 
+and all accessions have fixity before running it to actually validate.
 
 ### Actions Taken 
 
@@ -110,8 +116,9 @@ If the summary report flags instances of invalid fixity, submit a Libraries IT t
 backup. If this is not an option, determine if the affected file(s) can still be opened or if there is something 
 visibly wrong with the way the data is rendered. Thoroughly document any findings. 
 
-All actions must be documented in the accession’s preservation log. Because the script updates each preservation log 
-with the results, the summary report does not need to be retained. 
+All actions must be documented in the accession’s preservation log.
+The validation log and a narrative report are being kept for now to help us track and improve the process.
+We may not keep these permanently. 
 
 ## Risk Update 
 
@@ -198,3 +205,4 @@ and priority information.
 ## Review Schedule 
 
 Last reviewed: July 2024
+Last review of fixity validation: September 2025
