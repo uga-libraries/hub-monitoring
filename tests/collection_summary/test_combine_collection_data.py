@@ -37,7 +37,7 @@ class MyTestCase(unittest.TestCase):
                      'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
                     ['coll1', '2021-2022', 'backlogged', 36.61, 696, 90, 9, 57, 540, 0, 0],
                     ['coll2', '2023', 'closed', 123.22, 82, 30, 0, 0, 52, 0, 0]]
-        self.assertEqual(result, expected, "Problem with test for multiple accessions")
+        self.assertEqual(expected, result, "Problem with test for multiple accessions")
 
     def test_multiple_all_errors(self):
         """Test for when a collection has multiple accessions with both error messages"""
@@ -57,7 +57,7 @@ class MyTestCase(unittest.TestCase):
                      'Accession acc2a has no risk csv. Accession acc2b has no risk csv. ',
                      'Did not calculate size for accession acc2a due to folder organization. '
                      'Did not calculate size for accession acc2b due to path length. ']]
-        self.assertEqual(result, expected, "Problem with test for multiple accessions, all errors")
+        self.assertEqual(expected, result, "Problem with test for multiple accessions, all errors")
 
     def test_multiple_some_errors(self):
         """Test for when a collection has multiple accessions, some with and some without error messages"""
@@ -82,7 +82,7 @@ class MyTestCase(unittest.TestCase):
                      'Did not calculate size for accession acc1b due to path length. '
                      'Did not calculate size for accession acc1c due to path length. '],
                     ['coll2', '2023', 'closed', 123.22, 82, 30, 0, 0, 37, 'Accession acc2b has no risk csv. ', 0]]
-        self.assertEqual(result, expected, "Problem with test for multiple accessions, some errors")
+        self.assertEqual(expected, result, "Problem with test for multiple accessions, some errors")
 
     def test_one(self):
         """Test for when each collection has one accession with no error messages"""
@@ -98,7 +98,7 @@ class MyTestCase(unittest.TestCase):
                      'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
                     ['coll1', '2023', 'backlogged', 23.52, 51, 2, 0, 17, 32, 0, 0],
                     ['coll2', '2024', 'backlogged', 123.2, 250, 100, 54, 33, 63, 0, 0]]
-        self.assertEqual(result, expected, "Problem with test for one accession")
+        self.assertEqual(expected, result, "Problem with test for one accession")
 
     def test_one_errors(self):
         """Test for when each collection has one accession with both error messages"""
@@ -118,7 +118,7 @@ class MyTestCase(unittest.TestCase):
                      'Did not calculate size for accession acc1a due to path length. '],
                     ['coll2', '2022', 'backlogged', 0, 0, 0, 0, 0, 0, 'Accession 2a has no risk csv. ',
                      'Did not calculate size for accession acc1b due to path length. ']]
-        self.assertEqual(result, expected, "Problem with test for one accession, all errors")
+        self.assertEqual(expected, result, "Problem with test for one accession, all errors")
 
 
 if __name__ == '__main__':

@@ -50,7 +50,7 @@ class MyTestCase(unittest.TestCase):
         output = run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
         result = output.stdout.decode('utf-8')
         expected = "Provided input_directory 'test_data\\Error' does not exist\r\n"
-        self.assertEqual(result, expected, "Problem with test for printed error")
+        self.assertEqual(expected, result, "Problem with test for printed error")
 
     def test_hargrett(self):
         """Test running the script with Hargrett test data"""
@@ -66,7 +66,7 @@ class MyTestCase(unittest.TestCase):
                     ['2022-15-er', 'ms0001 Person papers', 'backlogged', '2024', 0.00001, 3, 0, 0, 1, 2, 'nan', 'nan'],
                     ['ua_01_032_ER', 'ua01-001 Dept records', 'backlogged', '2024', 0.00000001, 1, 0, 0, 0, 1, 'nan', 'nan'],
                     ['ua_01_033_ER', 'ua01-001 Dept records', 'backlogged', '2024', 0.00004, 3, 1, 0, 1, 1, 'nan', 'nan']]
-        self.assertEqual(result, expected, "Problem with test for Hargrett data, accession report")
+        self.assertEqual(expected, result, "Problem with test for Hargrett data, accession report")
 
         # Tests the contents of the collection report.
         coll_path = join(input_directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
@@ -75,7 +75,7 @@ class MyTestCase(unittest.TestCase):
                      'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error'],
                     ['ms0001 Person papers', '2024', 'backlogged', 0.00001, 3, 0, 0, 1, 2, 'nan', 'nan'],
                     ['ua01-001 Dept records', '2024', 'backlogged', 0.00004, 4, 1, 0, 1, 2, 'nan', 'nan']]
-        self.assertEqual(result, expected, "Problem with test for Hargrett data, collection report")
+        self.assertEqual(expected, result, "Problem with test for Hargrett data, collection report")
 
     def test_russell(self):
         """Test running the script with Russell test data"""
@@ -112,7 +112,7 @@ class MyTestCase(unittest.TestCase):
                     ['2024-31-er', 'rbrl003', 'closed', '2024', 0, 0, 0, 0, 0, 0,
                      'Accession 2024-31-er has no risk csv. ',
                      'Did not calculate size for accession 2024-31-er due to folder organization. ']]
-        self.assertEqual(result, expected, "Problem with test for Russell data, accession report")
+        self.assertEqual(expected, result, "Problem with test for Russell data, accession report")
 
         # Tests the contents of the collection report.
         coll_path = join(input_directory, f"hub-collection-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
@@ -125,7 +125,7 @@ class MyTestCase(unittest.TestCase):
                     ['rbrl003', '2024', 'closed', 0, 0, 0, 1, 7, 10,
                      'Accession 2024-31-er has no risk csv. ',
                      'Did not calculate size for accession 2024-31-er due to folder organization. ']]
-        self.assertEqual(result, expected, "Problem with test for Russell data, collection report")
+        self.assertEqual(expected, result, "Problem with test for Russell data, collection report")
 
 
 if __name__ == '__main__':
