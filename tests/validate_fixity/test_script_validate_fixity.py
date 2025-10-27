@@ -53,6 +53,81 @@ class MyTestCase(unittest.TestCase):
             if os.path.exists(log_path):
                 os.remove(log_path)
 
+    def test_dup_accession(self):
+        """Test for when the script runs correctly on accessions with duplicate accession ids"""
+        # Makes the variables used for script input and runs the script.
+        script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
+        input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'dup-acc', 'born-digital')
+        output = subprocess.run(f'python "{script}" "{input_directory}"', shell=True, capture_output=True, text=True)
+        today = date.today().strftime('%Y-%m-%d')
+
+        # # Verifies the script printed the correct message about the missing preservation log and validation errors.
+        result = output.stdout
+        expected = (f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_002_er (Bag)\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_004_er (Bag)\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (Bag)\n'
+                    f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (Bag)\n'
+                    '\nValidation errors found, see the fixity validation log in the input_directory.\n')
+        self.assertEqual(expected, result, 'Problem with test for dup_accession, printed message')
+
+        # Verifies the contents of the fixity validation log are correct.
+        result = csv_to_list(os.path.join(input_directory, f"fixity_validation_log_{today}.csv"))
+        expected = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+                    ['backlogged', 'test_001', '2023_test001_002_er',
+                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er'), 'Bag',
+                     'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
+                    ['backlogged', 'test_001', '2023_test001_004_er',
+                     os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er'), 'Bag',
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Bag validation failed: data\\CD_2\\File2.txt md5 validation failed: '
+                     'expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" found="85c8fbcb2ff1d73cb94ed9c355eb20d5"'],
+                    ['backlogged', 'test_005', '2023_test005_001_er',
+                     os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'), 'Zipped_Bag',
+                     'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
+                     'Payload-Oxum validation failed. Expected 1 files and 589 bytes but found 2 files and 613 bytes'],
+                    ['closed', 'test_123', '2023_test123_001_er',
+                     os.path.join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'Zip',
+                     'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
+        self.assertEqual(expected, result, 'Problem with test for dup_accession, validation report')
+
+        # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er', 'preservation_log.txt')
+        result = csv_to_list(log_path, delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.2.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.2.ER', today, 'BLANK',
+                     'Validated bag for accession 2023.1.2.ER. The bag is valid.', 'validate_fixity.py']]
+        self.assertEqual(expected, result, 'Problem with test for dup_accession, 2023_test001_002_er preservation log')
+
+        # Verifies the contents of the preservation log for 2023_test001_004_er have been updated.
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er', 'preservation_log.txt')
+        result = csv_to_list(log_path, delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.4.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
+                    ['TEST.1', '2023.1.4.ER', today, 'BLANK',
+                     'Validated bag for accession 2023.1.4.ER. The bag is not valid. Bag validation failed: '
+                     'data\\CD_2\\File2.txt md5 validation failed: expected="00a0aaaa0aa0a00ab00ad0a000aa00a0" '
+                     'found="85c8fbcb2ff1d73cb94ed9c355eb20d5"', 'validate_fixity.py']]
+        self.assertEqual(expected, result, 'Problem with test for dup_accession, 2023_test001_004_er preservation log')
+
+        # Verifies the contents of the preservation log for 2023_test005_001_er have been updated.
+        log_path = os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er', 'preservation_log.txt')
+        result = csv_to_list(log_path, delimiter='\t')
+        expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
+                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.001', 'Copied.', 'Jane Doe'],
+                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.002', 'Copied.', 'Jane Doe'],
+                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Zipped to bag.', 'Jane Doe'],
+                    ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'BLANK', 'Zipped bag valid.', 'Jane Doe'],
+                    ['TEST.005', '2023.test005.001.ER', today, 'BLANK',
+                     'Validated zip md5 for accession 2023.test005.001.ER. The zip is not valid. '
+                     'Payload-Oxum validation failed. Expected 1 files and 589 bytes but found 2 files and 613 bytes',
+                     'validate_fixity.py']]
+        self.assertEqual(expected, result, 'Problem with test for dup_accession, 2023_test005_001_er preservation log')
+
     def test_mix(self):
         """Test for when the script runs correctly on a mix of valid and not valid accessions,
         as well as an accession without a preservation log."""
