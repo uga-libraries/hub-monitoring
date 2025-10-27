@@ -1,0 +1,4 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+TEST.3	2023.7.ER	2023-02-28	CD1	Copied, no errors.	Jane Doe
+TEST.3	2023.7.ER	2023-02-28		Made bag, no errors.	Jane Doe
+
