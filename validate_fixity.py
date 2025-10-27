@@ -233,15 +233,19 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
 
     # Checks if the log starts with the expected column header row.
     # If yes, gets the ids from the first two columns of the last row, so the id formatting in the log is consistent.
-    # If not, returns the status for the fixity validation log and does not do the rest of the function.
+    # If not, or the last row is blank (IndexError), returns the status for the fixity validation log
+    # and does not do the rest of the function. The preservation log will be updated manually.
     with open(log_path, 'r') as open_log:
         log_lines = open_log.readlines()
         first_row = log_lines[0]
         if not first_row == 'Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff\n':
             return 'Nonstandard columns'
-        last_row_list = log_lines[-1].split('\t')
-        collection_id = last_row_list[0]
-        accession_id = last_row_list[1]
+        try:
+            last_row_list = log_lines[-1].split('\t')
+            collection_id = last_row_list[0]
+            accession_id = last_row_list[1]
+        except IndexError:
+            return 'Extra blank row'
 
     # Calculates the action to include in the log entry for the validation.
     # It includes the type of validation, if it was valid, and any additional error message.

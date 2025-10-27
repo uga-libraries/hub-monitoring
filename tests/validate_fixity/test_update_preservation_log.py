@@ -14,7 +14,7 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Return the preservation logs to the original contents after testing,
         using a copy of the original log that is also in the accession folder"""
-        accessions = ['2023_1_er', '2023_2_er', '2023_3_er', '2023_4_er', '2023_5_er', '2023_6_er', '2023_7_er']
+        accessions = ['2023_1_er', '2023_2_er', '2023_3_er', '2023_4_er', '2023_5_er', '2023_6_er', '2023_8_er']
         for accession in accessions:
             accession_path = os.path.join('test_data', 'update_preservation_log', accession)
             shutil.copyfile(os.path.join(accession_path, 'preservation_log_copy.txt'),
@@ -144,8 +144,8 @@ class MyTestCase(unittest.TestCase):
                      'Validated zip for accession 2023.6.ER. The zip is valid.', 'validate_fixity.py']]
         self.assertEqual(expected, result, 'Problem with test for zip valid, log contents')
 
-    def test_no_end_return(self):
-        """Test for when the preservation_log.txt has no return at the end of the last line"""
+    def test_error_indexerror(self):
+        """Test for when there is an IndexError from too many blank rows at the end of the preservation log"""
         # Makes the variables needed for function input and runs the function.
         acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_7_er')
         validation_result = 'Valid'
@@ -153,7 +153,18 @@ class MyTestCase(unittest.TestCase):
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
         # Verifies the function returned the correct log_status.
-        self.assertEqual('Updated', log_status, 'Problem with test for no end return, log_status')
+        self.assertEqual('Extra blank row', log_status, 'Problem with test for error - IndexError, log_status')
+
+    def test_error_no_end_return(self):
+        """Test for when the preservation_log.txt has no return at the end of the last line"""
+        # Makes the variables needed for function input and runs the function.
+        acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_8_er')
+        validation_result = 'Valid'
+        fixity_type = 'Bag'
+        log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
+
+        # Verifies the function returned the correct log_status.
+        self.assertEqual('Updated', log_status, 'Problem with test for error - no end return, log_status')
 
         # Verifies the contents of the log have been updated.
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
@@ -162,14 +173,23 @@ class MyTestCase(unittest.TestCase):
                     ['TEST.3', '2023.7.ER', '2023-02-28', 'BLANK', 'Made bag, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.7.ER', date.today().strftime('%Y-%m-%d'), 'BLANK',
                      'Validated bag for accession 2023.7.ER. The bag is valid.', 'validate_fixity.py']]
-        self.assertEqual(expected, result, 'Problem with test for no end return, log_status')
+        self.assertEqual(expected, result, 'Problem with test for error - no end return, log_status')
 
-    def test_nonstandard(self):
-        """Test for when the preservation_log.txt does not have the standard columns
-        Also check that the function prints a message
-        """
+    def test_error_no_log(self):
+        """Test for when there is no preservation log to update"""
         # Makes the variables needed for function input and runs the function.
-        acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_8_er')
+        acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_9_er')
+        validation_result = 'Valid'
+        fixity_type = 'Bag'
+        log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
+
+        # Verifies the function returned the correct log_status.
+        self.assertEqual('Log path not found', log_status, 'Problem with test for error - no log, log_status')
+
+    def test_error_nonstandard(self):
+        """Test for when the preservation_log.txt does not have the standard columns"""
+        # Makes the variables needed for function input and runs the function.
+        acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_10_er')
         validation_result = 'Valid'
         fixity_type = 'Bag'
         log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
@@ -181,19 +201,9 @@ class MyTestCase(unittest.TestCase):
         result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
         expected = [['Date', 'Electronic Media Identifier', 'Action', 'Staff'],
                     ['2023-02-28', 'Test003.008.CD1', 'Copied, no errors.', 'Jane Doe']]
-        self.assertEqual(expected, result, 'Problem with test for nonstandard, log contents')
+        self.assertEqual(expected, result, 'Problem with test for error - nonstandard, log contents')
 
-    def test_no_log(self):
-        """Test for when there is no preservation log to update.
-        """
-        # Makes the variables needed for function input and runs the function.
-        acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_9_er')
-        validation_result = 'Valid'
-        fixity_type = 'Bag'
-        log_status = update_preservation_log(acc_dir, validation_result, fixity_type)
 
-        # Verifies the function returned the correct log_status.
-        self.assertEqual('Log path not found', log_status, 'Problem with test for no log, log_status')
 
 
 if __name__ == '__main__':
