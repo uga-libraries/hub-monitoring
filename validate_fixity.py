@@ -428,9 +428,10 @@ if __name__ == '__main__':
         # Prints the script progress.
         print(f'Starting on accession {acc.Path} ({acc.Fixity_Type})')
 
-        # Calculates the row index in the fixity validation log dataframe for the accession,
-        # to use for later adding the validation result.
-        df_row_index = log_df.index[log_df['Accession'] == acc.Accession].tolist()[0]
+        # Calculates the row index in the fixity validation log dataframe for the accession for updating the log.
+        # The collection is tested because accession numbers may be duplicated in different collections,
+        # either from no-acc-num or errors when assigning the numbers.
+        df_row_index = log_df.index[(log_df['Collection'] == acc.Collection) & (log_df['Accession'] == acc.Accession)][0]
 
         # Validates the accession, including updating the preservation log and fixity validation log.
         # Different validation functions are used depending on if it is in a bag or is zipped.

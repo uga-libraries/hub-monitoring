@@ -1,0 +1,4 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+TEST.005	AC002.ER	2023-10-03	CD.001	Copied with no errors.	Jane Doe
+TEST.005	AC002.ER	2023-10-03	CD.002	Copied with no errors.	Jane Doe
+TEST.005	AC002.ER	2023-10-04		Made bag. The bag is valid.	Jane Doe

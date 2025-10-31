@@ -1,0 +1,3 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+TEST.005	no-acc-num	2023-10-03	CD.002	Copied.	Jane Doe
+TEST.005	no-acc-num	2023-10-03		Bag valid.	Jane Doe
