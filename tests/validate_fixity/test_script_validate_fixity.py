@@ -212,6 +212,9 @@ class MyTestCase(unittest.TestCase):
                      os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er'), 'Zipped_Bag',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Payload-Oxum validation failed. Expected 1 files and 589 bytes but found 2 files and 613 bytes'],
+                    ['backlogged', 'test_005', '2025-31-er',
+                     os.path.join(input_directory, 'backlogged', 'test_005', '2025-31-er'), 'Multiple_Bags',
+                     'BLANK', 'TBD', 'BLANK', 'Validate separately'],
                     ['closed', 'test_123', '2023_test123_001_er',
                      os.path.join(input_directory, 'closed', 'test_123', '2023_test123_001_er'), 'Zip',
                      'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]

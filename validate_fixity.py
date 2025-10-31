@@ -2,6 +2,7 @@
 
 Accessions are most commonly in bags, but legacy accessions may be zipped instead.
 Bags may be named accession_bag or accession_zipped_bag (contents are zipped because they cannot be bagged otherwise; bag is not zipped)
+Accessions may also have multiple bags, in which case they are in the log with a note to validate separately.
 If bagit cannot run on bag (generally a path length problem), the bag manifest is used instead.
 
 The preservation log (in the accession folder) will be updated with the validation result for every accession
@@ -108,7 +109,7 @@ def fixity_validation_log(acc_dir):
     Collection is an identifier and potentially the name (name of folder at second level within input_directory).
     Accession is an identifier OR a non-accession folder (name of folder at third level within input_directory).
     Path is the full path to the folder which contains the digital content (bag or zip) and preservation metadata.
-    Fixity_Type is Bag or Zip and will be used to determine how to validate the accession, or None.
+    Fixity_Type is used to determine how to validate the accession.
     Pres_Log is None for all, and is for errors encountered updating the preservation log during validation.
     Valid is None or has text if Result also has text.
     Valid_Time is None for all, and is for the time that validation finishes.
@@ -153,6 +154,10 @@ def fixity_validation_log(acc_dir):
                                         fixity_type = 'Bag'
                                         is_valid = None
                                         result = None
+                                    elif os.path.exists(os.path.join(folder_path, f'{folder}_bags')):
+                                        fixity_type = 'Multiple_Bags'
+                                        is_valid = 'TBD'
+                                        result = 'Validate separately'
                                     elif os.path.exists(os.path.join(folder_path, f'{folder}_zipped_bag')):
                                         fixity_type = 'Zipped_Bag'
                                         is_valid = None
