@@ -434,6 +434,7 @@ if __name__ == '__main__':
 
     # Validates every accession in the log that has not yet been validated (Result is blank).
     log_df = pd.read_csv(fixity_validation_log_path)
+    total_acc = len(log_df[log_df['Result'].isnull()].index)
     for acc in log_df[log_df['Result'].isnull()].itertuples():
 
         # Prints the script progress.
