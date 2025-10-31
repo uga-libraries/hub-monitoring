@@ -1,0 +1,4 @@
+ca1ea02c10b7c37f425b9b7dd86d5e11  data/CD_1/File1.txt
+ca1ea02c10b7c37f425b9b7dd86d5e11  data/CD_2/File1.txt
+85c8fbcb2ff1d73cb94ed9c355eb20d5  data/CD_2/File2.txt
+
