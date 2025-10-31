@@ -471,10 +471,3 @@ if __name__ == '__main__':
             valid = validate_zip(acc.Path)
             log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
             update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
-
-    # Prints if there were any validation errors, based on the Result column.
-    error_df = log_df.loc[~log_df['Result'].isin(['Valid', 'Valid (bag manifest)', 'Not an accession'])]
-    if error_df.empty:
-        print('\nNo validation errors.')
-    else:
-        print('\nValidation errors found, see the fixity validation log in the input_directory.')
