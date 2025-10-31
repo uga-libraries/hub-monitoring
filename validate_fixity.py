@@ -294,11 +294,14 @@ def validate_bag(acc_dir, report_dir, bag_name):
 
     # If the bag object was made, validates the bag and returns the validation result,
     # which is used to update the preservation log and fixity validation log.
+    # FileNotFoundError happens when running remotely on the server but the path will be found if run over the network.
     try:
         new_bag.validate()
         validation_result = 'Valid'
     except bagit.BagValidationError as errors:
         validation_result = str(errors)
+    except FileNotFoundError:
+        validation_result = 'Path Error'
     return validation_result
 
 
