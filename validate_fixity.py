@@ -179,6 +179,21 @@ def fixity_validation_log(acc_dir):
                                 log_writer.writerow(row)
 
 
+def get_bag_size(bag_path):
+    """Get a bag size from the Payload-Oxum
+    @:parameter
+    bag_path (string): the path to the bag folder
+
+    @:returns
+    bag_size (float): the bag size in GB, rounded to 1 decimal place
+    """
+    bag = bagit.Bag(bag_path)
+    bag_bytes = bag.info['Payload-Oxum']
+    bag_gb = float(bag_bytes) / 1000000000
+    bag_size = round(bag_gb, 1)
+    return bag_size
+
+
 def update_fixity_validation_log(log_path, df, row, pres_log, validation_result):
     """Add the validation result for an accession to the fixity validation log dataframe and csv
 
