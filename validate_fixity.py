@@ -440,12 +440,22 @@ if __name__ == '__main__':
         # Different validation functions are used depending on if it is in a bag or is zipped.
         if acc.Fixity_Type == 'Bag':
             valid = validate_bag(acc.Path, input_directory, f'{acc.Accession}_bag')
-            log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
+            # Path Error happens on the server (faster) and means that accession needs to be re-run over the network,
+            # so no permanent record of the error in the preservation log is needed.
+            if valid == 'Path Error':
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, 'skipped', valid)
+            else:
+                log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         elif acc.Fixity_Type == 'Zipped_Bag':
             valid = validate_bag(acc.Path, input_directory, f'{acc.Accession}_zipped_bag')
-            log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
+            # Path Error happens on the server (faster) and means that accession needs to be re-run over the network,
+            # so no permanent record of the error in the preservation log is needed.
+            if valid == 'Path Error':
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, 'skipped', valid)
+            else:
+                log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         else:
             valid = validate_zip(acc.Path)
             log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
