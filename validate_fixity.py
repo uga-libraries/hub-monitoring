@@ -435,9 +435,11 @@ if __name__ == '__main__':
     # Validates every accession in the log that has not yet been validated (Result is blank).
     log_df = pd.read_csv(fixity_validation_log_path)
     total_acc = len(log_df[log_df['Result'].isnull()].index)
+    current_acc = 0
     for acc in log_df[log_df['Result'].isnull()].itertuples():
 
         # Prints the script progress.
+        current_acc += 1
         print(f'Starting on accession {acc.Path} ({acc.Fixity_Type})')
 
         # Calculates the row index in the fixity validation log dataframe for the accession for updating the log.
