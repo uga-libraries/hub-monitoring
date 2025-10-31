@@ -440,7 +440,7 @@ if __name__ == '__main__':
 
         # Prints the script progress.
         current_acc += 1
-        print(f'Starting on accession {acc.Path} ({acc.Fixity_Type})')
+        print(f'Starting on accession {acc.Path} ({current_acc} of {total_acc})')
 
         # Calculates the row index in the fixity validation log dataframe for the accession for updating the log.
         # The collection is tested because accession numbers may be duplicated in different collections,
