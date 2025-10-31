@@ -27,11 +27,9 @@ def csv_to_list(csv_path, delimiter=','):
 class MyTestCase(unittest.TestCase):
 
     def tearDown(self):
-        """Return the preservation logs to the original contents after testing,
-        using a copy of the original log that is also in the accession folder,
-        and delete the fixity validation log if it was created."""
+        """Delete the updated preservation log and fixity validation log, if present."""
 
-        # For each accession, replaces the updated log with a copy of the original log from the accession folder.
+        # For each accession, deletes the updated preservation from the accession folder.
         accessions = [os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_001', 'AC001_ER'),
                       os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_001', 'no-acc-num'),
                       os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_005', 'AC002_ER'),
@@ -45,9 +43,9 @@ class MyTestCase(unittest.TestCase):
                       os.path.join('valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
                       os.path.join('valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
-            path = os.path.join('test_data', 'script', accession)
-            shutil.copyfile(os.path.join(path, 'preservation_log_copy.txt'),
-                            os.path.join(path, 'preservation_log.txt'))
+            log_path = os.path.join('test_data', 'script', accession, 'preservation_log.txt')
+            if os.path.exists(log_path):
+                os.remove(log_path)
 
         # Deletes the fixity validation log, if present.
         input_dirs = [os.path.join('test_data', 'script', 'dup_acc', 'born-digital'),
@@ -61,6 +59,16 @@ class MyTestCase(unittest.TestCase):
 
     def test_dup_accession(self):
         """Test for when the script runs correctly on accessions with duplicate accession ids"""
+        # Makes a copy of the preservation logs, since it will be updated by the test.
+        accessions = [os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_001', 'AC001_ER'),
+                      os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_001', 'no-acc-num'),
+                      os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_005', 'AC002_ER'),
+                      os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_005', 'no-acc-num'),
+                      os.path.join('dup_acc', 'born-digital', 'closed', 'test_123', 'AC001_ER')]
+        for accession in accessions:
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
+
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
         input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'dup_acc', 'born-digital')
@@ -168,6 +176,14 @@ class MyTestCase(unittest.TestCase):
     def test_mix(self):
         """Test for when the script runs correctly on a mix of valid and not valid accessions,
         as well as an accession without a preservation log."""
+        # Makes a copy of the preservation logs, since it will be updated by the test.
+        accessions = [os.path.join('mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_002_er'),
+                      os.path.join('mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_004_er'),
+                      os.path.join('mix', 'born-digital', 'backlogged', 'test_005', '2023_test005_001_er')]
+        for accession in accessions:
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
+
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
         input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'mix', 'born-digital')
@@ -244,10 +260,16 @@ class MyTestCase(unittest.TestCase):
     def test_restart(self):
         """Test for when the script is being restarted after a break
         and uses a pre-existing fixity validation log where some accessions already have a validation result"""
-        input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'restart', 'born-digital')
+        # Makes a copy of the preservation logs, since it will be updated by the test.
+        accessions = [os.path.join('restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test004_002_er'),
+                      os.path.join('restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test005_004_er')]
+        for accession in accessions:
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
 
         # Makes the fixity validation log, as if the first two accessions had validated when running the script earlier.
         # It is made by the test instead of stored in the repo so the date in the filename will be correct.
+        input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'restart', 'born-digital')
         coll_path = os.path.join(input_directory, 'backlogged', 'coll_2023')
         rows = [['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
                 ['backlogged', 'coll_2023', '2023_test001_001_er', os.path.join(coll_path, '2023_test001_001_er'),
@@ -318,6 +340,13 @@ class MyTestCase(unittest.TestCase):
         There are also a folder and file that the script should skip
         and accession 2023_test001_001_er contains a manifest that the script should skip as well as being in a bag.
         """
+        # Makes a copy of the preservation logs, since it will be updated by the test.
+        accessions = [os.path.join('valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
+                      os.path.join('valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
+        for accession in accessions:
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
+            
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
         input_directory = os.path.join(os.getcwd(), 'test_data', 'script', 'valid', 'Born-digital')
