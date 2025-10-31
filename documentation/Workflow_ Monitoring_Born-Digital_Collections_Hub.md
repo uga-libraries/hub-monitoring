@@ -116,6 +116,9 @@ and all accessions have fixity before running it to actually validate.
 
 ### Actions Taken 
 
+To address errors from temp files (usually Thumbs.db) or to further analyze bag Payload-Oxum errors,
+use the scripts in https://github.com/uga-libraries/bags
+
 If the summary report flags instances of invalid fixity, submit a Libraries IT ticket to restore the file from the 
 backup. If this is not an option, determine if the affected file(s) can still be opened or if there is something 
 visibly wrong with the way the data is rendered. Thoroughly document any findings. 
