@@ -77,13 +77,12 @@ class MyTestCase(unittest.TestCase):
 
         # # Verifies the script printed the correct message about the missing preservation log and validation errors.
         result = output.stdout
-        expected = (f'Starting on accession {input_directory}\\backlogged\\test_001\\AC001_ER (Bag)\n'
-                    f'Starting on accession {input_directory}\\backlogged\\test_001\\no-acc-num (Bag)\n'
-                    f'Starting on accession {input_directory}\\backlogged\\test_005\\AC002_ER (Bag)\n'
-                    f'Starting on accession {input_directory}\\backlogged\\test_005\\no-acc-num (Bag)\n'
-                    f'Starting on accession {input_directory}\\closed\\test_123\\AC001_ER (Bag)\n'
-                    f'Starting on accession {input_directory}\\closed\\test_123\\no-acc-num (Bag)\n'
-                    '\nValidation errors found, see the fixity validation log in the input_directory.\n')
+        expected = (f'Starting on accession {input_directory}\\backlogged\\test_001\\AC001_ER (1 of 6)\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_001\\no-acc-num (2 of 6)\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_005\\AC002_ER (3 of 6)\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_005\\no-acc-num (4 of 6)\n'
+                    f'Starting on accession {input_directory}\\closed\\test_123\\AC001_ER (5 of 6)\n'
+                    f'Starting on accession {input_directory}\\closed\\test_123\\no-acc-num (6 of 6)\n')
         self.assertEqual(expected, result, 'Problem with test for dup_accession, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
@@ -192,11 +191,10 @@ class MyTestCase(unittest.TestCase):
 
         # # Verifies the script printed the correct message about the missing preservation log and validation errors.
         result = output.stdout
-        expected = (f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_002_er (Bag)\n'
-                    f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_004_er (Bag)\n'
-                    f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (Zipped_Bag)\n'
-                    f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (Zip)\n'
-                    '\nValidation errors found, see the fixity validation log in the input_directory.\n')
+        expected = (f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_002_er (1 of 4)\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_001\\2023_test001_004_er (2 of 4)\n'
+                    f'Starting on accession {input_directory}\\backlogged\\test_005\\2023_test005_001_er (3 of 4)\n'
+                    f'Starting on accession {input_directory}\\closed\\test_123\\2023_test123_001_er (4 of 4)\n')
         self.assertEqual(expected, result, 'Problem with test for mix, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
@@ -292,9 +290,8 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the script printed the correct message about validation errors.
         result = output.stdout
-        expected = (f'Starting on accession {coll_path}\\2023_test004_002_er (Zip)\n'
-                    f'Starting on accession {coll_path}\\2023_test005_004_er (Zipped_Bag)\n'
-                    '\nValidation errors found, see the fixity validation log in the input_directory.\n')
+        expected = (f'Starting on accession {coll_path}\\2023_test004_002_er (1 of 2)\n'
+                    f'Starting on accession {coll_path}\\2023_test005_004_er (2 of 2)\n')
         self.assertEqual(expected, result, 'Problem with test for restart, printed message')
 
         # Verifies the contents of the fixity validation log are correct.
@@ -356,9 +353,8 @@ class MyTestCase(unittest.TestCase):
         # Verifies the script printed the correct message about validation errors.
         result = output.stdout
         status_path = os.path.join(input_directory, 'closed')
-        expected = (f'Starting on accession {status_path}\\test_001\\2023_test001_001_er (Bag)\n'
-                    f'Starting on accession {status_path}\\test_004\\2023_test004_003_er (Zipped_Bag)\n'
-                    '\nNo validation errors.\n')
+        expected = (f'Starting on accession {status_path}\\test_001\\2023_test001_001_er (1 of 2)\n'
+                    f'Starting on accession {status_path}\\test_004\\2023_test004_003_er (2 of 2)\n')
         self.assertEqual(expected, result, 'Problem with test for valid, printed message')
 
         # Verifies the contents of the fixity validation log.
