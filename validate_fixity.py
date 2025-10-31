@@ -188,11 +188,19 @@ def update_fixity_validation_log(log_path, df, row, pres_log, validation_result)
     None
     """
 
-    # Adds preservation log status to the Pres_Log column.
-    df.loc[row, 'Pres_Log'] = pres_log
-
     # Adds validation result to the Result column.
     df.loc[row, 'Result'] = validation_result
+
+    # If the validation result is "Path Error", no other information is included in the log.
+    # This happens from running the script on the server and means it must be done over the network.
+    # This is a placeholder in the validation log, so it can be restarted on the server without retrying,
+    # but then easily deleted, so they can be retried over the network.
+    if validation_result == 'Path Error':
+        df.to_csv(log_path, index=False)
+        return
+
+    # Adds preservation log status to the Pres_Log column.
+    df.loc[row, 'Pres_Log'] = pres_log
 
     # Determines if the fixity is valid, based on validation result, and adds to the Valid column.
     if validation_result.startswith('Valid'):
