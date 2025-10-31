@@ -188,11 +188,19 @@ def update_fixity_validation_log(log_path, df, row, pres_log, validation_result)
     None
     """
 
-    # Adds preservation log status to the Pres_Log column.
-    df.loc[row, 'Pres_Log'] = pres_log
-
     # Adds validation result to the Result column.
     df.loc[row, 'Result'] = validation_result
+
+    # If the validation result is "Path Error", no other information is included in the log.
+    # This happens from running the script on the server and means it must be done over the network.
+    # This is a placeholder in the validation log, so it can be restarted on the server without retrying,
+    # but then easily deleted, so they can be retried over the network.
+    if validation_result == 'Path Error':
+        df.to_csv(log_path, index=False)
+        return
+
+    # Adds preservation log status to the Pres_Log column.
+    df.loc[row, 'Pres_Log'] = pres_log
 
     # Determines if the fixity is valid, based on validation result, and adds to the Valid column.
     if validation_result.startswith('Valid'):
@@ -294,11 +302,14 @@ def validate_bag(acc_dir, report_dir, bag_name):
 
     # If the bag object was made, validates the bag and returns the validation result,
     # which is used to update the preservation log and fixity validation log.
+    # FileNotFoundError happens when running remotely on the server but the path will be found if run over the network.
     try:
         new_bag.validate()
         validation_result = 'Valid'
     except bagit.BagValidationError as errors:
         validation_result = str(errors)
+    except FileNotFoundError:
+        validation_result = 'Path Error'
     return validation_result
 
 
@@ -437,12 +448,22 @@ if __name__ == '__main__':
         # Different validation functions are used depending on if it is in a bag or is zipped.
         if acc.Fixity_Type == 'Bag':
             valid = validate_bag(acc.Path, input_directory, f'{acc.Accession}_bag')
-            log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
+            # Path Error happens on the server (faster) and means that accession needs to be re-run over the network,
+            # so no permanent record of the error in the preservation log is needed.
+            if valid == 'Path Error':
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, 'skipped', valid)
+            else:
+                log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         elif acc.Fixity_Type == 'Zipped_Bag':
             valid = validate_bag(acc.Path, input_directory, f'{acc.Accession}_zipped_bag')
-            log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
-            update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
+            # Path Error happens on the server (faster) and means that accession needs to be re-run over the network,
+            # so no permanent record of the error in the preservation log is needed.
+            if valid == 'Path Error':
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, 'skipped', valid)
+            else:
+                log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)
+                update_fixity_validation_log(fixity_validation_log_path, log_df, df_row_index, log_status, valid)
         else:
             valid = validate_zip(acc.Path)
             log_status = update_preservation_log(acc.Path, valid, acc.Fixity_Type)

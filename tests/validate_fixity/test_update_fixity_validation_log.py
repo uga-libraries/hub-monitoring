@@ -111,6 +111,21 @@ class MyTestCase(unittest.TestCase):
                      'Fixity changed from aaaaaaaaa to bbbbbbbbb.']]
         self.assertEqual(expected, result, "Problem with test for not valid, fixity changed")
 
+    def test_path_error(self):
+        """Test for adding the validation result 'Path Error'"""
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Skipped', 'Path Error')
+        update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 1, 'Skipped', 'Path Error')
+
+        # Verifies the fixity validation log CSV has the correct values.
+        result = csv_to_list('fixity_validation_20241031.csv')
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+                     'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'BLANK', 'BLANK', 'BLANK',
+                     'Path Error'],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'BLANK', 'BLANK', 'BLANK',
+                     'Path Error']]
+        self.assertEqual(expected, result, "Problem with test for path error")
+
     def test_valid_bag_manifest(self):
         """Test for adding the validation result 'Valid (bag manifest - could not validate with bagit)'"""
         update_fixity_validation_log('fixity_validation_20241031.csv', self.log_df, 0, 'Updated',
