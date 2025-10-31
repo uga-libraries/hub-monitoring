@@ -97,6 +97,10 @@ It can be run at the top-level “born-digital” folder in each library’s Hub
 It will validate the fixity for each file in an accession and update each accession’s preservation log with the result. 
 It also creates a summary report of the validations for easier review. 
 
+In rare cases, an accession is split into multiple bags. 
+It will have a folder acc-id_bags at the level where there is normally a single bag, 
+and will be in the fixity validation log with a result of "Validate separately"
+
 By default, the script uses each bag’s built-in validation function to check the fixity of the contents. 
 The bag may be named accession_bag or accession_zipped_bag (the contents of the bag are zipped, not the bag itself).
 If the bag cannot validate, it will use the bag manifest to validate.

@@ -2,6 +2,7 @@
 
 Accessions are most commonly in bags, but legacy accessions may be zipped instead.
 Bags may be named accession_bag or accession_zipped_bag (contents are zipped because they cannot be bagged otherwise; bag is not zipped)
+Accessions may also have multiple bags, in which case they are in the log with a note to validate separately.
 If bagit cannot run on bag (generally a path length problem), the bag manifest is used instead.
 
 The preservation log (in the accession folder) will be updated with the validation result for every accession
