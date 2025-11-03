@@ -128,7 +128,8 @@ def fixity_validation_log(acc_dir):
 
     # Makes the fixity validation log with a header in the input_directory.
     log_path = os.path.join(acc_dir, f"fixity_validation_log_{date.today().strftime('%Y-%m-%d')}.csv")
-    header = ['Status', 'Collection', 'Accession', 'Path', 'Fixity_Type', 'Pres_Log', 'Valid', 'Valid_Time', 'Result']
+    header = ['Status', 'Collection', 'Accession', 'Path', 'Size_GB', 'Fixity_Type', 'Pres_Log',
+              'Valid', 'Valid_Time', 'Result']
     with open(log_path, 'w', newline='') as open_log:
         log_writer = csv.writer(open_log)
         log_writer.writerow(header)
@@ -152,31 +153,53 @@ def fixity_validation_log(acc_dir):
                                 if is_accession:
                                     if os.path.exists(os.path.join(folder_path, f'{folder}_bag')):
                                         fixity_type = 'Bag'
+                                        bag_size = get_bag_size(os.path.join(folder_path, f'{folder}_bag'))
                                         is_valid = None
                                         result = None
                                     elif os.path.exists(os.path.join(folder_path, f'{folder}_bags')):
                                         fixity_type = 'Multiple_Bags'
+                                        bag_size = None
                                         is_valid = 'TBD'
                                         result = 'Validate separately'
                                     elif os.path.exists(os.path.join(folder_path, f'{folder}_zipped_bag')):
                                         fixity_type = 'Zipped_Bag'
+                                        bag_size = get_bag_size(os.path.join(folder_path, f'{folder}_zipped_bag'))
                                         is_valid = None
                                         result = None
                                     elif os.path.exists(os.path.join(folder_path, f'{folder}_zip_md5.txt')):
                                         fixity_type = 'Zip'
+                                        bag_size = None
                                         is_valid = None
                                         result = None
                                     else:
                                         fixity_type = None
+                                        bag_size = None
                                         is_valid = 'False'
                                         result = 'No fixity information'
                                 else:
                                     fixity_type = None
+                                    bag_size = None
                                     is_valid = 'Skipped'
                                     result = 'Not an accession'
                                 # Adds information for folder, regardless of if it is an accession, to the log.
-                                row = [status, collection, folder, folder_path, fixity_type, None, is_valid, None, result]
+                                row = [status, collection, folder, folder_path, bag_size, fixity_type, None,
+                                       is_valid, None, result]
                                 log_writer.writerow(row)
+
+
+def get_bag_size(bag_path):
+    """Get a bag size from the Payload-Oxum
+    @:parameter
+    bag_path (string): the path to the bag folder
+
+    @:returns
+    bag_size (float): the bag size in GB, rounded to 1 decimal place
+    """
+    bag = bagit.Bag(bag_path)
+    bag_bytes = bag.info['Payload-Oxum']
+    bag_gb = float(bag_bytes) / 1000000000
+    bag_size = round(bag_gb, 1)
+    return bag_size
 
 
 def update_fixity_validation_log(log_path, df, row, pres_log, validation_result):

@@ -1,5 +1,0 @@
-Status,Collection,Accession,Path,Fixity_Type,Pres_Log,Valid,Valid_Time,Result
-backlogged,harg_ms1234 papers,2021_12_er,test_data\fixity_validation_log\acc_zipped_bag\born-digital\backlogged\harg_ms1234 papers\2021_12_er,Zipped_Bag,,,,
-backlogged,harg_ms1234 papers,2021_345_ER,test_data\fixity_validation_log\acc_zipped_bag\born-digital\backlogged\harg_ms1234 papers\2021_345_ER,Zipped_Bag,,,,
-closed,harg_ms1000 papers,2001_01_er,test_data\fixity_validation_log\acc_zipped_bag\born-digital\closed\harg_ms1000 papers\2001_01_er,Zipped_Bag,,,,
-closed,harg_ms2000 papers,2002_02_er,test_data\fixity_validation_log\acc_zipped_bag\born-digital\closed\harg_ms2000 papers\2002_02_er,Zipped_Bag,,,,
