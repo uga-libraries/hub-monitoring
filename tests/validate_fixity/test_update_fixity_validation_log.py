@@ -17,9 +17,9 @@ class MyTestCase(unittest.TestCase):
 
     def setUp(self):
         """Make the dataframe and csv of the log that the tests will update"""
-        row_list = [['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', None, None, None, None],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', None, None, None, None]]
-        columns_list = ['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        row_list = [['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag', None, None, None, None],
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', None, 'Zip', 'a2-er_zip_md5.txt', None, None, None, None]]
+        columns_list = ['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                         'Pres_Log', 'Valid', 'Valid_Time', 'Result']
         self.log_df = pd.DataFrame(row_list, columns=columns_list)
         self.log_df.to_csv('fixity_validation_20241031.csv', index=False)
@@ -35,11 +35,11 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                      'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag',
                      'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'BLANK', 'Zip', 'a2-er_zip_md5.txt',
                      'BLANK', 'BLANK', 'BLANK', 'BLANK']]
         self.assertEqual(expected, result, "Problem with test for one change to the log")
 
@@ -50,11 +50,11 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                      'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag',
                      'Log path not found', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'BLANK', 'Zip', 'a2-er_zip_md5.txt',
                      'Nonstandard columns', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Valid']]
         self.assertEqual(expected, result, "Problem with test for two changes to the log")
 
@@ -65,11 +65,11 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                      'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Payload-Oxum'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'BLANK', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'), 'Not valid']]
         self.assertEqual(expected, result, "Problem with test for not valid, bag error")
 
@@ -82,12 +82,12 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                      'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Could not validate with bagit. Bag manifest not valid: 1 errors'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'BLANK', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Could not validate with bagit. Bag manifest not valid: 99 errors']]
         self.assertEqual(expected, result, "Problem with test for not valid, bag manifest")
@@ -101,12 +101,12 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                      'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Fixity changed from xxxxxxxxx to yyyyyyyyy.'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'BLANK', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'False', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Fixity changed from aaaaaaaaa to bbbbbbbbb.']]
         self.assertEqual(expected, result, "Problem with test for not valid, fixity changed")
@@ -118,12 +118,12 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                      'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag', 'BLANK', 'BLANK', 'BLANK',
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag', 'BLANK', 'BLANK', 'BLANK',
                      'Path Error'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt', 'BLANK', 'BLANK', 'BLANK',
-                     'Path Error']]
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'BLANK', 'Zip', 'a2-er_zip_md5.txt', 'BLANK', 'BLANK',
+                     'BLANK', 'Path Error']]
         self.assertEqual(expected, result, "Problem with test for path error")
 
     def test_valid_bag_manifest(self):
@@ -135,12 +135,12 @@ class MyTestCase(unittest.TestCase):
 
         # Verifies the fixity validation log CSV has the correct values.
         result = csv_to_list('fixity_validation_20241031.csv')
-        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Fixity_Type', 'Fixity',
+        expected = [['Status', 'Collection', 'Accession', 'Accession_Path', 'Size_GB', 'Fixity_Type', 'Fixity',
                      'Pres_Log', 'Valid', 'Valid_Time', 'Result'],
-                    ['closed', 'c1', 'a1-er', 'path\\a1-er', 'Bag', 'a1-er_bag',
+                    ['closed', 'c1', 'a1-er', 'path\\a1-er', '42.0', 'Bag', 'a1-er_bag',
                      'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Valid (bag manifest - could not validate with bagit)'],
-                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'Zip', 'a2-er_zip_md5.txt',
+                    ['closed', 'c1', 'a2-er', 'path\\a2-er', 'BLANK', 'Zip', 'a2-er_zip_md5.txt',
                      'Updated', 'True', datetime.now().strftime('%Y-%m-%d %H:%M'),
                      'Valid (bag manifest - could not validate with bagit)']]
         self.assertEqual(expected, result, "Problem with test for valid bag manifest")
