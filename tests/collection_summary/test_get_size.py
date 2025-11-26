@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase):
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(0, files, "Problem with test for no_bag, files")
         self.assertEqual(0, size_gb, "Problem with test for no_bag, size_gb")
-        self.assertEqual('Accession bag not found', size_error, 'Problem with test for no_bag, size_error')
+        self.assertEqual('Accession bag not found. ', size_error, 'Problem with test for no_bag, size_error')
 
 
 if __name__ == '__main__':
