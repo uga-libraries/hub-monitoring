@@ -1,5 +1,7 @@
 """Makes two spreadsheets with summary data about each accession and collection in a given department folder
 
+Accessions must be in a bag to have size information.
+
 Data included:
 - Accession (accession report only)
 - Collection
