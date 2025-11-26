@@ -1,0 +1,2 @@
+d0fafe5fe3e8544b9d3bb644cf180a38  data/Test File.txt
+9b8f351f7e43bc995045200b7d05bf41  data/Test Spreadsheet.csv

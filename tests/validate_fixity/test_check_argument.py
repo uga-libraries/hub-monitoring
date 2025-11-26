@@ -58,7 +58,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(None, input_directory, 'Problem with test for directory not b-d, input_directory')
 
         # Checks error has the correct value.
-        expected = "Provided input_directory 'test_data' is not to folder 'Born-digital' or 'born-digital'"
+        expected = "Provided input_directory 'test_data' is not the folder 'Born-digital' or 'born-digital'"
         self.assertEqual(expected, error, 'Problem with test for directory not b-d, error')
 
     def test_directory_invalid(self):

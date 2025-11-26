@@ -1,12 +1,11 @@
 """
 Tests for the function save_accession_report(), which saves accession data to a CSV.
 """
+from datetime import datetime
+import os
 import unittest
 from collection_summary import save_accession_report
 from test_script_collection_summary import csv_to_list
-from datetime import datetime
-from os import remove
-from os.path import exists, join
 
 
 class MyTestCase(unittest.TestCase):
@@ -14,17 +13,17 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Delete the report, if it was made by the tests"""
         today = datetime.today().strftime('%Y-%m-%d')
-        path = join('test_data', f'hub-accession-summary_{today}.csv')
-        if exists(path):
-            remove(path)
+        path = os.path.join('test_data', f'hub-accession-summary_{today}.csv')
+        if os.path.exists(path):
+            os.remove(path)
 
     def test_header(self):
         """Test for making a new report with a header"""
         save_accession_report('test_data', 'header')
 
         # Verifies the expected CSV was made with the correct file name.
-        csv_path = join('test_data', f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
-        csv_made = exists(csv_path)
+        csv_path = os.path.join('test_data', f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        csv_made = os.path.exists(csv_path)
         self.assertEqual(True, csv_made, "Problem with test for header, CSV is made")
 
         # Verifies the CSV has the expected contents.
@@ -40,8 +39,8 @@ class MyTestCase(unittest.TestCase):
         save_accession_report('test_data', accession_data)
 
         # Verifies the expected CSV was made with the correct file name.
-        csv_path = join('test_data', f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
-        csv_made = exists(csv_path)
+        csv_path = os.path.join('test_data', f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        csv_made = os.path.exists(csv_path)
         self.assertEqual(True, csv_made, "Problem with test for one row, CSV is made")
 
         # Verifies the CSV has the expected contents.
@@ -62,8 +61,8 @@ class MyTestCase(unittest.TestCase):
         save_accession_report('test_data', accession_data)
 
         # Verifies the expected CSV was made with the correct file name.
-        csv_path = join('test_data', f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
-        csv_made = exists(csv_path)
+        csv_path = os.path.join('test_data', f"hub-accession-summary_{datetime.today().strftime('%Y-%m-%d')}.csv")
+        csv_made = os.path.exists(csv_path)
         self.assertEqual(True, csv_made, "Problem with test for two rows, CSV is made")
 
         # Verifies the CSV has the expected contents.

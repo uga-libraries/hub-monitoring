@@ -3,15 +3,15 @@ Tests for the function combine_collection_date(), which gets the date or date ra
 
 For simplicity, the acc_df used for testing only has the columns used by this function, Collection and Date.
 """
+import pandas as pd
 import unittest
 from collection_summary import combine_collection_dates
-from pandas import DataFrame
 
 
 def make_df(df_rows):
     """Make and return a dataframe with consistent column headers."""
     column_names = ['Collection', 'Date']
-    df = DataFrame(df_rows, columns=column_names)
+    df = pd.DataFrame(df_rows, columns=column_names)
     return df
 
 
