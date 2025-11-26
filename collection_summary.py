@@ -90,8 +90,8 @@ def combine_collection_data(acc_df):
     # to make it clearer that the size for the collection needs to be calculated manually.
     # If there is an AttributeError, it means none of the rows have a value in Size_Error and no change is needed.
     try:
-        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'GB'] = 0
-        coll_df.loc[coll_df['Size_Error'].str.startswith('Did not calculate size', na=False), 'Files'] = 0
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Accession bag not found', na=False), 'GB'] = 0
+        coll_df.loc[coll_df['Size_Error'].str.startswith('Accession bag not found', na=False), 'Files'] = 0
     except AttributeError:
         pass
 
@@ -264,7 +264,7 @@ def get_size(acc_path):
     accession_number = os.path.basename(acc_path)
     bag_path = os.path.join(acc_path, f'{accession_number}_bag')
     if not os.path.exists(bag_path):
-        return 0.0, 0, 'Accession bag not found'
+        return 0, 0, 'Accession bag not found. '
 
     # Gets the size information from the bag Payload-Oxum, which is formatted 'bytes.file_count'
     bag_instance = bagit.Bag(bag_path)
