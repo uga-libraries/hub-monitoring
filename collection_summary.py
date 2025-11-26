@@ -389,9 +389,6 @@ if __name__ == '__main__':
     for status in os.listdir(input_directory):
         if status in ('backlogged', 'closed'):
             for collection in os.listdir(os.path.join(input_directory, status)):
-                # Do not include ua22-008 in the report, since it is not our collection.
-                if collection == 'ua22-008 Linguistic Atlas Project':
-                    continue
                 for accession in os.listdir(os.path.join(input_directory, status, collection)):
                     accession_dir = os.path.join(input_directory, status, collection, accession)
                     is_accession = accession_test(accession, accession_dir)
