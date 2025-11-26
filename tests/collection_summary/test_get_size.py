@@ -11,7 +11,7 @@ class MyTestCase(unittest.TestCase):
         
     def test_file(self):
         """Test for a directory with one file and no folders"""
-        acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2022-27-er')
+        acc_path = join('test_data', 'Russell_Hub', 'born-digital', 'closed', 'rbrl003', '2022-27-er')
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(1, files, "Problem with test for one file, files")
         self.assertEqual(0.00001, size_gb, "Problem with test for one file, size_gb")
@@ -19,7 +19,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_file_folder(self):
         """Test for a directory with one file, which is in a folder"""
-        acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2023-01-er')
+        acc_path = join('test_data', 'Russell_Hub', 'born-digital', 'closed', 'rbrl003', '2023-01-er')
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(1, files, "Problem with test for one file in a folder, files")
         self.assertEqual(0.00001, size_gb, "Problem with test for one file in a folder, size_gb")
@@ -27,7 +27,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_files(self):
         """Test for a directory with two files and no folders"""
-        acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2023-12-er')
+        acc_path = join('test_data', 'Russell_Hub', 'born-digital', 'closed', 'rbrl003', '2023-12-er')
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(2, files, "Problem with test for two files, files")
         self.assertEqual(0.0001, size_gb, "Problem with test for two files, size_gb")
@@ -35,7 +35,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_files_folders(self):
         """Test for a directory with multiple files and multiple folders"""
-        acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2023-23-er')
+        acc_path = join('test_data', 'Russell_Hub', 'born-digital', 'closed', 'rbrl003', '2023-23-er')
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(8, files, "Problem with test for folder, files")
         self.assertEqual(0.0005, size_gb, "Problem with test for folder, size_gb")
@@ -43,7 +43,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_no_bag(self):
         """Test for an accession that is not in a bag"""
-        acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2019-13-er')
+        acc_path = join('test_data', 'Russell_Hub', 'born-digital', 'closed', 'rbrl003', '2019-13-er')
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(6, files, "Problem with test for no bag, files")
         self.assertEqual(0.0002, size_gb, "Problem with test for no bag, size_gb")
@@ -51,7 +51,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_organization_error(self):
         """Test for an accession that is not organized in an expected way and cannot calculate size"""
-        acc_path = join('test_data', 'Russell_Hub', 'closed', 'rbrl003', '2024-31-er')
+        acc_path = join('test_data', 'Russell_Hub', 'born-digital', 'closed', 'rbrl003', '2024-31-er')
         files, size_gb, size_error = get_size(acc_path)
         self.assertEqual(0, files, "Problem with test for organization error, files")
         self.assertEqual(0, size_gb, "Problem with test for organization error, size_gb")

@@ -10,7 +10,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_error_messages(self):
         """Test for when the accession has an error message from get_risk() and get_size()"""
-        input_directory = join('test_data', 'Russell_Hub')
+        input_directory = join('test_data', 'Russell_Hub', 'born-digital')
         status = 'closed'
         collection = 'rbrl003'
         accession = '2024-31-er'
@@ -23,7 +23,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_no_error_messages(self):
         """Test for when the accession does not have any error messages."""
-        input_directory = join('test_data', 'Hargrett_Hub')
+        input_directory = join('test_data', 'Hargrett_Hub', 'Born-digital')
         status = 'backlogged'
         collection = 'ms0001 Person papers'
         accession = '2022-15-er'

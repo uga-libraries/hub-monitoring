@@ -26,10 +26,10 @@ class MyTestCase(unittest.TestCase):
         """Delete the test outputs if they were created"""
         # List of paths for possible test outputs.
         today = datetime.today().strftime('%Y-%m-%d')
-        outputs = [join('test_data', 'Hargrett_Hub', f'hub-accession-summary_{today}.csv'),
-                   join('test_data', 'Hargrett_Hub', f'hub-collection-summary_{today}.csv'),
-                   join('test_data', 'Russell_Hub', f'hub-accession-summary_{today}.csv'),
-                   join('test_data', 'Russell_Hub', f'hub-collection-summary_{today}.csv')]
+        outputs = [join('test_data', 'Hargrett_Hub', 'Born-digital', f'hub-accession-summary_{today}.csv'),
+                   join('test_data', 'Hargrett_Hub', 'Born-digital', f'hub-collection-summary_{today}.csv'),
+                   join('test_data', 'Russell_Hub', 'born-digital', f'hub-accession-summary_{today}.csv'),
+                   join('test_data', 'Russell_Hub', 'born-digital', f'hub-collection-summary_{today}.csv')]
 
         # Deletes any test output that is present.
         for output in outputs:
@@ -55,7 +55,7 @@ class MyTestCase(unittest.TestCase):
     def test_hargrett(self):
         """Test running the script with Hargrett test data"""
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        input_directory = join('test_data', 'Hargrett_Hub')
+        input_directory = join(getcwd(), 'test_data', 'Hargrett_Hub', 'Born-digital')
         run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
 
         # Tests the contents of the accession report.
@@ -80,7 +80,7 @@ class MyTestCase(unittest.TestCase):
     def test_russell(self):
         """Test running the script with Russell test data"""
         script = join(getcwd(), '..', '..', 'collection_summary.py')
-        input_directory = join('test_data', 'Russell_Hub')
+        input_directory = join('test_data', 'Russell_Hub', 'born-digital')
         run(f'python "{script}" "{input_directory}"', shell=True, stdout=PIPE)
 
         # Tests the contents of the accession report.
