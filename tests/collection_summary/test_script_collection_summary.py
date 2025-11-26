@@ -104,14 +104,13 @@ class MyTestCase(unittest.TestCase):
                     ['2022-04-er', 'rbrl002', 'backlogged', '2024', 0.00001, 1, 0, 0, 1, 1, 'nan', 'nan'],
                     ['2022-05-er', 'rbrl002', 'backlogged', '2024', 0.00003, 5, 0, 2, 3, 0, 'nan', 'nan'],
                     ['2022-06-er', 'rbrl002', 'backlogged', '2024', 0.00003, 5, 0, 2, 3, 0, 'nan', 'nan'],
-                    ['2019-13-er', 'rbrl003', 'closed', '2024', 0.0002, 6, 0, 0, 0, 6, 'nan', 'nan'],
+                    ['2019-13-er', 'rbrl003', 'closed', '2024', 0, 0, 0, 0, 0, 6, 'nan', 'Accession bag not found. '],
                     ['2022-27-er', 'rbrl003', 'closed', '2024', 0.00001, 1, 0, 0, 1, 0, 'nan', 'nan'],
                     ['2023-01-er', 'rbrl003', 'closed', '2024', 0.00001, 1, 0, 0, 1, 0, 'nan', 'nan'],
                     ['2023-12-er', 'rbrl003', 'closed', '2024', 0.0001, 2, 0, 0, 1, 1, 'nan', 'nan'],
                     ['2023-23-er', 'rbrl003', 'closed', '2024', 0.0005, 8, 0, 1, 4, 3, 'nan', 'nan'],
                     ['2024-31-er', 'rbrl003', 'closed', '2024', 0, 0, 0, 0, 0, 0,
-                     'Accession 2024-31-er has no risk csv. ',
-                     'Did not calculate size for accession 2024-31-er due to folder organization. ']]
+                     'Accession 2024-31-er has no risk csv. ', 'Accession bag not found. ']]
         self.assertEqual(expected, result, "Problem with test for Russell data, accession report")
 
         # Tests the contents of the collection report.
@@ -122,9 +121,9 @@ class MyTestCase(unittest.TestCase):
                     ['rbrl001', '2024', 'backlogged', 0.0002, 11, 0, 0, 0, 11, 'nan', 'nan'],
                     ['rbrl002', '2024', 'backlogged', 0.0003, 46, 10, 11, 14, 12,
                      'Accession 2021-40-er has no risk csv. ', 'nan'],
-                    ['rbrl003', '2024', 'closed', 0, 0, 0, 1, 7, 10,
+                    ['rbrl003', '2024', 'closed', 0.0, 0, 0, 1, 7, 10,
                      'Accession 2024-31-er has no risk csv. ',
-                     'Did not calculate size for accession 2024-31-er due to folder organization. ']]
+                     'Accession bag not found. Accession bag not found. ']]
         self.assertEqual(expected, result, "Problem with test for Russell data, collection report")
 
 
