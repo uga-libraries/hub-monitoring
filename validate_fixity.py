@@ -195,9 +195,11 @@ def get_bag_size(bag_path):
     @:returns
     bag_size (float): the bag size in GB, rounded to 1 decimal place
     """
-    bag = bagit.Bag(bag_path)
-    bag_bytes = bag.info['Payload-Oxum']
-    bag_gb = float(bag_bytes) / 1000000000
+    # The bag Payload-Oxum is formatted 'bytes.file_count'
+    bag_instance = bagit.Bag(bag_path)
+    bag_payload = bag_instance.info['Payload-Oxum']
+    size_bytes, file_count = bag_payload.split('.')
+    bag_gb = float(size_bytes) / 1000000000
     bag_size = round(bag_gb, 1)
     return bag_size
 
