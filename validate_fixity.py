@@ -76,7 +76,7 @@ def check_argument(arg_list):
             if os.path.basename(dir_path).lower() == 'born-digital':
                 return dir_path, None
             else:
-                return None, f"Provided input_directory '{dir_path}' is not to folder 'Born-digital' or 'born-digital'"
+                return None, f"Provided input_directory '{dir_path}' is not the folder 'Born-digital' or 'born-digital'"
         else:
             return None, f"Provided input_directory '{dir_path}' does not exist"
     else:
