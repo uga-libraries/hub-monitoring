@@ -20,6 +20,7 @@ Returns:
     hub-accession-summary_DATE.csv
     hub-collection-summary_DATE.csv
 """
+import bagit
 import csv
 from datetime import date, datetime
 import numpy as np
@@ -252,11 +253,9 @@ def get_risk(acc_path):
 
 
 def get_size(acc_path):
-    """Calculate the size of the accession in number of files and GB
+    """Get the size of the accession in number of files and GB from the bag metadata
 
-    For bagged accessions, this is for the contents of the bag data folder.
-    Otherwise, this is for the contents of the folder within the accession folder that is not for FITS files.
-    If the folder cannot be found or size cannot be calculated for any file, size is set to 0.
+    If the folder cannot be found or is not a bag (rare), both size measures are set to 0.
 
     @:parameter
     acc_path (string): the path to the accession folder
@@ -267,37 +266,18 @@ def get_size(acc_path):
     error (string; None): an error message if the size could not be calculated or None
     """
 
-    # Calculates the path to the folder with the accession content,
-    # which should be in the bag's data folder or the folder within the accession folder that isn't for FITS files.
-    content_path = None
+    # Calculates the path to bag within the accession folder.
     accession_number = os.path.basename(acc_path)
-    data_path = os.path.join(acc_path, f'{accession_number}_bag', 'data')
-    if os.path.exists(data_path):
-        content_path = data_path
-    else:
-        for item in os.listdir(acc_path):
-            if os.path.isdir(os.path.join(acc_path, item)) and not item.endswith('_FITS'):
-                content_path = os.path.join(acc_path, item)
+    bag_path = os.path.join(acc_path, f'{accession_number}_bag')
+    if not os.path.exists(bag_path):
+        return 0.0, 0, 'Accession bag not found'
 
-    # If content_path could not be determined, returns a size of 0. Size will need to be calculated manually.
-    if not content_path:
-        return 0, 0, f'Did not calculate size for accession {accession_number} due to folder organization. '
-
-    # Adds the number and size of the files at each level within the folder with the accession's content.
-    # If the size for any files cannot be calculated (usually due to path length), returns a size of 0.
-    # Size for these will need to be calculated manually.
-    file_count = 0
-    size_bytes = 0
-    for root, dirs, files in os.walk(content_path):
-        file_count += len(files)
-        for file in files:
-            file_path = os.path.join(root, file)
-            try:
-                size_bytes += os.stat(file_path).st_size
-            except FileNotFoundError:
-                return 0, 0, f'Could not calculate size for accession {accession_number} due to path length. '
-    size_gb = round_non_zero(size_bytes / 1000000000)
-    return file_count, size_gb, None
+    # Gets the size information from the bag Payload-Oxum, which is formatted 'bytes.file_count'
+    bag_instance = bagit.Bag(bag_path)
+    bag_payload = bag_instance.info['Payload-Oxum']
+    size_bytes, file_count = bag_payload.split('.')
+    size_gb = round_non_zero(int(size_bytes) / 1000000000)
+    return int(file_count), size_gb, None
 
 
 def most_recent_risk_csv(file_list):
