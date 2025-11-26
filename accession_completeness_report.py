@@ -57,25 +57,32 @@ def accession_paths(coll_path):
 
 def check_completeness(acc_path):
     """Test if the accession has a preservation log, full risk report, initial manifest, and if the content is bagged
+    and if the preservation log is formatted correctly
 
     @:parameter
     acc_path (string): the full path to the accession folder
 
     @:returns
-    result (dictionary): keys are 'pres_log', 'full_risk', 'initial_manifest', 'bag'
-                         and values are True/False for if each are present
+    result (dictionary): keys are 'pres_log', 'pres_log_format', 'full_risk', 'initial_manifest', 'bag'
+                         and values are True/False for if each are present/correct
+                         except for pres_log_format, which has an error message or None
     """
 
-    # Starts a dictionary with the default value of False for all three completeness criteria.
+    # Starts a dictionary with the default value of False for all completeness criteria.
     # These are updated to True if they are found in the accession.
-    result = {'pres_log': False, 'full_risk': False, 'initial_manifest': False, 'bag': False}
+    # If the preservation  log is present but has formatting errors, it will stay False.
+    result = {'pres_log': False, 'pres_log_format': None, 'full_risk': False, 'initial_manifest': False, 'bag': False}
 
     # Looks for the completeness criteria, which are in the first level within the accession folder.
     for item in os.listdir(acc_path):
 
-        # Preservation log has a consistent file name.
+        # Preservation log has a consistent file name and has formatting requirements.
         if item == 'preservation_log.txt':
-            result['pres_log'] = True
+            error = check_preservation_log(os.path.join(acc_path, item))
+            if error:
+                result['pres_log_format'] = error
+            else:
+                result['pres_log'] = True
 
         # Full risk data spreadsheet may have a date between full_risk_data and the file extension.
         elif 'full_risk_data' in item and item.endswith('.csv'):
