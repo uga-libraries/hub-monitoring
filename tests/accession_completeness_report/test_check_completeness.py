@@ -22,6 +22,13 @@ class MyTestCase(unittest.TestCase):
                     'initial_manifest': False, 'bag': False}
         self.assertEqual(expected, completeness_dict, "Problem with test for not complete")
 
+    def test_pres_log_formatting(self):
+        """Test for an accession with all four required components but the preservation log is formatted wrong."""
+        completeness_dict = check_completeness(join('check_completeness_test_data', 'coll_1', 'acc_1_3'))
+        expected = {'pres_log': False, 'pres_log_format': 'Nonstandard columns', 'full_risk': True,
+                    'initial_manifest': True, 'bag': True}
+        self.assertEqual(expected, completeness_dict, "Problem with test for pres log formatting")
+
 
 if __name__ == '__main__':
     unittest.main()
