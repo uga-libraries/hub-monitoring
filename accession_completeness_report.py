@@ -92,6 +92,34 @@ def check_completeness(acc_path):
     return result
 
 
+def check_preservation_log(log_path):
+    """Check the columns and for blank rows that cause errors when automatically adding to a preservation log
+
+    @:parameter
+    log_path (string): path to the preservation log
+
+    @:returns
+    error_msg (string, None): error message or None if no error
+    """
+    # Find the errors.
+    error_list = []
+    with open(log_path, 'r') as open_log:
+        log_lines = open_log.readlines()
+        # First row should match the standard header.
+        if not log_lines[0] == 'Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff\n':
+            error_list.append('Nonstandard columns')
+        # Last row should have values and not just be blank.
+        if log_lines[-1] == '\n':
+            error_list.append('Extra blank row(s) at end')
+
+    # Format the errors into a string, or return None if there are no errors.
+    if len(error_list) == 0:
+        return None
+    else:
+        error_msg = ', '.join(error_list)
+        return error_msg
+
+
 def update_report(report_dir, acc_status, coll, acc_path, result):
     """Make the completeness report, if it doesn't already exist, and add an accession to the report
 
