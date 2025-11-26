@@ -280,7 +280,7 @@ def most_recent_risk_csv(file_list):
     From legacy practices, any spreadsheet with a date in the name is more recent than one without.
     The list will also include other types of files, such as preservation logs, which are ignored.
 
-    Keep in sync with the copy of this function in format_list.py and risk_uudate.py
+    Keep in sync with the copy of this function in format_list.py and risk_update.py
     The unit tests are in risk_update.
 
     @:parameter

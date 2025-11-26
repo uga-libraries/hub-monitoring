@@ -5,16 +5,16 @@ If there is only one accession, the collection information is the same as the ac
 If a column's values are all "None", they are 0 in the expected output for this function after list conversion,
 but will be saved to the report as blank.
 """
+import pandas as pd
 import unittest
 from collection_summary import combine_collection_data
-from pandas import DataFrame
 
 
 def make_df(df_rows):
     """Make and return a dataframe with consistent column names."""
     column_names = ['Accession', 'Collection', 'Status', 'Date', 'GB', 'Files', 'No_Match_Risk',
                     'High_Risk', 'Moderate_Risk', 'Low_Risk', 'Notes', 'Size_Error']
-    df = DataFrame(df_rows, columns=column_names, dtype=object)
+    df = pd.DataFrame(df_rows, columns=column_names, dtype=object)
     return df
 
 
