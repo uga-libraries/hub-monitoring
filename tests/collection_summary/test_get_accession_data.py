@@ -17,8 +17,7 @@ class MyTestCase(unittest.TestCase):
         accession_data = get_accession_data(input_directory, status, collection, accession)
 
         expected = ['2024-31-er', 'rbrl003', 'closed', '2024', 0, 0, 0, 0, 0, 0,
-                    'Accession 2024-31-er has no risk csv. ',
-                    'Did not calculate size for accession 2024-31-er due to folder organization. ']
+                    'Accession 2024-31-er has no risk csv. ', 'Accession bag not found']
         self.assertEqual(expected, accession_data, "Problem with test for error messages")
 
     def test_no_error_messages(self):
