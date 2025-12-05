@@ -36,7 +36,7 @@ def accession_paths(coll_path):
     # Variable for the function output.
     acc_paths = []
 
-    # Navigates the collection folder looking for the folder with the accession content.
+    # Navigates the collection folder looking for the folders with the accession content.
     for acc in os.listdir(coll_path):
 
         # Skips anything that is a file instead of a folder.
@@ -44,9 +44,9 @@ def accession_paths(coll_path):
             continue
 
         # Skips non-accession folders that may be sibling folders of accessions.
-        # Multiple folders are about appraisal, which all match the pattern starts with 'App'.
-        skip = ['Access Copies', 'AIPs V2', 'Arranged by series', 'to ingest']
-        if acc in skip or acc.startswith('App') or acc.startswith('Risk') or acc.endswith('FITS'):
+        skip = ['Access Copies', 'Final appraisal (deduped)', 'First rnd appraisal (not deduped)', 'to ingest']
+        skip_prefix = ('AIP', 'Appraisal', 'Appraised', 'Arranged', 'Risk')
+        if acc in skip or acc.startswith(skip_prefix) or acc.endswith('_FITS'):
             continue
 
         # Accession folder is directly inside the collection folder.
