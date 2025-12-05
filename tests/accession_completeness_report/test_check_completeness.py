@@ -15,6 +15,13 @@ class MyTestCase(unittest.TestCase):
                     'initial_manifest': True, 'bag': True}
         self.assertEqual(expected, completeness_dict, "Problem with test for complete")
 
+    def test_complete_bags(self):
+        """Test for an accession that is complete and is split in multiple bags."""
+        completeness_dict = check_completeness(join('test_data', 'check_completeness', 'coll_1', 'acc_1_1'))
+        expected = {'pres_log': True, 'pres_log_format': None, 'full_risk': True,
+                    'initial_manifest': True, 'bag': True}
+        self.assertEqual(expected, completeness_dict, "Problem with test for complete")
+
     def test_not_complete(self):
         """Test for an accession that is missing all four required components."""
         completeness_dict = check_completeness(join('test_data', 'check_completeness', 'coll_1', 'acc_1_2'))
