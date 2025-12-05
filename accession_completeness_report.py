@@ -170,16 +170,9 @@ if __name__ == '__main__':
     # as well as additional folders and files that are not part of this analysis.
     for status in os.listdir(input_directory):
         if status == 'backlogged' or status == 'closed':
-
             # All folders within the status folders should be collections.
+            # Gets a list of the path to every folder with accession content and tests their completeness.
             for collection in os.listdir(os.path.join(input_directory, status)):
-
-                # Skips unconventional collections, which are not expected to follow these rules.
-                unconventional = ['ua22-008 Linguistic Atlas Project', 'RBRL_275_GEPO', 'rbrl349', 'rbrl409', 'rbrl462']
-                if collection in unconventional:
-                    continue
-
-                # Gets a list of the path to every folder with accession content and tests their completeness.
                 accession_list = accession_paths(os.path.join(input_directory, status, collection))
                 for accession_path in accession_list:
                     print('Starting on accession', accession_path)
