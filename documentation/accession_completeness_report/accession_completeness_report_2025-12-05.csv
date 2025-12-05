@@ -1,0 +1,6 @@
+Status,Collection,Accession,Preservation_Log,Preservation_Log_Format,Full_Risk,Initial_Manifest,Bag
+backlogged,coll_1,acc_1_1,False,Nonstandard columns,False,False,True
+backlogged,coll_2,acc_2_1,True,,True,False,False
+backlogged,coll_2,acc_2_3,False,,False,True,True
+closed,coll_3,acc_3_1,False,Extra blank row(s) at end,False,False,False
+closed,rbrl349,acc_349_1,True,,False,False,False
