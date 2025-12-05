@@ -24,8 +24,10 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Deletes the test output if it was created"""
         today = date.today().strftime('%Y-%m-%d')
-        if os.path.exists(os.path.join('test_data', 'script', 'incomplete', f'accession_completeness_report_{today}.csv')):
-            os.remove(os.path.join('test_data', 'script', 'incomplete', f'accession_completeness_report_{today}.csv'))
+        for folder in ('complete', 'incomplete'):
+            report_path = os.path.join('test_data', 'script', folder, f'accession_completeness_report_{today}.csv')
+            if os.path.exists(report_path):
+                os.remove(report_path)
 
     def test_complete(self):
         """Test for an input directory that contains only complete accessions, so no report is generated,
