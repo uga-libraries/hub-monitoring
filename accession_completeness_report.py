@@ -110,15 +110,18 @@ def check_preservation_log(log_path):
     """
     # Find the errors.
     error_list = []
-    with open(log_path, 'r') as open_log:
-        log_lines = open_log.readlines()
-        # First row should match the standard header.
-        if not log_lines[0] == 'Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff\n':
-            error_list.append('Nonstandard columns')
-        # Last row should have values and not just be blank.
-        if log_lines[-1] == '\n':
-            error_list.append('Extra blank row(s) at end')
-
+    try:
+        with open(log_path, 'r') as open_log:
+            log_lines = open_log.readlines()
+            # First row should match the standard header.
+            if not log_lines[0] == 'Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff\n':
+                error_list.append('Nonstandard columns')
+            # Last row should have values and not just be blank.
+            if log_lines[-1] == '\n':
+                error_list.append('Extra blank row(s) at end')
+    except UnicodeDecodeError:
+        error_list.append('Script cannot read log')
+        
     # Format the errors into a string, or return None if there are no errors.
     if len(error_list) == 0:
         return None
