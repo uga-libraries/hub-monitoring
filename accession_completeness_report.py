@@ -1,9 +1,9 @@
 """Analyze all accessions in a given folder (input_directory) for completeness
 and make a report of any that are not complete.
 
-An accession is complete if it contains a preservation log (preservation_log.txt),
+An accession is complete if it contains a preservation log (preservation_log.txt) that is formatted correctly,
  a full risk report (acc_full_risk_data.csv), an initial manifest (initialmanifest_date.csv)
- and the files are bagged (folder ends with '_bag').
+ and the files are bagged (folder ends with '_bag' or '_bags').
 
 Accessions may be incomplete because they were created prior to current procedures
 or because file path lengths or other errors prevent current procedures from being done.
@@ -45,8 +45,8 @@ def accession_paths(coll_path):
 
         # Skips non-accession folders that may be sibling folders of accessions.
         skip = ['access copies', 'final appraisal (deduped)', 'first rnd appraisal (not deduped)', 'to ingest']
-        skip_prefix = ('aip', 'appraisal', 'appraised', 'arranged', 'risk')
-        if acc.lower() in skip or acc.lower().startswith(skip_prefix) or acc.lower().endswith('_fits'):
+        skip_prefix = ('aip', 'appraisal', 'appraised', 'arranged', 'inventories', 'risk')
+        if acc.lower() in skip or acc.lower().startswith(skip_prefix) or acc.lower().endswith(('_fits', '_metadata')):
             continue
 
         # Accession folder is directly inside the collection folder.
@@ -121,7 +121,7 @@ def check_preservation_log(log_path):
                 error_list.append('Extra blank row(s) at end')
     except UnicodeDecodeError:
         error_list.append('Script cannot read log')
-        
+
     # Format the errors into a string, or return None if there are no errors.
     if len(error_list) == 0:
         return None
