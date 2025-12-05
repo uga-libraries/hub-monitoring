@@ -18,12 +18,13 @@ The reports generated with these files are stored in [documentation](documentati
 
 The file directory structure should be:
 
-- directory (parent folder being analyzed - optional if not doing collection summary)
-    - status (if it is in the backlog or closed due to restrictions - optional if not doing collection summary)
+- directory (parent folder being analyzed, "born-digital")
+    - status (if it is in the backlog or closed due to restrictions)
         - collection_id/name
             - accession_id
                 - accession_id_bag
-                - accession_id_bag_full_risk_data.csv (will be missing if accession has long path errors)
+                - accession_id_bag_full_risk_data.csv
+                - initialmanifest_date.csv
                 - preservation_log.txt
                 - additional metadata files (optional)
 
