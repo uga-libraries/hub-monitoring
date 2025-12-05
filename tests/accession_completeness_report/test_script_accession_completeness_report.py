@@ -24,15 +24,15 @@ class MyTestCase(unittest.TestCase):
     def tearDown(self):
         """Deletes the test output if it was created"""
         today = date.today().strftime('%Y-%m-%d')
-        if os.path.exists(os.path.join('script_test_data', 'incomplete', f'accession_completeness_report_{today}.csv')):
-            os.remove(os.path.join('script_test_data', 'incomplete', f'accession_completeness_report_{today}.csv'))
+        if os.path.exists(os.path.join('test_data', 'script', 'incomplete', f'accession_completeness_report_{today}.csv')):
+            os.remove(os.path.join('test_data', 'script', 'incomplete', f'accession_completeness_report_{today}.csv'))
 
     def test_complete(self):
         """Test for an input directory that contains only complete accessions, so no report is generated,
         as well as a folder at the status level that is not backlogged or closed and is skipped"""
         # Makes the variable used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'accession_completeness_report.py')
-        input_directory = os.path.join('script_test_data', 'complete')
+        input_directory = os.path.join('test_data', 'script', 'complete')
         script_message = subprocess.run(f'python {script} {input_directory}', shell=True, stdout=subprocess.PIPE)
 
         # Tests the correct message is printed.
@@ -54,7 +54,7 @@ class MyTestCase(unittest.TestCase):
         that will not be in the report"""
         # Makes the variable used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'accession_completeness_report.py')
-        input_directory = os.path.join('script_test_data', 'incomplete')
+        input_directory = os.path.join('test_data', 'script', 'incomplete')
         script_message = subprocess.run(f'python {script} {input_directory}', shell=True, stdout=subprocess.PIPE)
 
         # Tests the correct message is printed.
