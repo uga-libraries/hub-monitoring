@@ -68,16 +68,19 @@ class MyTestCase(unittest.TestCase):
                     f"Starting on accession {os.path.join(input_directory, 'backlogged', 'coll_2', 'acc_2_2')}\r\n"
                     f"Starting on accession {os.path.join(input_directory, 'backlogged', 'coll_2', 'acc_2_3')}\r\n"
                     f"Starting on accession {os.path.join(input_directory, 'closed', 'coll_3', 'acc_3_1')}\r\n"
+                    f"Starting on accession {os.path.join(input_directory, 'closed', 'rbrl349', 'acc_349_1')}\r\n"
                     f"\r\nIncomplete accessions found. See {report_path}.\r\n")
         self.assertEqual(expected, result, "Problem with test for incomplete, printed message")
 
         # Tests the contents of the csv are correct.
         result = csv_to_list(report_path)
-        expected = [['Status', 'Collection', 'Accession', 'Preservation_Log', 'Full_Risk', 'Initial_Manifest', 'Bag'],
-                    ['backlogged', 'coll_1', 'acc_1_1', True, False, False, True],
-                    ['backlogged', 'coll_2', 'acc_2_1', True, True, False, False],
-                    ['backlogged', 'coll_2', 'acc_2_3', False, False, True, True],
-                    ['closed', 'coll_3', 'acc_3_1', True, False, False, False]]
+        expected = [['Status', 'Collection', 'Accession', 'Preservation_Log', 'Preservation_Log_Format',
+                     'Full_Risk', 'Initial_Manifest', 'Bag'],
+                    ['backlogged', 'coll_1', 'acc_1_1', False, 'Nonstandard columns', False, False, True],
+                    ['backlogged', 'coll_2', 'acc_2_1', True, 'nan', True, False, False],
+                    ['backlogged', 'coll_2', 'acc_2_3', False, 'nan', False, True, True],
+                    ['closed', 'coll_3', 'acc_3_1', False, 'Extra blank row(s) at end', False, False, False],
+                    ['closed', 'rbrl349', 'acc_349_1', True, 'nan', False, False, False]]
         self.assertEqual(expected, result, "Problem with test for incomplete, report")
 
 

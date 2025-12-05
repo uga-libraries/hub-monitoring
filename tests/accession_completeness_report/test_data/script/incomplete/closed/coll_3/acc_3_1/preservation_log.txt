@@ -1,1 +1,5 @@
-Placeholder. Test is for the file name and not the contents.
+Collection	Accession	Date	Media Identifier	Action	Staff
+coll.3	acc.3.1	2025-12-05		Log placeholder, too many blank rows	AH
+
+
+
