@@ -1,0 +1,4 @@
+Status,Collection,Accession,Preservation_Log,Preservation_Log_Format,Full_Risk,Initial_Manifest,Bag
+backlogged,coll_1,acc_1_1,False,Nonstandard columns,True,True,True
+backlogged,coll_2,acc_2_1,False,Nonstandard columns,True,True,True
+backlogged,coll_2,acc_2_2,False,Nonstandard columns,True,True,True
