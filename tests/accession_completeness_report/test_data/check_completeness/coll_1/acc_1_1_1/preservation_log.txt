@@ -1,0 +1,5 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+TEST.01	2025.01.ER	2025-01-05	HD.001	Virus scanned with Microsoft Defender Antivirus. No security threats were detected.	Adriane Hanson
+TEST.01	2025.01.ER	2025-01-05	HD.001	Copied files from media to Digital Production Hub using TeraCopy version 3.17. No errors were detected.	Adriane Hanson
+TEST.01	2025.01.ER	2025-01-05	HD.001	Bagged with accession 2025.01.ER using bagit.py. No errors were detected.	Adriane Hanson
+TEST.01	2025.01.ER	2025-01-05	HD.001		Validated bag for accession 2025.01.ER using bagit.py. The bag was valid.	Adriane Hanson

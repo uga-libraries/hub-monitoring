@@ -1,0 +1,2 @@
+Collection	Accession	Date	Media Identifier	Action	Staff
+coll.2	acc.2.2	2025-12-05		Log placeholder	AH
