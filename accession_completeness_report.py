@@ -92,8 +92,8 @@ def check_completeness(acc_path):
         elif item.startswith('initialmanifest_') and item.endswith('.csv'):
             result['initial_manifest'] = True
 
-        # Bags follow the naming convention of ending with _bag.
-        elif item.endswith('_bag'):
+        # Bags follow the naming convention of ending with _bag or _bags (for an accession split into multiple bags).
+        elif item.endswith('_bag') or item.endswith('bags'):
             result['bag'] = True
 
     return result
