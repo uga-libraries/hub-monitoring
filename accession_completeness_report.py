@@ -44,9 +44,9 @@ def accession_paths(coll_path):
             continue
 
         # Skips non-accession folders that may be sibling folders of accessions.
-        skip = ['Access Copies', 'Final appraisal (deduped)', 'First rnd appraisal (not deduped)', 'to ingest']
-        skip_prefix = ('AIP', 'Appraisal', 'Appraised', 'Arranged', 'Risk')
-        if acc in skip or acc.startswith(skip_prefix) or acc.endswith('_FITS'):
+        skip = ['access copies', 'final appraisal (deduped)', 'first rnd appraisal (not deduped)', 'to ingest']
+        skip_prefix = ('aip', 'appraisal', 'appraised', 'arranged', 'risk')
+        if acc.lower() in skip or acc.lower().startswith(skip_prefix) or acc.lower().endswith('_fits'):
             continue
 
         # Accession folder is directly inside the collection folder.
