@@ -326,7 +326,7 @@ def validate_bag(acc_dir, report_dir, bag_name):
     # in which case it tries to validate the bag using the manifest.
     try:
         new_bag = bagit.Bag(os.path.join(acc_dir, bag_name))
-    except bagit.BagError:
+    except (bagit.BagError, FileNotFoundError):
         validation_result = validate_bag_manifest(acc_dir, report_dir, bag_name)
         return validation_result
 
