@@ -1,7 +1,7 @@
 """Analyze all accessions in a given folder (input_directory) for completeness
 and make a report of any that are not complete.
 
-An accession is complete if it contains a preservation log (preservation_log.txt) that is formatted correctly,
+An accession is complete if it contains a preservation log (preservation_log.csv) that is formatted correctly,
  a full risk report (acc_full_risk_data.csv), an initial manifest (initialmanifest_date.csv)
  and the files are bagged (folder ends with '_bag' or '_bags').
 
@@ -77,7 +77,7 @@ def check_completeness(acc_path):
     for item in os.listdir(acc_path):
 
         # Preservation log has a consistent file name and has formatting requirements.
-        if item == 'preservation_log.txt':
+        if item == 'preservation_log.csv':
             error = check_preservation_log(os.path.join(acc_path, item))
             if error:
                 result['pres_log_format'] = error
@@ -108,19 +108,14 @@ def check_preservation_log(log_path):
     @:returns
     error_msg (string, None): error message or None if no error
     """
-    # Find the errors.
+    # Find the errors (header values and extra blank rows at the end).
     error_list = []
-    try:
-        with open(log_path, 'r') as open_log:
-            log_lines = open_log.readlines()
-            # First row should match the standard header.
-            if not log_lines[0] == 'Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff\n':
-                error_list.append('Nonstandard columns')
-            # Last row should have values and not just be blank.
-            if log_lines[-1] == '\n':
-                error_list.append('Extra blank row(s) at end')
-    except UnicodeDecodeError:
-        error_list.append('Script cannot read log')
+    with open(log_path) as logfile:
+        logread = list(csv.reader(logfile))
+        if not logread[0] == ['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff']:
+            error_list.append('Nonstandard columns')
+        if logread[-1] == []:
+            error_list.append('Extra blank row(s) at end')
 
     # Format the errors into a string, or return None if there are no errors.
     if len(error_list) == 0:

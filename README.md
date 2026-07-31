@@ -25,7 +25,7 @@ The file directory structure should be:
                 - accession_id_bag
                 - accession_id_bag_full_risk_data.csv
                 - initialmanifest_date.csv
-                - preservation_log.txt
+                - preservation_log.csv
                 - additional metadata files (optional)
 
 For the risk update, download the latest version of NARA's Digital Preservation Plan spreadsheet (CSV version) from the 
