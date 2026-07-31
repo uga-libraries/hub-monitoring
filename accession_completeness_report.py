@@ -77,7 +77,7 @@ def check_completeness(acc_path):
     for item in os.listdir(acc_path):
 
         # Preservation log has a consistent file name and has formatting requirements.
-        if item == 'preservation_log.txt':
+        if item == 'preservation_log.csv':
             error = check_preservation_log(os.path.join(acc_path, item))
             if error:
                 result['pres_log_format'] = error
