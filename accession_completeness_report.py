@@ -1,7 +1,7 @@
 """Analyze all accessions in a given folder (input_directory) for completeness
 and make a report of any that are not complete.
 
-An accession is complete if it contains a preservation log (preservation_log.txt) that is formatted correctly,
+An accession is complete if it contains a preservation log (preservation_log.csv) that is formatted correctly,
  a full risk report (acc_full_risk_data.csv), an initial manifest (initialmanifest_date.csv)
  and the files are bagged (folder ends with '_bag' or '_bags').
 
