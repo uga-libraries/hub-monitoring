@@ -47,7 +47,8 @@ def accession_test(folder_name):
     elif folder_name.lower().endswith('_er'):
         return True
     # Temporary designation for legacy content while determining an accession number.
-    elif folder_name == 'no-acc-num':
+    # It may be no-acc-num or collid_no-acc-num.
+    elif folder_name.lower().endswith('no-acc-num'):
         return True
     # Folder that matches none of the patterns for an accession.
     else:
