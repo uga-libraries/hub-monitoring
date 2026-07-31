@@ -17,8 +17,8 @@ class MyTestCase(unittest.TestCase):
         accessions = ['2023_1_er', '2023_2_er', '2023_3_er', '2023_4_er', '2023_5_er', '2023_6_er', '2023_8_er']
         for accession in accessions:
             accession_path = os.path.join('test_data', 'update_preservation_log', accession)
-            shutil.copyfile(os.path.join(accession_path, 'preservation_log_copy.txt'),
-                            os.path.join(accession_path, 'preservation_log.txt'))
+            shutil.copyfile(os.path.join(accession_path, 'preservation_log_copy.csv'),
+                            os.path.join(accession_path, 'preservation_log.csv'))
 
     def test_bag_not_valid(self):
         """Test for when the bag is not valid"""
@@ -32,7 +32,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Updated', log_status, 'Problem with test for bag not valid, log_status')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.1.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.1.ER', '2023-02-28', 'BLANK', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -53,7 +53,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Updated', log_status, 'Problem with test for bag valid, log_status')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.2.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.2.ER', '2023-02-28', 'BLANK', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -73,7 +73,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Updated', log_status, 'Problem with test for bag manifest not valid, log_status')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.3.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.3.ER', '2023-02-28', 'BLANK', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -94,7 +94,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Updated', log_status, 'Problem with test for bag manifest valid, log_status')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.4.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.4.ER', '2023-02-28', 'BLANK', 'Bagged accession, no errors.', 'Jane Doe'],
@@ -115,7 +115,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Updated', log_status, 'Problem with test for zip not valid, log_status')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.5.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.5.ER', '2023-02-28', 'BLANK', 'Made zip, no errors.', 'Jane Doe'],
@@ -136,7 +136,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Updated', log_status, 'Problem with test for zip valid, log_status')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.6.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.6.ER', '2023-02-28', 'BLANK', 'Made zip, no errors.', 'Jane Doe'],
@@ -156,7 +156,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Extra blank row', log_status, 'Problem with test for error - IndexError, log_status')
 
     def test_error_no_end_return(self):
-        """Test for when the preservation_log.txt has no return at the end of the last line"""
+        """Test for when the preservation_log.csv has no return at the end of the last line"""
         # Makes the variables needed for function input and runs the function.
         acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_8_er')
         validation_result = 'Valid'
@@ -167,7 +167,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Updated', log_status, 'Problem with test for error - no end return, log_status')
 
         # Verifies the contents of the log have been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.3', '2023.7.ER', '2023-02-28', 'CD1', 'Copied, no errors.', 'Jane Doe'],
                     ['TEST.3', '2023.7.ER', '2023-02-28', 'BLANK', 'Made bag, no errors.', 'Jane Doe'],
@@ -187,7 +187,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Log path not found', log_status, 'Problem with test for error - no log, log_status')
 
     def test_error_nonstandard(self):
-        """Test for when the preservation_log.txt does not have the standard columns"""
+        """Test for when the preservation_log.csv does not have the standard columns"""
         # Makes the variables needed for function input and runs the function.
         acc_dir = os.path.join('test_data', 'update_preservation_log', '2023_10_er')
         validation_result = 'Valid'
@@ -198,7 +198,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('Nonstandard columns', log_status, 'Problem with test for nonstandard, log_status')
 
         # Verifies the contents of the log have NOT been updated.
-        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.txt'), delimiter='\t')
+        result = csv_to_list(os.path.join(acc_dir, 'preservation_log.csv'))
         expected = [['Date', 'Electronic Media Identifier', 'Action', 'Staff'],
                     ['2023-02-28', 'Test003.008.CD1', 'Copied, no errors.', 'Jane Doe']]
         self.assertEqual(expected, result, 'Problem with test for error - nonstandard, log contents')
