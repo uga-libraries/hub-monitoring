@@ -61,7 +61,7 @@ class MyTestCase(unittest.TestCase):
         result = validate_bag(accession_path, input_directory, '2023_test002_005_er_bag')
 
         # Verifies the function returned the correct validation_result.
-        expected = 'Bag validation failed: bag-info.txt exists in manifest but was not found on filesystem'
+        expected = 'Bag is incomplete: bag-info.txt exists in manifest but was not found on filesystem'
         self.assertEqual(expected, result, 'Problem with test for missing bag-info.txt')
 
     def test_valid_bag(self):
