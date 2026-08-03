@@ -47,7 +47,8 @@ def accession_test(folder_name):
     elif folder_name.lower().endswith('_er'):
         return True
     # Temporary designation for legacy content while determining an accession number.
-    elif folder_name == 'no-acc-num':
+    # It may be no-acc-num or collid_no-acc-num.
+    elif folder_name.lower().endswith('no-acc-num'):
         return True
     # Folder that matches none of the patterns for an accession.
     else:
@@ -265,7 +266,7 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
 
     # Verifies the preservation log exists.
     # If not, returns the status for the fixity validation log and does not do the rest of this function.
-    log_path = os.path.join(acc_dir, 'preservation_log.txt')
+    log_path = os.path.join(acc_dir, 'preservation_log.csv')
     if not os.path.exists(log_path):
         return 'Log path not found'
 
@@ -274,12 +275,12 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
     # If not, or the last row is blank (IndexError), returns the status for the fixity validation log
     # and does not do the rest of the function. The preservation log will be updated manually.
     with open(log_path, 'r') as open_log:
-        log_lines = open_log.readlines()
+        log_lines = list(csv.reader(open_log))
         first_row = log_lines[0]
-        if not first_row == 'Collection\tAccession\tDate\tMedia Identifier\tAction\tStaff\n':
+        if not first_row == ['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff']:
             return 'Nonstandard columns'
         try:
-            last_row_list = log_lines[-1].split('\t')
+            last_row_list = log_lines[-1]
             collection_id = last_row_list[0]
             accession_id = last_row_list[1]
         except IndexError:
@@ -298,13 +299,10 @@ def update_preservation_log(acc_dir, validation_result, fixity_type):
             action = f'Validated zip md5 for accession {accession_id}. The zip is not valid. {validation_result}'
 
     # Adds a row to the end of the preservation log for the accession validation.
-    # First adds a line return after existing text, if missing, so the new data is on its own row.
     validation_date = date.today().strftime('%Y-%m-%d')
     log_row = [collection_id, accession_id, validation_date, None, action, 'validate_fixity.py']
     with open(log_path, 'a', newline='') as open_log:
-        if not log_lines[-1].endswith('\n'):
-            open_log.write('\n')
-        log_writer = csv.writer(open_log, delimiter='\t')
+        log_writer = csv.writer(open_log)
         log_writer.writerow(log_row)
     return 'Updated'
 

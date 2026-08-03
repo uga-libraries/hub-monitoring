@@ -13,12 +13,11 @@ import subprocess
 import unittest
 
 
-def csv_to_list(csv_path, delimiter=','):
+def csv_to_list(csv_path):
     """Read csv into a dataframe, clean up, and return the values of each row as a list
-    Delimiter is supplied so this works on the preservation log, which is tab separated instead of commas.
     Blanks are filled with a string because np.nan comparisons work inconsistently.
     """
-    df = pd.read_csv(csv_path, dtype=str, delimiter=delimiter)
+    df = pd.read_csv(csv_path, dtype=str)
     df = df.fillna('BLANK')
     csv_list = [df.columns.tolist()] + df.values.tolist()
     return csv_list
@@ -43,7 +42,7 @@ class MyTestCase(unittest.TestCase):
                       os.path.join('valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
                       os.path.join('valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
-            log_path = os.path.join('test_data', 'script', accession, 'preservation_log.txt')
+            log_path = os.path.join('test_data', 'script', accession, 'preservation_log.csv')
             if os.path.exists(log_path):
                 os.remove(log_path)
 
@@ -66,8 +65,8 @@ class MyTestCase(unittest.TestCase):
                       os.path.join('dup_acc', 'born-digital', 'backlogged', 'test_005', 'no-acc-num'),
                       os.path.join('dup_acc', 'born-digital', 'closed', 'test_123', 'AC001_ER')]
         for accession in accessions:
-            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
-                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.csv'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.csv'))
 
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
@@ -114,8 +113,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for dup_accession, validation report')
 
         # Verifies the contents of the preservation log for test_001, AC001_ER have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'test_001', 'AC001_ER', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', 'AC001_ER', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.001', 'AC001.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.001', 'AC001.ER', '2023-10-31', 'BLANK', 'Made bag. The bag is valid.', 'Jane Doe'],
@@ -126,8 +125,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for dup_accession, test_001/AC001_ER preservation log')
 
         # Verifies the contents of the preservation log for test_001, no-acc-num have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'test_001', 'no-acc-num', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', 'no-acc-num', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.001', 'no-acc-num', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.001', 'no-acc-num', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -139,8 +138,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for dup_accession, test_001/no-acc-num preservation log')
 
         # Verifies the contents of the preservation log for test_005, AC002_ER have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'test_005', 'AC002_ER', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_005', 'AC002_ER', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.005', 'AC002.ER', '2023-10-03', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.005', 'AC002.ER', '2023-10-03', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -153,8 +152,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for dup_accession, test_005/AC002_ER preservation log')
 
         # Verifies the contents of the preservation log for test_005, no-acc-num have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'test_005', 'no-acc-num', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_005', 'no-acc-num', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.005', 'no-acc-num', '2023-10-03', 'CD.002', 'Copied.', 'Jane Doe'],
                     ['TEST.005', 'no-acc-num', '2023-10-03', 'BLANK', 'Bag valid.', 'Jane Doe'],
@@ -163,8 +162,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for dup_accession, test_005/no-acc-num preservation log')
 
         # Verifies the contents of the preservation log for test_123, AC001_ER have been updated.
-        log_path = os.path.join(input_directory, 'closed', 'test_123', 'AC001_ER', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'closed', 'test_123', 'AC001_ER', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.123', 'AC001.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.123', 'AC001.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -181,8 +180,8 @@ class MyTestCase(unittest.TestCase):
                       os.path.join('mix', 'born-digital', 'backlogged', 'test_001', '2023_test001_004_er'),
                       os.path.join('mix', 'born-digital', 'backlogged', 'test_005', '2023_test005_001_er')]
         for accession in accessions:
-            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
-                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.csv'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.csv'))
 
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
@@ -223,8 +222,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for mix, validation report')
 
         # Verifies the contents of the preservation log for 2023_test001_002_er have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_002_er', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.2.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -234,8 +233,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for mix, 2023_test001_002_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test001_004_er have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_001', '2023_test001_004_er', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.4.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -247,8 +246,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for mix, 2023_test001_004_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test005_001_er have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'test_005', '2023_test005_001_er', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.001', 'Copied.', 'Jane Doe'],
                     ['TEST.005', '2023.test005.001.ER', '2023-10-03', 'CD.002', 'Copied.', 'Jane Doe'],
@@ -267,8 +266,8 @@ class MyTestCase(unittest.TestCase):
         accessions = [os.path.join('restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test004_002_er'),
                       os.path.join('restart', 'born-digital', 'backlogged', 'coll_2023', '2023_test005_004_er')]
         for accession in accessions:
-            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
-                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.csv'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.csv'))
 
         # Makes the fixity validation log, as if the first two accessions had validated when running the script earlier.
         # It is made by the test instead of stored in the repo so the date in the filename will be correct.
@@ -315,8 +314,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for restart, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test004_002_er have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'coll_2023', '2023_test004_002_er', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'coll_2023', '2023_test004_002_er', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied, no errors.', 'JD'],
                     ['T4', '2023.T4.02.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied, no errors.', 'JD'],
@@ -327,8 +326,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for restart, 2023_test004_002_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test005_004_er have been updated.
-        log_path = os.path.join(input_directory, 'backlogged', 'coll_2023', '2023_test005_004_er', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'backlogged', 'coll_2023', '2023_test005_004_er', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.1', 'Virus scanned and copied. No errors.', 'JD'],
                     ['T5', '2023.T5.04.ER', '2023-10-03', 'CD.2', 'Virus scanned and copied. No errors.', 'JD'],
@@ -348,8 +347,8 @@ class MyTestCase(unittest.TestCase):
         accessions = [os.path.join('valid', 'Born-digital', 'closed', 'test_001', '2023_test001_001_er'),
                       os.path.join('valid', 'Born-digital', 'closed', 'test_004', '2023_test004_003_er')]
         for accession in accessions:
-            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.txt'),
-                            os.path.join('test_data', 'script', accession, 'preservation_log.txt'))
+            shutil.copyfile(os.path.join('test_data', 'script', accession, 'preservation_log_copy.csv'),
+                            os.path.join('test_data', 'script', accession, 'preservation_log.csv'))
             
         # Makes the variables used for script input and runs the script.
         script = os.path.join(os.getcwd(), '..', '..', 'validate_fixity.py')
@@ -379,8 +378,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for valid, fixity validation log')
 
         # Verifies the contents of the preservation log for 2023_test001_001_er have been updated.
-        log_path = os.path.join(input_directory, 'closed', 'test_001', '2023_test001_001_er', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'closed', 'test_001', '2023_test001_001_er', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.001', 'Copied with no errors.', 'Jane Doe'],
                     ['TEST.1', '2023.1.1.ER', '2023-10-30', 'CD.002', 'Copied with no errors.', 'Jane Doe'],
@@ -390,8 +389,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected, result, 'Problem with test for valid, 2023_test001_001_er preservation log')
 
         # Verifies the contents of the preservation log for 2023_test004_003_er have been updated.
-        log_path = os.path.join(input_directory, 'closed', 'test_004', '2023_test004_003_er', 'preservation_log.txt')
-        result = csv_to_list(log_path, delimiter='\t')
+        log_path = os.path.join(input_directory, 'closed', 'test_004', '2023_test004_003_er', 'preservation_log.csv')
+        result = csv_to_list(log_path)
         expected = [['Collection', 'Accession', 'Date', 'Media Identifier', 'Action', 'Staff'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.001', 'Copied.', 'Jane Doe'],
                     ['TEST.004', '2023.test004.003.ER', '2023-11-24', 'CD.002', 'Copied.', 'Jane Doe'],
