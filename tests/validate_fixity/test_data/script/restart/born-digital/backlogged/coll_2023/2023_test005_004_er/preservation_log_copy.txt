@@ -1,5 +1,0 @@
-Collection	Accession	Date	Media Identifier	Action	Staff
-T5	2023.T5.04.ER	2023-10-03	CD.1	Virus scanned and copied. No errors.	JD
-T5	2023.T5.04.ER	2023-10-03	CD.2	Virus scanned and copied. No errors.	JD
-T5	2023.T5.04.ER	2023-10-03		Zipped to bag.	JD
-T5	2023.T5.04.ER	2023-10-03		Zipped bag valid.	JD
